@@ -14,7 +14,7 @@ repo地址:
 ## EventBus的构造
 双重加锁的单例.
 
-{% highlight ruby %}
+{% highlight java %}
 static volatile EventBus defaultInstance;
 public static EventBus getDefault() {
     if (defaultInstance == null) {
@@ -37,7 +37,7 @@ public static EventBus getDefault() {
 注册即添加订阅者,调用`register()`方法:
 方法参数最全时共有三个参数:
 
-{% highlight ruby %}
+{% highlight java %}
 private synchronized void register(Object subscriber, boolean sticky, int priority) {
     List<SubscriberMethod> subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());
     for (SubscriberMethod subscriberMethod : subscriberMethods) {
@@ -56,7 +56,7 @@ private synchronized void register(Object subscriber, boolean sticky, int priori
 在一个类(class)中寻找方法的过程, 首先是拿出方法:
 在循环中skip了一些系统的类, 因为我们不可能在这些类里加入方法.
 
-{% highlight ruby %}
+{% highlight java %}
 while (clazz != null) {
     String name = clazz.getName();
     if (name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.")) {
@@ -84,7 +84,7 @@ while (clazz != null) {
 #### 反射
 关于反射的性能讨论, 代码中有说:
 
-{% highlight ruby %}
+{% highlight java %}
 // This is faster than getMethods, especially when subscribers a fat classes like Activities
 Method[] methods = clazz.getDeclaredMethods();
 {% endhighlight %}
@@ -123,7 +123,7 @@ Android代码里可能会有一些方法标明了`@TargetApi`,表明是更高级
 ### 筛选方法
 得到了所有的方法之后,开始筛选方法:
 
-{% highlight ruby %}
+{% highlight java %}
 private void filterSubscriberMethods(List<SubscriberMethod> subscriberMethods, HashMap<String, Class> eventTypesFound, 
 StringBuilder methodKeyBuilder, Method[] methods)
 {% endhighlight %}
@@ -208,7 +208,7 @@ key是subscriber,即订阅者的类的对象,value是eventType的class,即事件
 
 首先看事件的触发: `post()`方法, 这里传入的参数是事件类对象.
 
-{% highlight ruby %}
+{% highlight java %}
 public void post(Object event) {
     PostingThreadState postingState = currentPostingThreadState.get();
     List<Object> eventQueue = postingState.eventQueue;
@@ -243,7 +243,7 @@ public void post(Object event) {
 
 取出所有基类和接口的方法:`lookupAllEventTypes()`
 
-{% highlight ruby %}
+{% highlight java %}
 
 /** Looks up all Class objects including super classes and interfaces. Should also work for interfaces. */
 private List<Class<?>> lookupAllEventTypes(Class<?> eventClass) {
@@ -268,7 +268,7 @@ private List<Class<?>> lookupAllEventTypes(Class<?> eventClass) {
 所有这些费时的遍历查找操作都是有一个map作为cache的.
 注意这里添加接口的时候,因为**接口是多继承的**,所以除了去重以外,还需要深入遍历:
 
-{% highlight ruby %}
+{% highlight java %}
 
 /** Recurses through super interfaces. */
 static void addInterfaces(List<Class<?>> eventTypes, Class<?>[] interfaces) {
@@ -296,7 +296,7 @@ private boolean postSingleEventForEventType(Object event, PostingThreadState pos
 ### 线程模式
 这里根据线程模式不同,有一个switch case.
 
-{% highlight ruby %}
+{% highlight java %}
 private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
     switch (subscription.subscriberMethod.threadMode) {
         case PostThread:
@@ -334,7 +334,7 @@ private void postToSubscription(Subscription subscription, Object event, boolean
     `case Async`: 加入asyncPoster队列.
 
 加入的三个队列类型如下:
-{% highlight ruby %}
+{% highlight java %}
 private final HandlerPoster mainThreadPoster; 
 private final BackgroundPoster backgroundPoster;
 private final AsyncPoster asyncPoster;
@@ -402,7 +402,7 @@ Async模式下,不管你的post thread是什么,都是会新启线程来执行�
 ## 事件取消
 有一个public的cancel方法:
 
-{% highlight ruby %}
+{% highlight java %}
 public void cancelEventDelivery(Object event) {
     PostingThreadState postingState = currentPostingThreadState.get();
     if (!postingState.isPosting) {
@@ -424,7 +424,7 @@ public void cancelEventDelivery(Object event) {
 1.首先它只能在handler里面调用, 即第一个异常.这里判断的isPosting这个值在post的时候变为true,处理完就变为false.
 这里用到的currentPostingState:
 
-{% highlight ruby %}
+{% highlight java %}
 private final ThreadLocal<PostingThreadState> currentPostingThreadState = new ThreadLocal<PostingThreadState>() {
     @Override
     protected PostingThreadState initialValue() {
@@ -436,7 +436,7 @@ private final ThreadLocal<PostingThreadState> currentPostingThreadState = new Th
 ThreadLocal类是什么?
 [ThreadLocal类](https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html)
 
-{% highlight ruby %}
+{% highlight java %}
 ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).
 {% endhighlight %}
 
