@@ -16,7 +16,7 @@ url: http://mengdd.github.io/
 root: /
 permalink: :category/:year/:month/:day/:title/
 permalink_defaults:
-	lang: en
+  lang: en
 
 # Directory
 source_dir: source
@@ -69,4 +69,6 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: https://github.com/mengdd/mengdd.github.io
+  branch: master
