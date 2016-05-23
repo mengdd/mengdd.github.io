@@ -12,7 +12,7 @@ repo地址:
 ## EventBus的构造
 双重加锁的单例.
 
-```
+```java
 static volatile EventBus defaultInstance;
 public static EventBus getDefault() {
     if (defaultInstance == null) {
@@ -35,7 +35,7 @@ public static EventBus getDefault() {
 注册即添加订阅者,调用`register()`方法:
 方法参数最全时共有三个参数:
 
-```
+```java
 private synchronized void register(Object subscriber, boolean sticky, int priority) {
     List<SubscriberMethod> subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());
     for (SubscriberMethod subscriberMethod : subscriberMethods) {
@@ -53,7 +53,7 @@ private synchronized void register(Object subscriber, boolean sticky, int priori
 在一个类(class)中寻找方法的过程, 首先是拿出方法:
 在循环中skip了一些系统的类, 因为我们不可能在这些类里加入方法.
 
-```
+```java
 while (clazz != null) {
     String name = clazz.getName();
     if (name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.")) {
@@ -80,7 +80,7 @@ while (clazz != null) {
 #### 反射
 关于反射的性能讨论, 代码中有说:
 
-```
+```java
 // This is faster than getMethods, especially when subscribers a fat classes like Activities
 Method[] methods = clazz.getDeclaredMethods();
 ```
@@ -119,7 +119,7 @@ Android代码里可能会有一些方法标明了`@TargetApi`,表明是更高级
 ### 筛选方法
 得到了所有的方法之后,开始筛选方法:
 
-```
+```java
 private void filterSubscriberMethods(List<SubscriberMethod> subscriberMethods, HashMap<String, Class> eventTypesFound, 
 StringBuilder methodKeyBuilder, Method[] methods)
 
@@ -165,7 +165,7 @@ StringBuilder methodKeyBuilder, Method[] methods)
 
 筛选结束后,我们就获取到了所有的目标方法.
 把它们都存在了一个cache map里面,以免同一个类下次我们又要重新筛选一遍:
-```
+```java
 private static final Map<Class<?>, List<SubscriberMethod>> methodCache = new HashMap<Class<?>, List<SubscriberMethod>>();
 ```
 
@@ -202,7 +202,7 @@ key是subscriber,即订阅者的类的对象,value是eventType的class,即事件
 
 首先看事件的触发: `post()`方法, 这里传入的参数是事件类对象.
 
-```
+```java
 public void post(Object event) {
     PostingThreadState postingState = currentPostingThreadState.get();
     List<Object> eventQueue = postingState.eventQueue;
@@ -236,7 +236,7 @@ public void post(Object event) {
 
 取出所有基类和接口的方法:`lookupAllEventTypes()`
 
-```
+```java
 /** Looks up all Class objects including super classes and interfaces. Should also work for interfaces. */
 private List<Class<?>> lookupAllEventTypes(Class<?> eventClass) {
     synchronized (eventTypesCache) {
@@ -259,7 +259,7 @@ private List<Class<?>> lookupAllEventTypes(Class<?> eventClass) {
 所有这些费时的遍历查找操作都是有一个map作为cache的.
 注意这里添加接口的时候,因为**接口是多继承的**,所以除了去重以外,还需要深入遍历:
 
-```
+```java
 /** Recurses through super interfaces. */
 static void addInterfaces(List<Class<?>> eventTypes, Class<?>[] interfaces) {
     for (Class<?> interfaceClass : interfaces) {
@@ -285,7 +285,7 @@ private boolean postSingleEventForEventType(Object event, PostingThreadState pos
 ### 线程模式
 这里根据线程模式不同,有一个switch case.
 
-```
+```java
 private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
     switch (subscription.subscriberMethod.threadMode) {
         case PostThread:
@@ -322,7 +322,7 @@ private void postToSubscription(Subscription subscription, Object event, boolean
     `case Async`: 加入asyncPoster队列.
 
 加入的三个队列类型如下:
-```
+```java
 private final HandlerPoster mainThreadPoster; 
 private final BackgroundPoster backgroundPoster;
 private final AsyncPoster asyncPoster;
@@ -389,7 +389,7 @@ Async模式下,不管你的post thread是什么,都是会新启线程来执行�
 ## 事件取消
 有一个public的cancel方法:
 
-```
+```java
 public void cancelEventDelivery(Object event) {
     PostingThreadState postingState = currentPostingThreadState.get();
     if (!postingState.isPosting) {
@@ -411,7 +411,7 @@ public void cancelEventDelivery(Object event) {
 1.首先它只能在handler里面调用, 即第一个异常.这里判断的isPosting这个值在post的时候变为true,处理完就变为false.
 这里用到的currentPostingState:
 
-```
+```java
 private final ThreadLocal<PostingThreadState> currentPostingThreadState = new ThreadLocal<PostingThreadState>() {
     @Override
     protected PostingThreadState initialValue() {
@@ -472,6 +472,10 @@ EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要
 
 本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了, 然后留下了链接. 
 有点流水账,讲得也不是很深入,如果有错请帮忙指正.
+
+
+
+
 
 
 
