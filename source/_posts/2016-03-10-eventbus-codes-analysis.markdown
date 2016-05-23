@@ -333,9 +333,9 @@ private final AsyncPoster asyncPoster;
 
 #### 关于Queue的相关知识
 队列Queue: Java中Queue是一个接口, 类文档:
-[Queue Java doc] (https://docs.oracle.com/javase/7/docs/api/java/util/Queue.html)
+[Queue Java doc](https://docs.oracle.com/javase/7/docs/api/java/util/Queue.html)
 它是继承自Collection这个接口:
-[Collection] (https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html)
+[Collection](https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html)
 
 Queue这个数据结构可以自己定义顺序, 可以用来做FIFO也可以用来做LIFO.
 每一种Queue的实现都必须指定要用什么顺序.
@@ -421,7 +421,7 @@ private final ThreadLocal<PostingThreadState> currentPostingThreadState = new Th
 
 ```
 ThreadLocal类是什么?
-[ThreadLocal类] (https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html)
+[ThreadLocal类](https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html)
 
 ```
 ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).

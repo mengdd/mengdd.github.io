@@ -7,7 +7,7 @@ tags:
 # Set up Github Pages with Hexo, migrating from Jekyll.
 
 本文介绍用Hexo建立github pages, 其中包含了从Jekyll迁移过来的过程.
-Migrate github pages from Jekyll to [Hexo] (https://hexo.io/docs/index.html).
+Migrate github pages from Jekyll to [Hexo](https://hexo.io/docs/index.html).
 Set up github pages using Hexo.
 不光是迁移哇, 直接用Hexo setup github pages 看这个也有用哇.
 
@@ -22,11 +22,11 @@ Set up github pages using Hexo.
 
 ## 安装Hexo
 必要条件: 
-[Node.js] (https://nodejs.org/en/)
+[Node.js](https://nodejs.org/en/)
 可以选个pkg,下载后点击安装, 装完之后告诉你路径:
 
 也可以用nvm装的
-[nvm] (https://github.com/creationix/nvm)
+[nvm](https://github.com/creationix/nvm)
 Git
 这个一般大家都有哒~
 
@@ -38,7 +38,7 @@ Git
 
 
 ## 设置和迁移 
-[Setup] (https://hexo.io/docs/setup.html)
+[Setup](https://hexo.io/docs/setup.html)
 
 ### 备份
 首先, 从原先的_posts/目录下将原来的文章都拷贝出来.
@@ -59,12 +59,12 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 ### 配置
 网站的设置文件是`_config.yml`
 打开可以配置一些新东东, 比如title url之类的.
-具体设置参照这个: [configuration] (https://hexo.io/docs/configuration.html)
+具体设置参照这个: [configuration](https://hexo.io/docs/configuration.html)
 
 
 ### 内容迁移
 这是内容迁移的介绍:
-[migration] (https://hexo.io/docs/migration.html)
+[migration](https://hexo.io/docs/migration.html)
 
 所以首先在`_config.yml`文件里把 new_post_name字段改为:
 `new_post_name: :year-:month-:day-:title.md`
@@ -75,7 +75,7 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 比较bug的是以前jekyll文章里的代码段前后加的那两句还得手动移除.
 用Hexo后 前后各加三个` 即可标记代码段. 
 如果想要代码高亮, 比如是java, 代码段首的```后加个java.
-这里可以查看代码高亮的各种语言: [highlightjs] (http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html)
+这里可以查看代码高亮的各种语言: [highlightjs](http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html)
 
 完成之后可以运行hexo server 命令在本地看一下样子.
 
@@ -83,7 +83,7 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 最后提交, 本次提交即为迁移提交, push.
 
 ## Deployment
-[部署Deployment] (https://hexo.io/docs/deployment.html)
+[部署Deployment](https://hexo.io/docs/deployment.html)
 
 我本来以为跟Jekyll一样本地运行好了, push上去就生效了, 结果并没有.
 访问原地址, github pages并不生效,居然还是原来的那个样子.
@@ -119,7 +119,7 @@ deploy:
 哒哒!
 
 ## 网站代码和静态网页管理
-在知乎上看到这个问题: [使用hexo, 如果换了电脑怎么更新博客?] (https://www.zhihu.com/question/21193762)
+在知乎上看到这个问题: [使用hexo, 如果换了电脑怎么更新博客?](https://www.zhihu.com/question/21193762)
 乍一看感觉很奇怪, 换一台电脑难道不是clone下来就行了吗? 仔细看了一下恍然大悟.
 前面提到刚刚的部署命令执行了一次强制push, 可是当我们查看github上的repo(https://github.com/mengdd/mengdd.github.io),
 发现push上去的文件和我们本地的这些完全不同.
@@ -128,7 +128,7 @@ deploy:
 也就是等于我们把母鸡留在了本地电脑, 执行deploy之后只把鸡蛋push到了origin. (我这个形象的比喻).
 
 那么怎么解决呢? 该问题下排名第一的 [CrazyMilk] 大哥已经给出了答案.
-[他的博文] (http://crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/)
+[他的博文](http://crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/)
 所以解决办法就是新建一个分支把网站代码(母鸡)放上去咯~哈~
 
 首先在本地, 基于当前本地的master新建一个hexo分支:
@@ -156,7 +156,7 @@ DONE!
 
 
 ## Future
-需要用到的命令: [commands] (https://hexo.io/docs/commands.html) 随时查看哇.
+需要用到的命令: [commands](https://hexo.io/docs/commands.html) 随时查看哇.
 
 
 
