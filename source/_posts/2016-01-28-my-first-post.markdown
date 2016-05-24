@@ -20,9 +20,6 @@ The first one is here:
 
 
 
-
-
-
 *Do whatever improves yourself.*
 
 **Life is so beautiful~**

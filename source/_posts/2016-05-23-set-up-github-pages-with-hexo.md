@@ -11,6 +11,8 @@ Migrate github pages from Jekyll to [Hexo](https://hexo.io/docs/index.html).
 Set up github pages using Hexo.
 不光是迁移哇, 直接用Hexo setup github pages 看这个也有用哇.
 
+<!-- more -->
+
 为什么要把github pages 从Jekyll实现迁移到Hexo?
 前阵子用Jekyll建了github pages(官方推荐), 但是发现添加代码段比较痛苦, markdown的前后三个点并不能标记一个代码块, 需要在代码块前后加上两句特定的语句.
 如果一篇文章有很多代码块, 这样一个一个加下来比较费劲, 而且加完了之后代码段的样式也不是很好看.

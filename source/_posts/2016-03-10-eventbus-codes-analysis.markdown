@@ -5,8 +5,13 @@ categories: Android
 
 # EventBus源码阅读记录
 
-repo地址: 
+EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要的原理是利用了反射注册以及调用.
+本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了,然后留下了链接.
+有点流水账,讲得也不是很深入,如果有错请帮忙指正.
+repo地址:
 [greenrobot/EventBus](https://github.com/greenrobot/EventBus)
+
+<!-- more -->
 
 
 ## EventBus的构造
