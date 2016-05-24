@@ -19,11 +19,10 @@ Set up github pages using Hexo.
 
 下文记录了我的操作过程.
 
-
 ## 安装Hexo
-必要条件: 
+必要条件:
 [Node.js](https://nodejs.org/en/)
-可以选个pkg,下载后点击安装, 装完之后告诉你路径:
+可以选个pkg,下载后点击安装, 装完之后告诉你路径.
 
 也可以用nvm装的
 [nvm](https://github.com/creationix/nvm)
@@ -36,8 +35,7 @@ Git
 装得也很快.
 之后试一下hexo命令,如果有命令介绍(而不是command not found)就代表装好了.
 
-
-## 设置和迁移 
+## 设置和迁移
 [Setup](https://hexo.io/docs/setup.html)
 
 ### 备份
@@ -61,7 +59,6 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 打开可以配置一些新东东, 比如title url之类的.
 具体设置参照这个: [configuration](https://hexo.io/docs/configuration.html)
 
-
 ### 内容迁移
 这是内容迁移的介绍:
 [migration](https://hexo.io/docs/migration.html)
@@ -73,8 +70,8 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 然后把原来备份的博客文章移到source/_posts/目录下.
 
 比较bug的是以前jekyll文章里的代码段前后加的那两句还得手动移除.
-用Hexo后 前后各加三个` 即可标记代码段. 
-如果想要代码高亮, 比如是java, 代码段首的```后加个java.
+用Hexo后 前后各加三个点即可标记代码段.
+如果想要代码高亮, 比如是java, 代码段首的三个点后加个java.
 这里可以查看代码高亮的各种语言: [highlightjs](http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html)
 
 完成之后可以运行hexo server 命令在本地看一下样子.
@@ -90,7 +87,6 @@ Hexo会自动忽略下划线开头的目录和文件名,但是_posts目录除外
 
 查了一下是因为deploy没有设置.
 
-
 打开`_config.yml`文件,找到deploy字段, 设置一下.
 我的是这样写的:
 
@@ -104,8 +100,7 @@ deploy:
 然后执行一下这条命令:
 `npm install hexo-deployer-git --save`
 这条命令执行后package.json会有一条改动, 新添加了一个插件.
-把这个提交了. 
-
+把这个提交了.
 
 然后generate和deploy:
 `$ hexo generate --deploy`
@@ -140,10 +135,9 @@ deploy:
 最后在github的settings页面把hexo分支设置为default.
 DONE!
 
-
 ## Theme
 之后想设置一个好看的主题, 知乎上居然还有这么个问题:
-[有哪些好看的Hexo主题?]  (https://www.zhihu.com/question/24422335)
+[有哪些好看的Hexo主题?](https://www.zhihu.com/question/24422335)
 我打算选这个试试: https://github.com/wuchong/jacman
 在本地hexo分支根目录下运行:
 `git clone https://github.com/wuchong/jacman.git themes/jacman`
@@ -153,7 +147,6 @@ DONE!
 然后用命令hexo server就可以在本地查看效果.
 改主题大概就酱, 两步就可以完成, 可以多试几个选一选.
 选完了在hexo分支提交保存,然后运行`hexo d -g`生成部署即可.
-
 
 ## Future
 需要用到的命令: [commands](https://hexo.io/docs/commands.html) 随时查看哇.
