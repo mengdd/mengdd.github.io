@@ -1,5 +1,5 @@
 ---
-title: 2016-05-23-set-up-github-pages-with-hexo.md
+title: Set up github pages with Hexo
 date: 2016-05-23 18:12:02
 tags:
 ---
