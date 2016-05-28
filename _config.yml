@@ -73,3 +73,10 @@ deploy:
   type: git
   repo: https://github.com/mengdd/mengdd.github.io
   branch: master
+
+# RSS
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
