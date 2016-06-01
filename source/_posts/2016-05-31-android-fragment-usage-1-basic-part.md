@@ -4,11 +4,11 @@ date: 2016-05-31 12:51:19
 tags: Android
 ---
 
-# Android Fragment使用(一) 基础篇 温故知新
 Fragment使用的基本知识点总结, 包括Fragment的添加, 参数传递和通信, 生命周期和各种操作.
 
 <!-- more -->
 
+# Fragment使用基础
 ## Fragment添加
 方法一: 布局里的标签<fragment>
 标识符: tag, id, 如果都没有, container的id将会被使用.
@@ -86,6 +86,11 @@ Fragment的生命周期首先和Activity的生命周期密切相关,
 如果activity destroyed, 其中所有的fragment都会被destroyed.
 只有activity在resumed状态下,fragment的生命周期可以独立改变,否则它被activity控制.
 
+![](/images/fragment-lifecycle.png)
+![](/images/fragment-lifecycle-2.png)
+![](/images/activity-fragment-lifecycle.png)
+![](/images/fragment-lifecycle-with-callbacks.png)
+
 上面这个图来自于: https://corner.squareup.com/2014/10/advocating-against-android-fragments.html
 
 # FragmentTransaction基础操作
@@ -126,12 +131,8 @@ remove()比detach()要彻底一些, 如果不加入到back stack, remove()的时
 如果调用了`addToBackStack()`,旧的fragment会处在stopped状态,调用到`onDestroyView()`, 可以通过返回键来resume.
 这个时候对于旧的Fragment来说, 成员变量依然在,但是View被销毁了. 所以返回时它的生命周期从`onCreateView()`开始重建View.
 
-## 参考资料
+
+# 参考资料
 [Android Reference Fragment](https://developer.android.com/reference/android/app/Fragment.html)
 [Android Reference FragmentTransaction](https://developer.android.com/reference/android/app/FragmentTransaction.html)
 [CodePath Guides: Creating and Using Fragments](https://guides.codepath.com/android/Creating-and-Using-Fragments)
-
-
-
-
-
