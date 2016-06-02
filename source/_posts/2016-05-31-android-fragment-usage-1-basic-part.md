@@ -1,7 +1,8 @@
 ---
 title: Android Fragment使用(一) 基础篇 温故知新
 date: 2016-05-31 12:51:19
-tags: Android
+tags: [Android, Fragment]
+categories: Android
 ---
 
 Fragment使用的基本知识点总结, 包括Fragment的添加, 参数传递和通信, 生命周期和各种操作.
