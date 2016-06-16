@@ -93,6 +93,7 @@ Fragment的生命周期首先和Activity的生命周期密切相关,
 ![](/images/fragment-lifecycle-with-callbacks.png)
 
 上面这个图来自于: https://corner.squareup.com/2014/10/advocating-against-android-fragments.html
+这里还有一个更吊的图: https://github.com/xxv/android-lifecycle
 
 # FragmentTransaction基础操作
 
