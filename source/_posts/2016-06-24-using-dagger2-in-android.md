@@ -24,11 +24,38 @@ categories: Android
 在项目的**build.gradle**里加这个:
 classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
-然后**app的build.gradle**加这三行:
+然后**app的build.gradle**:
 ```
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.ddmeng.dagger2sample"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'javax.annotation:jsr250-api:1.0'
     compile 'com.google.dagger:dagger:2.2'
     apt 'com.google.dagger:dagger-compiler:2.2'
+}
 ```
 
 ## 常用注解
