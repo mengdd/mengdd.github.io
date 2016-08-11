@@ -180,3 +180,4 @@ collapsingToolbar.setTitle("Title");
 [Handling Scrolls with CoordinatorLayout](https://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout)
 [Material Design: scrolling techniques](https://material.google.com/patterns/scrolling-techniques.html#scrolling-techniques-behavior)
 [Design Support Library](https://guides.codepath.com/android/Design-Support-Library#official-source-code)
+[Mastering the Coordinator Layout](http://saulmm.github.io/mastering-coordinator)
