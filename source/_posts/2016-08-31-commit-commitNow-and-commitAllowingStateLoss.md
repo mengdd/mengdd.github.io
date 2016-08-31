@@ -6,7 +6,7 @@ categories: Android
 ---
 
 关于FragmentTransaction的各种提交方法: `commit()`,`commitAllowingStateLoss()`,`commitNow()`和`commitNowAllowingStateLoss()`.
-作者Rryan Herbst发了一个blog [The many flavors of commit()](https://medium.com/@bherbst/the-many-flavors-of-commit-186608a015b1#.uwl2v86cx)讨论这几个方法的特点和用途.
+作者Bryan Herbst发了一个blog [The many flavors of commit()](https://medium.com/@bherbst/the-many-flavors-of-commit-186608a015b1#.uwl2v86cx)讨论这几个方法的特点和用途.
 下文是中文摘要.
 
 
