@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 222
 date: 2016-09-15 17:44:39
-tags: [Android, Android Weekly]
+tags: [Android, Android Weekly, Okio, Tools, Resources, Espresso, Support Annotations, MVP, Design]
 categories: [Android, Android Weekly]
 ---
 
