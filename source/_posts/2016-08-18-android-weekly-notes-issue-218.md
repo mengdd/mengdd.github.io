@@ -1,7 +1,7 @@
 ---
-title: Android Weekly Notes Issue #218
+title: Android Weekly Notes Issue 218
 date: 2016-08-18 13:20:56
-tags: [Android, Android Weekly]
+tags: [Android, Android Weekly, AnimatedVectorDrawable, Espresso, TV, Wear, Router, Performance, Maven, Bottom Navigation]
 categories: [Android, Android Weekly]
 ---
 

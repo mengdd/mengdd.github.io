@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 219
 date: 2016-08-24 17:32:23
-tags: [Android, Android Weekly]
+tags: [Android, Android Weekly, Bottom Sheet, Dagger2, Security, Kotlin, JobScheduler, Trello, TextInputLayout, Code Style, Java 8, Lambda, Wear, Firebase, AutoValue]
 categories: [Android, Android Weekly]
 ---
 

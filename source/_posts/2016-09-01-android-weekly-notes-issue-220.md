@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 220
 date: 2016-09-01 14:05:48
-tags: [Android, Android Weekly]
+tags: [Android, Android Weekly, Gradle, Docker, Bottom Sheet, Certificate, Retrofit, AnimatedVectorDrawable, Fragment, RxJava, MVP, AsyncLayoutInflater, DiffUtil, Recorder, tiger]
 categories: [Android, Android Weekly]
 ---
 

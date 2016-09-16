@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 221
 date: 2016-09-09 11:42:07
-tags: [Android, Android Weekly]
+tags: [Android, Android Weekly, ScaleType, Devices, Security, Accessibility, Scrolling, Gradle, Dagger2, ExpandableRecyclerView, Annotation, RxJava, ItemTouchHelper, Fresco, Resources]
 categories: [Android, Android Weekly]
 ---
 
