@@ -9,7 +9,7 @@ categories: [Android, Android Weekly]
 October 2nd, 2016
 [Android Weekly Issue #225](http://androidweekly.net/issues/issue-225)
 
-本期内容包括: Android 7.0的Quick Settings; Firebase; 兼容旧版本的shared element transtion; Wear; ORM: 用ActiveAndroid做数据库存储; 崩溃报告工具对比; Google Cast API介绍; Google的播放器库ExoPlayer 2.x发布; 项目的包结构整理; Task API的使用等等.
+本期内容包括: Android 7.0的Quick Settings; Firebase; 兼容旧版本的shared element transition; Wear; ORM: 用ActiveAndroid做数据库存储; 崩溃报告工具对比; Google Cast API介绍; Google的播放器库ExoPlayer 2.x发布; 项目的包结构整理; Task API的使用等等.
 
 <!-- more -->
 # ARTICLES & TUTORIALS
@@ -67,7 +67,7 @@ UI是[Tile](https://developer.android.com/reference/android/service/quicksetting
 
 不要在UI线程进行文件操作.
 
-明白Bitmaps. 因为它们占用很多memory. [Didplaying Bitmaps](https://developer.android.com/training/displaying-bitmaps/index.html)
+明白Bitmaps. 因为它们占用很多memory. [Displaying Bitmaps](https://developer.android.com/training/displaying-bitmaps/index.html)
 
 使用style来避免重复的属性设置.
 
