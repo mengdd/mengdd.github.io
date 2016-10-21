@@ -272,7 +272,7 @@ abstract class Film implements Parcelable {
 还有一些其他有用的快捷键, 请看原文吧.
 
 ## [Constraint Layout: Icon Label Text](http://blog.sqisland.com/2016/10/constraint-layout-icon-label-text.html)
-作者想做这样一个UI, 左边是一个icon, 右边是两行字, icon的top和bottom分别和第一行字的top和bottom对其.
+作者想做这样一个UI, 左边是一个icon, 右边是两行字, icon的top和bottom分别和第一行字的top和bottom对齐.
 ![ConstraintLayout: Icon Label Text](/images/icon-label-text.jpg)
 怎么做呢? 她想到了用[ConstraintLayout](https://developer.android.com/training/constraint-layout/index.html).
 代码在这里: [iconlabeltext](https://github.com/chiuki/iconlabeltext)
