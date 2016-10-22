@@ -583,7 +583,7 @@ Presenter中保存了:
 private CompositeSubscription mSubscriptions;
 ```
 在`subscribe()`的时候, `mSubscriptions.add(subscription);`;
-在`unsubscribe()的时候, `mSubscriptions.clear();`.
+在`unsubscribe()`的时候, `mSubscriptions.clear();` .
 
 ### Diff with todo-mvp
 数据层暴露了RxJava的`Observable`流作为获取数据的方式, `TasksDataSource`接口中的方法变成了这样:
