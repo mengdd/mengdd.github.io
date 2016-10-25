@@ -85,12 +85,13 @@ Android 7.1已经发了预览版, 这里是API Overview: [API overview](https://
     </shortcut>
 </shortcuts>
 ```
+这就好了, 这个文件添加了两个shortcuts, 点击都将打开指定的Activity, 本例子中是`StaticShortcutActivity`.
 
 ### 用多个Intent构建back stack
 上面这个文件里添加了两个静态的shortcuts, 第一个关联了一个Activity, 点击shortcut将直接打开这个Activity, 回退的时候回到桌面.
 
 
-如果你想要的效果是点击back键回到应用里的某个界面, 那么可以利用多个intents来构建back stack, 比如在第二个shortcut里面, 点击shortcut打开目标Activity, 这个Intent放在最后, 但是回退会返回到MainActivity, 即之前的那个Intent.
+如果你想要的效果是点击back键回到应用里的某个界面, 那么可以利用多个intents来构建back stack, 比如在第二个shortcut里面, 点击shortcut还是打开目标Activity, 这个指定目标Activity的Intent放在最后, 但是回退会返回到MainActivity, 即之前的那个Intent.
 
 
 ## 动态Shortcuts使用
@@ -115,6 +116,7 @@ ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
 shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
 
 ```
+点击这个shortcut会发出一个打开网页的Intent, 让你选择浏览器, 从而打开网址.
 
 ### 多个Intent构建back stack
 动态的shortcut仍然可以用多个Intent来指定一个back stack, 那么打开目标Activity之后就可以返回到应用中的指定界面而不是回到launcher:
@@ -133,7 +135,8 @@ ShortcutInfo dynamicShortcut2 = new ShortcutInfo.Builder(this, "shortcut_dynamic
                 })
         .build();
 ```
-和静态一样, 最后一个Intent对应的是shortcut打开的界面, 前面的都是用来构建back stack.
+和静态一样, 最后一个Intent对应的是shortcut打开的界面`DynamicShortcutActivity`, 前面的都是用来构建back stack, 即back退回到MainActivity.
+注意这里的Intent必须指定Action, 否则会抛出异常.
 
 ## Shortcuts的个数限制
 Shortcuts的总数不能超过5个, 即静态和动态shortcuts加起来总数最多是五个.
