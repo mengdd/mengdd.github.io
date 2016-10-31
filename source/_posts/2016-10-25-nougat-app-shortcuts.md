@@ -2,7 +2,7 @@
 title: Android 7.1 App Shortcuts使用
 date: 2016-10-25 14:00:01
 tags: [Android, Android 7, Nougat, Shortcuts]
-catetories: [Android, Nougat]
+categories: [Android, Nougat]
 ---
 
 # Android 7.1 App Shortcuts使用

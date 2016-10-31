@@ -2,7 +2,7 @@
 title: Android MVP模式 谷歌官方代码解读
 date: 2016-10-22 19:11:27
 tags: [MVP, MVC, MVVM, Clean Architecture, Data Binding, Loader, Content Provider, Dagger, RxJava]
-catetories: [Android, Architecture]
+categories: [Android, Architecture]
 ---
 
 # Google官方MVP Sample代码解读
