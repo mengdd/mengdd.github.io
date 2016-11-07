@@ -40,3 +40,13 @@ http://www.realestate.com.au/buy/property-house-with-1-bedroom-size-1-between-0-
 
 2016-08-03
 https://m.realestate.com.au/saved-properties
+
+2016-11-7
+Property detail:
+http://www.realestate.com.au/property-apartment-vic-melbourne-122718062
+Saved Properties -> should open second tab
+https://m.realestate.com.au/saved-properties
+Saved Property Notification: -> should open detail page on second tab
+rea-app://saved-properties/122718062
+Agenda deeplink: -> should open inspections on second tab
+rea-app://saved-properties/inbox-style
