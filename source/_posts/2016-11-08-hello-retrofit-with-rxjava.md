@@ -62,8 +62,6 @@ public class ServiceGenerator {
 }
 ```
 这里指定了我们的base url.
-ConverterFactory指定的是`GsonConverterFactory`.
-
 `createService()`方法返回的是一个泛型.
 
 然后我们创建`GithubService`, 注意这是一个**接口**:
@@ -83,6 +81,8 @@ public interface GitHubService {
 `Endpoints`类是这个请求所返回的json转化的java类.
 
 好了, 准备工作做完了, 现在就可以请求并得到结果:
+请求github api的root url, 得到所有的endpoints:
+
 ```java
 GitHubService gitHubService = ServiceGenerator.createService(GitHubService.class);
 Call<Endpoints> endpointsCall = gitHubService.getAllEndpoints("");
@@ -101,13 +101,31 @@ endpointsCall.enqueue(new Callback<Endpoints>() {
     }
 });
 ```
-
+说明:
 首先利用前面的ServiceGenerator来创建Service, 然后调用接口中定义的`getAllEndpoints()`方法, 此处传入了空字符串, 因为我请求的就是base url.
 
-
-这里注意这个Call<T>, 泛型T是model类型, 它有两个方法:
+### 同步和异步
+这里注意用Retrofit请求的返回值是`Call<T>` (后面我们还会介绍用RxJava的情形), 泛型T是model类型, 它有两个方法:
 - `execute()`是同步方法, 返回`Response<T>`;
 - `enqueue()`是异步方法, 在上面的例子中用的就是这个, 在回调`onResponse()`中返回了`Response<T>`.
+
+### Converter
+Converter的作用: 如果不指定Converter, 默认情况下Retrofit只能返回`ResponseBody`类型, 加了Converter之后就可以返回我们定义的Model类型了.
+所以Converter替我们做了json -> model的工作.
+
+本例子中ConverterFactory指定的是`GsonConverterFactory`. 这里我们选的是Gson Converter, 所以依赖的是`com.squareup.retrofit2:converter-gson`.
+
+Retrofit支持多种converters:
+
+- Gson: com.squareup.retrofit2:converter-gson
+- Jackson: com.squareup.retrofit2:converter-jackson
+- Moshi: com.squareup.retrofit2:converter-moshi
+- Protobuf: com.squareup.retrofit2:converter-protobuf
+- Wire: com.squareup.retrofit2:converter-wire
+- Simple XML: com.squareup.retrofit2:converter-simplexml
+- Scalars (primitives, boxed, and String): com.squareup.retrofit2:converter-scalars
+
+
 
 ### Path和参数
 从上面返回的endpoints可以看到, user_url是: `https://api.github.com/users/{user}`
@@ -126,6 +144,7 @@ public interface GitHubService {
 }
 ```
 使用时的方法完全一样, 不再赘述, 同理, 如果要在后面加参数, 可以用`@Query`.
+更多注解的例子见官方网站: [Retrofit](https://square.github.io/retrofit/)
 
 
 ## Retrofit + RxJava
@@ -206,6 +225,7 @@ public class ServiceGenerator {
 Call<List<User>> getUserFollowing(@Path("user") String user);
 ```
 请求的时候是这样的:
+请求指定用户follow的所有人:
 ```java
 GitHubService service = ServiceGenerator.createService(GitHubService.class);
 Call<List<User>> userFollowing = service.getUserFollowing(inputUserNameView.getText().toString());
@@ -229,6 +249,7 @@ userFollowing.enqueue(new Callback<List<User>>() {
 Observable<List<User>> getUserFollowingObservable(@Path("user") String user);
 ```
 结合RxJava请求的时候变为这样:
+还是请求用户follow的所有人:
 ```java
 GitHubService service = ServiceGenerator.createService(GitHubService.class);
 String username = inputUserNameView.getText().toString();
@@ -254,15 +275,21 @@ service.getUserFollowingObservable(username)
             }
         });
 ```
-
-其中`.subscribeOn(Schedulers.io())`指定请求在io线程, `.observeOn(AndroidSchedulers.mainThread())`指定最后onNext()回调在主线程.
-
+用RxJava实现后, 请求返回的是一个Observable, 用`subscribe()`添加一个订阅者, 即它的观察者.
+当请求返回后, 回到主线程, 更新UI.
 这是单个请求的例子, 所以RxJava的优势不是很明显, 如果我们有多个请求, 用RxJava进行变换组合显然就是更好的选择.
+
+#### 用RxJava进行线程切换
+上个例子中`.subscribeOn(Schedulers.io())`指定Observable的工作, 在我们的例子中Observable的工作即发送请求, 在io线程做, 指定了被观察者的处理线程;
+`.observeOn(AndroidSchedulers.mainThread())`指定最后onNext()回调在主线程, 即指定了通知后续观察者的线程.
+关于这两个操作符的更多说明请看官方文档: [subscribeOn](http://reactivex.io/documentation/operators/subscribeon.html)和[observeOn](http://reactivex.io/documentation/operators/observeon.html).
+
 
 ### RxJava处理多个请求的例子
 设计这样一个场景, 我们现在取到了一个用户follow的所有人, 但是取回的信息中并不包含每个人拥有的repo个数, 只有一个url可用户查看所有repo.
 
 接下来我们要取其中每一个人的详细信息, 就要查询另一个API, 重新查询这个人的完整信息.
+查询用户follow的所有人, 然后查询每一个人的详细信息:
 ```java
 subscription = service.getUserFollowingObservable(username)
         .flatMap(new Func1<List<User>, Observable<User>>() {
@@ -312,6 +339,7 @@ subscription = service.getUserFollowingObservable(username)
 #### 线程问题处理
 上面多个请求的例子, 发现虽然实现了我们的需求, 但是结果回来得很慢. 
 我们加上一个`.map`操作符来加上log:
+(这里省略了一些前后的代码, 只是在`.flatMap()`里加了一个`.map()`)
 ```java
 ...
 subscription = service.getUserFollowingObservable(username)
@@ -344,7 +372,7 @@ subscription = service.getUserFollowingObservable(username)
 Demo地址: https://github.com/mengdd/HelloRetrofit.
 `git checkout multiple-requests-in-single-thread`
 
-回头梳理一下我们的需求, 请求一个所有follow的人, 返回一个人的List, 然后对List中的每一项, 单独请求详细信息.
+回头梳理一下我们的需求, 请求一个所有follow的人, 返回一个follow的人的List, 然后对List中的每一个人, 单独请求详细信息.
 
 那么按理来说, 第二个批量的请求是可以同时发送, 并行进行的.
 所以我们想要的行为其实是平行发送多个请求, 然后最后统一结果到UI线程. 
@@ -352,7 +380,7 @@ Demo地址: https://github.com/mengdd/HelloRetrofit.
 改动如下:
 ```java
 subscription = service.getUserFollowingObservable(username)
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.io()) // 从io线程开始, 取用户follow的所有人
         .flatMap(new Func1<List<User>, Observable<User>>() {
             @Override
             public Observable<User> call(List<User> users) {
@@ -363,8 +391,8 @@ subscription = service.getUserFollowingObservable(username)
         .flatMap(new Func1<User, Observable<User>>() {
             @Override
             public Observable<User> call(User user) {
-                return service.getUserObservable(user.getLogin())
-                        .subscribeOn(Schedulers.io())
+                return service.getUserObservable(user.getLogin()) // 取每个人的详细信息
+                        .subscribeOn(Schedulers.io()) // 指定取每个人详细信息的工作都在单独的io线程
                         .map(new Func1<User, User>() {
                             @Override
                             public User call(User user) {
@@ -376,7 +404,7 @@ subscription = service.getUserFollowingObservable(username)
             }
         })
         .toList()
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread()) // 最后返回到主线程
         .subscribe(new Subscriber<List<User>>() {
             @Override
             public void onCompleted() {
@@ -396,16 +424,23 @@ subscription = service.getUserFollowingObservable(username)
             }
         })
 ```
+给改动的部分加上了注释, 这样更清楚一些.
 
+注意`subscribeOn()`指定的是当前的这个Observable的工作在什么线程进行. 
+所以在本例子中, `subscribeOn(Schedulers.io())`的位置放在`.flatMap()`里面才会产生多个请求并行的效果.
 
 这样一改, 我们的显示时间不再是所有请求时间之和, 而是只取决于最慢的那个请求时间.
+
 
 查看代码:
 Demo地址: https://github.com/mengdd/HelloRetrofit
 `git checkout multiple-requests-in-multiple-threads`
 
 
-### 取消请求
+### 取消订阅
+正常情况下, 行为结束之后, 到达`onComplete()`或者`onError()`, RxJava的订阅会自动取消.
+但是在处理网络请求的时候, 很可能会出现请求还没有返回, 界面就已经结束了的情况.
+
 上面的代码中已经出现了, 订阅方法`subscribe()`的返回值是一个`Subscription`对象, 我们保存了这个对象的引用, 然后在`onPause()`的时候取消了请求, 防止内存泄露.
 ```java
 @Override
@@ -438,7 +473,7 @@ public void onPause() {
 ## Demo说明
 Demo地址: https://github.com/mengdd/HelloRetrofit
 
-本Demo只用于展示Retrofit和RxJava结合的使用, 为了清晰起见所以没有采用MVP构架, 也没有用Dagger进行依赖注入, 有的请求也没有在生命周期结束时取消, 也没有UI的loading效果, 大家使用时请根据实际需要做一些处理.
+本Demo只用于展示Retrofit和RxJava结合的使用, 为了清晰起见所以没有采用MVP构架, 也没有用Dagger进行依赖注入, 有的请求也没有在生命周期结束时取消, 也没有UI的loading效果和没网情况的处理等, 大家使用时请根据实际需要做一些处理.
 
 这些没有的东西会在我最近在做一个应用repo中出现: https://github.com/mengdd/GithubClient, 还在开发中, 可以关注一下. 
 
