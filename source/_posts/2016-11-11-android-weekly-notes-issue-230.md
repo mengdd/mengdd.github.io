@@ -62,7 +62,7 @@ RxJava2.0.0已经发布了. 这是它的wiki page来介绍2.0有什么不同.
 用Espresso做测试, 如何等待网络请求结束再验证UI.
 
 ## [Composing functions in Kotlin with extensions and operators](https://www.novoda.com/blog/composing-functions-in-kotlin-with-extensions-and-operators/)
-K结合otlin的extensions和operator overloading功能, 改善function, 让代码变得更优雅.
+结合Kotlin的extensions和operator overloading功能, 改善function, 让代码变得更优雅.
 
 ## [Authentication sucks. Bad security too](https://medium.com/@flschweiger/authentication-sucks-bad-security-too-345ed20463d4#.yl40vbtgd)
 一个例子, 说明为什么老的验证方法用户体验不好, 我们如何在仍然考虑用户安全的情况下进行改善.
