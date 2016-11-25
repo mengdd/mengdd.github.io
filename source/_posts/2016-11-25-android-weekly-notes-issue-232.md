@@ -6,6 +6,7 @@ categories: [Android, Android Weekly]
 ---
 
 # Android Weekly Issue #232
+November 20th, 2016
 [Android Weekly Issue #232](http://androidweekly.net/issues/issue-232)
 本期内容包括: Kotlin的优势讨论; MVVM模式结合RxJava和Retrofit的应用构架实现; Android中传感器使用; 如何给App写单元测试; Reductor的组合使用; Android应用进程被杀死的状态恢复和问题处理; Kotlin中的Anko; 后台任务处理库"Android Job"; VectorDrawable和PNG的使用问题等.
 
