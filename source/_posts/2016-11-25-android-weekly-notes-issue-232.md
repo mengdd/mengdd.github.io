@@ -27,11 +27,11 @@ Kotlin的优势: 和Java可以互相调用; 函数式语言; function purity; �
 作者一年多以前写过一个这个文章: [RxJava: Android MVVM App structure with Retrofit](https://medium.com/@manuelvicnt/rxjava-android-mvvm-app-structure-with-retrofit-a5605fa32c00#.44uq87s6w), 介绍MVVM结合Retrofit和RxJava的App架构模式. 此篇文章是一年后作者对此的改进.
 
 主要内容有:
-- 1. 通过View和ViewModel之间的协议接口, 让ViewModel知道View的生命周期变化.
-- 2. RxJava2的流式类型: Completable, Maybe, Flowable的使用.
-- 3. 用RxJava操作符组合网络请求: 让不同的网络请求一起发送, 并且都返回以后才得到通知 -> 用`.zip()`. 顺序连接不同的网络请求 -> `.flatMap()`, `.andThen()`.
-- 4. 后台网络请求和View更新的处理: 不取消网络请求, 等View再次resume的时候检查状态再更新. 这里提供了两种选择, 一种是用前面提到的协议接口中的生命周期方法, 另一种是用`AsyncProcessor`.
-- 5. Mock Retrofit的网络请求.
+- 1.通过View和ViewModel之间的协议接口, 让ViewModel知道View的生命周期变化.
+- 2.RxJava2的流式类型: Completable, Maybe, Flowable的使用.
+- 3.用RxJava操作符组合网络请求: 让不同的网络请求一起发送, 并且都返回以后才得到通知 -> 用`.zip()`. 顺序连接不同的网络请求 -> `.flatMap()`, `.andThen()`.
+- 4.后台网络请求和View更新的处理: 不取消网络请求, 等View再次resume的时候检查状态再更新. 这里提供了两种选择, 一种是用前面提到的协议接口中的生命周期方法, 另一种是用`AsyncProcessor`.
+- 5.Mock Retrofit的网络请求.
 
 ## [Tech Talks - You Do Have Something To Say!](https://medium.com/upday-devs/tech-talks-you-do-have-something-to-say-a1a0ae23fa0#.61m7x6rj8)
 这篇文章鼓励你分享你的知识, 经验, 问题及解决方法,  无论是通过演讲还是写出来的方式.
@@ -75,8 +75,8 @@ Kotlin的优势: 和Java可以互相调用; 函数式语言; function purity; �
 作者把自己的一个布局改为用Kotlin的Anko, 然后测试性能.
 
 好处是:
-- 1. 性能提升了, 避免了XML的运行时解析所花费的时间.
-- 2. 可以动态地加入逻辑, 比如版本判断, 屏幕尺寸, 方向判断等.
+- 1.性能提升了, 避免了XML的运行时解析所花费的时间.
+- 2.可以动态地加入逻辑, 比如版本判断, 屏幕尺寸, 方向判断等.
 
 作者用的测试性能的工具是: [AndroidDevMetrics](https://github.com/frogermcs/AndroidDevMetrics)
 
