@@ -1,5 +1,5 @@
 ---
-title: Android Weekly Notes Issue #233
+title: Android Weekly Notes Issue 233
 date: 2016-12-01 18:23:40
 tags: [Android, Android Weekly, RxJava, Mockito, Terminal, Android 7.1, Nougat, App Shortcuts, Custom View, Firebase, Remote Config, APK analyzer, Cache, MVP, push notification, transient, Java]
 categories: [Android, Android Weekly, Java]
