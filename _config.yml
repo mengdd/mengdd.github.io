@@ -81,3 +81,7 @@ feed:
   limit: 20
   hub:
 
+# Sitemap
+sitemap:
+path: sitemap.xml
+
