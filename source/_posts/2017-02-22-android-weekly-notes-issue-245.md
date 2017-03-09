@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 245
 date: 2017-02-22 15:35:47
-tags: [Android, Android Weekly, Testing, Unit Test, Kotlin, Mockito, God Objects, Call, SMS, Android Things, Keystore, Dagger 2, Wear 2.0, ViewPager, RxJava, Memory Leak, Alert, Gesture, Loading]
+tags: [Android, Android Weekly, Testing, Unit Test, Kotlin, Mockito, God Objects, Call, SMS, Android Things, Keystore, Dagger2, Wear 2.0, ViewPager, RxJava, Memory Leak, Alert, Gesture, Loading]
 categories: [Android, Android Weekly]
 ---
 

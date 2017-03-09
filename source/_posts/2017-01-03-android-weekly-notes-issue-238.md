@@ -2,7 +2,7 @@
 title: Android Weekly Notes Issue 238
 date: 2017-01-03 18:02:01
 tags: [Android, Android Weekly, Firebase, Notification, RecyclerView, Background work, Flutter, Gradle, Testing, Android Things, CI]
-categories: [Android Weekly]
+categories: [Android, Android Weekly]
 ---
 
 # Android Weekly Issue #238

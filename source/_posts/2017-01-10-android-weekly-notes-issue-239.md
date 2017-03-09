@@ -2,7 +2,7 @@
 title: Android Weekly Notes Issue 239
 date: 2017-01-10 14:10:31
 tags: [Android, Android Weekly, Android Things, Gradle, Looper, Handler, HandlerThread, Wear, PDF, Test, Robolectric, RxJava, RxJava2]
-categories: [Android Weekly]
+categories: [Android, Android Weekly]
 ---
 # Android Weekly Issue #239
 January 8th, 2017

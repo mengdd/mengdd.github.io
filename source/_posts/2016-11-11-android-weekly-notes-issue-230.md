@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 230
 date: 2016-11-11 12:57:21
-tags: [Android, Android Weekly, Mockito, ConstraintLayout, Kotlin, Async-Await, RxJava, RxJava2.0, Activity, Rotation, Retrofit, JDK, Espresso, Authentication, KeyStore, proguard, MVP, WifiManager, ConfigurationManager, Material Design]
+tags: [Android, Android Weekly, Mockito, ConstraintLayout, Kotlin, Async-Await, RxJava, RxJava2, Activity, Rotation, Retrofit, JDK, Espresso, Authentication, KeyStore, proguard, MVP, WifiManager, ConfigurationManager, Material Design]
 categories: [Android, Android Weekly]
 ---
 # Android Weekly Issue #230
