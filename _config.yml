@@ -85,3 +85,8 @@ feed:
 sitemap:
 path: sitemap.xml
 
+# Local search
+search:
+  path: search.xml
+  field: post
+
