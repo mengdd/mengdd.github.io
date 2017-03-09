@@ -7,8 +7,9 @@ title: Meng's pages
 subtitle: Android developer and maybe other intersting things.
 description: This is a technical blog site of an Android developer.
 author: Dandan Meng
-language: zh
+language: zh-Hans
 timezone: Asia/Shanghai
+avatar: https://avatars1.githubusercontent.com/u/3823345?v=3&s=400
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -65,7 +66,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: jacman
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -80,3 +81,8 @@ feed:
   path: atom.xml
   limit: 20
   hub:
+
+# Duoshuo
+duoshuo_shortname: mengddgithub
+# Baidu Tongji
+baidu_analytics: 83e8338b542a9fd155f68673d113e0ae
