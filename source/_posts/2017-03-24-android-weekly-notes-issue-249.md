@@ -183,8 +183,7 @@ dependencies {
 
 详细介绍的内容包括: 如何用GLSL写vertex shader和fragment shader; 如何贴图; 用JBox2D来实现气泡的动画(需要自己实现重力); 检测用户手势移动气泡; 发现用户点击的气泡.
 
-项目在Github: [Bubble-Picker
-](https://github.com/igalata/Bubble-Picker).
+项目在Github: [Bubble-Picker](https://github.com/igalata/Bubble-Picker).
 
 
 ## [Reducing networking footprint with OkHttp, Etags and If-Modified-Since](https://android.jlelse.eu/reducing-your-networking-footprint-with-okhttp-etags-and-if-modified-since-b598b8dd81a1#.260pws449)
