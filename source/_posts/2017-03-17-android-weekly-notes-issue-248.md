@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 248
 date: 2017-03-17 10:51:51
-tags: [Android, Android Weekly, Crash, Dagger, Dagger2, Realm, Mockito, MockWebServer, Google Map, JUnit5, RxJava, RxJava2, FindBugs, Lint]
+tags: [Android, Android Weekly, Crash, Dagger, Dagger2, Realm, Mockito, MockWebServer, Google Map, JUnit 5, RxJava, RxJava2, FindBugs, Lint]
 categories: [Android, Android Weekly]
 ---
 
