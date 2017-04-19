@@ -1,7 +1,7 @@
 ---
 title: Android Weekly Notes Issue 250
 date: 2017-03-31 16:50:01
-tags: [Android, Android Weekly, Android O, JUnit 5, SpringAnimation, Dagger, Injection, BroadcastReceiver, Kotlin, RxJava]
+tags: [Android, Android Weekly, Android O, JUnit 5,	Physics-based Animation, SpringAnimation, Animation, Dagger, Injection, BroadcastReceiver, Kotlin, RxJava]
 categories: [Android, Android Weekly]
 ---
 
