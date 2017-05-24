@@ -80,7 +80,7 @@ Observable<Lce<Data>> getDataEventStream() {
 Uber的数据类生成及迁移到Immutable Collections的过程.
 
 
-## [Don’t put view != null checks in your Presenters](https://android.jlelse.eu/dont-put-view-null-checks-in-your-presenters-4b6026c67423miss)
+## [Don’t put view != null checks in your Presenters](https://android.jlelse.eu/dont-put-view-null-checks-in-your-presenters-4b6026c67423)
 如果你使用了MVP模式, 并且你的presenter在configuration变化时是一直存在的, 那么你的presenter至少会有下面两个方法:
 ```java
 void attachView(View)
