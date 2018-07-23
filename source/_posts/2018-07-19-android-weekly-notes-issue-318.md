@@ -7,7 +7,7 @@ categories: [Android, Android Weekly, Kotlin]
 
 # Android Weekly Issue #318
 July 15th, 2018
-[Android Weekly Issue #318](https://androidweekly.net/)
+[Android Weekly Issue #318](https://androidweekly.net/issues/issue-318)
 本期内容包括: Android Navigation Component结合`NavigationView`和`BottomNavigationView`; 建议build多个modules到一个大aar; 应用例子说明UI层构建; Realm代码迁移到Kotlin; MVI模式的用法; Facebook和Twitter的sdk集成实现;
 Kotlin中的scope functions; Google的机器学习例子网站: Seedbank; 用Kotlin SDL包装一个Java Builder.
 
