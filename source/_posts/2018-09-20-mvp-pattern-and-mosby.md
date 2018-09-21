@@ -189,6 +189,7 @@ mosby是处理了屏幕旋转时的状态保存的, 可以看到初始化`Activi
 因为我们的需求只是在屏幕旋转的情况下保存presenter的实例, 我们仍然需要在activity真的销毁的时候释放对presenter实例的保存.
 这里用了`activity.isChangingConfigurations()`的条件来区分activity是真的要销毁, 还是为了屏幕旋转要销毁. 
 
+PS: 说到状态保存和恢复, 之前的一篇博客写得很详细, 可以参考一下: [Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复](https://www.cnblogs.com/mengdd/p/5582244.html)
 
 ## 其他
 Mosby还支持LCE(Loading-Content-Error)和ViewState, 为开发者省去更多套路化的代码, 还有处理屏幕旋转之后的状态恢复.
