@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android Weekly Issue #244February 12th, 2017Android Weekly Issue #244本期内容包括: Android Fragments使用教程; ClassyShark使用; Firebase的Personal App Indexing功能引出的一些权限问题; 关于应用内没有提供Privacy Policy的后续处理; Kotlin中的anno">
+<meta name="keywords" content="Android,Fragment,Android Weekly,Android 7,Nougat,Kotlin,Testing,FileProvider,Firebase,ClassyShark,Permission,Privacy Policy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 244">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #244February 12th, 2017Android Weekly Issue #244本期内容包括: Android Fragments使用教程; ClassyShark使用; Firebase的Personal App Indexing功能引出的一些权限问题; 关于应用内没有提供Privacy Policy的后续处理; Kotlin中的anno">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-17T06:43:57.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Weekly Notes Issue 244">
+<meta name="twitter:description" content="Android Weekly Issue #244February 12th, 2017Android Weekly Issue #244本期内容包括: Android Fragments使用教程; ClassyShark使用; Firebase的Personal App Indexing功能引出的一些权限问题; 关于应用内没有提供Privacy Policy的后续处理; Kotlin中的anno">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 244 | Meng's pages</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Meng's pages</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Weekly Notes Issue 244
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-02-13 14:53:29" itemprop="dateCreated datePublished" datetime="2017-02-13T14:53:29+08:00">2017-02-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Android-Weekly-Issue-244"><a href="#Android-Weekly-Issue-244" class="headerlink" title="Android Weekly Issue #244"></a>Android Weekly Issue #244</h1><p>February 12th, 2017<br><a href="http://androidweekly.net/issues/issue-244" target="_blank" rel="noopener">Android Weekly Issue #244</a><br>本期内容包括: Android Fragments使用教程; ClassyShark使用; Firebase的Personal App Indexing功能引出的一些权限问题; 关于应用内没有提供Privacy Policy的后续处理; Kotlin中的annotation processor讨论; Pull和Push模式的讲解; 为什么Android测试这么难; Android 7 Nougat不再支持用Intent发送<code>file:// URI</code>, 应用需要改用<code>FileProvider</code>实现原有功能.<br><a id="more"></a></p>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Android-Fragments-Tutorial-An-Introduction"><a href="#Android-Fragments-Tutorial-An-Introduction" class="headerlink" title="Android Fragments Tutorial: An Introduction"></a><a href="https://www.raywenderlich.com/149112/android-fragments-tutorial-introduction" target="_blank" rel="noopener">Android Fragments Tutorial: An Introduction</a></h2><p>一篇如何使用Fragments的讲解.</p>
+<h2 id="Exporting-data-from-ClassyShark"><a href="#Exporting-data-from-ClassyShark" class="headerlink" title="Exporting data from ClassyShark"></a><a href="https://medium.com/@BorisFarber/exporting-data-from-classyshark-e3cf3fe3fab8#.e2r76detr" target="_blank" rel="noopener">Exporting data from ClassyShark</a></h2><p>用<a href="https://github.com/google/android-classyshark" target="_blank" rel="noopener">ClassyShark</a>的APK dashboardA检查apk的问题(重复依赖, 过期依赖等).<br>本文介绍如何一次性导出全部的数据.</p>
+<h2 id="Post-mortem-Firebase-vs-permissions"><a href="#Post-mortem-Firebase-vs-permissions" class="headerlink" title="Post-mortem : Firebase vs permissions"></a><a href="http://jeremie-martinez.com/2017/02/08/firebase-permissions/" target="_blank" rel="noopener">Post-mortem : Firebase vs permissions</a></h2><p>两周前Firebase发布了一个新功能: <a href="https://firebase.google.com/docs/app-indexing/android/personal-content" target="_blank" rel="noopener">Personal App Indexing</a>. 之后遇到了一些权限相关的问题, 本文讨论遇到的具体问题和解决方法, 然后他们发布了一个hotfix版本.</p>
+<h2 id="Did-you-get-one-of-these-Google-Play-Developer-Policy-Violation-Emails"><a href="#Did-you-get-one-of-these-Google-Play-Developer-Policy-Violation-Emails" class="headerlink" title="Did you get one of these Google Play Developer Policy Violation Emails?"></a><a href="https://medium.com/@ali.muzaffar/did-you-get-one-of-these-google-play-developer-policy-violation-emails-6c529ceb082d#.glctt861o" target="_blank" rel="noopener">Did you get one of these Google Play Developer Policy Violation Emails?</a></h2><p>如果你的应用使用了一些”dangerous permissions”, 你需要在应用或者Google Play上附有privacy policy, 否则你就会收到Google Play的邮件.</p>
+<p>作者他的Demo app也收到了这种邮件, 所以他提供了他的解决方法.</p>
+<p>他找到了这个<a href="https://privacypolicytemplate.net/" target="_blank" rel="noopener">网站</a>, 这是他最后写成的<a href="https://gist.github.com/alphamu/c42f6c3fce530ca5e804e672fed70d78" target="_blank" rel="noopener">Gist</a>. 利用<a href="https://rawgit.com/" target="_blank" rel="noopener">RawGit</a>可以将github上的文件url转成用HTML显示的url. 之后在app中设置一个链接, 点击打开这个url就可以了.</p>
+<h2 id="Pushing-the-limits-of-Kotlin-annotation-processing"><a href="#Pushing-the-limits-of-Kotlin-annotation-processing" class="headerlink" title="Pushing the limits of Kotlin annotation processing"></a><a href="https://medium.com/@workingkills/pushing-the-limits-of-kotlin-annotation-processing-8611027b6711#.7crkk5m68" target="_blank" rel="noopener">Pushing the limits of Kotlin annotation processing</a></h2><p>关于Kotlin的annotation processor支持, 是一个很复杂的问题, 作者讨论了关于这个问题的历史进展和当前的局限性.</p>
+<h2 id="Pull-vs-Push-amp-Imperative-vs-Reactive-Reactive-Programming"><a href="#Pull-vs-Push-amp-Imperative-vs-Reactive-Reactive-Programming" class="headerlink" title="Pull vs Push &amp; Imperative vs Reactive - Reactive Programming"></a><a href="http://www.uwanttolearn.com/android/pull-vs-push-imperative-vs-reactive-reactive-programming-android-rxjava2-hell-part2/" target="_blank" rel="noopener">Pull vs Push &amp; Imperative vs Reactive - Reactive Programming</a></h2><p>作者用浅显的代码例子解释了Pull和Push模式的区别, 一个是自己不停地查询读取, 另一个是等改变发生的时候收到通知. </p>
+<h2 id="Why-Android-Testing-is-so-Hard-Historical-Edition"><a href="#Why-Android-Testing-is-so-Hard-Historical-Edition" class="headerlink" title="Why Android Testing is so Hard: Historical Edition"></a><a href="https://www.philosophicalhacker.com/post/why-android-testing-is-so-hard-historical-edition/" target="_blank" rel="noopener">Why Android Testing is so Hard: Historical Edition</a></h2><p>为什么Android项目这么难测试呢? 作者认为主要有三方面的历史原因: </p>
+<ul>
+<li>Performance方面的考虑. </li>
+<li>对Android组件的误解.</li>
+<li>Android和Unit Testing出现的时机.</li>
+</ul>
+<h2 id="Sharing-files-though-Intents-are-you-ready-for-Nougat"><a href="#Sharing-files-though-Intents-are-you-ready-for-Nougat" class="headerlink" title="Sharing files though Intents: are you ready for Nougat?"></a><a href="https://medium.com/@quiro91/sharing-files-though-intents-are-you-ready-for-nougat-70f7e9294a0b#.h3f06hxg7A" target="_blank" rel="noopener">Sharing files though Intents: are you ready for Nougat?</a></h2><p>Android 7 Nougat引入了一些文件系统的权限变化, 来增强安全性.</p>
+<p>如果你已经把<code>targetSdkVersion</code>升到了24+, 并且你用Intent发送一个<code>file:// URI</code>, 你将会得到一个<code>FileUriExposedException</code>.</p>
+<p>解决办法是使用<code>FileProvider</code>.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="SlidingSquaresLoader"><a href="#SlidingSquaresLoader" class="headerlink" title="SlidingSquaresLoader"></a><a href="https://github.com/biodunalfet/SlidingSquaresLoader" target="_blank" rel="noopener">SlidingSquaresLoader</a></h2><p>一个有趣的动画方块的loading图案.</p>
+<h2 id="ason"><a href="#ason" class="headerlink" title="ason"></a><a href="https://github.com/afollestad/ason" target="_blank" rel="noopener">ason</a></h2><p>一个JSON库, 简化了序列化, 更易使用.</p>
+<h2 id="Intro-To-RxJava"><a href="#Intro-To-RxJava" class="headerlink" title="Intro-To-RxJava"></a><a href="https://github.com/PareshMayani/Intro-To-RxJava" target="_blank" rel="noopener">Intro-To-RxJava</a></h2><p>上一期有一篇文章提过的RxJava练习项目.</p>
+<h2 id="chuck"><a href="#chuck" class="headerlink" title="chuck"></a><a href="https://github.com/jgilfelt/chuck" target="_blank" rel="noopener">chuck</a></h2><p>An in-app HTTP inspector for Android OkHttp clients.<br>截取请求和响应, 点击通知可以查看UI显示.</p>
+<h2 id="android-parcelable-intellij-plugin-kotlin"><a href="#android-parcelable-intellij-plugin-kotlin" class="headerlink" title="android-parcelable-intellij-plugin-kotlin"></a><a href="https://github.com/nekocode/android-parcelable-intellij-plugin-kotlin" target="_blank" rel="noopener">android-parcelable-intellij-plugin-kotlin</a></h2><p>为kotlin的类生成Parcelable代码的插件.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Fragment/" rel="tag"># Fragment</a>
+          
+            <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+          
+            <a href="/tags/Android-7/" rel="tag"># Android 7</a>
+          
+            <a href="/tags/Nougat/" rel="tag"># Nougat</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+            <a href="/tags/Testing/" rel="tag"># Testing</a>
+          
+            <a href="/tags/FileProvider/" rel="tag"># FileProvider</a>
+          
+            <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+          
+            <a href="/tags/ClassyShark/" rel="tag"># ClassyShark</a>
+          
+            <a href="/tags/Permission/" rel="tag"># Permission</a>
+          
+            <a href="/tags/Privacy-Policy/" rel="tag"># Privacy Policy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" rel="next" title="Android Weekly Notes Issue 243">
+                <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 243
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" rel="prev" title="Android Weekly Notes Issue 245">
+                Android Weekly Notes Issue 245 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-244"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #244</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Fragments-Tutorial-An-Introduction"><span class="nav-number">2.1.</span> <span class="nav-text">Android Fragments Tutorial: An Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exporting-data-from-ClassyShark"><span class="nav-number">2.2.</span> <span class="nav-text">Exporting data from ClassyShark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Post-mortem-Firebase-vs-permissions"><span class="nav-number">2.3.</span> <span class="nav-text">Post-mortem : Firebase vs permissions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Did-you-get-one-of-these-Google-Play-Developer-Policy-Violation-Emails"><span class="nav-number">2.4.</span> <span class="nav-text">Did you get one of these Google Play Developer Policy Violation Emails?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pushing-the-limits-of-Kotlin-annotation-processing"><span class="nav-number">2.5.</span> <span class="nav-text">Pushing the limits of Kotlin annotation processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pull-vs-Push-amp-Imperative-vs-Reactive-Reactive-Programming"><span class="nav-number">2.6.</span> <span class="nav-text">Pull vs Push &amp; Imperative vs Reactive - Reactive Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Android-Testing-is-so-Hard-Historical-Edition"><span class="nav-number">2.7.</span> <span class="nav-text">Why Android Testing is so Hard: Historical Edition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sharing-files-though-Intents-are-you-ready-for-Nougat"><span class="nav-number">2.8.</span> <span class="nav-text">Sharing files though Intents: are you ready for Nougat?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SlidingSquaresLoader"><span class="nav-number">3.1.</span> <span class="nav-text">SlidingSquaresLoader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ason"><span class="nav-number">3.2.</span> <span class="nav-text">ason</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intro-To-RxJava"><span class="nav-number">3.3.</span> <span class="nav-text">Intro-To-RxJava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chuck"><span class="nav-number">3.4.</span> <span class="nav-text">chuck</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android-parcelable-intellij-plugin-kotlin"><span class="nav-number">3.5.</span> <span class="nav-text">android-parcelable-intellij-plugin-kotlin</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

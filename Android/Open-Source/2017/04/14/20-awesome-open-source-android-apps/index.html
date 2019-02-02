@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="20+个很棒的Android开源项目本文摘自文章: 20+ Awesome Open-Source Android Apps To Boost Your Development Skills. 考虑到原文在墙外, 故分享在此, 希望让更多开发者看到.">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20+个很棒的Android开源项目">
+<meta property="og:url" content="http://mengdd.github.io/Android/Open-Source/2017/04/14/20-awesome-open-source-android-apps/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="20+个很棒的Android开源项目本文摘自文章: 20+ Awesome Open-Source Android Apps To Boost Your Development Skills. 考虑到原文在墙外, 故分享在此, 希望让更多开发者看到.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-leafpic.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-amaze-file-manager.jpeg">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-easy-sound-recoder.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-movie-guide.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-timber.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-another-monitor.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-CoCoin.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-super-clean-master.jpeg">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-KISS.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-turbo-editor.png">
+<meta property="og:image" content="http://mengdd.github.io/images/open-source-pedometer.png">
+<meta property="og:updated_time" content="2019-01-17T06:43:57.696Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20+个很棒的Android开源项目">
+<meta name="twitter:description" content="20+个很棒的Android开源项目本文摘自文章: 20+ Awesome Open-Source Android Apps To Boost Your Development Skills. 考虑到原文在墙外, 故分享在此, 希望让更多开发者看到.">
+<meta name="twitter:image" content="http://mengdd.github.io/images/open-source-leafpic.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://mengdd.github.io/Android/Open-Source/2017/04/14/20-awesome-open-source-android-apps/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>20+个很棒的Android开源项目 | Meng's pages</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Meng's pages</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Open-Source/2017/04/14/20-awesome-open-source-android-apps/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">20+个很棒的Android开源项目
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-04-14 17:09:19" itemprop="dateCreated datePublished" datetime="2017-04-14T17:09:19+08:00">2017-04-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Open-Source/" itemprop="url" rel="index"><span itemprop="name">Open Source</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="20-个很棒的Android开源项目"><a href="#20-个很棒的Android开源项目" class="headerlink" title="20+个很棒的Android开源项目"></a>20+个很棒的Android开源项目</h1><p>本文摘自文章: <a href="https://blog.aritraroy.in/20-awesome-open-source-android-apps-to-boost-your-development-skills-b62832cf0fa4" target="_blank" rel="noopener">20+ Awesome Open-Source Android Apps To Boost Your Development Skills</a>.</p>
+<p>考虑到原文在墙外, 故分享在此, 希望让更多开发者看到.</p>
+<a id="more"></a>
+<h2 id="LeafPic"><a href="#LeafPic" class="headerlink" title="LeafPic"></a><a href="https://github.com/HoraApps/LeafPic" target="_blank" rel="noopener">LeafPic</a></h2><p>难度: 初级.<br><img src="/images/open-source-leafpic.png" alt="Open Source LeafPic"></p>
+<p>图片和视频的Gallery app.<br>实现了动态主题.</p>
+<h2 id="Simple-Calendar"><a href="#Simple-Calendar" class="headerlink" title="Simple Calendar"></a><a href="https://github.com/SimpleMobileTools/Simple-Calendar" target="_blank" rel="noopener">Simple Calendar</a></h2><p>难度: 初级.</p>
+<p>一个简单好用的Calendar应用, 完全用Kotlin实现.</p>
+<p>另外可以从这个项目学习一下自定义的桌面widgets.</p>
+<h2 id="Amaze-File-Manager"><a href="#Amaze-File-Manager" class="headerlink" title="Amaze File Manager"></a><a href="https://github.com/arpitkh96/AmazeFileManager" target="_blank" rel="noopener">Amaze File Manager</a></h2><p>难度: 中级.<br><img src="/images/open-source-amaze-file-manager.jpeg" alt="Open Source Amaze File Manager"></p>
+<p>一个文件管理器.</p>
+<p>可以学习SD卡上的文件操作.</p>
+<p>但不建议学习这个项目中的编码标准.</p>
+<h2 id="Easy-Sound-Recorder"><a href="#Easy-Sound-Recorder" class="headerlink" title="Easy Sound Recorder"></a><a href="https://github.com/dkim0419/SoundRecorder" target="_blank" rel="noopener">Easy Sound Recorder</a></h2><p>难度: 初级.<br><img src="/images/open-source-easy-sound-recoder.png" alt="Open Source Easy Sound Recoder"></p>
+<p>一个简单的录音程序, 遵循Material Design.</p>
+<h2 id="MLManager"><a href="#MLManager" class="headerlink" title="MLManager"></a><a href="https://github.com/javiersantos/MLManager" target="_blank" rel="noopener">MLManager</a></h2><p>难度: 初级.</p>
+<p>一个App管理器, 可以学习如何得到所有安装应用的详细信息, 提取APK, 卸载程序等.</p>
+<h2 id="PhotoAffix"><a href="#PhotoAffix" class="headerlink" title="PhotoAffix"></a><a href="https://github.com/afollestad/photo-affix" target="_blank" rel="noopener">PhotoAffix</a></h2><p>难度: 初级.</p>
+<p>一个简单的应用, 可以水平或竖直地拼接照片.</p>
+<p>可以学习创建自定义View.</p>
+<h2 id="MovieGuide"><a href="#MovieGuide" class="headerlink" title="MovieGuide"></a><a href="https://github.com/esoxjem/MovieGuide" target="_blank" rel="noopener">MovieGuide</a></h2><p>难度: 中级.<br><img src="/images/open-source-movie-guide.png" alt="Open Source MovieGuide"></p>
+<p>一个流行电影浏览应用.<br>使用了: MVP, Clean Architecture, RxJava, Dagger2.</p>
+<h2 id="AnExplorer"><a href="#AnExplorer" class="headerlink" title="AnExplorer"></a><a href="https://github.com/1hakr/AnExplorer" target="_blank" rel="noopener">AnExplorer</a></h2><p>难度: 中级.</p>
+<p>一个轻量级的文件管理器, 为手机和平板设计.</p>
+<p>可以学到很多文件处理, 权限管理, loaders, 自定义View等相关的东西.</p>
+<h2 id="Minimal-ToDo"><a href="#Minimal-ToDo" class="headerlink" title="Minimal ToDo"></a><a href="https://github.com/avjinder/Minimal-Todo" target="_blank" rel="noopener">Minimal ToDo</a></h2><p>难度: 初级.</p>
+<p>一个Material Design的To-Do应用.<br>可以学到一些Android开发的基本知识, 适合初学者学习.</p>
+<p>但不要学习里面的包结构和代码规范, 这些不太标准.</p>
+<h2 id="Timber"><a href="#Timber" class="headerlink" title="Timber"></a><a href="https://github.com/naman14/Timber" target="_blank" rel="noopener">Timber</a></h2><p>难度: 高级.<br><img src="/images/open-source-timber.png" alt="Open Source Timber"></p>
+<p>一个很漂亮的, 功能完善的音乐播放器.</p>
+<p>这个项目很大, 所以对初学者来说想要一下把握全部的内容可能会有点困难, 但是对中高级开发者来说看一看应该会觉得挺有意思.</p>
+<h2 id="AnotherMonitor"><a href="#AnotherMonitor" class="headerlink" title="AnotherMonitor"></a><a href="https://github.com/AntonioRedondo/AnotherMonitor" target="_blank" rel="noopener">AnotherMonitor</a></h2><p>难度: 中级.<br><img src="/images/open-source-another-monitor.png" alt="Open Source AnotherMonitor"></p>
+<p>如果你想要学监控Android进程, 内存占用, CPU使用以及与这些相关的东西, 这个项目很适合.</p>
+<p>这个项目很小也很好理解, 但是编码和架构设计不是很好, 不应该遵循.</p>
+<h2 id="InstaMaterial"><a href="#InstaMaterial" class="headerlink" title="InstaMaterial"></a><a href="https://github.com/frogermcs/InstaMaterial" target="_blank" rel="noopener">InstaMaterial</a></h2><p>难度: 初级.</p>
+<p>这是一个学习Material Design的好项目. 这个项目复制了一些Instagram的功能, 结合了Material Design来实现.</p>
+<p>这里有很多Material Design的元素, 动画和转场.</p>
+<p>项目简单易懂, 适合各个阶段的学习者.</p>
+<h2 id="CoCoin"><a href="#CoCoin" class="headerlink" title="CoCoin"></a><a href="https://github.com/Nightonke/CoCoin" target="_blank" rel="noopener">CoCoin</a></h2><p>难度: 简单.<br><img src="/images/open-source-CoCoin.png" alt="Open Source CoCoin"></p>
+<p>一个详尽的个人财务记账应用, 界面干净漂亮.</p>
+<p>如果你想学习如何处理大量用户数据, 根据这些数据绘制各类图表, 写一些很酷的自定义View, 那么这个开源项目很适合你.</p>
+<h2 id="OmniNotes"><a href="#OmniNotes" class="headerlink" title="OmniNotes"></a><a href="https://github.com/federicoiosue/Omni-Notes" target="_blank" rel="noopener">OmniNotes</a></h2><p>难度: 中级.</p>
+<p>如果你想建一个跟Evernote类似的功能强大的笔记应用, 那么这个项目可以看看.</p>
+<p>这个项目很大, 有很多功能比如分享和搜索笔记, 上传图片, 视频, 音频, 在笔记中绘制草图, 添加提醒等. </p>
+<h2 id="Clip-Stack"><a href="#Clip-Stack" class="headerlink" title="Clip Stack"></a><a href="https://github.com/heruoxin/Clip-Stack" target="_blank" rel="noopener">Clip Stack</a></h2><p>难度: 初级.</p>
+<p>一个简单的剪贴板管理器.<br>项目很小, 简单易懂.</p>
+<p>但是包结构和代码架构, 命名及代码规范不推荐学习. 并且这个项目已经不再维护了.</p>
+<h2 id="Super-Clean-Master"><a href="#Super-Clean-Master" class="headerlink" title="Super Clean Master"></a><a href="https://github.com/joyoyao/superCleanMaster" target="_blank" rel="noopener">Super Clean Master</a></h2><p>难度: 高级.<br><img src="/images/open-source-super-clean-master.jpeg" alt="Open Source Super Clean Master"></p>
+<p>一键清理开源版, 包括内存加速, 缓存清理, 自启管理, 软件管理等.</p>
+<p>代码很优雅, 但是项目有一点复杂, 如果你想弄明白所有的事情, 得多花一点时间.</p>
+<h2 id="Travel-Mate"><a href="#Travel-Mate" class="headerlink" title="Travel Mate"></a><a href="https://github.com/Swati4star/Travel-Mate" target="_blank" rel="noopener">Travel Mate</a></h2><p>难度: 中级.</p>
+<p>一个旅游导览类应用, 依赖于位置和地图.<br>代码质量尚未达到标准, 但是对初级和中级开发者来说还是有很多值得学习的地方.</p>
+<h2 id="KISS"><a href="#KISS" class="headerlink" title="KISS"></a><a href="https://github.com/Neamar/KISS" target="_blank" rel="noopener">KISS</a></h2><p>难度: 中级.<br><img src="/images/open-source-KISS.png" alt="Open Source KISS"></p>
+<p>一个简单快速轻量级的launcher应用. 可以从中学习一些比较酷的features.</p>
+<p>项目很小很简单.</p>
+<h2 id="Turbo-Editor"><a href="#Turbo-Editor" class="headerlink" title="Turbo Editor"></a><a href="https://github.com/vmihalachi/turbo-editor" target="_blank" rel="noopener">Turbo Editor</a></h2><p>难度: 中级.<br><img src="/images/open-source-turbo-editor.png" alt="Open Source Turbo Editor"></p>
+<p>一个简单但强大的文字编辑应用. 你也可以使用这个编辑器来写代码, 对不同的语言支持代码高亮.</p>
+<p>从这个项目你可以学到如何做一个稳定健壮的文字(或代码)编辑器.</p>
+<h2 id="Wally"><a href="#Wally" class="headerlink" title="Wally"></a><a href="https://github.com/Musenkishi/wally" target="_blank" rel="noopener">Wally</a></h2><p>难度: 初级.</p>
+<p>一个简单快速的壁纸应用.<br>对于初学者来说可以学到很多东西.</p>
+<p>这个应用的架构很好, 使得这个应用易于维护和扩展. 这个应用的目的虽然简单, 但是实现目的的方法很好.</p>
+<h2 id="Pedometer"><a href="#Pedometer" class="headerlink" title="Pedometer"></a><a href="https://github.com/j4velin/Pedometer" target="_blank" rel="noopener">Pedometer</a></h2><p>难度: 初级.<br><img src="/images/open-source-pedometer.png" alt="Open Source Pedometer"></p>
+<p>一个简单轻量级的计步器, 使用硬件传感器来计算步数, 同时考虑到了电量使用问题, 最小化电量消耗.</p>
+<p>对于学习计步器实现来说是一个好项目, 但是代码标准和设计架构可能不够好.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2017/04/13/android-weekly-notes-issue-252/" rel="next" title="Android Weekly Notes Issue 252">
+                <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 252
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2017/04/18/android-weekly-notes-issue-253/" rel="prev" title="Android Weekly Notes Issue 253">
+                Android Weekly Notes Issue 253 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#20-个很棒的Android开源项目"><span class="nav-number">1.</span> <span class="nav-text">20+个很棒的Android开源项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LeafPic"><span class="nav-number">1.1.</span> <span class="nav-text">LeafPic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-Calendar"><span class="nav-number">1.2.</span> <span class="nav-text">Simple Calendar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Amaze-File-Manager"><span class="nav-number">1.3.</span> <span class="nav-text">Amaze File Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Easy-Sound-Recorder"><span class="nav-number">1.4.</span> <span class="nav-text">Easy Sound Recorder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MLManager"><span class="nav-number">1.5.</span> <span class="nav-text">MLManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PhotoAffix"><span class="nav-number">1.6.</span> <span class="nav-text">PhotoAffix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MovieGuide"><span class="nav-number">1.7.</span> <span class="nav-text">MovieGuide</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AnExplorer"><span class="nav-number">1.8.</span> <span class="nav-text">AnExplorer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minimal-ToDo"><span class="nav-number">1.9.</span> <span class="nav-text">Minimal ToDo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Timber"><span class="nav-number">1.10.</span> <span class="nav-text">Timber</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AnotherMonitor"><span class="nav-number">1.11.</span> <span class="nav-text">AnotherMonitor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InstaMaterial"><span class="nav-number">1.12.</span> <span class="nav-text">InstaMaterial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CoCoin"><span class="nav-number">1.13.</span> <span class="nav-text">CoCoin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OmniNotes"><span class="nav-number">1.14.</span> <span class="nav-text">OmniNotes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clip-Stack"><span class="nav-number">1.15.</span> <span class="nav-text">Clip Stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Super-Clean-Master"><span class="nav-number">1.16.</span> <span class="nav-text">Super Clean Master</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Travel-Mate"><span class="nav-number">1.17.</span> <span class="nav-text">Travel Mate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KISS"><span class="nav-number">1.18.</span> <span class="nav-text">KISS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Turbo-Editor"><span class="nav-number">1.19.</span> <span class="nav-text">Turbo Editor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wally"><span class="nav-number">1.20.</span> <span class="nav-text">Wally</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pedometer"><span class="nav-number">1.21.</span> <span class="nav-text">Pedometer</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

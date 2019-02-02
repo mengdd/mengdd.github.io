@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android Weekly Issue #230November 6th, 2016Android Weekly Issue #230. Android Weekly笔记, 本期内容包括: Mockito的扩展; ConstraintLayout的链式约束; Kotlin的Async-Await; RxJava2.0; 屏幕旋转导致的Activity重建; Throwable类的设计问题; Es">
+<meta name="keywords" content="Android,Android Weekly,Espresso,MVP,RxJava,Kotlin,ConstraintLayout,Mockito,Async-Await,RxJava2,Activity,Rotation,Retrofit,JDK,Authentication,KeyStore,proguard,WifiManager,ConfigurationManager,Material Design">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 230">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/11/11/android-weekly-notes-issue-230/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #230November 6th, 2016Android Weekly Issue #230. Android Weekly笔记, 本期内容包括: Mockito的扩展; ConstraintLayout的链式约束; Kotlin的Async-Await; RxJava2.0; 屏幕旋转导致的Activity重建; Throwable类的设计问题; Es">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-17T06:43:57.687Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Weekly Notes Issue 230">
+<meta name="twitter:description" content="Android Weekly Issue #230November 6th, 2016Android Weekly Issue #230. Android Weekly笔记, 本期内容包括: Mockito的扩展; ConstraintLayout的链式约束; Kotlin的Async-Await; RxJava2.0; 屏幕旋转导致的Activity重建; Throwable类的设计问题; Es">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/11/android-weekly-notes-issue-230/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 230 | Meng's pages</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Meng's pages</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/11/android-weekly-notes-issue-230/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Weekly Notes Issue 230
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-11-11 12:57:21" itemprop="dateCreated datePublished" datetime="2016-11-11T12:57:21+08:00">2016-11-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Android-Weekly-Issue-230"><a href="#Android-Weekly-Issue-230" class="headerlink" title="Android Weekly Issue #230"></a>Android Weekly Issue #230</h1><p>November 6th, 2016<br><a href="http://androidweekly.net/issues/issue-230" target="_blank" rel="noopener">Android Weekly Issue #230</a>.</p>
+<p>Android Weekly笔记, 本期内容包括: Mockito的扩展; ConstraintLayout的链式约束; Kotlin的Async-Await; RxJava2.0; 屏幕旋转导致的Activity重建; Throwable类的设计问题; Espresso测试中如何等待异步请求返回; Kotlin的扩展和运算符重载; Android KeyStore实现用户验证.</p>
+<p>代码部分有proguard的库, mvp的库和WifiManager, ConfigurationManager的包装库.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Extending-Mockito"><a href="#Extending-Mockito" class="headerlink" title="Extending Mockito"></a><a href="http://jeroenmols.com/blog/2016/10/31/mockitomatchers/" target="_blank" rel="noopener">Extending Mockito</a></h2><p>这篇文章讲了如何扩展Mockito, 简化对参数的验证.</p>
+<p>首先作者举了之前验证参数的例子, 用的是ArgumentCaptor, 写起来很麻烦, 用了自定义的matcher之后简化了很多.</p>
+<h2 id="ConstraintLayout-Chains-–-Part-2"><a href="#ConstraintLayout-Chains-–-Part-2" class="headerlink" title="ConstraintLayout Chains – Part 2"></a><a href="https://blog.stylingandroid.com/constraintlayout-chains-part-2/" target="_blank" rel="noopener">ConstraintLayout Chains – Part 2</a></h2><p>上一篇文章讲过在ConstraintLayout中如何创建对称的链式约束, 本篇文章介绍chainStyle的不同设置和比较.</p>
+<p>默认的spread chain: 均匀分布;<br>inside spread chain: 边缘元素顶边, 中间均匀分布.</p>
+<p>如果指定了权重, 将会按照权重布局. 那么spread chain和inside spread chain就没有区别了.</p>
+<p>packed chain: 默认会把所有元素都放在一起放在中间, 可以指定bias来定义偏移基准, 默认bias是0.5, bias设置为0.25的意思就是往左偏. </p>
+<h2 id="A-glimpse-of-Async-Await-on-Android"><a href="#A-glimpse-of-Async-Await-on-Android" class="headerlink" title="A glimpse of Async-Await on Android"></a><a href="https://medium.com/@haarman.niek/async-await-in-android-f0202cf31088#.bdf3jarxd" target="_blank" rel="noopener">A glimpse of Async-Await on Android</a></h2><p>Kotlin 1.1推出了<a href="https://github.com/Kotlin/kotlin-coroutines" target="_blank" rel="noopener">coroutines</a>, 这是一个让计算可以在某个点暂停然后之后又恢复的功能, 例子是几年前C#的<a href="http://blog.stephencleary.com/2012/02/async-and-await.html" target="_blank" rel="noopener">Async-Await</a>.</p>
+<p>作者先举例说明了异步操作的几种常见实现, 最后结合自己的库用Async-Await做了一个例子.</p>
+<h2 id="What’s-different-in-2-0"><a href="#What’s-different-in-2-0" class="headerlink" title="What’s different in 2.0"></a><a href="https://github.com/ReactiveX/RxJava/wiki/What&#39;s-different-in-2.0" target="_blank" rel="noopener">What’s different in 2.0</a></h2><p>RxJava2.0.0已经发布了. 这是它的wiki page来介绍2.0有什么不同.</p>
+<h2 id="Activity-Revival-and-the-case-of-the-Rotating-Device"><a href="#Activity-Revival-and-the-case-of-the-Rotating-Device" class="headerlink" title="Activity Revival and the case of the Rotating Device"></a><a href="https://medium.com/google-developers/activity-revival-and-the-case-of-the-rotating-device-167e34f9a30d#.fwrqz8nit" target="_blank" rel="noopener">Activity Revival and the case of the Rotating Device</a></h2><p>本篇文章讲configuration变化(比如屏幕旋转)导致的Activity重建.</p>
+<p>为什么configuration变化的时候要重建Activity呢? 因为系统想要尽力地做一些helpful的事情, 希望在这种时候能重新加载正确的资源.</p>
+<p>怎么处理呢?</p>
+<p>方法一: 让系统自动处理. 在屏幕旋转时, <code>onSaveInstanceState()</code>会在Activity销毁前调用, 可以存储一些状态, 之后重建的时候从bundle中拿出来恢复.</p>
+<p>方法二: 自己处理. 如果你想要获取更多控制, 那么你可以在manifest中声明<code>configChanges</code>类型, 然后在Activity中覆写<code>onConfigurationChanged()</code>方法, 来自己做处理.</p>
+<p>另外文章中还讨论了网络请求, 屏幕方向设置, retained fragment的使用等.</p>
+<h2 id="RxJava-and-Retrofit-Throwing-a-Tantrum"><a href="#RxJava-and-Retrofit-Throwing-a-Tantrum" class="headerlink" title="RxJava and Retrofit Throwing a Tantrum"></a><a href="https://medium.com/square-corner-blog/no-cause-for-concern-rxjava-and-retrofit-throwing-a-tantrum-96c9e4ba8a6c#.p1ck4zijo" target="_blank" rel="noopener">RxJava and Retrofit Throwing a Tantrum</a></h2><p>作者讨论了他们在项目中遇到的一个问题.<br>他们用<code>RxJavaHooks.enableAssemblyTracking();</code>来收集RxJava崩溃栈信息, 可以显示出到底是哪一个Observable崩了.<br>使用这个工具以后发现了一个问题, 进而研究了JDK的<code>Throwable</code>类.</p>
+<p>原来cause不存在(this)和cause未知(null)是两种不同的情况, 但是<code>Throwable</code>的<code>getCause()</code>方法都会返回null.</p>
+<h2 id="Retrofitting-Espresso"><a href="#Retrofitting-Espresso" class="headerlink" title="Retrofitting Espresso"></a><a href="http://collectiveidea.com/blog/archives/2016/10/13/retrofitting-espresso/" target="_blank" rel="noopener">Retrofitting Espresso</a></h2><p>用Espresso做测试, 如何等待网络请求结束再验证UI.</p>
+<h2 id="Composing-functions-in-Kotlin-with-extensions-and-operators"><a href="#Composing-functions-in-Kotlin-with-extensions-and-operators" class="headerlink" title="Composing functions in Kotlin with extensions and operators"></a><a href="https://www.novoda.com/blog/composing-functions-in-kotlin-with-extensions-and-operators/" target="_blank" rel="noopener">Composing functions in Kotlin with extensions and operators</a></h2><p>结合Kotlin的extensions和operator overloading功能, 改善function, 让代码变得更优雅.</p>
+<h2 id="Authentication-sucks-Bad-security-too"><a href="#Authentication-sucks-Bad-security-too" class="headerlink" title="Authentication sucks. Bad security too"></a><a href="https://medium.com/@flschweiger/authentication-sucks-bad-security-too-345ed20463d4#.yl40vbtgd" target="_blank" rel="noopener">Authentication sucks. Bad security too</a></h2><p>一个例子, 说明为什么老的验证方法用户体验不好, 我们如何在仍然考虑用户安全的情况下进行改善.</p>
+<p>解决方案是用Android 6.0推出的Android Keystore.<br>作者展示了如何实现并提供了<a href="https://github.com/flschweiger/SafeApp" target="_blank" rel="noopener">Demo</a>.</p>
+<h1 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h1><h2 id="Eight-don’ts-for-your-Material-Design-app"><a href="#Eight-don’ts-for-your-Material-Design-app" class="headerlink" title="Eight don’ts for your Material Design app"></a><a href="https://blog.prototypr.io/common-material-design-bad-practices-to-avoid-b7995f251329#.ij9u38lu7" target="_blank" rel="noopener">Eight don’ts for your Material Design app</a></h2><p>Material Design app需要避免的8个点.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Android-proguards"><a href="#Android-proguards" class="headerlink" title="Android-proguards"></a><a href="https://github.com/yongjhih/android-proguards" target="_blank" rel="noopener">Android-proguards</a></h2><p>使用一行就可以加上所有流行库的proguard.</p>
+<h2 id="Moxy"><a href="#Moxy" class="headerlink" title="Moxy"></a><a href="https://github.com/Arello-Mobile/Moxy" target="_blank" rel="noopener">Moxy</a></h2><p>一个MVP的库.</p>
+<h2 id="WiseFy"><a href="#WiseFy" class="headerlink" title="WiseFy"></a><a href="https://github.com/isuPatches/WiseFy" target="_blank" rel="noopener">WiseFy</a></h2><p>包装了Android的WifiManager和ConnectivityManager的一个库.</p>
+<h1 id="VIDEOS-amp-PODCASTS"><a href="#VIDEOS-amp-PODCASTS" class="headerlink" title="VIDEOS &amp; PODCASTS"></a>VIDEOS &amp; PODCASTS</h1><p><a href="https://www.youtube.com/playlist?list=PLnVy79PaFHMXJha06t6pWfkYcATV4oPvC" target="_blank" rel="noopener">Droidcon NYC 2016</a><br>所有Droidcon NYC 2016的视频资源.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+          
+            <a href="/tags/Espresso/" rel="tag"># Espresso</a>
+          
+            <a href="/tags/MVP/" rel="tag"># MVP</a>
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+            <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+          
+            <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+          
+            <a href="/tags/Async-Await/" rel="tag"># Async-Await</a>
+          
+            <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+          
+            <a href="/tags/Activity/" rel="tag"># Activity</a>
+          
+            <a href="/tags/Rotation/" rel="tag"># Rotation</a>
+          
+            <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
+          
+            <a href="/tags/JDK/" rel="tag"># JDK</a>
+          
+            <a href="/tags/Authentication/" rel="tag"># Authentication</a>
+          
+            <a href="/tags/KeyStore/" rel="tag"># KeyStore</a>
+          
+            <a href="/tags/proguard/" rel="tag"># proguard</a>
+          
+            <a href="/tags/WifiManager/" rel="tag"># WifiManager</a>
+          
+            <a href="/tags/ConfigurationManager/" rel="tag"># ConfigurationManager</a>
+          
+            <a href="/tags/Material-Design/" rel="tag"># Material Design</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/" rel="next" title="Retrofit结合RxJava使用指南">
+                <i class="fa fa-chevron-left"></i> Retrofit结合RxJava使用指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/" rel="prev" title="Android Weekly Notes Issue 231">
+                Android Weekly Notes Issue 231 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-230"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #230</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Extending-Mockito"><span class="nav-number">2.1.</span> <span class="nav-text">Extending Mockito</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout-Chains-–-Part-2"><span class="nav-number">2.2.</span> <span class="nav-text">ConstraintLayout Chains – Part 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-glimpse-of-Async-Await-on-Android"><span class="nav-number">2.3.</span> <span class="nav-text">A glimpse of Async-Await on Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What’s-different-in-2-0"><span class="nav-number">2.4.</span> <span class="nav-text">What’s different in 2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity-Revival-and-the-case-of-the-Rotating-Device"><span class="nav-number">2.5.</span> <span class="nav-text">Activity Revival and the case of the Rotating Device</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RxJava-and-Retrofit-Throwing-a-Tantrum"><span class="nav-number">2.6.</span> <span class="nav-text">RxJava and Retrofit Throwing a Tantrum</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Retrofitting-Espresso"><span class="nav-number">2.7.</span> <span class="nav-text">Retrofitting Espresso</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Composing-functions-in-Kotlin-with-extensions-and-operators"><span class="nav-number">2.8.</span> <span class="nav-text">Composing functions in Kotlin with extensions and operators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Authentication-sucks-Bad-security-too"><span class="nav-number">2.9.</span> <span class="nav-text">Authentication sucks. Bad security too</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Design"><span class="nav-number">3.</span> <span class="nav-text">Design</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Eight-don’ts-for-your-Material-Design-app"><span class="nav-number">3.1.</span> <span class="nav-text">Eight don’ts for your Material Design app</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-proguards"><span class="nav-number">4.1.</span> <span class="nav-text">Android-proguards</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Moxy"><span class="nav-number">4.2.</span> <span class="nav-text">Moxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WiseFy"><span class="nav-number">4.3.</span> <span class="nav-text">WiseFy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VIDEOS-amp-PODCASTS"><span class="nav-number">5.</span> <span class="nav-text">VIDEOS &amp; PODCASTS</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

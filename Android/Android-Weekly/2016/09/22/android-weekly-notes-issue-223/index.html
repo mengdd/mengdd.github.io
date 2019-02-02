@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android Weekly Issue #223September 18th, 2016Android Weekly Issue #223 本期内容包括:Offline时间戳处理;  Accessibility的安全问题可能并不是个问题; 如何在单元测试和UI测试之间共享代码; Android中的指纹认证; 编译时间Kotlin vs Java; MVP结合RxJava, 让View来处理生命周">
+<meta name="keywords" content="Android,Android Weekly,Nougat,Test,MVP,RxJava,Kotlin,Memory Leak,RxJava2,Gradle,Fingerprint,Accessibility,GCM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 223">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #223September 18th, 2016Android Weekly Issue #223 本期内容包括:Offline时间戳处理;  Accessibility的安全问题可能并不是个问题; 如何在单元测试和UI测试之间共享代码; Android中的指纹认证; 编译时间Kotlin vs Java; MVP结合RxJava, 让View来处理生命周">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-17T06:43:57.683Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Weekly Notes Issue 223">
+<meta name="twitter:description" content="Android Weekly Issue #223September 18th, 2016Android Weekly Issue #223 本期内容包括:Offline时间戳处理;  Accessibility的安全问题可能并不是个问题; 如何在单元测试和UI测试之间共享代码; Android中的指纹认证; 编译时间Kotlin vs Java; MVP结合RxJava, 让View来处理生命周">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 223 | Meng's pages</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Meng's pages</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Weekly Notes Issue 223
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-09-22 17:34:27" itemprop="dateCreated datePublished" datetime="2016-09-22T17:34:27+08:00">2016-09-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Android-Weekly-Issue-223"><a href="#Android-Weekly-Issue-223" class="headerlink" title="Android Weekly Issue #223"></a>Android Weekly Issue #223</h1><p>September 18th, 2016<br><a href="http://androidweekly.net/issues/issue-223" target="_blank" rel="noopener">Android Weekly Issue #223</a></p>
+<p>本期内容包括:<br>Offline时间戳处理;  Accessibility的安全问题可能并不是个问题; 如何在单元测试和UI测试之间共享代码; Android中的指纹认证; 编译时间Kotlin vs Java; MVP结合RxJava, 让View来处理生命周期; RxJava2预览; 内存泄露处理; Gradle相关等等.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Offline-First-Introducing-TrueTime-for-Android"><a href="#Offline-First-Introducing-TrueTime-for-Android" class="headerlink" title="Offline First: Introducing TrueTime for Android"></a><a href="https://tech.instacart.com/truetime/" target="_blank" rel="noopener">Offline First: Introducing TrueTime for Android</a></h2><p>TrueTime是一个NTP library for <a href="https://github.com/instacart/truetime.swift" target="_blank" rel="noopener">Swift</a> and <a href="https://github.com/instacart/truetime-android" target="_blank" rel="noopener">Android</a>.</p>
+<p>其中NTP是Network Time Protocol.</p>
+<p>作者他们有一个购物app, 但是时断时续的网络降低了用户体验, 所以他们进行了离线迁移, 准备出一系列文章分享相关的想法和在此过程中学到的东西.</p>
+<p>本文是第一篇, 关于时间.</p>
+<p>由于在设置里可以设置设备的日期和时间, 所以设备的时间并不一定是真实的时间, 我们在程序里<code>new Date()</code>得到的其实是设备时间.</p>
+<p>关于真实时间的计算, 他们开源了TrueTime库, Android和iOS都能用.</p>
+<p>TrueTime如何计算真实时间的呢? 它其实是向NTP的server发了请求, 然后计算出的.</p>
+<p>文中和库都说明了用法.</p>
+<h2 id="Android-Security-and-Accessibility"><a href="#Android-Security-and-Accessibility" class="headerlink" title="Android Security and Accessibility"></a><a href="https://medium.com/@ataulm/a-few-weeks-ago-android-weekly-promoted-a-post-highlighting-a-security-issue-with-the-android-5eae7ff6b8aa#.p25cbw2wl" target="_blank" rel="noopener">Android Security and Accessibility</a></h2><p>之前有一个<a href="https://android.jlelse.eu/android-accessibility-75fdc5810025#.94tpbl6z2" target="_blank" rel="noopener">文章</a>说Accessiblity存在安全隐患, 这个服务可能可以访问到一些隐私信息, 比如密码.</p>
+<p>但是这篇文章的作者觉得前一篇文章作者的解决方案不是很好.</p>
+<p>因为当用户开启Accessibility权限的时候, Android就已经给出了警告, 说明敏感信息可能会被观察到. 第三方的keyboard也可以访问这些信息, Android也是在开启的时候给出了警告.</p>
+<p>另外对于前一篇文章作者提出的解决方案: <code>View.IMPORTANT_FOR_ACCESSIBILITY_NO</code><br>这样真正有视觉障碍的那部分用户也无法看到密码, 可能就无法登陆了.</p>
+<p>所以本文作者建议的解决方案是, 可以弹一个对话框来提醒用户, 如果用户允许了, 再继续输入.</p>
+<h2 id="Sharing-code-between-UI-amp-unit-tests"><a href="#Sharing-code-between-UI-amp-unit-tests" class="headerlink" title="Sharing code between UI &amp; unit tests"></a><a href="http://trickyandroid.com/android-test-tricks-sharing-code-between-unit-ui-tests/" target="_blank" rel="noopener">Sharing code between UI &amp; unit tests</a></h2><p>Android的测试分两种:</p>
+<p>一种是Unit tests. 单元测试, 在JVM上跑.</p>
+<p>另一种是UI测试, 需要Android设备.</p>
+<p>在Android Studio中对应<code>test</code>和<code>androidTest</code>文件夹.</p>
+<p>这两个测试文件夹之间是不共享代码的, 即一个文件夹里不能访问另一个里面的代码.</p>
+<p>但是如果我们想要共用一些代码, 是有办法解决的.</p>
+<p>首先在app/src下新建一个文件夹, 比如叫<code>testShared</code>. 里面添加要共享的代码.</p>
+<p>然后在<code>app/build.gradle</code>里面添加这个:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">android.sourceSets &#123;  </span><br><span class="line">    test &#123;</span><br><span class="line">        java.srcDirs += &quot;$projectDir/src/testShared&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    androidTest &#123;</span><br><span class="line">        java.srcDirs += &quot;$projectDir/src/testShared&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>就可以在UI测试和单元测试中共享同一份代码了.</p>
+<h2 id="Synchronously-Animating-Colors-on-Android"><a href="#Synchronously-Animating-Colors-on-Android" class="headerlink" title="Synchronously Animating Colors on Android"></a><a href="https://kylewbanks.com/blog/animating-toolbar-tablayout-floatingactionbutton-and-statusbar-background-color-on-android" target="_blank" rel="noopener">Synchronously Animating Colors on Android</a></h2><p>作者想做的一个效果是, 在切换tab的时候, 把<code>Toolbar</code>, <code>TabLayout</code>, <code>FloatingActionButton</code>还有<code>StatusBar</code>的颜色都动画地改变到另一个颜色.</p>
+<p>实现很简单, 首先用当前颜色和目标颜色建立一个<code>ValueAnimator</code>, 然后<code>addUpdateListener()</code>在更新的过程中把值set给相应的控件:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">colorAnimation.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> color = (<span class="keyword">int</span>) animator.getAnimatedValue();</span><br><span class="line"></span><br><span class="line">        toolbar.setBackgroundColor(color);</span><br><span class="line">        tabLayout.setBackgroundColor(color);</span><br><span class="line">        floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">            getWindow().setStatusBarColor(color);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line">colorAnimation.start();</span><br></pre></td></tr></table></figure></p>
+<p>其中FloatingActionButton要用<code>setBackgroundTintList()</code>.</p>
+<p>StatusBar在21及以上才支持<code>getWindow().setStatusBarColor(color);</code></p>
+<h2 id="Android-Fingerprint-Authentication"><a href="#Android-Fingerprint-Authentication" class="headerlink" title="Android Fingerprint Authentication"></a><a href="https://medium.com/@aitorvs/android-fingerprint-authentication-44c047179d9a#.3og72boir" target="_blank" rel="noopener">Android Fingerprint Authentication</a></h2><p>其实用户都不喜欢验证, 因为用户都比较懒, 不喜欢一次又一次地输入密码或者手势pattern, 但是不锁屏又不安全.</p>
+<p>指纹验证<a href="https://developer.android.com/about/versions/marshmallow/android-6.0.html#fingerprint-authentication" target="_blank" rel="noopener">Fingerprint Authentication</a>是Android M (Android 6.0, API 23)引入的. 它就是为了解决这个问题, 提升用户体验. 这种non-disturbing和easy的方式, 让我们不用在安全和用户体验之间做出妥协.</p>
+<p>如果你的应用需要做一些关键操作, 比如支付, 你需要用户在操作前授权, 那么指纹验证会很有帮助.</p>
+<p>然后作者介绍了实现的细节.</p>
+<p>最后作者附上了自己的相关库: <a href="https://github.com/aitorvs/fingerlock" target="_blank" rel="noopener">fingerlock</a>.</p>
+<h2 id="Kotlin-vs-Java-Compilation-Speed"><a href="#Kotlin-vs-Java-Compilation-Speed" class="headerlink" title="Kotlin vs Java: Compilation Speed"></a><a href="https://medium.com/keepsafe-engineering/kotlin-vs-java-compilation-speed-e6c174b39b5d#.nep65secf" target="_blank" rel="noopener">Kotlin vs Java: Compilation Speed</a></h2><p>这是作者关于Kotlin的第三篇文章, 作者在这篇文章里测试了Kotlin和Java的编译时间.</p>
+<p><strong>Clean build with No Gradle daemon</strong><br>Java编译比Kotlin快17%.</p>
+<p><strong>Clean build + Gradle daemon</strong><br><code>org.gradle.daemon=true</code></p>
+<p>Java编译比Kotlin快13%.</p>
+<p><strong>Incremental builds</strong><br><code>kotlin.incremental=true</code></p>
+<p>在clean build的时候, Java可能快10-15%, 但是在增量build + gradle daemon时, kotlin和Java一样快, 甚至可能比Java更快一些.</p>
+<h2 id="Let-the-view-handle-the-lifecycle-in-MVP-by-using-RxJava"><a href="#Let-the-view-handle-the-lifecycle-in-MVP-by-using-RxJava" class="headerlink" title="Let the view handle the lifecycle in MVP by using RxJava"></a><a href="https://medium.com/@ferhatparmak/let-the-view-handle-the-lifecycle-in-mvp-by-using-rxjava-694d67923871#.vt21pzfr0" target="_blank" rel="noopener">Let the view handle the lifecycle in MVP by using RxJava</a></h2><p>问题:<br>作者举了一个例子, 在Fragment作为View的MVP中, 如果P从service取一些数据, 然后调用View的显示方法, 则还需要知道<code>onViewCreated()</code>是不是已经调用过了.</p>
+<p>解决方案:</p>
+<p>首先创建一个Lifecycle的BehaviorSubject, 在<code>onViewCreated()</code>的时候调用<code>onNext(null)</code>.</p>
+<p>把View的方法改成返回一个Observable, presenter的方法调用View的方法时实际上是subscribe了一下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductsFragment</span> <span class="keyword">implements</span> <span class="title">ProductsView</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> ProductsPresenter presenter;</span><br><span class="line">  <span class="comment">//Lifecycle subject. It is BehaviourSubject because it can be subscribed after onViewCreated call.</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> BehaviorSubject&lt;Void&gt; onViewCreatedSubject = BehaviorSubject.create();</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Observable&lt;Void&gt; <span class="title">showProducts</span><span class="params">(List&lt;Product&gt; productList)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> onViewCreatedSubject. <span class="comment">// Wait for onViewCreated</span></span><br><span class="line">        doOnNext(<span class="keyword">new</span> Action1&lt;Object&gt;() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//Updates recyclerview adapter items</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">    onViewCreatedSubject.onNext(<span class="keyword">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Presenter:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductsFragmentPresenter</span> <span class="keyword">implements</span> <span class="title">ProductsPresenter</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> ProductsView view;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadProducts</span><span class="params">()</span></span>&#123;</span><br><span class="line">    productsService.getProducts()</span><br><span class="line">      .flatMap(<span class="keyword">new</span> Func1&lt;Object, Observable&lt;Void&gt;&gt;() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> Observable&lt;Void&gt; <span class="title">call</span><span class="params">(List&lt;Product&gt; productList)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//Return the view's observable to show products. </span></span><br><span class="line">            <span class="comment">//No need to check if the view is created!</span></span><br><span class="line">            <span class="keyword">return</span> view.showProducts(productList); </span><br><span class="line">          &#125;</span><br><span class="line">        &#125;) </span><br><span class="line">      .subscribe();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然这并不是一个完整的例子, 完整的例子还需要考虑<code>onDestroyView()</code>还有注销等情况的处理.</p>
+<h2 id="Nougat-GCM-Network-Manager"><a href="#Nougat-GCM-Network-Manager" class="headerlink" title="Nougat - GCM Network Manager"></a><a href="https://blog.stylingandroid.com/nougat-gcm-network-manager/" target="_blank" rel="noopener">Nougat - GCM Network Manager</a></h2><p>作者搞了一个message app来研究Android 7的新特性.</p>
+<p>他用到了<a href="http://ryanharter.com/blog/2016/03/22/autovalue/" target="_blank" rel="noopener">AutoValue</a>.</p>
+<p>关于Android 7的另一篇文章: <a href="https://commonsware.com/blog/2016/03/09/random-musings-n-developer-preview.html" target="_blank" rel="noopener">Random Musings on the N Developer Preview</a></p>
+<p>他们的应用首先需要周期性地生产一些消息, 关于生产消息的实现, 作者没有用<code>AlarmManager</code>, 也没有用<code>JobScheduler</code>(因为只支持API 21及以上), 而是选用了<code>GCMNetworkManager</code>.</p>
+<p>具体实现见原文, 有详细说明.<br>另: <a href="https://github.com/StylingAndroid/Nougat/tree/GCMNetworkManager" target="_blank" rel="noopener">代码</a></p>
+<p>这只是系列文章的第一篇, 后续应该会写更多.</p>
+<h2 id="TransactionTooLargeException-crashes-on-Nougat"><a href="#TransactionTooLargeException-crashes-on-Nougat" class="headerlink" title="TransactionTooLargeException crashes on Nougat"></a><a href="http://blog.sqisland.com/2016/09/transactiontoolargeexception-crashes-nougat.html" target="_blank" rel="noopener">TransactionTooLargeException crashes on Nougat</a></h2><p>作者自己的应用在Activity转换的时候遇到了一个crash: <code>java.lang.RuntimeException: android.os.TransactionTooLargeException: data parcel size 700848 bytes.</code></p>
+<p>之前应用里有相关的Warning log, 但是<br>Android 7 Nougat (API 24)把它作为异常抛出来了.</p>
+<p>产生这个问题的原因是在<code>onSaveInstanceState()</code>里面存了太多数据. 作者做了一个测试, 想看看这个限制大概是多少, 大概是500K左右. </p>
+<p>所以这里是不应该用来存储太多数据的, 应该只存状态.</p>
+<p>底下回复说每个进程都有1M的buffer来接收transactions, 但是是在没有任何其他IPC的情况下. 所以建议存储的状态数据少于100K或者50K, 当然越少越好.</p>
+<h2 id="Building-a-blazing-fast-ETC2-compressor"><a href="#Building-a-blazing-fast-ETC2-compressor" class="headerlink" title="Building a blazing fast ETC2 compressor"></a><a href="https://medium.com/@duhroach/building-a-blazing-fast-etc2-compressor-307f3e9aad99#.ixumn3e2v" target="_blank" rel="noopener">Building a blazing fast ETC2 compressor</a></h2><p>作者是Google的, 以前做游戏的, 所以致力于Performances, GPU, 数据压缩等内容.</p>
+<p>作者关注VR, 但是VR中要提升体验, 必定会增加图像的大小和质量.</p>
+<p><a href="https://en.wikipedia.org/wiki/Ericsson_Texture_Compression" target="_blank" rel="noopener">ETC textures</a> 是OpenGLES 3.0的一种标准格式.</p>
+<p>编码一个高质量的ETC2 texture会花费很多时间.<br>以在游戏界最流行的压缩工具<a href="http://malideveloper.arm.com/resources/tools/" target="_blank" rel="noopener">Mali GPU Texture Compression tool</a>为例, 作者做了实验, 证明确实要花费很多时间(平均10分钟)来encode一个图.</p>
+<p>所以作者他们开发了一个新的库: <a href="https://github.com/google/etc2comp" target="_blank" rel="noopener">etc2comp</a>, 一个很快的texture encoder.</p>
+<p>然后和之前的工具做了比较, 平均时间提高到了10秒.</p>
+<p>后来他说的技术细节我就看不懂了. 文后还有其他图像格式(JPG, PNG, WebP)相关的文章链接.</p>
+<h2 id="Low-Coupling-With-Rx-and-Dagger2-in-Android"><a href="#Low-Coupling-With-Rx-and-Dagger2-in-Android" class="headerlink" title="Low Coupling With Rx and Dagger2 in Android"></a><a href="http://www.ottodroid.net/?p=479" target="_blank" rel="noopener">Low Coupling With Rx and Dagger2 in Android</a></h2><p>作者举例展示Android程序的解耦.</p>
+<p>首先, 他展示一个高度耦合的Android程序, 然后加入Rx, 最后加入Dagger2, 从而一步一步地解耦这个项目.</p>
+<p>项目的内容是发现Network中的Services. 这里有官方的Training: <a href="https://developer.android.com/training/connect-devices-wirelessly/nsd.html" target="_blank" rel="noopener">Network Service Discovery</a>.</p>
+<h2 id="RxJava2-An-Early-Preview"><a href="#RxJava2-An-Early-Preview" class="headerlink" title="RxJava2: An Early Preview"></a><a href="https://medium.com/@theMikhail/rxjava2-an-early-preview-5b05de46b07#.ftflhi48n" target="_blank" rel="noopener">RxJava2: An Early Preview</a></h2><p>最近RxJava2有了第一个Release Candidate. 所以作者在这里先预览一下有哪些有趣的更新和新加的功能:</p>
+<p><strong>New Dependency</strong>:<br>添加了依赖: <a href="http://www.reactive-streams.org/" target="_blank" rel="noopener">ReactiveStreams</a>.</p>
+<p><strong>Imports</strong>:<br>RxJava2放在了一个不同的package下:</p>
+<p>RxJava:</p>
+<p><code>compile ‘io.reactivex:rxjava:1.0.y-SNAPSHOT’</code></p>
+<p>RxJava2:</p>
+<p><code>compile ‘io.reactivex.rxjava2:rxjava:x.y.z’</code></p>
+<p>这意味着, 你可以同时用两个版本的库. 如果你要完全迁移的话, 你需要把所有的import都改到新包.</p>
+<p><strong>Null Emissions No Longer Permitted</strong>:<br>不允许再发送null值了, 会直接抛出空指针异常.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(<span class="keyword">null</span>); <span class="comment">//don’t do this</span></span><br><span class="line">subject.onNext(<span class="keyword">null</span>); <span class="comment">//don’t do this either</span></span><br></pre></td></tr></table></figure>
+<p><strong>Under(Back)Pressure</strong>:</p>
+<p><code>Backpressure</code>是当<code>Observable</code>发射值的速度比<code>Observer</code>能处理的速度快时发生的.</p>
+<p>RxJava2引入了一个新的Observable类<code>Flowable</code>, with backpressure support.</p>
+<p><strong>Single Old and New</strong>:<br>订阅一个Single现在可以用这个:<br><code>SingleObserver&lt;T&gt;</code>.</p>
+<p><strong>Hit Me Maybe One More Type</strong>:<br>一个新的类型叫<code>Maybe</code>, 它是<code>Single</code>和<code>Completable</code>的混合体. 用来发射0或1个值.</p>
+<p><strong>New BackPressured Subject: Processor</strong>:<br>引入了一个新类型, <code>Processor</code>, 它是一个有backpressure support的<code>Subject</code>.</p>
+<p><strong>New Names for Function and Action</strong>:</p>
+<ul>
+<li><code>Func1</code> -&gt; <code>Function</code></li>
+<li><code>Func2</code> -&gt; <code>BiFunction</code></li>
+<li><code>FuncN</code> -&gt; <code>Function&lt;Object[], R&gt;</code></li>
+<li><code>Func1&lt;T, Boolean&gt;</code> -&gt; <code>Predicate&lt;T&gt;</code></li>
+<li><code>Action0</code> -&gt; <code>Consumer</code></li>
+<li><code>Action1</code> -&gt; <code>BiConsumer</code></li>
+<li><code>ActionN</code> -&gt; <code>Consumer&lt;Object[]&gt;</code></li>
+</ul>
+<p><strong>Subscriber is Now Disposable</strong>:</p>
+<p>因为和Reactive-Streams的命名冲突, 所以<code>Subscriber</code>改名为<code>Disposable</code>. 它有一个<code>.dispose()</code>方法, 类似于<code>Subscription</code>的<code>.unsubscribe()</code>方法.</p>
+<p><code>onCompleted()</code>也将变为<code>onComplete()</code>.</p>
+<p><strong>Composite Subscriptions Changes</strong>:</p>
+<p><code>CompositeSubscription</code> + <code>subscribe()</code>-&gt; <code>CompositeDisposable</code> + <code>subscribeWith()</code></p>
+<p><strong>Blocking Calls</strong>:<br>RxJava2加了一些新的操作符来变异步为同步.<br><code>.toBlocking.first()</code> -&gt; <code>.blockingFirst()</code></p>
+<p><strong>Better Hooks for Plugins</strong>:<br>plugin系统被重写了. 现在你可以覆写内置schedulers返回的值了. 这样你就可以在做单元测试的时候覆写<code>Schedulers.io()</code>来返回同步的值, 甚至debug Schedulers.</p>
+<p><strong>Summary</strong></p>
+<p>目标Release日期: October 29.</p>
+<p>Retrofit已经支持RxJava2了:<br><a href="https://github.com/JakeWharton/retrofit2-rxjava2-adapter" target="_blank" rel="noopener">retrofit-rxjava2-adapter</a></p>
+<p>这里还有一个Library用来把RxJava1转换到RxJava2: <a href="https://github.com/akarnokd/RxJava2Interop" target="_blank" rel="noopener">RxJava2Interop</a></p>
+<p>Sources:<br><a href="http://reactivex.io/RxJava/2.x/javadoc/" target="_blank" rel="noopener">RxJava 2.x javadoc</a>,<br><a href="https://github.com/ReactiveX/RxJava/wiki/What%27s-different-in-2.0" target="_blank" rel="noopener">Github Wiki: What’s different in 2.0</a>,<br><a href="http://stackoverflow.com/questions/38423079/differences-between-rxjava1-and-rxjava2" target="_blank" rel="noopener">Stackoverflow</a></p>
+<h2 id="Eight-Ways-Your-Android-App-Can-STOP-Leaking-Memory"><a href="#Eight-Ways-Your-Android-App-Can-STOP-Leaking-Memory" class="headerlink" title="Eight Ways Your Android App Can STOP Leaking Memory"></a><a href="http://blog.nimbledroid.com/2016/09/06/stop-memory-leaks.html" target="_blank" rel="noopener">Eight Ways Your Android App Can STOP Leaking Memory</a></h2><p>之前作者有个文章叫<a href="http://blog.nimbledroid.com/2016/05/23/memory-leaks.html" target="_blank" rel="noopener">Eight Ways Your Android App Can Leak Memory</a>, 讲的是Android应用中8种内存泄露的原因, 主要是泄露了Activity.</p>
+<p>这篇文章主要讲解决方法:</p>
+<h3 id="Static-Activities"><a href="#Static-Activities" class="headerlink" title="Static Activities"></a>Static Activities</h3><p>错误原因: 把Activity存在一个静态引用里, Activity生命周期结束后仍然持有.</p>
+<p>解决方法:<br>使用<a href="https://developer.android.com/reference/java/lang/ref/WeakReference.html" target="_blank" rel="noopener">WeakReference</a>.</p>
+<h3 id="Static-Views"><a href="#Static-Views" class="headerlink" title="Static Views"></a>Static Views</h3><p>错误原因: 静态引用了View, 因为attached View引用了Activity, 所以等于间接引用了Activity.</p>
+<p>解决方法:</p>
+<ol>
+<li>使用WeakReference;</li>
+<li>在onDestroy()里面把引用置为null.</li>
+</ol>
+<h3 id="Inner-Classes"><a href="#Inner-Classes" class="headerlink" title="Inner Classes"></a>Inner Classes</h3><p>内部类分两种, 静态内部类和非静态内部类: <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html" target="_blank" rel="noopener">Nested Class</a></p>
+<p>错误原因: 在Activity里有一个内部类(非静态), 创建内部类的对象, 然后静态引用之. 因为内部类持有外部类的应用, 所以会造成内存泄露.</p>
+<p>解决方法:<br>尽量不要存static引用.</p>
+<h3 id="匿名内部类-AsyncTask-Handler-Thread-TimerTask"><a href="#匿名内部类-AsyncTask-Handler-Thread-TimerTask" class="headerlink" title="匿名内部类 AsyncTask, Handler, Thread, TimerTask"></a>匿名内部类 AsyncTask, Handler, Thread, TimerTask</h3><p>错误原因:</p>
+<p>如果你不在超出生命周期的地方引用它, 匿名内部类的对象是无害的.</p>
+<p>但是上面的这些内部类对象全都是用来产生一些线程的, 这些线程是app全局的, 而且会引用创建它们的对象.</p>
+<p>解决方法: </p>
+<ol>
+<li>把上面的这些类改成静态内部类, 静态的内部类对象不会引用外部类的对象.</li>
+<li>如果你坚持使用匿名内部类, 可以在Activity的onDestroy()里面终止线程.</li>
+</ol>
+<h3 id="Sensor-Manager"><a href="#Sensor-Manager" class="headerlink" title="Sensor Manager"></a>Sensor Manager</h3><p>错误原因:</p>
+<p>把Activity作为listener注册给了系统服务, 但是在Activity生命周期结束之前没有注销listener.</p>
+<p>解决方法: 在生命周期结束前注销listener.</p>
+<h2 id="Auto-rename-Android-versionName-in-Gradle"><a href="#Auto-rename-Android-versionName-in-Gradle" class="headerlink" title="Auto rename Android versionName in Gradle"></a><a href="https://medium.com/@jagonzalez.develop/auto-rename-android-versionname-by-creating-custom-gradle-plugin-2922bbaaaed6#.cds2wvd05" target="_blank" rel="noopener">Auto rename Android versionName in Gradle</a></h2><p>在应用release的时候, 版本号是确定的, 这没问题. 在应用开发的时候, 如果每一个apk也有一个特定的版本号, 将会非常有帮助.</p>
+<p><strong>自定义Gradle Plugin</strong>:<br><code>com.android.application</code>就是一个gradle plugin.</p>
+<p>有三种方式可以创建gradle plugin: <a href="https://docs.gradle.org/current/userguide/custom_plugins.html#sec:packaging_a_plugin" target="_blank" rel="noopener">doc</a>.</p>
+<p>本文作者选择了<code>buildSrc</code>的方式, 因为这很容易, 而且可以被加到repo里, 但是这样将依附于你的project, 不能复用.</p>
+<p>具体代码见原文.</p>
+<p>这么做了之后, 每一次build的apk都自带了分支信息, Jira卡号, 或者任何你想带的信息.</p>
+<h2 id="Is-your-custom-view-interactive-aware"><a href="#Is-your-custom-view-interactive-aware" class="headerlink" title="Is your custom view interactive aware?"></a><a href="https://renaudcerrato.github.io/2016/09/15/is-your-custom-view-interactive-aware/" target="_blank" rel="noopener">Is your custom view interactive aware?</a></h2><p>什么是<strong>Interactive View</strong>?<br>当View是可见的, 即可以和用户交互, 即为interactive.</p>
+<p>当你的自定义View做一些很重的工作, 比如循环的动画或者loading, 或者依赖于传感器, 当这种View变为不可见时,你需要做一些工作来节约电量.</p>
+<p>作者写了一个辅助类: <a href="https://gist.github.com/renaudcerrato/746e039700ac5eeaaea40808666e239f" target="_blank" rel="noopener">InteractiveViewHelper</a> 来做这个.</p>
+<p>具体利用了View的这几个回调:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> View::onVisibilityChanged(View, <span class="keyword">int</span>)</span><br><span class="line"><span class="keyword">void</span> View::onWindowVisibilityChanged()</span><br><span class="line"><span class="keyword">void</span> View::onAttachedToWindow()</span><br><span class="line"><span class="keyword">void</span> View::onDetachedFromWindow()</span><br></pre></td></tr></table></figure></p>
+<p>还有两个ACTION:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent.ACTION_SCREEN_ON</span><br><span class="line">Intent.ACTION_SCREEN_OFF</span><br></pre></td></tr></table></figure></p>
+<h2 id="Beta-Testing-Your-Android-App-With-Build-Variants"><a href="#Beta-Testing-Your-Android-App-With-Build-Variants" class="headerlink" title="Beta Testing Your Android App With Build Variants"></a><a href="http://chikemgbemena.com/2016/09/16/beta-testing-your-app-with-build-variants/" target="_blank" rel="noopener">Beta Testing Your Android App With Build Variants</a></h2><p>讲了如何用Build Variants, 添加不同的Flavors.</p>
+<h2 id="Make-your-build-gradle-great-again"><a href="#Make-your-build-gradle-great-again" class="headerlink" title="Make your build.gradle great again"></a><a href="https://medium.com/@sergii/make-your-build-gradle-great-again-c84cc172a654#.y66yudcxc" target="_blank" rel="noopener">Make your build.gradle great again</a></h2><h3 id="1-把你的build-gradle分成小份-更加模块化-用apply应用"><a href="#1-把你的build-gradle分成小份-更加模块化-用apply应用" class="headerlink" title="1. 把你的build.gradle分成小份, 更加模块化, 用apply应用."></a>1. 把你的build.gradle分成小份, 更加模块化, 用<code>apply</code>应用.</h3><h3 id="2-在build-file里指明application-id"><a href="#2-在build-file里指明application-id" class="headerlink" title="2. 在build file里指明application id."></a>2. 在build file里指明application id.</h3><p>applicationId是apk最终会用的包名.<br>packageName是用来找代码中的R, 和activity/service组件的相对路径.<br>如果不在build文件里指明applicationId可能会有一些问题.</p>
+<h3 id="3-给debug版使用一个不同的applicationId"><a href="#3-给debug版使用一个不同的applicationId" class="headerlink" title="3. 给debug版使用一个不同的applicationId."></a>3. 给debug版使用一个不同的applicationId.</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;    </span><br><span class="line">    debug &#123;</span><br><span class="line">        applicationIdSuffix &quot;.debug&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好处是同一个机器上可以同时安装debug和release版.</p>
+<h3 id="4-统计build时间"><a href="#4-统计build时间" class="headerlink" title="4. 统计build时间."></a>4. 统计build时间.</h3><p>用–profile命令. 或<a href="https://scans.gradle.com/get-started?type=project" target="_blank" rel="noopener">Build Scans</a></p>
+<p>还可以用<a href="https://github.com/passy/build-time-tracker-plugin" target="_blank" rel="noopener">build-time-tracker-plugin</a></p>
+<h3 id="5-配置release"><a href="#5-配置release" class="headerlink" title="5. 配置release."></a>5. 配置release.</h3><p>Proguard在Java层面工作, 对于资源是不管的, 只把R中的id删了.<br>如果想进一步处理不用的资源, 需要加:<br><code>shrinkResources true</code>.</p>
+<p>更深一步的居然还可以拆分apk: <a href="https://developer.android.com/studio/build/configure-apk-splits.html" target="_blank" rel="noopener">config-apk-splits</a></p>
+<h3 id="6-发现一些有用的tasks-或者自己开发-Reddit-page"><a href="#6-发现一些有用的tasks-或者自己开发-Reddit-page" class="headerlink" title="6. 发现一些有用的tasks, 或者自己开发. Reddit page."></a>6. 发现一些有用的tasks, 或者自己开发. <a href="https://www.reddit.com/r/androiddev/comments/3ig3gm/show_us_your_gradle_tasks" target="_blank" rel="noopener">Reddit page</a>.</h3><h3 id="7-把依赖的版本号抽出来"><a href="#7-把依赖的版本号抽出来" class="headerlink" title="7. 把依赖的版本号抽出来."></a>7. 把依赖的版本号抽出来.</h3><h3 id="8-使用jcenter-响应更快"><a href="#8-使用jcenter-响应更快" class="headerlink" title="8. 使用jcenter, 响应更快."></a>8. 使用jcenter, 响应更快.</h3><h3 id="9-在开发时把最小sdk设为21或以上-会build得更快"><a href="#9-在开发时把最小sdk设为21或以上-会build得更快" class="headerlink" title="9. 在开发时把最小sdk设为21或以上, 会build得更快."></a>9. 在开发时把最小sdk设为21或以上, 会build得更快.</h3><h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Android-Amazing-Open-Source-Apps"><a href="#Android-Amazing-Open-Source-Apps" class="headerlink" title="Android Amazing Open Source Apps"></a><a href="https://medium.com/@amitshekhar/android-amazing-open-source-apps-e44f520593cc" target="_blank" rel="noopener">Android Amazing Open Source Apps</a></h2><p>这篇文章列举了一些好的开源app.<br>包括<a href="https://github.com/google/iosched" target="_blank" rel="noopener">google/iosched</a>, <a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="noopener">android-architecture</a>, <a href="https://github.com/DrKLO/Telegram" target="_blank" rel="noopener">Telegram</a>, <a href="https://github.com/nickbutcher/plaid" target="_blank" rel="noopener">Plaid</a>, <a href="https://github.com/wireapp/wire-android" target="_blank" rel="noopener">wire-android</a>, <a href="https://github.com/ribot/ribot-app-android" target="_blank" rel="noopener">ribot/ribot-app-android</a>, <a href="https://github.com/pockethub/PocketHub" target="_blank" rel="noopener">PocketHub</a>.</p>
+<h2 id="DoorSignView"><a href="#DoorSignView" class="headerlink" title="DoorSignView"></a><a href="https://github.com/renaudcerrato/DoorSignView" target="_blank" rel="noopener">DoorSignView</a></h2><p>一个自定义View, 显示门牌. AnimatedDoorSignView可以根据传感器进行动画.</p>
+<h2 id="Java-Error-Handler"><a href="#Java-Error-Handler" class="headerlink" title="Java Error Handler"></a><a href="https://github.com/Workable/java-error-handler/" target="_blank" rel="noopener">Java Error Handler</a></h2><p>一个统一的错误处理器. 为每一种错误建立全局默认的处理方式.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+          
+            <a href="/tags/Nougat/" rel="tag"># Nougat</a>
+          
+            <a href="/tags/Test/" rel="tag"># Test</a>
+          
+            <a href="/tags/MVP/" rel="tag"># MVP</a>
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+            <a href="/tags/Memory-Leak/" rel="tag"># Memory Leak</a>
+          
+            <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+          
+            <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+          
+            <a href="/tags/Fingerprint/" rel="tag"># Fingerprint</a>
+          
+            <a href="/tags/Accessibility/" rel="tag"># Accessibility</a>
+          
+            <a href="/tags/GCM/" rel="tag"># GCM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/" rel="next" title="Android Weekly Notes Issue 222">
+                <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 222
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2016/10/02/android-weekly-notes-issue-224/" rel="prev" title="Android Weekly Notes Issue 224">
+                Android Weekly Notes Issue 224 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-223"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #223</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Offline-First-Introducing-TrueTime-for-Android"><span class="nav-number">2.1.</span> <span class="nav-text">Offline First: Introducing TrueTime for Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Security-and-Accessibility"><span class="nav-number">2.2.</span> <span class="nav-text">Android Security and Accessibility</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sharing-code-between-UI-amp-unit-tests"><span class="nav-number">2.3.</span> <span class="nav-text">Sharing code between UI &amp; unit tests</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Synchronously-Animating-Colors-on-Android"><span class="nav-number">2.4.</span> <span class="nav-text">Synchronously Animating Colors on Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Fingerprint-Authentication"><span class="nav-number">2.5.</span> <span class="nav-text">Android Fingerprint Authentication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-vs-Java-Compilation-Speed"><span class="nav-number">2.6.</span> <span class="nav-text">Kotlin vs Java: Compilation Speed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Let-the-view-handle-the-lifecycle-in-MVP-by-using-RxJava"><span class="nav-number">2.7.</span> <span class="nav-text">Let the view handle the lifecycle in MVP by using RxJava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nougat-GCM-Network-Manager"><span class="nav-number">2.8.</span> <span class="nav-text">Nougat - GCM Network Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TransactionTooLargeException-crashes-on-Nougat"><span class="nav-number">2.9.</span> <span class="nav-text">TransactionTooLargeException crashes on Nougat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-blazing-fast-ETC2-compressor"><span class="nav-number">2.10.</span> <span class="nav-text">Building a blazing fast ETC2 compressor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-Coupling-With-Rx-and-Dagger2-in-Android"><span class="nav-number">2.11.</span> <span class="nav-text">Low Coupling With Rx and Dagger2 in Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RxJava2-An-Early-Preview"><span class="nav-number">2.12.</span> <span class="nav-text">RxJava2: An Early Preview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Eight-Ways-Your-Android-App-Can-STOP-Leaking-Memory"><span class="nav-number">2.13.</span> <span class="nav-text">Eight Ways Your Android App Can STOP Leaking Memory</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Static-Activities"><span class="nav-number">2.13.1.</span> <span class="nav-text">Static Activities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Static-Views"><span class="nav-number">2.13.2.</span> <span class="nav-text">Static Views</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Inner-Classes"><span class="nav-number">2.13.3.</span> <span class="nav-text">Inner Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#匿名内部类-AsyncTask-Handler-Thread-TimerTask"><span class="nav-number">2.13.4.</span> <span class="nav-text">匿名内部类 AsyncTask, Handler, Thread, TimerTask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sensor-Manager"><span class="nav-number">2.13.5.</span> <span class="nav-text">Sensor Manager</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Auto-rename-Android-versionName-in-Gradle"><span class="nav-number">2.14.</span> <span class="nav-text">Auto rename Android versionName in Gradle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Is-your-custom-view-interactive-aware"><span class="nav-number">2.15.</span> <span class="nav-text">Is your custom view interactive aware?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Beta-Testing-Your-Android-App-With-Build-Variants"><span class="nav-number">2.16.</span> <span class="nav-text">Beta Testing Your Android App With Build Variants</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Make-your-build-gradle-great-again"><span class="nav-number">2.17.</span> <span class="nav-text">Make your build.gradle great again</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-把你的build-gradle分成小份-更加模块化-用apply应用"><span class="nav-number">2.17.1.</span> <span class="nav-text">1. 把你的build.gradle分成小份, 更加模块化, 用apply应用.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在build-file里指明application-id"><span class="nav-number">2.17.2.</span> <span class="nav-text">2. 在build file里指明application id.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-给debug版使用一个不同的applicationId"><span class="nav-number">2.17.3.</span> <span class="nav-text">3. 给debug版使用一个不同的applicationId.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-统计build时间"><span class="nav-number">2.17.4.</span> <span class="nav-text">4. 统计build时间.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-配置release"><span class="nav-number">2.17.5.</span> <span class="nav-text">5. 配置release.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-发现一些有用的tasks-或者自己开发-Reddit-page"><span class="nav-number">2.17.6.</span> <span class="nav-text">6. 发现一些有用的tasks, 或者自己开发. Reddit page.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-把依赖的版本号抽出来"><span class="nav-number">2.17.7.</span> <span class="nav-text">7. 把依赖的版本号抽出来.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-使用jcenter-响应更快"><span class="nav-number">2.17.8.</span> <span class="nav-text">8. 使用jcenter, 响应更快.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-在开发时把最小sdk设为21或以上-会build得更快"><span class="nav-number">2.17.9.</span> <span class="nav-text">9. 在开发时把最小sdk设为21或以上, 会build得更快.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Amazing-Open-Source-Apps"><span class="nav-number">3.1.</span> <span class="nav-text">Android Amazing Open Source Apps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DoorSignView"><span class="nav-number">3.2.</span> <span class="nav-text">DoorSignView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Error-Handler"><span class="nav-number">3.3.</span> <span class="nav-text">Java Error Handler</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

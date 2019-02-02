@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Android Weekly Issue #245February 19th, 2017Android Weekly Issue #245本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&amp;gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);用Keys">
+<meta name="keywords" content="Android,Android Weekly,Dagger2,RxJava,Kotlin,Memory Leak,Mockito,Testing,Unit Test,Android Things,ViewPager,God Objects,Call,SMS,Keystore,Wear 2.0,Alert,Gesture,Loading">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 245">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #245February 19th, 2017Android Weekly Issue #245本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&amp;gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);用Keys">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-17T06:43:57.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Weekly Notes Issue 245">
+<meta name="twitter:description" content="Android Weekly Issue #245February 19th, 2017Android Weekly Issue #245本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&amp;gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);用Keys">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 245 | Meng's pages</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Meng's pages</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Weekly Notes Issue 245
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-02-22 15:35:47" itemprop="dateCreated datePublished" datetime="2017-02-22T15:35:47+08:00">2017-02-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Android-Weekly-Issue-245"><a href="#Android-Weekly-Issue-245" class="headerlink" title="Android Weekly Issue #245"></a>Android Weekly Issue #245</h1><p>February 19th, 2017<br><a href="http://androidweekly.net/issues/issue-245" target="_blank" rel="noopener">Android Weekly Issue #245</a><br>本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);<br>用Keystore保存敏感信息; 依赖注入和Dagger 2的使用; Wear应用向Wear 2.0的迁移; 用ViewPager构建无Fragment的应用结构; Android应用的压力测试讨论; RxJava中<code>Subscription</code>注销处理不当引起的内存泄露; 单元测试并不是完全可靠; Trello向离线模式迁移的架构变化.</p>
+<p>本周推荐的代码里有一个顶部提示控件, 一个手势检测库, 还有一个loading view的库.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Write-awesome-unit-tests"><a href="#Write-awesome-unit-tests" class="headerlink" title="Write awesome unit tests"></a><a href="http://jeroenmols.com/blog/2017/02/16/unittests/" target="_blank" rel="noopener">Write awesome unit tests</a></h2><p>作者关于写好单元测试提供了三条简单的规则以及每条规则对应的一些建议.</p>
+<h3 id="1-尽快尽早地跑测试"><a href="#1-尽快尽早地跑测试" class="headerlink" title="1. 尽快尽早地跑测试."></a>1. 尽快尽早地跑测试.</h3><p>尽量在每次改动之后都跑跑测试, 及早发现问题. 你的测试跑得越快你就越有可能经常跑它们.</p>
+<p>为了让测试跑得很快:</p>
+<ul>
+<li>让测试跑在JVM上而不是设备上.</li>
+<li>仅测试独立的逻辑模块.</li>
+<li>不要包含UI, 数据库, 或者网络测试在你的主测试套件中.</li>
+<li>测试中不要使用wait/sleep.</li>
+</ul>
+<h3 id="2-小并且关注点集中的测试"><a href="#2-小并且关注点集中的测试" class="headerlink" title="2. 小并且关注点集中的测试"></a>2. 小并且关注点集中的测试</h3><p>对每一个bug来说, 应该有且只有一个测试挂掉, 并且测试失败的原因应该能从测试方法名上看出来.</p>
+<p>这样就迫使你每一个测试只检查一件事情, 导致你的测试小并且简单易懂, 也好维护. </p>
+<p>实现tips:</p>
+<ul>
+<li>测试中只有一条assert/verify语句.</li>
+<li>有更多的小测试, 而不是几个大测试.</li>
+<li>测试的名字能清楚地描述失败的原因.</li>
+</ul>
+<h3 id="3-100-的可靠性"><a href="#3-100-的可靠性" class="headerlink" title="3. 100%的可靠性"></a>3. 100%的可靠性</h3><p>你的测试应该是完全值得信赖的, 不应该随机失败, 否则你将会对测试失去信任, 也不再会认真对待测试的失败.</p>
+<p>所以你的测试应该是100%可靠的, 只在真的有问题的时候才失败.</p>
+<p>建议是:</p>
+<ul>
+<li>在JVM上跑测试, 因为到设备的连接可能会中断.</li>
+<li>在测试的时候mock网络通信.</li>
+<li>把UI/集成测试移出你的单元测试套件.</li>
+</ul>
+<h2 id="Helping-to-Mock-Tests-in-Kotlin"><a href="#Helping-to-Mock-Tests-in-Kotlin" class="headerlink" title="Helping to Mock Tests in Kotlin"></a><a href="https://medium.com/@orogersilva/helping-androiddev-to-mock-tests-in-kotlin-ab3be5204559#.wetcvdvbt" target="_blank" rel="noopener">Helping to Mock Tests in Kotlin</a></h2><p>因为Kotlin中的类默认是<code>final</code>的, 要继承的话需要显示地声明<code>open</code>.</p>
+<p>如果只是为了在单元测试中mock就要加个open吗? 不.</p>
+<p>本篇文章就介绍如何如何mock Kotlin的对象, 而不用该它的声明.</p>
+<p>首先, <a href="https://kotlinlang.org/docs/tutorials/kotlin-android.html" target="_blank" rel="noopener">Set up</a>; 然后, 使用这个库<a href="https://github.com/nhaarman/mockito-kotlin" target="_blank" rel="noopener">mockito-kotlin</a>.</p>
+<p>文中详细介绍了使用细节, 以及对<code>any()</code>方法的讨论.</p>
+<h2 id="How-and-Why-I-Kill-God-Objects"><a href="#How-and-Why-I-Kill-God-Objects" class="headerlink" title="How and Why I Kill God Objects"></a><a href="https://www.philosophicalhacker.com/post/towards-godless-android-development-how-and-why-i-kill-god-objects/" target="_blank" rel="noopener">How and Why I Kill God Objects</a></h2><p>在面向对象编程中, God Objects是应该被避免的.</p>
+<p>在Android开发中, 最常见的一种God对象是Context. 本文介绍如何清除这个God对象, 同样的方法也可以用来处理其他对象.</p>
+<p>首先说为什么要干掉Context?<br>在做TDD的过程中, 我们希望是面向接口的, 而且我们不应该mock非我们拥有的类型.<br>所以我们不应该直接mock外部的API, 而是应该创建一个自己的接口层.</p>
+<p>作者发现很多类其实并不真正需要一个Context, 它们只是需要得到string或者存储的键值对.</p>
+<p>之后文中举例介绍了如何通过定义接口摆脱Context.</p>
+<h2 id="How-to-Make-Calls-and-Use-SMS-in-Android-Apps"><a href="#How-to-Make-Calls-and-Use-SMS-in-Android-Apps" class="headerlink" title="How to Make Calls and Use SMS in Android Apps"></a><a href="https://code.tutsplus.com/tutorials/how-to-make-calls-and-use-sms-in-android-apps--cms-28168" target="_blank" rel="noopener">How to Make Calls and Use SMS in Android Apps</a></h2><p><strong>如何拨打电话</strong>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String dial = <span class="string">"tel:"</span> + phoneNo;</span><br><span class="line">startActivity(<span class="keyword">new</span> Intent(Intent.ACTION_DIAL, Uri.parse(dial)));</span><br></pre></td></tr></table></figure></p>
+<p>(不需要权限).</p>
+<p>如果想在app里直接拨出去电话, 需要权限<code>android.permission.CALL_PHON</code>, 并且改用<code>ACTION_CALL</code>.</p>
+<p><strong>监控电话事件</strong>:</p>
+<p>需要权限<code>android.permission.READ_PHONE_STATE</code>.来监控来电, 打出去的电话需要这个权限: <code>android.permission.PROCESS_OUTGOING_CALLS</code>.</p>
+<p>具体实现就是在<code>TelephonyManager</code>注册监听器<code>PhoneStateListener</code>. 如果是在Activity中需要在对应的生命周期注销监听器.</p>
+<p>如果需要后台监控, 则需要用到<code>BroadcastReceiver</code>, 过滤actions为<code>android.intent.action.PHONE_STATE</code>和<code>android.intent.action.NEW_OUTGOING_CALL</code>.<br>除了获取相应的电话号码, 还可以进一步阻止电话的拨出.</p>
+<p><strong>发送短信</strong>:</p>
+<p>发短信也是两种方法, 启动一个短信客户端程序, 或者直接从程序里发.</p>
+<p>启动其他程序:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent smsIntent = <span class="keyword">new</span> Intent(Intent.ACTION_SENDTO, Uri.parse(<span class="string">"smsto:"</span> + phoneNo));</span><br><span class="line">smsIntent.putExtra(<span class="string">"sms_body"</span>, message);</span><br><span class="line">startActivity(smsIntent);</span><br></pre></td></tr></table></figure></p>
+<p>自己发: 需要权限<code>android.permission.SEND_SMS</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SmsManager smsManager = SmsManager.getDefault();</span><br><span class="line">smsManager.sendTextMessage(phoneNo, <span class="keyword">null</span>, message, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>注意Android 6.0以上的设备, 本文提到的这些危险权限都是需要动态请求的.</p>
+<p><strong>收短信</strong>:<br>通过<code>BroadcastReceiver</code>, 需要权限<code>android.permission.RECEIVE_SMS</code>.</p>
+<h2 id="Android-Things-Electricity-Monitoring-App"><a href="#Android-Things-Electricity-Monitoring-App" class="headerlink" title="Android Things - Electricity Monitoring App"></a><a href="https://riggaroo.co.za/android-things-electricity-monitoring-app/" target="_blank" rel="noopener">Android Things - Electricity Monitoring App</a></h2><p>作者分享了一个她的Android Things的应用(和Github repo), 可以监控她家的用电情况.</p>
+<h2 id="Using-Keystore-system-to-store-and-retrieve-sensitive-information"><a href="#Using-Keystore-system-to-store-and-retrieve-sensitive-information" class="headerlink" title="Using Keystore system to store and retrieve sensitive information"></a><a href="https://medium.com/@josiassena/using-the-android-keystore-system-to-store-sensitive-information-3a56175a454b#.nu3gw39qp" target="_blank" rel="noopener">Using Keystore system to store and retrieve sensitive information</a></h2><p>利用Android的Keystore来存储一些敏感信息.</p>
+<h2 id="The-lost-droid-and-the-magic-Dagger"><a href="#The-lost-droid-and-the-magic-Dagger" class="headerlink" title="The lost droid and the magic Dagger"></a><a href="https://medium.com/rocknnull/the-lost-droid-and-the-magic-dagger-an-intro-to-dependency-injection-for-android-c686f4399117#.k5vgmxsjh" target="_blank" rel="noopener">The lost droid and the magic Dagger</a></h2><p>一篇依赖注入的介绍文章.<br>先介绍依赖注入是什么, 有什么优点, 接着介绍Dagger 2的使用.</p>
+<h2 id="Wear-2-0-Match-Timer-–-Part-1"><a href="#Wear-2-0-Match-Timer-–-Part-1" class="headerlink" title="Wear 2.0: Match Timer – Part 1"></a><a href="https://blog.stylingandroid.com/wear-2-0-match-timer-part-1/" target="_blank" rel="noopener">Wear 2.0: Match Timer – Part 1</a></h2><p>作者把他的Wear应用升级到了Wear 2.0.</p>
+<h2 id="ViewPager-without-Fragments"><a href="#ViewPager-without-Fragments" class="headerlink" title="ViewPager without Fragments"></a><a href="http://www.ottodroid.net/?p=523" target="_blank" rel="noopener">ViewPager without Fragments</a></h2><p>一些开发者可能不想选择Fragment, 这篇文章里有相关讨论: <a href="https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97#.e4k145h1b" target="_blank" rel="noopener">Advocating Against Android Fragments</a>.</p>
+<p>作者推荐了一些在不用Fragment的情况下构建App的库: <a href="https://github.com/bluelinelabs/Conductor" target="_blank" rel="noopener">Conductor</a>, <a href="https://github.com/sockeqwe/mosby" target="_blank" rel="noopener">mosby</a>, <a href="https://github.com/square/flow" target="_blank" rel="noopener">flow</a>, <a href="https://github.com/square/mortar" target="_blank" rel="noopener">mortar</a>.</p>
+<p>而本篇文章想要展示另一种方法, 既不用Fragment, 也不用上述的第三方库来构建一个App -&gt; 用ViewPager.</p>
+<p>在PagerAdapter里管理了一个Presenter的List, 每一个Presenter管理一个View. 具体实现见原文.</p>
+<h2 id="Stress-testing-Android-apps"><a href="#Stress-testing-Android-apps" class="headerlink" title="Stress-testing Android apps"></a><a href="https://android.jlelse.eu/stress-testing-android-apps-601311ebf590#.8kqor9m39" target="_blank" rel="noopener">Stress-testing Android apps</a></h2><p>之前大神JakeWharton有一个Sample App: <a href="https://github.com/JakeWharton/u2020" target="_blank" rel="noopener">JakeWharton/u2020</a>, 里面有一个debug drawer, 可以用来模拟不同的测试情形, 比如网络连接不好, 延迟, 或者网络错误等等.</p>
+<p>作者他们的App也有一个类似的debug drawer, 他们讨论出了一个需要测试的情形的checklist:</p>
+<ul>
+<li>网络延迟</li>
+<li>错误率</li>
+<li>离线模式</li>
+<li>屏幕旋转</li>
+<li>应用在后台被杀死</li>
+<li>应用升级</li>
+<li>Key Bashing</li>
+<li>多窗口模式 (Android N)</li>
+<li>TransactionTooLargeException (Android N)</li>
+</ul>
+<p>作者甚至发现其中的一些项目组合起来测试非常有趣.</p>
+<ul>
+<li>网络延迟: 可结合方向改变/app后台被杀死测试.</li>
+<li>错误率: 可以检查错误是否被正确处理并被报告.</li>
+<li>离线模式: 关掉网络或者打开飞行模式, 检测正在执行的网络请求是否会引起崩溃; 是否正确通知了用户连接丢失了; 所有应该被cach的内容是否被正确cach了.</li>
+<li>方向改变: 检查:  正在进行的请求会怎么办? app的状态是否被正确恢复了? 是否加载了当前方向对应的正确资源?</li>
+<li>App在后台被杀死: 可以通过命令: <code>adb shell am kill YOUR_PACKAGNE_NAME</code>或者”Do not keep activities”来模拟这种情形. 相关阅读: <a href="https://developer.android.com/training/monitoring-device-state/doze-standby.html" target="_blank" rel="noopener">Optimizing for Doze and App Standby</a>.</li>
+<li>App更新: 升级后之前的数据是否被保存了?</li>
+<li>Key Bashing: 剧烈的滑动和敲击可能产生一些奇怪的错误. 可以跑Monkey来测试一下你的应用: <code>adb shell monkey -p YOUR_PACKAGNE_NAME</code>.</li>
+<li>多窗口模式(Android N): 列出了一些多窗口的测试项目, 详情见原文.</li>
+<li>TransactionTooLargeException (Android N): Bundle中的数据不能太大, 超过限制, 在Android N以上会直接抛异常.</li>
+</ul>
+<h2 id="How-to-leak-memory-with-Subscriptions-in-RxJava"><a href="#How-to-leak-memory-with-Subscriptions-in-RxJava" class="headerlink" title="How to leak memory with Subscriptions in RxJava"></a><a href="https://medium.com/@scanarch/how-to-leak-memory-with-subscriptions-in-rxjava-ae0ef01ad361#.20w4lbkxq" target="_blank" rel="noopener">How to leak memory with Subscriptions in RxJava</a></h2><p>文中举了一个例子, 用RxJava结合MVP, 做网络请求, 更新UI, 很常见的使用情形. </p>
+<p>在生命周期结束的时候调用RxJava的<code>Subscription.unsubscribe()</code>来注销, 以结束还在进行的网络请求.</p>
+<p>看上去没有什么问题, 但是程序实际运行, 反复旋转屏幕进行测试, <code>StrictMode</code>报告出了Activity的<code>InstanceCountViolation</code>, dump memory的确看到了多个Activity的实例. 这是为什么呢? </p>
+<p>作者深究原因, 发现<code>Subscriber</code>的子类存储的都是final的字段, 比如这个类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionSubscriber</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Subscriber</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> Action1&lt;? <span class="keyword">super</span> T&gt; onNext;</span><br><span class="line">    <span class="keyword">final</span> Action1&lt;Throwable&gt; onError;</span><br><span class="line">    <span class="keyword">final</span> Action0 onCompleted;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ActionSubscriber</span><span class="params">(Action1&lt;? <span class="keyword">super</span> T&gt; onNext, Action1&lt;Throwable&gt; onError, Action0 onCompleted)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.onNext = onNext;</span><br><span class="line">        <span class="keyword">this</span>.onError = onError;</span><br><span class="line">        <span class="keyword">this</span>.onCompleted = onCompleted;</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为它们都是final的, 所以最后即便执行了注销操作, 也是没有办法把它们置为null的.</p>
+<p>在生命周期结束的时候注销的操作是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    subscription.unsubscribe();</span><br><span class="line">    view = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个<code>subscription</code>是<code>subscribe()</code>方法的返回值, 被保存在Presenter的一个字段里, 它实际就是<code>Subscriber</code>对象.</p>
+<p>这里的问题就是, 在<code>destroy()</code>之后, 该引用并没有被置为null, 导致了下面的引用链:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Presenter -&gt; subscription字段, 也即匿名的`Subscriber`对象 -&gt; final字段 -&gt; 对view的引用 -&gt; 对Activity的引用.</span><br></pre></td></tr></table></figure>
+<p>从而造成了内存泄露.</p>
+<p>解决的办法有两个:</p>
+<ul>
+<li>在<code>subscription.unsubscribe();</code>之后把<code>subscription</code>字段置为null.</li>
+<li>使用<code>CompositeSubscription</code>, 它可以管理多个<code>Subscription</code>对象, 用它的<code>clear()</code>方法, 它会unsubscribe所有项目并且清除所有的引用.</li>
+</ul>
+<p>文后还列了相关的资料, 作者发现问题并寻找原因的思路很值得学习.</p>
+<h2 id="Your-Unit-tests-might-not-be-as-reliable-as-you-thought"><a href="#Your-Unit-tests-might-not-be-as-reliable-as-you-thought" class="headerlink" title="Your Unit tests might not be as reliable as you thought"></a><a href="https://afterecho.uk/blog/your-unit-tests-might-not-be-as-reliable-as-you-thought.html" target="_blank" rel="noopener">Your Unit tests might not be as reliable as you thought</a></h2><p>作者举了个例子, 说明即便你的单元测试过了, 也不保证你的产品代码一定没问题.</p>
+<p>他的例子是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat fmt = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>失败的原因是因为<code>XXX</code>格式是在Android 4.3以上才支持的, 它是在<code>java.text</code>包下的. 所以实际在高版本的设备还运行正常, 换个低版本的设备就崩溃了.</p>
+<p>所以单元测试并不一定可靠, 因为跑单元测试的JVM和Android设备上的JVM有可能不一样.</p>
+<h2 id="Airplane-Mode-Enabling-Trello-Mobile-Offline"><a href="#Airplane-Mode-Enabling-Trello-Mobile-Offline" class="headerlink" title="Airplane Mode: Enabling Trello Mobile Offline"></a><a href="http://tech.trello.com/sync-architecture/" target="_blank" rel="noopener">Airplane Mode: Enabling Trello Mobile Offline</a></h2><p>Trello移动移动现在有离线模式了. 作者介绍了他们的心路历程和架构变化. (比较简单和笼统的介绍).</p>
+<h2 id="Self-guided-resources-to-Android-development"><a href="#Self-guided-resources-to-Android-development" class="headerlink" title="Self-guided resources to Android development"></a><a href="https://twitter.com/corey_latislaw/status/831624360175603713?s=03" target="_blank" rel="noopener">Self-guided resources to Android development</a></h2><p>这是一条Twitter, 作者分享了Android的学习资源. (可惜我打不开里面说的链接, 不知为何.)</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Alerter"><a href="#Alerter" class="headerlink" title="Alerter"></a><a href="https://github.com/Tapadoo/Alerter" target="_blank" rel="noopener">Alerter</a></h2><p>一个加在Window的Decor View上面的顶部提示栏, 类似于Snackbar和Toast一类的东东. 可定制外观, icon, 加多行字, 可添加click事件.</p>
+<h2 id="sensey"><a href="#sensey" class="headerlink" title="sensey"></a><a href="https://github.com/nisrulz/sensey" target="_blank" rel="noopener">sensey</a></h2><p>一个好用的手势检测库.</p>
+<h2 id="mkloader"><a href="#mkloader" class="headerlink" title="mkloader"></a><a href="https://github.com/nntuyen/mkloader" target="_blank" rel="noopener">mkloader</a></h2><p>好看并且平滑的自定义loading view. 目前支持好几种图案.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+          
+            <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+            <a href="/tags/Memory-Leak/" rel="tag"># Memory Leak</a>
+          
+            <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+          
+            <a href="/tags/Testing/" rel="tag"># Testing</a>
+          
+            <a href="/tags/Unit-Test/" rel="tag"># Unit Test</a>
+          
+            <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
+          
+            <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+          
+            <a href="/tags/God-Objects/" rel="tag"># God Objects</a>
+          
+            <a href="/tags/Call/" rel="tag"># Call</a>
+          
+            <a href="/tags/SMS/" rel="tag"># SMS</a>
+          
+            <a href="/tags/Keystore/" rel="tag"># Keystore</a>
+          
+            <a href="/tags/Wear-2-0/" rel="tag"># Wear 2.0</a>
+          
+            <a href="/tags/Alert/" rel="tag"># Alert</a>
+          
+            <a href="/tags/Gesture/" rel="tag"># Gesture</a>
+          
+            <a href="/tags/Loading/" rel="tag"># Loading</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" rel="next" title="Android Weekly Notes Issue 244">
+                <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 244
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Android/Database/Realm/2017/02/27/android-realm-guide/" rel="prev" title="Android Realm数据库使用指南">
+                Android Realm数据库使用指南 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-245"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #245</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Write-awesome-unit-tests"><span class="nav-number">2.1.</span> <span class="nav-text">Write awesome unit tests</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-尽快尽早地跑测试"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 尽快尽早地跑测试.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-小并且关注点集中的测试"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. 小并且关注点集中的测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-100-的可靠性"><span class="nav-number">2.1.3.</span> <span class="nav-text">3. 100%的可靠性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Helping-to-Mock-Tests-in-Kotlin"><span class="nav-number">2.2.</span> <span class="nav-text">Helping to Mock Tests in Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-and-Why-I-Kill-God-Objects"><span class="nav-number">2.3.</span> <span class="nav-text">How and Why I Kill God Objects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-Make-Calls-and-Use-SMS-in-Android-Apps"><span class="nav-number">2.4.</span> <span class="nav-text">How to Make Calls and Use SMS in Android Apps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Things-Electricity-Monitoring-App"><span class="nav-number">2.5.</span> <span class="nav-text">Android Things - Electricity Monitoring App</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Keystore-system-to-store-and-retrieve-sensitive-information"><span class="nav-number">2.6.</span> <span class="nav-text">Using Keystore system to store and retrieve sensitive information</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-lost-droid-and-the-magic-Dagger"><span class="nav-number">2.7.</span> <span class="nav-text">The lost droid and the magic Dagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wear-2-0-Match-Timer-–-Part-1"><span class="nav-number">2.8.</span> <span class="nav-text">Wear 2.0: Match Timer – Part 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewPager-without-Fragments"><span class="nav-number">2.9.</span> <span class="nav-text">ViewPager without Fragments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stress-testing-Android-apps"><span class="nav-number">2.10.</span> <span class="nav-text">Stress-testing Android apps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-leak-memory-with-Subscriptions-in-RxJava"><span class="nav-number">2.11.</span> <span class="nav-text">How to leak memory with Subscriptions in RxJava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Your-Unit-tests-might-not-be-as-reliable-as-you-thought"><span class="nav-number">2.12.</span> <span class="nav-text">Your Unit tests might not be as reliable as you thought</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Airplane-Mode-Enabling-Trello-Mobile-Offline"><span class="nav-number">2.13.</span> <span class="nav-text">Airplane Mode: Enabling Trello Mobile Offline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-guided-resources-to-Android-development"><span class="nav-number">2.14.</span> <span class="nav-text">Self-guided resources to Android development</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Alerter"><span class="nav-number">3.1.</span> <span class="nav-text">Alerter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sensey"><span class="nav-number">3.2.</span> <span class="nav-text">sensey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mkloader"><span class="nav-number">3.3.</span> <span class="nav-text">mkloader</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
