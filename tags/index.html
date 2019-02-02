@@ -1,25 +1,20 @@
-<!DOCTYPE html>
-
-
-
-
-
-
-
-
-
+<!doctype html>
 
 
 
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -35,68 +30,66 @@
 
 
 
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
 
+  
+  
+  
+  
 
+  
+    
+    
+  
 
+  
 
+  
 
+  
 
+  
 
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=7.0.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '7.0.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
 
 
-  <meta name="description" content="This is a technical blog site of an Android developer.">
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="This is a technical blog site of an Android developer.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="tags">
 <meta property="og:url" content="http://mengdd.github.io/tags/index.html">
@@ -110,8 +103,27 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
-
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
 
 
 
@@ -119,19 +131,34 @@
 
 
 
-<script id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
 
-  <title>tags | Meng's pages</title>
+
+  <title>
+  
+
+  
+    tags | Meng's pages
+  
+</title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
   
 
 
 
 
 
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -139,46 +166,20 @@
 
 
 
-  <noscript>
-  <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
 
-  .use-motion .logo,
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
+  <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
@@ -188,16 +189,13 @@
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-    
       
-        <p class="site-subtitle">Android developer and maybe other intersting things.</p>
+        <h1 class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</h1>
       
-    
-    
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -205,1378 +203,140 @@
   </div>
 </div>
 
-
-
 <nav class="site-nav">
+  
+
   
     <ul id="menu" class="menu">
       
         
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
         
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
           
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
-
-  </li>
-        
-        
-        
+            <a href="javascript:;" class="popup-trigger">
           
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
-
-  </li>
-
-      
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
 
   
-    
-
-    
-    
+    <div class="site-search">
       
-      
-    
-      
-      
-    
-    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
 
-  
 
 
-  
-
+    </div>
   
 </nav>
 
 
 
-  
-
-
-
-</div>
+ </div>
     </header>
-
-    
-
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
-    
-    
-    
-    <div class="post-block page">
-      <header class="post-header">
+  <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">tags
-
-</h1>
-
-<div class="post-meta">
-  
-  
+	<h2 class="post-title" itemprop="name headline">tags</h2>
 
 
-
-</div>
 
 </header>
 
-      
-      
-      
-      <div class="post-body">
-        
-        
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-              308 tags in total
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/APK/" style="font-size: 13.13px; color: #c0c0c0">APK</a> <a href="/tags/APK-analyzer/" style="font-size: 12px; color: #ccc">APK analyzer</a> <a href="/tags/AR/" style="font-size: 12px; color: #ccc">AR</a> <a href="/tags/Abstract-class/" style="font-size: 12px; color: #ccc">Abstract class</a> <a href="/tags/Accessibility/" style="font-size: 14.25px; color: #b5b5b5">Accessibility</a> <a href="/tags/ActionBar/" style="font-size: 12px; color: #ccc">ActionBar</a> <a href="/tags/ActiveAndroid/" style="font-size: 12px; color: #ccc">ActiveAndroid</a> <a href="/tags/Activity/" style="font-size: 12px; color: #ccc">Activity</a> <a href="/tags/Adapter/" style="font-size: 12px; color: #ccc">Adapter</a> <a href="/tags/Adaptive-Icons/" style="font-size: 12px; color: #ccc">Adaptive Icons</a> <a href="/tags/Alarm/" style="font-size: 12px; color: #ccc">Alarm</a> <a href="/tags/Alert/" style="font-size: 12px; color: #ccc">Alert</a> <a href="/tags/Analytics/" style="font-size: 12px; color: #ccc">Analytics</a> <a href="/tags/Android/" style="font-size: 30px; color: #111">Android</a> <a href="/tags/Android-7/" style="font-size: 16.5px; color: #9d9d9d">Android 7</a> <a href="/tags/Android-7-0/" style="font-size: 12px; color: #ccc">Android 7.0</a> <a href="/tags/Android-7-1/" style="font-size: 12px; color: #ccc">Android 7.1</a> <a href="/tags/Android-News/" style="font-size: 12px; color: #ccc">Android News</a> <a href="/tags/Android-O/" style="font-size: 16.5px; color: #9d9d9d">Android O</a> <a href="/tags/Android-P/" style="font-size: 12px; color: #ccc">Android P</a> <a href="/tags/Android-Studio/" style="font-size: 18.75px; color: #868686">Android Studio</a> <a href="/tags/Android-Things/" style="font-size: 16.5px; color: #9d9d9d">Android Things</a> <a href="/tags/Android-Weekly/" style="font-size: 28.88px; color: #1d1d1d">Android Weekly</a> <a href="/tags/AnimatedVectorDrawable/" style="font-size: 14.25px; color: #b5b5b5">AnimatedVectorDrawable</a> <a href="/tags/Animation/" style="font-size: 25.5px; color: #404040">Animation</a> <a href="/tags/AnimationList/" style="font-size: 12px; color: #ccc">AnimationList</a> <a href="/tags/Anko/" style="font-size: 12px; color: #ccc">Anko</a> <a href="/tags/Annotation/" style="font-size: 13.13px; color: #c0c0c0">Annotation</a> <a href="/tags/App-Shortcuts/" style="font-size: 12px; color: #ccc">App Shortcuts</a> <a href="/tags/AppBarLayout/" style="font-size: 12px; color: #ccc">AppBarLayout</a> <a href="/tags/Architecture/" style="font-size: 14.25px; color: #b5b5b5">Architecture</a> <a href="/tags/Architecture-Components/" style="font-size: 12px; color: #ccc">Architecture Components</a> <a href="/tags/ArrayMap/" style="font-size: 12px; color: #ccc">ArrayMap</a> <a href="/tags/Async-Await/" style="font-size: 12px; color: #ccc">Async-Await</a> <a href="/tags/AsyncLayoutInflater/" style="font-size: 12px; color: #ccc">AsyncLayoutInflater</a> <a href="/tags/Audio/" style="font-size: 13.13px; color: #c0c0c0">Audio</a> <a href="/tags/Authentication/" style="font-size: 12px; color: #ccc">Authentication</a> <a href="/tags/AutoValue/" style="font-size: 13.13px; color: #c0c0c0">AutoValue</a> <a href="/tags/Background-work/" style="font-size: 12px; color: #ccc">Background work</a> <a href="/tags/Barcode-Detection/" style="font-size: 12px; color: #ccc">Barcode Detection</a> <a href="/tags/Battery/" style="font-size: 12px; color: #ccc">Battery</a> <a href="/tags/Bottom-Navigation/" style="font-size: 13.13px; color: #c0c0c0">Bottom Navigation</a> <a href="/tags/Bottom-Sheet/" style="font-size: 14.25px; color: #b5b5b5">Bottom Sheet</a> <a href="/tags/BottomNavigationView/" style="font-size: 15.38px; color: #a9a9a9">BottomNavigationView</a> <a href="/tags/Broadcast/" style="font-size: 12px; color: #ccc">Broadcast</a> <a href="/tags/BroadcastReceiver/" style="font-size: 12px; color: #ccc">BroadcastReceiver</a> <a href="/tags/Build-Time/" style="font-size: 12px; color: #ccc">Build Time</a> <a href="/tags/CI/" style="font-size: 14.25px; color: #b5b5b5">CI</a> <a href="/tags/Cache/" style="font-size: 12px; color: #ccc">Cache</a> <a href="/tags/Call/" style="font-size: 12px; color: #ccc">Call</a> <a href="/tags/Camera2/" style="font-size: 12px; color: #ccc">Camera2</a> <a href="/tags/Certificate/" style="font-size: 12px; color: #ccc">Certificate</a> <a href="/tags/CheckStyle/" style="font-size: 12px; color: #ccc">CheckStyle</a> <a href="/tags/ClassyShark/" style="font-size: 13.13px; color: #c0c0c0">ClassyShark</a> <a href="/tags/Clean-Architecture/" style="font-size: 12px; color: #ccc">Clean Architecture</a> <a href="/tags/Code-Style/" style="font-size: 12px; color: #ccc">Code Style</a> <a href="/tags/Color/" style="font-size: 13.13px; color: #c0c0c0">Color</a> <a href="/tags/Concurrency/" style="font-size: 12px; color: #ccc">Concurrency</a> <a href="/tags/ConfigurationManager/" style="font-size: 12px; color: #ccc">ConfigurationManager</a> <a href="/tags/ConstraintLayout/" style="font-size: 21px; color: #6f6f6f">ConstraintLayout</a> <a href="/tags/Content-Provider/" style="font-size: 13.13px; color: #c0c0c0">Content Provider</a> <a href="/tags/ContentProvider/" style="font-size: 12px; color: #ccc">ContentProvider</a> <a href="/tags/Coroutines/" style="font-size: 12px; color: #ccc">Coroutines</a> <a href="/tags/Crash/" style="font-size: 12px; color: #ccc">Crash</a> <a href="/tags/Crash-Reporting/" style="font-size: 12px; color: #ccc">Crash Reporting</a> <a href="/tags/Custom-View/" style="font-size: 13.13px; color: #c0c0c0">Custom View</a> <a href="/tags/Cutouts/" style="font-size: 12px; color: #ccc">Cutouts</a> <a href="/tags/Dagger/" style="font-size: 16.5px; color: #9d9d9d">Dagger</a> <a href="/tags/Dagger2/" style="font-size: 23.25px; color: #575757">Dagger2</a> <a href="/tags/Data-Binding/" style="font-size: 13.13px; color: #c0c0c0">Data Binding</a> <a href="/tags/Data-Model/" style="font-size: 12px; color: #ccc">Data Model</a> <a href="/tags/Database/" style="font-size: 12px; color: #ccc">Database</a> <a href="/tags/Dependency-Injection/" style="font-size: 12px; color: #ccc">Dependency Injection</a> <a href="/tags/Design/" style="font-size: 14.25px; color: #b5b5b5">Design</a> <a href="/tags/Design-Patterns/" style="font-size: 14.25px; color: #b5b5b5">Design Patterns</a> <a href="/tags/Design-Support-Library/" style="font-size: 12px; color: #ccc">Design Support Library</a> <a href="/tags/Devices/" style="font-size: 12px; color: #ccc">Devices</a> <a href="/tags/DiffUtil/" style="font-size: 13.13px; color: #c0c0c0">DiffUtil</a> <a href="/tags/Docker/" style="font-size: 12px; color: #ccc">Docker</a> <a href="/tags/DownloadManager/" style="font-size: 12px; color: #ccc">DownloadManager</a> <a href="/tags/Effective-Java/" style="font-size: 12px; color: #ccc">Effective Java</a> <a href="/tags/Emoji/" style="font-size: 12px; color: #ccc">Emoji</a> <a href="/tags/Espresso/" style="font-size: 19.88px; color: #7a7a7a">Espresso</a> <a href="/tags/Etag/" style="font-size: 12px; color: #ccc">Etag</a> <a href="/tags/ExoPlayer/" style="font-size: 13.13px; color: #c0c0c0">ExoPlayer</a> <a href="/tags/ExpandableRecyclerView/" style="font-size: 12px; color: #ccc">ExpandableRecyclerView</a> <a href="/tags/FAB/" style="font-size: 12px; color: #ccc">FAB</a> <a href="/tags/FPS/" style="font-size: 12px; color: #ccc">FPS</a> <a href="/tags/Face-Detection/" style="font-size: 12px; color: #ccc">Face Detection</a> <a href="/tags/Facebook/" style="font-size: 12px; color: #ccc">Facebook</a> <a href="/tags/FileProvider/" style="font-size: 15.38px; color: #a9a9a9">FileProvider</a> <a href="/tags/FindBugs/" style="font-size: 13.13px; color: #c0c0c0">FindBugs</a> <a href="/tags/Fingerprint/" style="font-size: 13.13px; color: #c0c0c0">Fingerprint</a> <a href="/tags/Firebase/" style="font-size: 23.25px; color: #575757">Firebase</a> <a href="/tags/Flavor/" style="font-size: 12px; color: #ccc">Flavor</a> <a href="/tags/FlexboxLayout/" style="font-size: 13.13px; color: #c0c0c0">FlexboxLayout</a> <a href="/tags/Floating-Menu/" style="font-size: 12px; color: #ccc">Floating Menu</a> <a href="/tags/Flutter/" style="font-size: 12px; color: #ccc">Flutter</a> <a href="/tags/Font/" style="font-size: 12px; color: #ccc">Font</a> <a href="/tags/Fragment/" style="font-size: 21px; color: #6f6f6f">Fragment</a> <a href="/tags/FragmentPagerAdapter/" style="font-size: 12px; color: #ccc">FragmentPagerAdapter</a> <a href="/tags/FragmentStatePagerAdapter/" style="font-size: 12px; color: #ccc">FragmentStatePagerAdapter</a> <a href="/tags/Fresco/" style="font-size: 12px; color: #ccc">Fresco</a> <a href="/tags/Functional-Programming/" style="font-size: 12px; color: #ccc">Functional Programming</a> <a href="/tags/GCM/" style="font-size: 12px; color: #ccc">GCM</a> <a href="/tags/Gesture/" style="font-size: 12px; color: #ccc">Gesture</a> <a href="/tags/Git/" style="font-size: 13.13px; color: #c0c0c0">Git</a> <a href="/tags/Glide/" style="font-size: 12px; color: #ccc">Glide</a> <a href="/tags/God-Objects/" style="font-size: 12px; color: #ccc">God Objects</a> <a href="/tags/Google-Actions/" style="font-size: 12px; color: #ccc">Google Actions</a> <a href="/tags/Google-Cast/" style="font-size: 12px; color: #ccc">Google Cast</a> <a href="/tags/Google-Map/" style="font-size: 12px; color: #ccc">Google Map</a> <a href="/tags/Gradient/" style="font-size: 12px; color: #ccc">Gradient</a> <a href="/tags/Gradle/" style="font-size: 22.13px; color: #636363">Gradle</a> <a href="/tags/Gradle-Plugin/" style="font-size: 13.13px; color: #c0c0c0">Gradle Plugin</a> <a href="/tags/Groovy/" style="font-size: 12px; color: #ccc">Groovy</a> <a href="/tags/Handler/" style="font-size: 13.13px; color: #c0c0c0">Handler</a> <a href="/tags/HandlerThread/" style="font-size: 12px; color: #ccc">HandlerThread</a> <a href="/tags/HashMap/" style="font-size: 12px; color: #ccc">HashMap</a> <a href="/tags/ID/" style="font-size: 12px; color: #ccc">ID</a> <a href="/tags/IDE/" style="font-size: 13.13px; color: #c0c0c0">IDE</a> <a href="/tags/If-Modified-Since/" style="font-size: 12px; color: #ccc">If-Modified-Since</a> <a href="/tags/In-App-Billing/" style="font-size: 12px; color: #ccc">In-App Billing</a> <a href="/tags/Infer/" style="font-size: 12px; color: #ccc">Infer</a> <a href="/tags/Injection/" style="font-size: 12px; color: #ccc">Injection</a> <a href="/tags/Instant-App/" style="font-size: 12px; color: #ccc">Instant App</a> <a href="/tags/Interface/" style="font-size: 12px; color: #ccc">Interface</a> <a href="/tags/Interview/" style="font-size: 12px; color: #ccc">Interview</a> <a href="/tags/Intro-Screen/" style="font-size: 12px; color: #ccc">Intro Screen</a> <a href="/tags/IoT/" style="font-size: 12px; color: #ccc">IoT</a> <a href="/tags/ItemDecoration/" style="font-size: 12px; color: #ccc">ItemDecoration</a> <a href="/tags/ItemTouchHelper/" style="font-size: 12px; color: #ccc">ItemTouchHelper</a> <a href="/tags/JBox2D/" style="font-size: 12px; color: #ccc">JBox2D</a> <a href="/tags/JCenter/" style="font-size: 12px; color: #ccc">JCenter</a> <a href="/tags/JDK/" style="font-size: 12px; color: #ccc">JDK</a> <a href="/tags/JUnit-5/" style="font-size: 16.5px; color: #9d9d9d">JUnit 5</a> <a href="/tags/Jacoco/" style="font-size: 12px; color: #ccc">Jacoco</a> <a href="/tags/Java/" style="font-size: 14.25px; color: #b5b5b5">Java</a> <a href="/tags/Java-8/" style="font-size: 13.13px; color: #c0c0c0">Java 8</a> <a href="/tags/JavaDoc/" style="font-size: 12px; color: #ccc">JavaDoc</a> <a href="/tags/Jetpack/" style="font-size: 12px; color: #ccc">Jetpack</a> <a href="/tags/Jitpack/" style="font-size: 12px; color: #ccc">Jitpack</a> <a href="/tags/JobScheduler/" style="font-size: 12px; color: #ccc">JobScheduler</a> <a href="/tags/KeyStore/" style="font-size: 12px; color: #ccc">KeyStore</a> <a href="/tags/Keyboard/" style="font-size: 12px; color: #ccc">Keyboard</a> <a href="/tags/Keystore/" style="font-size: 12px; color: #ccc">Keystore</a> <a href="/tags/Kotlin/" style="font-size: 27.75px; color: #282828">Kotlin</a> <a href="/tags/Lambda/" style="font-size: 13.13px; color: #c0c0c0">Lambda</a> <a href="/tags/LeakCanary/" style="font-size: 12px; color: #ccc">LeakCanary</a> <a href="/tags/Libraries/" style="font-size: 12px; color: #ccc">Libraries</a> <a href="/tags/Lifecycle/" style="font-size: 12px; color: #ccc">Lifecycle</a> <a href="/tags/Lint/" style="font-size: 13.13px; color: #c0c0c0">Lint</a> <a href="/tags/Litho/" style="font-size: 12px; color: #ccc">Litho</a> <a href="/tags/LiveData/" style="font-size: 14.25px; color: #b5b5b5">LiveData</a> <a href="/tags/Loader/" style="font-size: 13.13px; color: #c0c0c0">Loader</a> <a href="/tags/Loading/" style="font-size: 12px; color: #ccc">Loading</a> <a href="/tags/Locales/" style="font-size: 12px; color: #ccc">Locales</a> <a href="/tags/Looper/" style="font-size: 12px; color: #ccc">Looper</a> <a href="/tags/Lottie/" style="font-size: 12px; color: #ccc">Lottie</a> <a href="/tags/MVC/" style="font-size: 13.13px; color: #c0c0c0">MVC</a> <a href="/tags/MVI/" style="font-size: 17.63px; color: #929292">MVI</a> <a href="/tags/MVP/" style="font-size: 24.38px; color: #4b4b4b">MVP</a> <a href="/tags/MVVM/" style="font-size: 17.63px; color: #929292">MVVM</a> <a href="/tags/Machine-Learning/" style="font-size: 12px; color: #ccc">Machine Learning</a> <a href="/tags/Master-Detail/" style="font-size: 12px; color: #ccc">Master/Detail</a> <a href="/tags/Material-Design/" style="font-size: 12px; color: #ccc">Material Design</a> <a href="/tags/Maven/" style="font-size: 12px; color: #ccc">Maven</a> <a href="/tags/Media/" style="font-size: 12px; color: #ccc">Media</a> <a href="/tags/MediatorLiveData/" style="font-size: 12px; color: #ccc">MediatorLiveData</a> <a href="/tags/Memory-Leak/" style="font-size: 15.38px; color: #a9a9a9">Memory Leak</a> <a href="/tags/Methods-Count/" style="font-size: 12px; color: #ccc">Methods Count</a> <a href="/tags/Mirror/" style="font-size: 12px; color: #ccc">Mirror</a> <a href="/tags/Mobile-Apps/" style="font-size: 12px; color: #ccc">Mobile Apps</a> <a href="/tags/Mobile-Vision/" style="font-size: 13.13px; color: #c0c0c0">Mobile Vision</a> <a href="/tags/MockWebServer/" style="font-size: 12px; color: #ccc">MockWebServer</a> <a href="/tags/Mockito/" style="font-size: 18.75px; color: #868686">Mockito</a> <a href="/tags/Model-View-Intent/" style="font-size: 12px; color: #ccc">Model-View-Intent</a> <a href="/tags/Modularizing/" style="font-size: 12px; color: #ccc">Modularizing</a> <a href="/tags/MotionLayout/" style="font-size: 13.13px; color: #c0c0c0">MotionLayout</a> <a href="/tags/Multiselection/" style="font-size: 12px; color: #ccc">Multiselection</a> <a href="/tags/Music-Player/" style="font-size: 12px; color: #ccc">Music Player</a> <a href="/tags/Mutability/" style="font-size: 12px; color: #ccc">Mutability</a> <a href="/tags/Mutilprocess/" style="font-size: 12px; color: #ccc">Mutilprocess</a> <a href="/tags/NDK/" style="font-size: 12px; color: #ccc">NDK</a> <a href="/tags/Navigation/" style="font-size: 12px; color: #ccc">Navigation</a> <a href="/tags/NavigationView/" style="font-size: 12px; color: #ccc">NavigationView</a> <a href="/tags/Nested-Fragments/" style="font-size: 13.13px; color: #c0c0c0">Nested Fragments</a> <a href="/tags/Network/" style="font-size: 14.25px; color: #b5b5b5">Network</a> <a href="/tags/Nothing/" style="font-size: 12px; color: #ccc">Nothing</a> <a href="/tags/Notification/" style="font-size: 13.13px; color: #c0c0c0">Notification</a> <a href="/tags/Nougat/" style="font-size: 19.88px; color: #7a7a7a">Nougat</a> <a href="/tags/ORM/" style="font-size: 12px; color: #ccc">ORM</a> <a href="/tags/ObjectBox/" style="font-size: 12px; color: #ccc">ObjectBox</a> <a href="/tags/Offline/" style="font-size: 12px; color: #ccc">Offline</a> <a href="/tags/Offline-Architecture/" style="font-size: 12px; color: #ccc">Offline Architecture</a> <a href="/tags/OkHttp/" style="font-size: 13.13px; color: #c0c0c0">OkHttp</a> <a href="/tags/OkLog/" style="font-size: 12px; color: #ccc">OkLog</a> <a href="/tags/Okio/" style="font-size: 12px; color: #ccc">Okio</a> <a href="/tags/OpenGL/" style="font-size: 12px; color: #ccc">OpenGL</a> <a href="/tags/Optimization/" style="font-size: 12px; color: #ccc">Optimization</a> <a href="/tags/PDF/" style="font-size: 12px; color: #ccc">PDF</a> <a href="/tags/PMD/" style="font-size: 12px; color: #ccc">PMD</a> <a href="/tags/PNG/" style="font-size: 12px; color: #ccc">PNG</a> <a href="/tags/Packages/" style="font-size: 12px; color: #ccc">Packages</a> <a href="/tags/Paging-Library/" style="font-size: 12px; color: #ccc">Paging Library</a> <a href="/tags/Parcelable/" style="font-size: 13.13px; color: #c0c0c0">Parcelable</a> <a href="/tags/Passive-View/" style="font-size: 12px; color: #ccc">Passive View</a> <a href="/tags/Performance/" style="font-size: 12px; color: #ccc">Performance</a> <a href="/tags/Permission/" style="font-size: 13.13px; color: #c0c0c0">Permission</a> <a href="/tags/Physics-based-Animation/" style="font-size: 13.13px; color: #c0c0c0">Physics-based Animation</a> <a href="/tags/Picasso/" style="font-size: 12px; color: #ccc">Picasso</a> <a href="/tags/Plaid/" style="font-size: 12px; color: #ccc">Plaid</a> <a href="/tags/Plugin/" style="font-size: 12px; color: #ccc">Plugin</a> <a href="/tags/Privacy-Policy/" style="font-size: 12px; color: #ccc">Privacy Policy</a> <a href="/tags/Process/" style="font-size: 12px; color: #ccc">Process</a> <a href="/tags/Profile/" style="font-size: 12px; color: #ccc">Profile</a> <a href="/tags/Proguard/" style="font-size: 12px; color: #ccc">Proguard</a> <a href="/tags/Pury/" style="font-size: 12px; color: #ccc">Pury</a> <a href="/tags/Quick-Settings/" style="font-size: 12px; color: #ccc">Quick Settings</a> <a href="/tags/React-Native/" style="font-size: 13.13px; color: #c0c0c0">React Native</a> <a href="/tags/Real-Time-Database/" style="font-size: 12px; color: #ccc">Real Time Database</a> <a href="/tags/Realm/" style="font-size: 14.25px; color: #b5b5b5">Realm</a> <a href="/tags/Recorder/" style="font-size: 12px; color: #ccc">Recorder</a> <a href="/tags/RecyclerView/" style="font-size: 17.63px; color: #929292">RecyclerView</a> <a href="/tags/Reductor/" style="font-size: 14.25px; color: #b5b5b5">Reductor</a> <a href="/tags/Redux/" style="font-size: 15.38px; color: #a9a9a9">Redux</a> <a href="/tags/Reference/" style="font-size: 12px; color: #ccc">Reference</a> <a href="/tags/Remote-Config/" style="font-size: 12px; color: #ccc">Remote Config</a> <a href="/tags/Rendering-Engine/" style="font-size: 12px; color: #ccc">Rendering Engine</a> <a href="/tags/Resources/" style="font-size: 15.38px; color: #a9a9a9">Resources</a> <a href="/tags/Retrofit/" style="font-size: 17.63px; color: #929292">Retrofit</a> <a href="/tags/Retrofit2/" style="font-size: 12px; color: #ccc">Retrofit2</a> <a href="/tags/Robolectric/" style="font-size: 12px; color: #ccc">Robolectric</a> <a href="/tags/Room/" style="font-size: 12px; color: #ccc">Room</a> <a href="/tags/Rotation/" style="font-size: 12px; color: #ccc">Rotation</a> <a href="/tags/Router/" style="font-size: 12px; color: #ccc">Router</a> <a href="/tags/RxAndroid/" style="font-size: 12px; color: #ccc">RxAndroid</a> <a href="/tags/RxBinding/" style="font-size: 12px; color: #ccc">RxBinding</a> <a href="/tags/RxJava/" style="font-size: 26.63px; color: #343434">RxJava</a> <a href="/tags/RxJava-2/" style="font-size: 12px; color: #ccc">RxJava 2</a> <a href="/tags/RxJava2/" style="font-size: 19.88px; color: #7a7a7a">RxJava2</a> <a href="/tags/SDK/" style="font-size: 12px; color: #ccc">SDK</a> <a href="/tags/SMS/" style="font-size: 12px; color: #ccc">SMS</a> <a href="/tags/SOLID/" style="font-size: 12px; color: #ccc">SOLID</a> <a href="/tags/SQLDelight/" style="font-size: 12px; color: #ccc">SQLDelight</a> <a href="/tags/SQLite/" style="font-size: 13.13px; color: #c0c0c0">SQLite</a> <a href="/tags/SSH/" style="font-size: 12px; color: #ccc">SSH</a> <a href="/tags/ScaleType/" style="font-size: 12px; color: #ccc">ScaleType</a> <a href="/tags/Scope/" style="font-size: 12px; color: #ccc">Scope</a> <a href="/tags/Scrolling/" style="font-size: 12px; color: #ccc">Scrolling</a> <a href="/tags/Security/" style="font-size: 15.38px; color: #a9a9a9">Security</a> <a href="/tags/Sensor/" style="font-size: 12px; color: #ccc">Sensor</a> <a href="/tags/Service/" style="font-size: 12px; color: #ccc">Service</a> <a href="/tags/Shared-Element/" style="font-size: 13.13px; color: #c0c0c0">Shared Element</a> <a href="/tags/Shared-Element-Transtion/" style="font-size: 12px; color: #ccc">Shared-Element Transtion</a> <a href="/tags/SharedPreferences/" style="font-size: 12px; color: #ccc">SharedPreferences</a> <a href="/tags/Shortcuts/" style="font-size: 14.25px; color: #b5b5b5">Shortcuts</a> <a href="/tags/Sign-In/" style="font-size: 12px; color: #ccc">Sign In</a> <a href="/tags/SmartLock/" style="font-size: 12px; color: #ccc">SmartLock</a> <a href="/tags/SpringAnimation/" style="font-size: 13.13px; color: #c0c0c0">SpringAnimation</a> <a href="/tags/Starter/" style="font-size: 12px; color: #ccc">Starter</a> <a href="/tags/State/" style="font-size: 12px; color: #ccc">State</a> <a href="/tags/Sticker/" style="font-size: 12px; color: #ccc">Sticker</a> <a href="/tags/StrictMode/" style="font-size: 12px; color: #ccc">StrictMode</a> <a href="/tags/Style/" style="font-size: 13.13px; color: #c0c0c0">Style</a> <a href="/tags/Subcomponent/" style="font-size: 12px; color: #ccc">Subcomponent</a> <a href="/tags/Support-Annotations/" style="font-size: 12px; color: #ccc">Support Annotations</a> <a href="/tags/Switch/" style="font-size: 12px; color: #ccc">Switch</a> <a href="/tags/TV/" style="font-size: 13.13px; color: #c0c0c0">TV</a> <a href="/tags/Tail-Recursion/" style="font-size: 12px; color: #ccc">Tail Recursion</a> <a href="/tags/Task/" style="font-size: 12px; color: #ccc">Task</a> <a href="/tags/TensorFlow/" style="font-size: 13.13px; color: #c0c0c0">TensorFlow</a> <a href="/tags/TensorFlow-Lite/" style="font-size: 12px; color: #ccc">TensorFlow Lite</a> <a href="/tags/Terminal/" style="font-size: 12px; color: #ccc">Terminal</a> <a href="/tags/Test/" style="font-size: 16.5px; color: #9d9d9d">Test</a> <a href="/tags/Testing/" style="font-size: 23.25px; color: #575757">Testing</a> <a href="/tags/Text/" style="font-size: 12px; color: #ccc">Text</a> <a href="/tags/TextInputLayout/" style="font-size: 12px; color: #ccc">TextInputLayout</a> <a href="/tags/Toast/" style="font-size: 12px; color: #ccc">Toast</a> <a href="/tags/Toolbar/" style="font-size: 14.25px; color: #b5b5b5">Toolbar</a> <a href="/tags/Tools/" style="font-size: 14.25px; color: #b5b5b5">Tools</a> <a href="/tags/Topography/" style="font-size: 12px; color: #ccc">Topography</a> <a href="/tags/Tracking/" style="font-size: 12px; color: #ccc">Tracking</a> <a href="/tags/Transformations/" style="font-size: 12px; color: #ccc">Transformations</a> <a href="/tags/Transition/" style="font-size: 14.25px; color: #b5b5b5">Transition</a> <a href="/tags/Trello/" style="font-size: 12px; color: #ccc">Trello</a> <a href="/tags/Twitter/" style="font-size: 12px; color: #ccc">Twitter</a> <a href="/tags/Unit-Test/" style="font-size: 13.13px; color: #c0c0c0">Unit Test</a> <a href="/tags/VectorDrawable/" style="font-size: 12px; color: #ccc">VectorDrawable</a> <a href="/tags/Version-Name/" style="font-size: 12px; color: #ccc">Version Name</a> <a href="/tags/ViewModel/" style="font-size: 12px; color: #ccc">ViewModel</a> <a href="/tags/ViewPager/" style="font-size: 14.25px; color: #b5b5b5">ViewPager</a> <a href="/tags/ViewSwitcher/" style="font-size: 12px; color: #ccc">ViewSwitcher</a> <a href="/tags/Wear/" style="font-size: 16.5px; color: #9d9d9d">Wear</a> <a href="/tags/Wear-2-0/" style="font-size: 12px; color: #ccc">Wear 2.0</a> <a href="/tags/WebView/" style="font-size: 12px; color: #ccc">WebView</a> <a href="/tags/WifiManager/" style="font-size: 12px; color: #ccc">WifiManager</a> <a href="/tags/aapt2/" style="font-size: 12px; color: #ccc">aapt2</a> <a href="/tags/fastlane/" style="font-size: 12px; color: #ccc">fastlane</a> <a href="/tags/font/" style="font-size: 12px; color: #ccc">font</a>
-            </div>
-          </div>
-        
+    
+    
+      <div class="tag-cloud">
+        <div class="tag-cloud-title">
+            目前共计 308 个标签
+        </div>
+        <div class="tag-cloud-tags">
+          <a href="/tags/APK/" style="font-size: 13.2px; color: #c0c0c0">APK</a> <a href="/tags/APK-analyzer/" style="font-size: 12px; color: #ccc">APK analyzer</a> <a href="/tags/AR/" style="font-size: 12px; color: #ccc">AR</a> <a href="/tags/Abstract-class/" style="font-size: 12px; color: #ccc">Abstract class</a> <a href="/tags/Accessibility/" style="font-size: 14.4px; color: #b3b3b3">Accessibility</a> <a href="/tags/ActionBar/" style="font-size: 12px; color: #ccc">ActionBar</a> <a href="/tags/ActiveAndroid/" style="font-size: 12px; color: #ccc">ActiveAndroid</a> <a href="/tags/Activity/" style="font-size: 12px; color: #ccc">Activity</a> <a href="/tags/Adapter/" style="font-size: 12px; color: #ccc">Adapter</a> <a href="/tags/Adaptive-Icons/" style="font-size: 12px; color: #ccc">Adaptive Icons</a> <a href="/tags/Alarm/" style="font-size: 12px; color: #ccc">Alarm</a> <a href="/tags/Alert/" style="font-size: 12px; color: #ccc">Alert</a> <a href="/tags/Analytics/" style="font-size: 12px; color: #ccc">Analytics</a> <a href="/tags/Android/" style="font-size: 30px; color: #111">Android</a> <a href="/tags/Android-7/" style="font-size: 16.8px; color: #9a9a9a">Android 7</a> <a href="/tags/Android-7-0/" style="font-size: 12px; color: #ccc">Android 7.0</a> <a href="/tags/Android-7-1/" style="font-size: 12px; color: #ccc">Android 7.1</a> <a href="/tags/Android-News/" style="font-size: 12px; color: #ccc">Android News</a> <a href="/tags/Android-O/" style="font-size: 16.8px; color: #9a9a9a">Android O</a> <a href="/tags/Android-P/" style="font-size: 12px; color: #ccc">Android P</a> <a href="/tags/Android-Studio/" style="font-size: 19.2px; color: #818181">Android Studio</a> <a href="/tags/Android-Things/" style="font-size: 16.8px; color: #9a9a9a">Android Things</a> <a href="/tags/Android-Weekly/" style="font-size: 28.8px; color: #1d1d1d">Android Weekly</a> <a href="/tags/AnimatedVectorDrawable/" style="font-size: 14.4px; color: #b3b3b3">AnimatedVectorDrawable</a> <a href="/tags/Animation/" style="font-size: 26.4px; color: #363636">Animation</a> <a href="/tags/AnimationList/" style="font-size: 12px; color: #ccc">AnimationList</a> <a href="/tags/Anko/" style="font-size: 12px; color: #ccc">Anko</a> <a href="/tags/Annotation/" style="font-size: 13.2px; color: #c0c0c0">Annotation</a> <a href="/tags/App-Shortcuts/" style="font-size: 12px; color: #ccc">App Shortcuts</a> <a href="/tags/AppBarLayout/" style="font-size: 12px; color: #ccc">AppBarLayout</a> <a href="/tags/Architecture/" style="font-size: 14.4px; color: #b3b3b3">Architecture</a> <a href="/tags/Architecture-Components/" style="font-size: 12px; color: #ccc">Architecture Components</a> <a href="/tags/ArrayMap/" style="font-size: 12px; color: #ccc">ArrayMap</a> <a href="/tags/Async-Await/" style="font-size: 12px; color: #ccc">Async-Await</a> <a href="/tags/AsyncLayoutInflater/" style="font-size: 12px; color: #ccc">AsyncLayoutInflater</a> <a href="/tags/Audio/" style="font-size: 13.2px; color: #c0c0c0">Audio</a> <a href="/tags/Authentication/" style="font-size: 12px; color: #ccc">Authentication</a> <a href="/tags/AutoValue/" style="font-size: 13.2px; color: #c0c0c0">AutoValue</a> <a href="/tags/Background-work/" style="font-size: 12px; color: #ccc">Background work</a> <a href="/tags/Barcode-Detection/" style="font-size: 12px; color: #ccc">Barcode Detection</a> <a href="/tags/Battery/" style="font-size: 12px; color: #ccc">Battery</a> <a href="/tags/Bottom-Navigation/" style="font-size: 13.2px; color: #c0c0c0">Bottom Navigation</a> <a href="/tags/Bottom-Sheet/" style="font-size: 14.4px; color: #b3b3b3">Bottom Sheet</a> <a href="/tags/BottomNavigationView/" style="font-size: 15.6px; color: #a7a7a7">BottomNavigationView</a> <a href="/tags/Broadcast/" style="font-size: 12px; color: #ccc">Broadcast</a> <a href="/tags/BroadcastReceiver/" style="font-size: 12px; color: #ccc">BroadcastReceiver</a> <a href="/tags/Build-Time/" style="font-size: 12px; color: #ccc">Build Time</a> <a href="/tags/CI/" style="font-size: 14.4px; color: #b3b3b3">CI</a> <a href="/tags/Cache/" style="font-size: 12px; color: #ccc">Cache</a> <a href="/tags/Call/" style="font-size: 12px; color: #ccc">Call</a> <a href="/tags/Camera2/" style="font-size: 12px; color: #ccc">Camera2</a> <a href="/tags/Certificate/" style="font-size: 12px; color: #ccc">Certificate</a> <a href="/tags/CheckStyle/" style="font-size: 12px; color: #ccc">CheckStyle</a> <a href="/tags/ClassyShark/" style="font-size: 13.2px; color: #c0c0c0">ClassyShark</a> <a href="/tags/Clean-Architecture/" style="font-size: 12px; color: #ccc">Clean Architecture</a> <a href="/tags/Code-Style/" style="font-size: 12px; color: #ccc">Code Style</a> <a href="/tags/Color/" style="font-size: 13.2px; color: #c0c0c0">Color</a> <a href="/tags/Concurrency/" style="font-size: 12px; color: #ccc">Concurrency</a> <a href="/tags/ConfigurationManager/" style="font-size: 12px; color: #ccc">ConfigurationManager</a> <a href="/tags/ConstraintLayout/" style="font-size: 21.6px; color: #686868">ConstraintLayout</a> <a href="/tags/Content-Provider/" style="font-size: 13.2px; color: #c0c0c0">Content Provider</a> <a href="/tags/ContentProvider/" style="font-size: 12px; color: #ccc">ContentProvider</a> <a href="/tags/Coroutines/" style="font-size: 12px; color: #ccc">Coroutines</a> <a href="/tags/Crash/" style="font-size: 12px; color: #ccc">Crash</a> <a href="/tags/Crash-Reporting/" style="font-size: 12px; color: #ccc">Crash Reporting</a> <a href="/tags/Custom-View/" style="font-size: 13.2px; color: #c0c0c0">Custom View</a> <a href="/tags/Cutouts/" style="font-size: 12px; color: #ccc">Cutouts</a> <a href="/tags/Dagger/" style="font-size: 16.8px; color: #9a9a9a">Dagger</a> <a href="/tags/Dagger2/" style="font-size: 24px; color: #4f4f4f">Dagger2</a> <a href="/tags/Data-Binding/" style="font-size: 13.2px; color: #c0c0c0">Data Binding</a> <a href="/tags/Data-Model/" style="font-size: 12px; color: #ccc">Data Model</a> <a href="/tags/Database/" style="font-size: 12px; color: #ccc">Database</a> <a href="/tags/Dependency-Injection/" style="font-size: 12px; color: #ccc">Dependency Injection</a> <a href="/tags/Design/" style="font-size: 14.4px; color: #b3b3b3">Design</a> <a href="/tags/Design-Patterns/" style="font-size: 14.4px; color: #b3b3b3">Design Patterns</a> <a href="/tags/Design-Support-Library/" style="font-size: 12px; color: #ccc">Design Support Library</a> <a href="/tags/Devices/" style="font-size: 12px; color: #ccc">Devices</a> <a href="/tags/DiffUtil/" style="font-size: 13.2px; color: #c0c0c0">DiffUtil</a> <a href="/tags/Docker/" style="font-size: 12px; color: #ccc">Docker</a> <a href="/tags/DownloadManager/" style="font-size: 12px; color: #ccc">DownloadManager</a> <a href="/tags/Effective-Java/" style="font-size: 12px; color: #ccc">Effective Java</a> <a href="/tags/Emoji/" style="font-size: 12px; color: #ccc">Emoji</a> <a href="/tags/Espresso/" style="font-size: 20.4px; color: #757575">Espresso</a> <a href="/tags/Etag/" style="font-size: 12px; color: #ccc">Etag</a> <a href="/tags/ExoPlayer/" style="font-size: 13.2px; color: #c0c0c0">ExoPlayer</a> <a href="/tags/ExpandableRecyclerView/" style="font-size: 12px; color: #ccc">ExpandableRecyclerView</a> <a href="/tags/FAB/" style="font-size: 12px; color: #ccc">FAB</a> <a href="/tags/FPS/" style="font-size: 12px; color: #ccc">FPS</a> <a href="/tags/Face-Detection/" style="font-size: 12px; color: #ccc">Face Detection</a> <a href="/tags/Facebook/" style="font-size: 12px; color: #ccc">Facebook</a> <a href="/tags/FileProvider/" style="font-size: 15.6px; color: #a7a7a7">FileProvider</a> <a href="/tags/FindBugs/" style="font-size: 13.2px; color: #c0c0c0">FindBugs</a> <a href="/tags/Fingerprint/" style="font-size: 13.2px; color: #c0c0c0">Fingerprint</a> <a href="/tags/Firebase/" style="font-size: 24px; color: #4f4f4f">Firebase</a> <a href="/tags/Flavor/" style="font-size: 12px; color: #ccc">Flavor</a> <a href="/tags/FlexboxLayout/" style="font-size: 13.2px; color: #c0c0c0">FlexboxLayout</a> <a href="/tags/Floating-Menu/" style="font-size: 12px; color: #ccc">Floating Menu</a> <a href="/tags/Flutter/" style="font-size: 12px; color: #ccc">Flutter</a> <a href="/tags/Font/" style="font-size: 12px; color: #ccc">Font</a> <a href="/tags/Fragment/" style="font-size: 21.6px; color: #686868">Fragment</a> <a href="/tags/FragmentPagerAdapter/" style="font-size: 12px; color: #ccc">FragmentPagerAdapter</a> <a href="/tags/FragmentStatePagerAdapter/" style="font-size: 12px; color: #ccc">FragmentStatePagerAdapter</a> <a href="/tags/Fresco/" style="font-size: 12px; color: #ccc">Fresco</a> <a href="/tags/Functional-Programming/" style="font-size: 12px; color: #ccc">Functional Programming</a> <a href="/tags/GCM/" style="font-size: 12px; color: #ccc">GCM</a> <a href="/tags/Gesture/" style="font-size: 12px; color: #ccc">Gesture</a> <a href="/tags/Git/" style="font-size: 13.2px; color: #c0c0c0">Git</a> <a href="/tags/Glide/" style="font-size: 12px; color: #ccc">Glide</a> <a href="/tags/God-Objects/" style="font-size: 12px; color: #ccc">God Objects</a> <a href="/tags/Google-Actions/" style="font-size: 12px; color: #ccc">Google Actions</a> <a href="/tags/Google-Cast/" style="font-size: 12px; color: #ccc">Google Cast</a> <a href="/tags/Google-Map/" style="font-size: 12px; color: #ccc">Google Map</a> <a href="/tags/Gradient/" style="font-size: 12px; color: #ccc">Gradient</a> <a href="/tags/Gradle/" style="font-size: 22.8px; color: #5c5c5c">Gradle</a> <a href="/tags/Gradle-Plugin/" style="font-size: 13.2px; color: #c0c0c0">Gradle Plugin</a> <a href="/tags/Groovy/" style="font-size: 12px; color: #ccc">Groovy</a> <a href="/tags/Handler/" style="font-size: 13.2px; color: #c0c0c0">Handler</a> <a href="/tags/HandlerThread/" style="font-size: 12px; color: #ccc">HandlerThread</a> <a href="/tags/HashMap/" style="font-size: 12px; color: #ccc">HashMap</a> <a href="/tags/ID/" style="font-size: 12px; color: #ccc">ID</a> <a href="/tags/IDE/" style="font-size: 13.2px; color: #c0c0c0">IDE</a> <a href="/tags/If-Modified-Since/" style="font-size: 12px; color: #ccc">If-Modified-Since</a> <a href="/tags/In-App-Billing/" style="font-size: 12px; color: #ccc">In-App Billing</a> <a href="/tags/Infer/" style="font-size: 12px; color: #ccc">Infer</a> <a href="/tags/Injection/" style="font-size: 12px; color: #ccc">Injection</a> <a href="/tags/Instant-App/" style="font-size: 12px; color: #ccc">Instant App</a> <a href="/tags/Interface/" style="font-size: 12px; color: #ccc">Interface</a> <a href="/tags/Interview/" style="font-size: 12px; color: #ccc">Interview</a> <a href="/tags/Intro-Screen/" style="font-size: 12px; color: #ccc">Intro Screen</a> <a href="/tags/IoT/" style="font-size: 12px; color: #ccc">IoT</a> <a href="/tags/ItemDecoration/" style="font-size: 12px; color: #ccc">ItemDecoration</a> <a href="/tags/ItemTouchHelper/" style="font-size: 12px; color: #ccc">ItemTouchHelper</a> <a href="/tags/JBox2D/" style="font-size: 12px; color: #ccc">JBox2D</a> <a href="/tags/JCenter/" style="font-size: 12px; color: #ccc">JCenter</a> <a href="/tags/JDK/" style="font-size: 12px; color: #ccc">JDK</a> <a href="/tags/JUnit-5/" style="font-size: 16.8px; color: #9a9a9a">JUnit 5</a> <a href="/tags/Jacoco/" style="font-size: 12px; color: #ccc">Jacoco</a> <a href="/tags/Java/" style="font-size: 14.4px; color: #b3b3b3">Java</a> <a href="/tags/Java-8/" style="font-size: 13.2px; color: #c0c0c0">Java 8</a> <a href="/tags/JavaDoc/" style="font-size: 12px; color: #ccc">JavaDoc</a> <a href="/tags/Jetpack/" style="font-size: 12px; color: #ccc">Jetpack</a> <a href="/tags/Jitpack/" style="font-size: 12px; color: #ccc">Jitpack</a> <a href="/tags/JobScheduler/" style="font-size: 12px; color: #ccc">JobScheduler</a> <a href="/tags/KeyStore/" style="font-size: 12px; color: #ccc">KeyStore</a> <a href="/tags/Keyboard/" style="font-size: 12px; color: #ccc">Keyboard</a> <a href="/tags/Keystore/" style="font-size: 12px; color: #ccc">Keystore</a> <a href="/tags/Kotlin/" style="font-size: 27.6px; color: #2a2a2a">Kotlin</a> <a href="/tags/Lambda/" style="font-size: 13.2px; color: #c0c0c0">Lambda</a> <a href="/tags/LeakCanary/" style="font-size: 12px; color: #ccc">LeakCanary</a> <a href="/tags/Libraries/" style="font-size: 12px; color: #ccc">Libraries</a> <a href="/tags/Lifecycle/" style="font-size: 12px; color: #ccc">Lifecycle</a> <a href="/tags/Lint/" style="font-size: 13.2px; color: #c0c0c0">Lint</a> <a href="/tags/Litho/" style="font-size: 12px; color: #ccc">Litho</a> <a href="/tags/LiveData/" style="font-size: 14.4px; color: #b3b3b3">LiveData</a> <a href="/tags/Loader/" style="font-size: 13.2px; color: #c0c0c0">Loader</a> <a href="/tags/Loading/" style="font-size: 12px; color: #ccc">Loading</a> <a href="/tags/Locales/" style="font-size: 12px; color: #ccc">Locales</a> <a href="/tags/Looper/" style="font-size: 12px; color: #ccc">Looper</a> <a href="/tags/Lottie/" style="font-size: 12px; color: #ccc">Lottie</a> <a href="/tags/MVC/" style="font-size: 13.2px; color: #c0c0c0">MVC</a> <a href="/tags/MVI/" style="font-size: 18px; color: #8e8e8e">MVI</a> <a href="/tags/MVP/" style="font-size: 25.2px; color: #434343">MVP</a> <a href="/tags/MVVM/" style="font-size: 18px; color: #8e8e8e">MVVM</a> <a href="/tags/Machine-Learning/" style="font-size: 12px; color: #ccc">Machine Learning</a> <a href="/tags/Master-Detail/" style="font-size: 12px; color: #ccc">Master/Detail</a> <a href="/tags/Material-Design/" style="font-size: 12px; color: #ccc">Material Design</a> <a href="/tags/Maven/" style="font-size: 12px; color: #ccc">Maven</a> <a href="/tags/Media/" style="font-size: 12px; color: #ccc">Media</a> <a href="/tags/MediatorLiveData/" style="font-size: 12px; color: #ccc">MediatorLiveData</a> <a href="/tags/Memory-Leak/" style="font-size: 15.6px; color: #a7a7a7">Memory Leak</a> <a href="/tags/Methods-Count/" style="font-size: 12px; color: #ccc">Methods Count</a> <a href="/tags/Mirror/" style="font-size: 12px; color: #ccc">Mirror</a> <a href="/tags/Mobile-Apps/" style="font-size: 12px; color: #ccc">Mobile Apps</a> <a href="/tags/Mobile-Vision/" style="font-size: 13.2px; color: #c0c0c0">Mobile Vision</a> <a href="/tags/MockWebServer/" style="font-size: 12px; color: #ccc">MockWebServer</a> <a href="/tags/Mockito/" style="font-size: 19.2px; color: #818181">Mockito</a> <a href="/tags/Model-View-Intent/" style="font-size: 12px; color: #ccc">Model-View-Intent</a> <a href="/tags/Modularizing/" style="font-size: 12px; color: #ccc">Modularizing</a> <a href="/tags/MotionLayout/" style="font-size: 13.2px; color: #c0c0c0">MotionLayout</a> <a href="/tags/Multiselection/" style="font-size: 12px; color: #ccc">Multiselection</a> <a href="/tags/Music-Player/" style="font-size: 12px; color: #ccc">Music Player</a> <a href="/tags/Mutability/" style="font-size: 12px; color: #ccc">Mutability</a> <a href="/tags/Mutilprocess/" style="font-size: 12px; color: #ccc">Mutilprocess</a> <a href="/tags/NDK/" style="font-size: 12px; color: #ccc">NDK</a> <a href="/tags/Navigation/" style="font-size: 12px; color: #ccc">Navigation</a> <a href="/tags/NavigationView/" style="font-size: 12px; color: #ccc">NavigationView</a> <a href="/tags/Nested-Fragments/" style="font-size: 13.2px; color: #c0c0c0">Nested Fragments</a> <a href="/tags/Network/" style="font-size: 14.4px; color: #b3b3b3">Network</a> <a href="/tags/Nothing/" style="font-size: 12px; color: #ccc">Nothing</a> <a href="/tags/Notification/" style="font-size: 13.2px; color: #c0c0c0">Notification</a> <a href="/tags/Nougat/" style="font-size: 20.4px; color: #757575">Nougat</a> <a href="/tags/ORM/" style="font-size: 12px; color: #ccc">ORM</a> <a href="/tags/ObjectBox/" style="font-size: 12px; color: #ccc">ObjectBox</a> <a href="/tags/Offline/" style="font-size: 12px; color: #ccc">Offline</a> <a href="/tags/Offline-Architecture/" style="font-size: 12px; color: #ccc">Offline Architecture</a> <a href="/tags/OkHttp/" style="font-size: 13.2px; color: #c0c0c0">OkHttp</a> <a href="/tags/OkLog/" style="font-size: 12px; color: #ccc">OkLog</a> <a href="/tags/Okio/" style="font-size: 12px; color: #ccc">Okio</a> <a href="/tags/OpenGL/" style="font-size: 12px; color: #ccc">OpenGL</a> <a href="/tags/Optimization/" style="font-size: 12px; color: #ccc">Optimization</a>
+        </div>
       </div>
-      
-      
-      
-    </div>
-    
-
-
-
-    
-    
     
   </div>
 
-
+          
           </div>
+          
+
+
           
 
         </div>
@@ -1592,755 +352,107 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
-    
     <div class="sidebar-inner">
 
       
 
       
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">Dandan Meng</p>
-              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
-          </div>
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpeg" alt="Dandan Meng">
+          <p class="site-author-name" itemprop="name">Dandan Meng</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
 
           
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">72</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">27</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">308</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
 
           
-
-          
-
-          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
           
 
           
             
-          
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">308</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mengdd" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
         </div>
-      </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/mengdd/" title="圣骑士Wind@博客园" target="_blank">圣骑士Wind@博客园</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/c4192d22f989" title="圣骑士Wind@简书" target="_blank">圣骑士Wind@简书</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
 
       
 
@@ -2356,39 +468,30 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
-
-  
-
-  
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
 
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
-
-
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
 
 
         
-
-
-
-
-
-
-
 
         
       </div>
@@ -2400,17 +503,12 @@
         
       </div>
     
-
-    
-
-    
-
     
   </div>
 
   
 
-<script>
+<script type="text/javascript">
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -2424,13 +522,78 @@
 
 
 
+  
 
 
 
 
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
 
 
 
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'dandanmeng';
+      var disqus_identifier = 'tags/index.html';
+
+      var disqus_title = "tags";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+
+    </script>
+  
 
 
 
@@ -2442,78 +605,249 @@
 
 
   
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
 
   
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/src/utils.js?v=7.0.0"></script>
-
-  <script src="/js/src/motion.js?v=7.0.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
-
-
-
-  
-  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
-<script src="/js/src/post-details.js?v=7.0.0"></script>
-
-
-
-  
-
-
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
-
-
-
-  
-
-
-
-  
-
-
-
-
 
   
 
   
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz", "h6jBdqdDSdfOuICNkOVq2DQ0");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
 
   
 
   
 
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
 
