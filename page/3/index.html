@@ -1,4 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9,12 +18,8 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -28,68 +33,70 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
 
 
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
 
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
-
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
-
-
-  <meta name="keywords" content="Hexo, NexT">
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
-
-
-
-
-
-
-<meta name="description" content="This is a technical blog site of an Android developer.">
+  <meta name="description" content="This is a technical blog site of an Android developer.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Meng&#39;s pages">
 <meta property="og:url" content="http://mengdd.github.io/page/3/index.html">
@@ -102,27 +109,8 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+  <link rel="alternate" href="/atom.xml" title="Meng's pages" type="application/atom+xml">
+
 
 
 
@@ -130,20 +118,21 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title> Meng's pages </title>
-</head>
-
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
+  <title>Meng's pages</title>
   
 
 
 
 
 
-  <script type="text/javascript">
+
+  <script>
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
@@ -159,22 +148,47 @@
 
 
 
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
 
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta">
     
 
     <div class="custom-logo-site-title">
@@ -184,13 +198,16 @@
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <h1 class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</h1>
       
+    
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -198,76 +215,114 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
-            
-            分类
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
-            
-            归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
-            
-            标签
-          </a>
-        </li>
-      
+          
+          <li class="menu-item menu-item-home">
 
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
       
         <li class="menu-item menu-item-search">
           
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
-            
-            搜索
-          </a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
         </li>
       
     </ul>
+  
+
+  
+    
+
   
 
   
@@ -282,7 +337,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -296,12 +351,20 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -314,12 +377,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -333,13 +402,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" itemprop="url">
-                  Android Weekly Notes Issue 249
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 249</a>
               
             
           </h2>
@@ -347,20 +412,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-24T17:13:37+08:00">
-                2017-03-24
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-03-24 17:13:37" itemprop="dateCreated datePublished" datetime="2017-03-24T17:13:37+08:00">2017-03-24</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -373,25 +460,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -401,13 +480,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -415,16 +497,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 249">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 249">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -437,7 +519,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -448,24 +532,32 @@
           <h1 id="Android-Weekly-Issue-249"><a href="#Android-Weekly-Issue-249" class="headerlink" title="Android Weekly Issue #249"></a>Android Weekly Issue #249</h1><p>March 19th, 2017<br><a href="http://androidweekly.net/issues/issue-249" target="_blank" rel="noopener">Android Weekly Issue #249</a></p>
 <p>本期内容包括: 一个设计的实现Demo讨论; Kotlin的Coroutines可能还是没有RxJava好用; 在构建SDK/Libraries时需要注意的事项; 如何用OpenGL和JBox2D实现一个好看的多气泡选择器效果;<br>网络请求中Etag, If-Modified-Since的工作原理和用OkHttp的客户端实现; 用ClassyShark导出类型分析; 指纹认证实现代码; MVI模式对调试带来的好处; 用TensorFlow做一个图像识别处理器.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -479,6 +571,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -491,12 +587,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -510,13 +612,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" itemprop="url">
-                  Android Weekly Notes Issue 248
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 248</a>
               
             
           </h2>
@@ -524,20 +622,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-17T10:51:51+08:00">
-                2017-03-17
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-03-17 10:51:51" itemprop="dateCreated datePublished" datetime="2017-03-17T10:51:51+08:00">2017-03-17</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -550,25 +670,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -578,13 +690,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -592,16 +707,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 248">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 248">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -614,7 +729,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -624,24 +741,32 @@
         
           <h1 id="Android-Weekly-Issue-248"><a href="#Android-Weekly-Issue-248" class="headerlink" title="Android Weekly Issue #248"></a>Android Weekly Issue #248</h1><p>March 5th, 2017<br><a href="http://androidweekly.net/issues/issue-248" target="_blank" rel="noopener">Android Weekly Issue #248</a>.<br>本期内容包括: 为什么有时候应该让你的应用崩溃(而不是一味保护); Trello离线模式实现中两个id的问题; 如何让Dagger的component按照scope保存, 在屏幕旋转时不重建; 用Dagger构建Realm的数据库迁移逻辑;<br>利用各种mock工具写单元测试; Map上markers的动画实现; JUnit5中@DisplayName的使用; RxJava中的Single和Completable使用; 举例说明如何给FindBugs写自定义的探测器; Android中静态代码分析工具的使用; Trello离线实现中sync失败情况的处理.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -655,6 +780,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -667,12 +796,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -686,13 +821,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" itemprop="url">
-                  Android Weekly Notes Issue 247
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 247</a>
               
             
           </h2>
@@ -700,20 +831,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-08T14:49:43+08:00">
-                2017-03-08
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-03-08 14:49:43" itemprop="dateCreated datePublished" datetime="2017-03-08T14:49:43+08:00">2017-03-08</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -726,25 +879,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -754,13 +899,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -768,16 +916,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 247">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 247">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -790,7 +938,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -801,24 +951,32 @@
           <h1 id="Android-Weekly-Issue-247"><a href="#Android-Weekly-Issue-247" class="headerlink" title="Android Weekly Issue #247"></a>Android Weekly Issue #247</h1><p>March 5th, 2017<br><a href="http://androidweekly.net/issues/issue-247" target="_blank" rel="noopener">Android Weekly Issue #247</a>.</p>
 <p>本期内容包括: 离线模式的实现; RxJava2的测试支持; MVI模式中的单向数据流; FlexboxLayout的使用; 用脚本来配置项目的版本名和版本号; Fragment的转场动画; MVP模式的几点原则;<br>RxJava中需要注意的一些点; RxJava在Android中的实现例子; JUnit 5使用.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -832,6 +990,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -844,12 +1006,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -863,13 +1031,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" itemprop="url">
-                  Android Weekly Notes Issue 246
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 246</a>
               
             
           </h2>
@@ -877,20 +1041,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-01T17:45:13+08:00">
-                2017-03-01
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-03-01 17:45:13" itemprop="dateCreated datePublished" datetime="2017-03-01T17:45:13+08:00">2017-03-01</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -903,25 +1089,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -931,13 +1109,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -945,16 +1126,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 246">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 246">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -967,7 +1148,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -978,24 +1161,32 @@
           <h1 id="Android-Weekly-Issue-246"><a href="#Android-Weekly-Issue-246" class="headerlink" title="Android Weekly Issue #246"></a>Android Weekly Issue #246</h1><p>February 26th, 2017<br><a href="http://androidweekly.net/issues/issue-246" target="_blank" rel="noopener">Android Weekly Issue #246</a><br>本期内容包括: RecyclerView上的Shared Element动画; 使用FileProvider分享文件有可能会碰到的权限问题; 测试和程序架构的一些讨论; FlexboxLayout的使用; RxJava中可以处理前后动作的两个方法;<br>In-App Billing的实现; 如何用组合而非继承的方式来组织应用.</p>
 <p>代码中有意思的项目: 一个开源的音乐播放器, 一个带状态的layout.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1009,6 +1200,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1021,12 +1216,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1040,13 +1241,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Database/Realm/2017/02/27/android-realm-guide/" itemprop="url">
-                  Android Realm数据库使用指南
-                </a>
+                
+                <a href="/Android/Database/Realm/2017/02/27/android-realm-guide/" class="post-title-link" itemprop="url">Android Realm数据库使用指南</a>
               
             
           </h2>
@@ -1054,20 +1251,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T17:32:23+08:00">
-                2017-02-27
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-27 17:32:23" itemprop="dateCreated datePublished" datetime="2017-02-27T17:32:23+08:00">2017-02-27</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1080,36 +1299,24 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Database/" itemprop="url" rel="index">
-                    <span itemprop="name">Database</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Database/" itemprop="url" rel="index"><span itemprop="name">Database</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Database/Realm/" itemprop="url" rel="index">
-                    <span itemprop="name">Realm</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Database/Realm/" itemprop="url" rel="index"><span itemprop="name">Realm</span></a></span>
 
                 
                 
@@ -1119,13 +1326,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Database/Realm/2017/02/27/android-realm-guide/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Database/Realm/2017/02/27/android-realm-guide/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Database/Realm/2017/02/27/android-realm-guide/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1133,16 +1343,16 @@
 
           
           
-             <span id="/Android/Database/Realm/2017/02/27/android-realm-guide/" class="leancloud_visitors" data-flag-title="Android Realm数据库使用指南">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Database/Realm/2017/02/27/android-realm-guide/" class="leancloud_visitors" data-flag-title="Android Realm数据库使用指南">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -1155,7 +1365,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1169,24 +1381,32 @@
 <p>我写了一个小程序<a href="https://github.com/mengdd/TodoRealm" target="_blank" rel="noopener">TodoRealm</a>, 使用Realm做数据库实现的一个To-do应用,  在实际使用的过程中也有一些发现.</p>
 <p>本文是我自己看文档的时候的一些记录, 有一些实际使用时的发现也穿插在对应的章节了.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Database/Realm/2017/02/27/android-realm-guide/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Database/Realm/2017/02/27/android-realm-guide/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1200,6 +1420,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1212,12 +1436,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1231,13 +1461,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" itemprop="url">
-                  Android Weekly Notes Issue 245
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 245</a>
               
             
           </h2>
@@ -1245,20 +1471,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T15:35:47+08:00">
-                2017-02-22
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-22 15:35:47" itemprop="dateCreated datePublished" datetime="2017-02-22T15:35:47+08:00">2017-02-22</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1271,25 +1519,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -1299,13 +1539,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1313,16 +1556,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 245">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 245">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -1335,7 +1578,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1346,24 +1591,32 @@
           <h1 id="Android-Weekly-Issue-245"><a href="#Android-Weekly-Issue-245" class="headerlink" title="Android Weekly Issue #245"></a>Android Weekly Issue #245</h1><p>February 19th, 2017<br><a href="http://androidweekly.net/issues/issue-245" target="_blank" rel="noopener">Android Weekly Issue #245</a><br>本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);<br>用Keystore保存敏感信息; 依赖注入和Dagger 2的使用; Wear应用向Wear 2.0的迁移; 用ViewPager构建无Fragment的应用结构; Android应用的压力测试讨论; RxJava中<code>Subscription</code>注销处理不当引起的内存泄露; 单元测试并不是完全可靠; Trello向离线模式迁移的架构变化.</p>
 <p>本周推荐的代码里有一个顶部提示控件, 一个手势检测库, 还有一个loading view的库.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1377,6 +1630,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1389,12 +1646,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1408,13 +1671,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" itemprop="url">
-                  Android Weekly Notes Issue 244
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 244</a>
               
             
           </h2>
@@ -1422,20 +1681,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-13T14:53:29+08:00">
-                2017-02-13
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-13 14:53:29" itemprop="dateCreated datePublished" datetime="2017-02-13T14:53:29+08:00">2017-02-13</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1448,25 +1729,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -1476,13 +1749,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1490,16 +1766,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 244">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 244">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -1512,7 +1788,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1522,24 +1800,32 @@
         
           <h1 id="Android-Weekly-Issue-244"><a href="#Android-Weekly-Issue-244" class="headerlink" title="Android Weekly Issue #244"></a>Android Weekly Issue #244</h1><p>February 12th, 2017<br><a href="http://androidweekly.net/issues/issue-244" target="_blank" rel="noopener">Android Weekly Issue #244</a><br>本期内容包括: Android Fragments使用教程; ClassyShark使用; Firebase的Personal App Indexing功能引出的一些权限问题; 关于应用内没有提供Privacy Policy的后续处理; Kotlin中的annotation processor讨论; Pull和Push模式的讲解; 为什么Android测试这么难; Android 7 Nougat不再支持用Intent发送<code>file:// URI</code>, 应用需要改用<code>FileProvider</code>实现原有功能.<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </p></div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1553,6 +1839,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1565,12 +1855,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1584,13 +1880,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" itemprop="url">
-                  Android Weekly Notes Issue 243
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 243</a>
               
             
           </h2>
@@ -1598,20 +1890,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-07T12:52:37+08:00">
-                2017-02-07
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-07 12:52:37" itemprop="dateCreated datePublished" datetime="2017-02-07T12:52:37+08:00">2017-02-07</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1624,25 +1938,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -1652,13 +1958,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1666,16 +1975,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 243">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 243">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -1688,7 +1997,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1698,24 +2009,32 @@
         
           <h1 id="Android-Weekly-Issue-243"><a href="#Android-Weekly-Issue-243" class="headerlink" title="Android Weekly Issue #243"></a>Android Weekly Issue #243</h1><p>February 5th, 2017<br><a href="http://androidweekly.net/issues/issue-243" target="_blank" rel="noopener">Android Weekly Issue #243</a><br>本期内容包括: ConstraintLayout的动画; 用Kotlin写测试; RxJava的练习项目; 一个库: Coordinators的介绍; 一个自动报告Google Play反馈的工具; Service的测试; 动画工具Lottie的介绍; Mutability的讨论;<br>Nougat的多语言支持和相关的一个有趣的case; 使用StrictMode来发现问题.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1729,6 +2048,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1741,12 +2064,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1760,13 +2089,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/2017/02/06/hello-constraint-layout/" itemprop="url">
-                  Say Hello to ConstraintLayout
-                </a>
+                
+                <a href="/Android/2017/02/06/hello-constraint-layout/" class="post-title-link" itemprop="url">Say Hello to ConstraintLayout</a>
               
             
           </h2>
@@ -1774,20 +2099,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-06T15:49:03+08:00">
-                2017-02-06
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-06 15:49:03" itemprop="dateCreated datePublished" datetime="2017-02-06T15:49:03+08:00">2017-02-06</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1800,14 +2147,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
@@ -1817,13 +2160,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/2017/02/06/hello-constraint-layout/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2017/02/06/hello-constraint-layout/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2017/02/06/hello-constraint-layout/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1831,16 +2177,16 @@
 
           
           
-             <span id="/Android/2017/02/06/hello-constraint-layout/" class="leancloud_visitors" data-flag-title="Say Hello to ConstraintLayout">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/2017/02/06/hello-constraint-layout/" class="leancloud_visitors" data-flag-title="Say Hello to ConstraintLayout">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -1853,7 +2199,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1863,24 +2211,32 @@
         
           <h2 id="ConstraintLayout介绍"><a href="#ConstraintLayout介绍" class="headerlink" title="ConstraintLayout介绍"></a>ConstraintLayout介绍</h2><p><code>ConstraintLayout</code>让你可以在很平的view结构(没有多层布局嵌套)中构建一个复杂的布局结构. 有点像<code>RelativeLayout</code>, 所有的view都是根据它和兄弟View和父layout的关系布局的, 但是它比<code>RelativeLayout</code>要更加灵活, 在Layout Editor中也更加好用.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/2017/02/06/hello-constraint-layout/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/2017/02/06/hello-constraint-layout/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -1894,6 +2250,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1906,12 +2266,18 @@
   
   
 
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Dandan Meng">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
@@ -1925,13 +2291,9 @@
         
         
           <h2 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" itemprop="url">
-                  Android Weekly Notes Issue 242
-                </a>
+                
+                <a href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" class="post-title-link" itemprop="url">Android Weekly Notes Issue 242</a>
               
             
           </h2>
@@ -1939,20 +2301,42 @@
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-03T17:27:49+08:00">
-                2017-02-03
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-02-03 17:27:49" itemprop="dateCreated datePublished" datetime="2017-02-03T17:27:49+08:00">2017-02-03</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-17 14:43:57" itemprop="dateModified" datetime="2019-01-17T14:43:57+08:00">2019-01-17</time>
+              
             
           </span>
 
@@ -1965,25 +2349,17 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
 
                 
                 
-                  ， 
+                  , 
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index">
-                    <span itemprop="name">Android Weekly</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a></span>
 
                 
                 
@@ -1993,13 +2369,16 @@
 
           
             
+            
+              
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
+            
                 <a href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2007,16 +2386,16 @@
 
           
           
-             <span id="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 242">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
+            <span id="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" class="leancloud_visitors" data-flag-title="Android Weekly Notes Issue 242">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
           
 
           
@@ -2029,7 +2408,9 @@
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -2039,24 +2420,32 @@
         
           <h1 id="Android-Weekly-Issue-242"><a href="#Android-Weekly-Issue-242" class="headerlink" title="Android Weekly Issue #242"></a>Android Weekly Issue #242</h1><p>January 29th, 2017<br><a href="http://androidweekly.net/issues/issue-242" target="_blank" rel="noopener">Android Weekly Issue #242</a><br>本期内容包括: Android中常用的设计模式; 基于NoSQL的移动对象数据库–ObjectBox; MVC, MVP和MVVM模式的讨论; 一个Google Actions的Java SDK; 一个带黏性动画的FAB的实现; Kotlin 1.1的新功能; Firebase的实时数据库讨论; Model-View-Intent模式应用的实现; 关于实现gradient时透明颜色的使用.</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
           <!--/noindex-->
         
       
     </div>
 
-    <div>
-      
-    </div>
+    
 
-    <div>
-      
-    </div>
+    
+    
+    
 
+    
+
+    
+      
+    
+    
+
+    
 
     <footer class="post-footer">
       
@@ -2070,6 +2459,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -2078,15 +2471,12 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
-          
+
           </div>
-          
-
-
           
 
         </div>
@@ -2102,107 +2492,790 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
 
       
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpeg" alt="Dandan Meng">
-          <p class="site-author-name" itemprop="name">Dandan Meng</p>
-           
-              <p class="site-description motion-element" itemprop="description"></p>
-           
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives">
-                <span class="site-state-item-count">72</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpeg" alt="Dandan Meng">
             
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">27</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">308</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
+              <p class="site-author-name" itemprop="name">Dandan Meng</p>
+              <p class="site-description motion-element" itemprop="description">This is a technical blog site of an Android developer.</p>
           </div>
-        
 
-        <div class="links-of-author motion-element">
           
-            
-              <span class="links-of-author-item">
-                <a href="https://github.com/mengdd" target="_blank" title="GitHub">
-                  
-                    <i class="fa fa-fw fa-github"></i>
-                  
-                  GitHub
-                </a>
-              </span>
-            
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
           
-        </div>
 
-        
-        
-
-        
-        
-          <div class="links-of-blogroll motion-element links-of-blogroll-block">
-            <div class="links-of-blogroll-title">
-              <i class="fa  fa-fw fa-globe"></i>
-              Links
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
             </div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.cnblogs.com/mengdd/" title="圣骑士Wind@博客园" target="_blank">圣骑士Wind@博客园</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.jianshu.com/u/c4192d22f989" title="圣骑士Wind@简书" target="_blank">圣骑士Wind@简书</a>
-                </li>
-              
-            </ul>
-          </div>
-        
+          
 
-        
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/mengdd" title="GitHub &rarr; https://github.com/mengdd" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
 
+          
 
-      </section>
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/mengdd/" title="http://www.cnblogs.com/mengdd/" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.jianshu.com/u/c4192d22f989" title="http://www.jianshu.com/u/c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
 
       
 
@@ -2218,30 +3291,39 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">
-  
-  &copy;  2016 - 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
-</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.0.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
@@ -2253,12 +3335,17 @@
         
       </div>
     
+
+    
+
+    
+
     
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -2272,78 +3359,13 @@
 
 
 
-  
 
 
 
 
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
 
 
 
-  
-  
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
-
-
-
-  
-
-
-
-  
-
-    <script type="text/javascript">
-      var disqus_shortname = 'dandanmeng';
-      var disqus_identifier = 'page/3/index.html';
-
-      var disqus_title = "";
-
-
-      function run_disqus_script(disqus_script) {
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      }
-
-      run_disqus_script('count.js');
-
-      
-
-    </script>
-  
 
 
 
@@ -2355,154 +3377,392 @@
 
 
   
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
   
-  <script type="text/javascript">
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+
+  
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+  
+  <script id="dsq-count-scr" src="https://dandanmeng.disqus.com/count.js" async></script>
+
+
+
+
+
+
+
+  
+
+  <script>
     // Popup Window;
     var isfetched = false;
+    var isXml = true;
     // Search DB path;
     var search_path = "search.xml";
-    if (search_path.length == 0) {
+    if (search_path.length === 0) {
       search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
     }
     var path = "/" + search_path;
     // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
 
     function proceedsearch() {
       $("body")
         .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
         .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
       $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
     }
+
     // search function;
     var searchFunc = function(path, search_id, content_id) {
       'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
       $.ajax({
         url: path,
-        dataType: "xml",
+        dataType: isXml ? "xml" : "json",
         async: true,
-        success: function( xmlResponse ) {
+        success: function(res) {
           // get the contents from search data
           isfetched = true;
           $('.popup').detach().appendTo('.header-inner');
-          var datas = $( "entry", xmlResponse ).map(function() {
+          var datas = isXml ? $("entry", res).map(function() {
             return {
-              title: $( "title", this ).text(),
+              title: $("title", this).text(),
               content: $("content",this).text(),
-              url: $( "url" , this).text()
+              url: $("url" , this).text()
             };
-          }).get();
-          var $input = document.getElementById(search_id);
-          var $resultContent = document.getElementById(content_id);
-          $input.addEventListener('input', function(){
-            var matchcounts = 0;
-            var str='<ul class=\"search-result-list\">';
-            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-            $resultContent.innerHTML = "";
-            if (this.value.trim().length > 1) {
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
               // perform local searching
               datas.forEach(function(data) {
                 var isMatch = false;
-                var content_index = [];
-                var data_title = data.title.trim().toLowerCase();
-                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
-                var data_url = decodeURIComponent(data.url);
-                var index_title = -1;
-                var index_content = -1;
-                var first_occur = -1;
-                // only match artiles with not empty titles and contents
-                if(data_title != '') {
-                  keywords.forEach(function(keyword, i) {
-                    index_title = data_title.indexOf(keyword);
-                    index_content = data_content.indexOf(keyword);
-                    if( index_title >= 0 || index_content >= 0 ){
-                      isMatch = true;
-                      if (i == 0) {
-                        first_occur = index_content;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
                       }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
                     }
 
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
                   });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
                 }
+
                 // show search results
+
                 if (isMatch) {
-                  matchcounts += 1;
-                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
-                  var content = data.content.trim().replace(/<[^>]+>/g,"");
-                  if (first_occur >= 0) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
                     // cut out 100 characters
-                    var start = first_occur - 20;
-                    var end = first_occur + 80;
+                    var start = position - 20;
+                    var end = position + 80;
                     if(start < 0){
                       start = 0;
                     }
-                    if(start == 0){
-                      end = 50;
+                    if (end < position + word.length) {
+                      end = position + word.length;
                     }
                     if(end > content.length){
                       end = content.length;
                     }
-                    var match_content = content.substring(start, end);
-                    // highlight all keywords
-                    keywords.forEach(function(keyword){
-                      var regS = new RegExp(keyword, "gi");
-                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
-                    });
-
-                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
                   }
-                  str += "</li>";
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
                 }
-              })};
-            str += "</ul>";
-            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
-            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
-            $resultContent.innerHTML = str;
-          });
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
           proceedsearch();
         }
-      });}
+      });
+    }
 
     // handle and trigger popup window;
     $('.popup-trigger').click(function(e) {
       e.stopPropagation();
-      if (isfetched == false) {
+      if (isfetched === false) {
         searchFunc(path, 'local-search-input', 'local-search-result');
       } else {
         proceedsearch();
       };
     });
 
-    $('.popup-btn-close').click(function(e){
-      $('.popup').hide();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    });
+    $('.popup-btn-close').click(onPopupClose);
     $('.popup').click(function(e){
       e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
     });
   </script>
 
 
-  
+
+
 
   
-
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz", "h6jBdqdDSdfOuICNkOVq2DQ0");</script>
   <script>
+    
     function showTime(Counter) {
-      var query = new AV.Query(Counter);
       var entries = [];
-      var $visitors = $(".leancloud_visitors");
+      var $visitors = $('.leancloud_visitors');
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
+      $visitors.each(function() {
+        entries.push( $(this).attr('id').trim() );
       });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { '$in': entries } }) })
+        .done(function({ results }) {
           var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
 
           if (results.length === 0) {
@@ -2512,83 +3772,48 @@
 
           for (var i = 0; i < results.length; i++) {
             var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
+            var url = item.url;
+            var time = item.time;
             var element = document.getElementById(url);
 
             $(element).find(COUNT_CONTAINER_REF).text(time);
           }
-          for(var i = 0; i < entries.length; i++) {
+          for (var i = 0; i < entries.length; i++) {
             var url = entries[i];
             var element = document.getElementById(url);
             var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
+            if (countSpan.text() == '') {
               countSpan.text(0);
             }
           }
         })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
+        .fail(function ({ responseJSON }) {
+          console.log(`LeanCloud Counter Error: ${responseJSON.code} ${responseJSON.error}`);
         });
     }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
+    
 
     $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + '6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': '6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz',
+                'X-LC-Key': 'h6jBdqdDSdfOuICNkOVq2DQ0',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            if ($('.post-title-link').length >= 1) {
+              showTime(Counter);
+            }
+          
+        });
     });
   </script>
 
@@ -2598,6 +3823,23 @@
 
   
 
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
 
