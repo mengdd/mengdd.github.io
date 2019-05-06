@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Effective Java Reading Notes</title>
+      <link href="/Java/2019/05/05/effective-java-reading-notes/"/>
+      <url>/Java/2019/05/05/effective-java-reading-notes/</url>
+      
+        <content type="html"><![CDATA[<p>Effective Java是一本经典的书, 很实用的Java进阶读物, 提供了各个方面的best practices.<br>最近终于做完了Effective Java的读书笔记, 发布出来与大家共享.<br><a id="more"></a></p><h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>看了历史, 写第一篇笔记居然是2016年的事情了, 中间半途而废搁置了好长时间, 去年生病的时候捡起来看了一些, 今年终于看完了.</p><p>做这个笔记的目的主要是为了个人学习, 把一本书读薄, 也留下以后可以查阅翻阅的资料. 写博客这么多年, 我觉得有一个很大的好处是, 有时候会有一个点, 或者有个什么相关的技术细节, 记得自己曾经归纳整理过, 迅速找到, 很有帮助.</p><p>读过书以后确实也能对自己更有信心一点, 毕竟知识的小圈圈又往外扩展或加深了一丢丢. 当然可能不是每一本书都有空要做个学习笔记. </p><p>学习笔记对别人的作用, 可以作为一个节约时间的摘要预览吧. 毕竟现在这么忙(或者浮躁), 碎片阅读大行其道, 分章节地看看读书笔记一会儿就可以完成了. 对高手来说, 知识点已经知道了, 大概看一下; 对小白来说, 作为一个摘要来阅读; 对所有水平的人, 有兴趣深入的条目再深入研究.</p><h2 id="Github-Repo"><a href="#Github-Repo" class="headerlink" title="Github Repo"></a>Github Repo</h2><p>笔记整理放在Github上了:<br><a href="https://github.com/mengdd/Effective-Java-Reading-Notes" target="_blank" rel="noopener">Github: Effective-Java-Reading-Notes</a></p><p>最开始做这个笔记的时候Effective Java还是第二版, 这次先把第二版的中文书看完了, 之后又对照着第三版的英文版过了一遍自己的笔记, 把新增的部分补上, 已有的部分也做了一些修正. </p><ul><li>第二版笔记: branch: <code>2nd-edition</code>, tag: <code>v2</code></li><li>第三版笔记: branch: <code>3rd-edition</code>, tag: <code>v3</code></li><li>默认的master分支上是第三版的笔记. </li></ul><p>注意做这些笔记的时候是基于个人的阅读, 只记下了自己觉得需要强调或者归纳整理的部分, 如果有兴趣深入研究, 还是看原书文章比较好. (英文好的话推荐读原版, 第一手资料.)</p><p>欢迎指正.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>移动应用中的非功能性(跨职能)需求</title>
       <link href="/Mobile-Apps/2019/02/02/CFRs-for-mobile-apps/"/>
       <url>/Mobile-Apps/2019/02/02/CFRs-for-mobile-apps/</url>
@@ -417,9 +442,9 @@
             
             <tag> MVVM </tag>
             
-            <tag> Kotlin </tag>
-            
             <tag> ConstraintLayout </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> Design </tag>
             
@@ -584,9 +609,9 @@
             
             <tag> Dagger2 </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Kotlin </tag>
             
@@ -944,11 +969,11 @@
             
             <tag> TensorFlow </tag>
             
+            <tag> ConstraintLayout </tag>
+            
             <tag> RxJava </tag>
             
             <tag> Kotlin </tag>
-            
-            <tag> ConstraintLayout </tag>
             
             <tag> Retrofit </tag>
             
@@ -959,8 +984,6 @@
             <tag> OkHttp </tag>
             
             <tag> Transition </tag>
-            
-            <tag> Network </tag>
             
             <tag> ViewSwitcher </tag>
             
@@ -973,6 +996,8 @@
             <tag> OpenGL </tag>
             
             <tag> JBox2D </tag>
+            
+            <tag> Network </tag>
             
             <tag> Etag </tag>
             
@@ -1066,9 +1091,9 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> RxJava2 </tag>
             
@@ -1313,11 +1338,11 @@
             
             <tag> Nougat </tag>
             
+            <tag> ConstraintLayout </tag>
+            
             <tag> RxJava </tag>
             
             <tag> Kotlin </tag>
-            
-            <tag> ConstraintLayout </tag>
             
             <tag> Testing </tag>
             
@@ -1628,9 +1653,9 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> Kotlin </tag>
-            
             <tag> ConstraintLayout </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> Android Things </tag>
             
@@ -1844,9 +1869,9 @@
             
             <tag> Nougat </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Mockito </tag>
             
@@ -1995,13 +2020,15 @@
             
             <tag> Espresso </tag>
             
+            <tag> Audio </tag>
+            
+            <tag> RxJava </tag>
+            
             <tag> Android Studio </tag>
             
             <tag> MVP </tag>
             
             <tag> Passive View </tag>
-            
-            <tag> RxJava </tag>
             
             <tag> RxBinding </tag>
             
@@ -2022,8 +2049,6 @@
             <tag> Memory Leak </tag>
             
             <tag> TV </tag>
-            
-            <tag> Audio </tag>
             
             <tag> Media </tag>
             
@@ -2058,13 +2083,13 @@
             
             <tag> Espresso </tag>
             
-            <tag> MVP </tag>
+            <tag> ConstraintLayout </tag>
             
             <tag> RxJava </tag>
             
-            <tag> Kotlin </tag>
+            <tag> MVP </tag>
             
-            <tag> ConstraintLayout </tag>
+            <tag> Kotlin </tag>
             
             <tag> Mockito </tag>
             
@@ -2160,19 +2185,19 @@
             
             <tag> Test </tag>
             
-            <tag> RxJava </tag>
-            
-            <tag> Audio </tag>
-            
             <tag> Pury </tag>
             
             <tag> Multiselection </tag>
+            
+            <tag> Audio </tag>
             
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
             
             <tag> Barcode Detection </tag>
+            
+            <tag> RxJava </tag>
             
             <tag> SOLID </tag>
             
@@ -2326,9 +2351,9 @@
             
             <tag> Dagger </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> MVC </tag>
             
@@ -2369,11 +2394,11 @@
             
             <tag> Nougat </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Reductor </tag>
             
@@ -2436,9 +2461,9 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Kotlin </tag>
             
@@ -2548,9 +2573,11 @@
             
             <tag> Wear </tag>
             
+            <tag> Handler </tag>
+            
             <tag> APK </tag>
             
-            <tag> Handler </tag>
+            <tag> Annotation </tag>
             
             <tag> pre-launch </tag>
             
@@ -2559,8 +2586,6 @@
             <tag> Profile </tag>
             
             <tag> Methods Count </tag>
-            
-            <tag> Annotation </tag>
             
             <tag> Adapter </tag>
             
@@ -2599,9 +2624,9 @@
             
             <tag> Test </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Kotlin </tag>
             
@@ -2701,8 +2726,6 @@
             
             <tag> Accessibility </tag>
             
-            <tag> Annotation </tag>
-            
             <tag> ScaleType </tag>
             
             <tag> Devices </tag>
@@ -2710,6 +2733,8 @@
             <tag> Scrolling </tag>
             
             <tag> ExpandableRecyclerView </tag>
+            
+            <tag> Annotation </tag>
             
             <tag> ItemTouchHelper </tag>
             
@@ -2777,9 +2802,9 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Retrofit </tag>
             

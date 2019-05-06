@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://mengdd.github.io/"/>
-  <updated>2019-02-02T08:10:33.644Z</updated>
+  <updated>2019-05-05T09:22:52.079Z</updated>
   <id>http://mengdd.github.io/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Effective Java Reading Notes</title>
+    <link href="http://mengdd.github.io/Java/2019/05/05/effective-java-reading-notes/"/>
+    <id>http://mengdd.github.io/Java/2019/05/05/effective-java-reading-notes/</id>
+    <published>2019-05-05T09:16:56.000Z</published>
+    <updated>2019-05-05T09:22:52.079Z</updated>
+    
+    <content type="html"><![CDATA[<p>Effective Java是一本经典的书, 很实用的Java进阶读物, 提供了各个方面的best practices.<br>最近终于做完了Effective Java的读书笔记, 发布出来与大家共享.<br><a id="more"></a></p><h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>看了历史, 写第一篇笔记居然是2016年的事情了, 中间半途而废搁置了好长时间, 去年生病的时候捡起来看了一些, 今年终于看完了.</p><p>做这个笔记的目的主要是为了个人学习, 把一本书读薄, 也留下以后可以查阅翻阅的资料. 写博客这么多年, 我觉得有一个很大的好处是, 有时候会有一个点, 或者有个什么相关的技术细节, 记得自己曾经归纳整理过, 迅速找到, 很有帮助.</p><p>读过书以后确实也能对自己更有信心一点, 毕竟知识的小圈圈又往外扩展或加深了一丢丢. 当然可能不是每一本书都有空要做个学习笔记. </p><p>学习笔记对别人的作用, 可以作为一个节约时间的摘要预览吧. 毕竟现在这么忙(或者浮躁), 碎片阅读大行其道, 分章节地看看读书笔记一会儿就可以完成了. 对高手来说, 知识点已经知道了, 大概看一下; 对小白来说, 作为一个摘要来阅读; 对所有水平的人, 有兴趣深入的条目再深入研究.</p><h2 id="Github-Repo"><a href="#Github-Repo" class="headerlink" title="Github Repo"></a>Github Repo</h2><p>笔记整理放在Github上了:<br><a href="https://github.com/mengdd/Effective-Java-Reading-Notes" target="_blank" rel="noopener">Github: Effective-Java-Reading-Notes</a></p><p>最开始做这个笔记的时候Effective Java还是第二版, 这次先把第二版的中文书看完了, 之后又对照着第三版的英文版过了一遍自己的笔记, 把新增的部分补上, 已有的部分也做了一些修正. </p><ul><li>第二版笔记: branch: <code>2nd-edition</code>, tag: <code>v2</code></li><li>第三版笔记: branch: <code>3rd-edition</code>, tag: <code>v3</code></li><li>默认的master分支上是第三版的笔记. </li></ul><p>注意做这些笔记的时候是基于个人的阅读, 只记下了自己觉得需要强调或者归纳整理的部分, 如果有兴趣深入研究, 还是看原书文章比较好. (英文好的话推荐读原版, 第一手资料.)</p><p>欢迎指正.</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Effective Java是一本经典的书, 很实用的Java进阶读物, 提供了各个方面的best practices.&lt;br&gt;最近终于做完了Effective Java的读书笔记, 发布出来与大家共享.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Java" scheme="http://mengdd.github.io/categories/Java/"/>
+    
+    
+      <category term="Java" scheme="http://mengdd.github.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
     <title>移动应用中的非功能性(跨职能)需求</title>
     <link href="http://mengdd.github.io/Mobile-Apps/2019/02/02/CFRs-for-mobile-apps/"/>
     <id>http://mengdd.github.io/Mobile-Apps/2019/02/02/CFRs-for-mobile-apps/</id>
     <published>2019-02-02T05:29:37.000Z</published>
-    <updated>2019-02-02T08:10:33.644Z</updated>
+    <updated>2019-02-03T02:33:25.623Z</updated>
     
     <content type="html"><![CDATA[<h1 id="移动应用中的非功能性-跨职能-需求"><a href="#移动应用中的非功能性-跨职能-需求" class="headerlink" title="移动应用中的非功能性(跨职能)需求"></a>移动应用中的非功能性(跨职能)需求</h1><h2 id="非功能需求定义"><a href="#非功能需求定义" class="headerlink" title="非功能需求定义"></a>非功能需求定义</h2><p>跨功能需求(Cross-Functional Requirements, CFR)通常被称为非功能需求(Non-Functional Requirements, NFR), 也可以叫做系统质量属性(System Quality Attributes/Traits), 是指那些用来评价系统运行状态的需求.<br>和具体的业务功能需求(Functional Requirements)不同, 这种需求定义的不是具体的行为和功能(What to do), 而是系统在完成这些功能的时候的属性(How well).</p><p>用Cross-Functional Requirements(CFR)来指代这种需求, 是希望开发者们能在开发的过程中能一直考虑到这些需求, 并且帮助非技术人员意识到要实现这些需求所需要的额外的工作量.</p><p>本文介绍在Mobile应用开发时需要考虑的各种CFRs.</p><a id="more"></a><h2 id="Mobile-App中的CFR"><a href="#Mobile-App中的CFR" class="headerlink" title="Mobile App中的CFR"></a>Mobile App中的CFR</h2><h3 id="Accessibility-无障碍"><a href="#Accessibility-无障碍" class="headerlink" title="Accessibility 无障碍"></a>Accessibility 无障碍</h3><p>是否支持有特殊需求的人使用, 比如支持屏幕阅读.<br>UX设计上是否要考虑对比度要求?</p><h3 id="Authentication-amp-Authorisation-认证和授权"><a href="#Authentication-amp-Authorisation-认证和授权" class="headerlink" title="Authentication &amp; Authorisation 认证和授权"></a>Authentication &amp; Authorisation 认证和授权</h3><p>用户是如何认证的?<br>应该遵循哪些标准或应用哪些现有的身份验证系统?<br>哪些角色和权限是必须的?</p><h3 id="Capacity-容量"><a href="#Capacity-容量" class="headerlink" title="Capacity 容量"></a>Capacity 容量</h3><p>数据体量是多大?<br>会有多少用户同时使用?<br>单个用户所使用到的数据类型和大小?<br>有特殊的存储要求吗?</p><h3 id="Compatibility-兼容性"><a href="#Compatibility-兼容性" class="headerlink" title="Compatibility 兼容性"></a>Compatibility 兼容性</h3><p>支持Android和iOS?<br>Android/iOS最低/最高支持版本?<br>Android需要支持哪些厂商的哪些机型?</p><h3 id="Configurability-可配置性"><a href="#Configurability-可配置性" class="headerlink" title="Configurability 可配置性"></a>Configurability 可配置性</h3><p>用户或管理员可以配置功能行为吗?<br>这是如何管理的?<br>用Firebase做A/B test?</p><h3 id="Continuity-连续性"><a href="#Continuity-连续性" class="headerlink" title="Continuity 连续性"></a>Continuity 连续性</h3><p>灾难恢复计划?</p><h3 id="Data-Integrity-and-Consistency-数据完整和一致性"><a href="#Data-Integrity-and-Consistency-数据完整和一致性" class="headerlink" title="Data Integrity and Consistency 数据完整和一致性"></a>Data Integrity and Consistency 数据完整和一致性</h3><p>需要数据同步吗?<br>需要支持离线操作吗?<br>数据校验?<br>冲突解决?</p><h3 id="Data-Privacy-隐私"><a href="#Data-Privacy-隐私" class="headerlink" title="Data Privacy 隐私"></a>Data Privacy 隐私</h3><p>什么数据不应该存储?<br>哪些数据需要加密?<br>哪些数据可见/不可见?<br>开发测试时是否可以利用产品数据?</p><h3 id="Distributability-分发性"><a href="#Distributability-分发性" class="headerlink" title="Distributability 分发性"></a>Distributability 分发性</h3><p>App使用是否有地域限制?<br>可以离线使用吗?<br>如何同步信息?</p><h3 id="Extensibility-扩展性"><a href="#Extensibility-扩展性" class="headerlink" title="Extensibility 扩展性"></a>Extensibility 扩展性</h3><p>是否提供比如插件平台, 用户可以自行扩展?<br>需要考虑什么样的限制和安全需求?</p><h3 id="Help-amp-Support-帮助支持"><a href="#Help-amp-Support-帮助支持" class="headerlink" title="Help &amp; Support 帮助支持"></a>Help &amp; Support 帮助支持</h3><p>需要文档支持吗?<br>需要提供用户使用向导吗?<br>需要客服吗?</p><h3 id="Installability-amp-Deployment-安装和部署"><a href="#Installability-amp-Deployment-安装和部署" class="headerlink" title="Installability &amp; Deployment 安装和部署"></a>Installability &amp; Deployment 安装和部署</h3><p>需要支持什么平台? (Android/iOS/?)<br>需要在哪里分发应用?</p><h3 id="Legal-Compliance-法律规定"><a href="#Legal-Compliance-法律规定" class="headerlink" title="Legal Compliance 法律规定"></a>Legal Compliance 法律规定</h3><p>是否有任何法律上的限制?<br>使用的第三方软件/库的license?<br>是否需要用户同意/授权/查看相关条款?</p><h3 id="Localisation-amp-Internationalisation-国际化"><a href="#Localisation-amp-Internationalisation-国际化" class="headerlink" title="Localisation &amp; Internationalisation 国际化"></a>Localisation &amp; Internationalisation 国际化</h3><p>是否支持多个语言?<br>日期/时间/货币的转换和翻译?</p><h3 id="Maintainability-可维护性"><a href="#Maintainability-可维护性" class="headerlink" title="Maintainability 可维护性"></a>Maintainability 可维护性</h3><p>崩溃率要求?<br>ANR率要求?<br>最大可容忍的停机时间? (Maximum tolerable downtime (RTO / Recovery Time Objective))<br>是否支持热更新?</p><h3 id="Monitoring-监控"><a href="#Monitoring-监控" class="headerlink" title="Monitoring 监控"></a>Monitoring 监控</h3><p>需要监控哪些数据? (Crash, ANR, …)<br>怎么监控的?<br>需要什么样的警报?<br>是否运用了合理的工具?</p><h3 id="Performance-性能"><a href="#Performance-性能" class="headerlink" title="Performance 性能"></a>Performance 性能</h3><p>应用安装包大小? -&gt; 用户下载安装一个应用的时间.<br>启动时间要求?<br>设备内存使用要求?<br>哪些请求的响应时间要求是比较重要的? (比如登录时间必须要在5s内?)<br>弱网络下的要求?<br>屏幕帧率要求? 卡顿容忍?<br>电量消耗要求?<br>是否有做性能测试的要求?</p><h3 id="Resilience-amp-Fault-Tolerance-弹性和容错性"><a href="#Resilience-amp-Fault-Tolerance-弹性和容错性" class="headerlink" title="Resilience &amp; Fault Tolerance 弹性和容错性"></a>Resilience &amp; Fault Tolerance 弹性和容错性</h3><p>如果发生了错误(比如外部依赖不可用或出错), 系统的功能应该如何降级表现?</p><h3 id="Reliability-可靠性"><a href="#Reliability-可靠性" class="headerlink" title="Reliability 可靠性"></a>Reliability 可靠性</h3><p>需要搞清楚系统不准确的商业代价是什么, 需要多大程度上的保证准确性.<br>(比如航天飞机和游戏应用的准确性可靠性要求肯定是不一样的).</p><h3 id="Scalability-可扩展性"><a href="#Scalability-可扩展性" class="headerlink" title="Scalability 可扩展性"></a>Scalability 可扩展性</h3><p>数据量的变化范围?<br>如何测试这一点?</p><h3 id="Security-安全性"><a href="#Security-安全性" class="headerlink" title="Security 安全性"></a>Security 安全性</h3><p>哪些数据需要被保护? (考虑加密, 存储位置, 传输方式).<br>是否需要限制设备类型(比如限制root设备)?<br>商业准则?<br>API使用限制?<br>WebView中的安全措施?<br>是否需要安全键盘? (如银行类应用)<br>哪些地方需要对用户输入进行合法性验证?<br>第三方工具的安全漏洞?<br>代码防反编译?<br>需要进行哪些安全测试? </p><h3 id="Usability-and-user-experience-用户体验"><a href="#Usability-and-user-experience-用户体验" class="headerlink" title="Usability and user experience 用户体验"></a>Usability and user experience 用户体验</h3><p>UX的重要性? (只是可用就可以? 还是Good to have? 美观大方非常重要?)<br>需要考虑不同的设备(平板?)和屏幕尺寸吗? 兼顾范围?<br>要支持横竖屏切换吗?<br>有企业内部需要遵循的UX Guidelines吗?</p><h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>有的项目重复出现在不同的分类下面了. 可以从不同的角度考虑下.<br>欢迎提出修改和补充意见.</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://en.wikipedia.org/wiki/Non-functional_requirement" target="_blank" rel="noopener">Wiki Non-functional requirement</a></li><li><a href="https://sachinsdate.wordpress.com/2013/04/27/non-functional-requirements-in-mobile-applications/" target="_blank" rel="noopener">Non-Functional Requirements in Mobile Applications</a></li></ul>]]></content>
     
@@ -407,9 +429,9 @@
     
       <category term="MVVM" scheme="http://mengdd.github.io/tags/MVVM/"/>
     
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
       <category term="ConstraintLayout" scheme="http://mengdd.github.io/tags/ConstraintLayout/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
       <category term="Design" scheme="http://mengdd.github.io/tags/Design/"/>
     
@@ -565,9 +587,9 @@
     
       <category term="Dagger2" scheme="http://mengdd.github.io/tags/Dagger2/"/>
     
-      <category term="MVP" scheme="http://mengdd.github.io/tags/MVP/"/>
-    
       <category term="RxJava" scheme="http://mengdd.github.io/tags/RxJava/"/>
+    
+      <category term="MVP" scheme="http://mengdd.github.io/tags/MVP/"/>
     
       <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
@@ -828,52 +850,6 @@
       <category term="Dependency Injection" scheme="http://mengdd.github.io/tags/Dependency-Injection/"/>
     
       <category term="Plugin" scheme="http://mengdd.github.io/tags/Plugin/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Android Weekly Notes Issue 250</title>
-    <link href="http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/"/>
-    <id>http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/</id>
-    <published>2017-03-31T08:50:01.000Z</published>
-    <updated>2019-01-17T06:43:57.695Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Android-Weekly-Issue-250"><a href="#Android-Weekly-Issue-250" class="headerlink" title="Android Weekly Issue #250"></a>Android Weekly Issue #250</h1><p>March 26th, 2017<br><a href="http://androidweekly.net/issues/issue-250" target="_blank" rel="noopener">Android Weekly Issue #250</a>.<br>本期内容: 好几篇关于Android O预览版的文章; JUnit 5的动态测试; 作为团队里唯一的Android开发如何学习和工作; Support库新推出的基于物理的动画API: SpringAnimation; Uber Rider项目重构中关于依赖注入的scope层级的改动; Kotlin和RxJava的简洁性.</p><a id="more"></a><h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="O-h-yeah-What-we-look-forward-to-in-Android-O"><a href="#O-h-yeah-What-we-look-forward-to-in-Android-O" class="headerlink" title="O-h yeah! What we look forward to in Android O"></a><a href="https://www.novoda.com/blog/o-h-yeah-what-we-look-forward-to-in-android-o/" target="_blank" rel="noopener">O-h yeah! What we look forward to in Android O</a></h2><p>Google宣布了最新Android O的预览程序. Novoda team查看了最新文档来看看什么新特性最让大家欣喜.</p><ul><li>更宽广的色域和多种颜色空间支持:<br>我们不再被限制在sRGB的颜色空间里, 文档见<a href="https://developer.android.com/reference/android/graphics/ColorSpace.html" target="_blank" rel="noopener">ColorSpace</a>.</li><li>字体支持.</li><li>Adaptive icons: Android N中提供了圆形的启动图标; 从Android O开始, 手机开发商和launcher开发者们可以指定一个mask到应用提供的背景图上.</li><li>ACCESSIBILITY按钮: Accessibility services(比如TalkBack)可以在有软导航键的设备上添加一个按钮.</li><li>指纹手势.</li><li>自动大小的TextView.</li><li>Autofill APIs. 自动填表.</li></ul><h2 id="JUnit-5-Dynamic-Tests"><a href="#JUnit-5-Dynamic-Tests" class="headerlink" title="JUnit 5: Dynamic Tests"></a><a href="https://blog.stylingandroid.com/junit-5-dynamic-tests/" target="_blank" rel="noopener">JUnit 5: Dynamic Tests</a></h2><p>本篇讲如何简化一个测试cases都很类似的test suite.</p><p>首先, 找出不同的部分, 抽取一个方法, 把不相同的部分作为参数传进去.</p><p>然后用JUnit 5的动态测试(Dynamic Tests)特性.<br>两个关键组件: <code>TextFactory</code>和<code>DynamicTest</code>.<br>文中代码详细说明了它们的用法.</p><h2 id="Flying-Solo-with-Android-Development"><a href="#Flying-Solo-with-Android-Development" class="headerlink" title="Flying Solo with Android Development"></a><a href="https://hackernoon.com/flying-solo-with-android-development-c52d911b62bf?gi=c13f45395440#.bdab0pxgy" target="_blank" rel="noopener">Flying Solo with Android Development</a></h2><p>作者几经周转, 从4人Android团队到2人团队, 现在又到了一个新团队, 作为团队里唯一Android开发. 在这篇文章中, 她分享了一些觉得不错的学习资源和她平时的工作习惯以及建议.</p><h2 id="Introduction-to-SpringAnimation-with-examples"><a href="#Introduction-to-SpringAnimation-with-examples" class="headerlink" title="Introduction to SpringAnimation with examples"></a><a href="https://www.thedroidsonroids.com/blog/android/springanimation-examples/" target="_blank" rel="noopener">Introduction to SpringAnimation with examples</a></h2><p>本文讲弹簧效果动画的实现.</p><p><a href="https://developer.android.com/reference/android/support/animation/package-summary.html" target="_blank" rel="noopener">Dynamic-animation</a>是Android Support Library 25.3.0最新引进的, 用于实现基于物理的动画.</p><p>作者这篇文章介绍了<a href="https://developer.android.com/reference/android/support/animation/SpringAnimation.html" target="_blank" rel="noopener">SpringAnimation</a>和<a href="https://developer.android.com/reference/android/support/animation/SpringForce.html" target="_blank" rel="noopener">SpringForce</a>的用法, 提供了几个例子, 动态改变View的位置, 旋转和大小属性: <a href="https://github.com/AlexKrupa/android-springanimation-examples" target="_blank" rel="noopener">android-springanimation-examples</a>.</p><h2 id="Rewriting-Uber-Engineering’s-Rider-App-with-Deep-Scope-Hierarchies"><a href="#Rewriting-Uber-Engineering’s-Rider-App-with-Deep-Scope-Hierarchies" class="headerlink" title="Rewriting Uber Engineering’s Rider App with Deep Scope Hierarchies"></a><a href="https://eng.uber.com/deep-scope-hierarchies/" target="_blank" rel="noopener">Rewriting Uber Engineering’s Rider App with Deep Scope Hierarchies</a></h2><p>Android Uber rider app的重构.<br>主要讨论了由于存在很多共用组件, 所以依赖注入的设计需要改进.</p><p>首先介绍了旧的设计: 两级Scope层次.<br>后来他们的新设计采用了深层次的scope层级, 减少了耦合.</p><p>最后又介绍了几种他们曾经考虑过的架构模式.</p><h2 id="It’s-time-to-kiss-goodbye-to-your-implicit-BroadcastReceivers"><a href="#It’s-time-to-kiss-goodbye-to-your-implicit-BroadcastReceivers" class="headerlink" title="It’s time to kiss goodbye to your implicit BroadcastReceivers"></a><a href="https://medium.com/@iiro.krankka/its-time-to-kiss-goodbye-to-your-implicit-broadcastreceivers-eefafd9f4f8a#.67j4153n6" target="_blank" rel="noopener">It’s time to kiss goodbye to your implicit BroadcastReceivers</a></h2><p>Android O的preview已经出来了: <a href="https://developer.android.com/preview/index.html" target="_blank" rel="noopener">Android O Preview</a>. 这是它列出来的<a href="https://developer.android.com/preview/behavior-changes.html" target="_blank" rel="noopener">Behavior changes</a>.</p><p>如果你想要把app target到Android O, 而且你的manifest中注册了一些隐式的BroadcastReceiver. 那么这篇文章就是为你准备的.</p><p>Android做这一切的出发点都是为了节约电量.</p><p>Android 7.0的时候就<a href="https://developer.android.com/about/versions/nougat/android-7.0-changes.html#bg-opt" target="_blank" rel="noopener">移除了三种隐式广播的支持</a>. 它们是<code>CONNECTIVITY_ACTION</code>,  <code>ACTION_NEW_PICTURE</code>和<code>ACTION_NEW_VIDEO</code>.</p><p>现在Android O中, 除了<a href="https://developer.android.com/preview/features/background-broadcasts.html" target="_blank" rel="noopener">background-broadcasts</a>中提到的, 其他所有在manifest中注册的隐式广播都不再工作了. (注意这里的关键字: manifest中注册, 隐式广播.)</p><p>那么你的manifest中如果有receiver, 现在应该怎么办呢?</p><p>首先看看你的广播是否是隐式的. 根据<a href="https://developer.android.com/preview/features/background.html#broadcasts" target="_blank" rel="noopener">文档</a>, 所有跟你的应用没有直接关系的广播都是隐式的; 而直接相关的都是显式的.</p><p>然后检查你的应用是否真的受到了影响, 因为有一些隐式的广播是例外情况.</p><p>真的受到影响了怎么办呢? 使用<code>JobScheduler</code>来拯救. 但是它只在API 21以上有, 如果你的最低API小于21, 可以用官方推荐的<a href="https://github.com/firebase/firebase-jobdispatcher-android" target="_blank" rel="noopener">firebase-jobdispatcher-android</a>. 作者他们团队用的是Evernote的<a href="https://github.com/evernote/android-job" target="_blank" rel="noopener">android-job</a>.</p><p>如果上面的库仍然不能帮到你, 你可以考虑把广播换成动态注册的.<br>不管你的广播是隐式的还是显式的, <code>Context.registerReceiver()</code>是永远有效的. 但缺陷就是注销以后就不能再收到事件了.</p><h2 id="Random-Musings-on-the-O-Developer-Preview-1"><a href="#Random-Musings-on-the-O-Developer-Preview-1" class="headerlink" title="Random Musings on the O Developer Preview 1"></a><a href="https://commonsware.com/blog/2017/03/22/random-musings-o-developer-preview-1.html" target="_blank" rel="noopener">Random Musings on the O Developer Preview 1</a></h2><p>作者对Android O预览的一些看法.</p><h3 id="比较令人担心的几点"><a href="#比较令人担心的几点" class="headerlink" title="比较令人担心的几点"></a>比较令人担心的几点</h3><ul><li>后台工作的处理: 许多隐式的广播可能不再起作用, 可能会改变某些应用的行为.</li><li>多显示支持. 允许用户把一个activity投射到外部显示器上. 这个行为还需要进一步测试, 如果我们投射到一个不可触摸的显示器上会怎样?</li><li>关于磁盘空间, 缓存目录.</li><li>Support Libraries支持的最小API为14.</li></ul><h3 id="有启发性的几点"><a href="#有启发性的几点" class="headerlink" title="有启发性的几点"></a>有启发性的几点</h3><ul><li>可以给Notification设置timeout.</li><li>Picture-in-Picture (PIP)模式. 一种特殊的多窗口模式, 多数被用来播放视频, TV已经有了.</li><li>新字体.</li><li>Storage Access Framework (SAF) -&gt; Seekable streams.</li><li>WebView将支持allow-cleartext设置.</li><li>应用安装其他应用需要用户授权.</li><li>Content provider分页查询.</li><li><code>FragmentLifecycleCallbacks</code>.</li><li><code>SmsManager</code>可以创建tokens.</li><li><code>SharedPreferences</code>提供了接口, 可以更换底层存储实现.</li><li><code>findViewById()</code>不再需要强转.</li></ul><h3 id="其他你可能感兴趣的"><a href="#其他你可能感兴趣的" class="headerlink" title="其他你可能感兴趣的"></a>其他你可能感兴趣的</h3><ul><li><code>View.setTooltipText()</code>.</li><li><code>TextView.setJustify()</code>.</li><li>提供了padding和margin的Vertical和Horizontal属性, 这样一下就可以设置同一方向上的两个值.</li><li><code>ProgressBar.setMin()</code>.</li><li><code>ANDROID_ID</code>现在是对每个应用来说, 而不是用户或设备. 见<a href="https://developer.android.com/preview/behavior-changes.html#privacy-all" target="_blank" rel="noopener">Privacy</a>.</li></ul><h2 id="Writing-Concise-Code-with-Kotlin-and-RxJava"><a href="#Writing-Concise-Code-with-Kotlin-and-RxJava" class="headerlink" title="Writing Concise Code with Kotlin and RxJava"></a><a href="https://pspdfkit.com/blog/2017/writing-concise-code-with-kotlin-and-rxjava/" target="_blank" rel="noopener">Writing Concise Code with Kotlin and RxJava</a></h2><p>用Github API举例子, 用RxJava和Kotlin实现一个功能, 说明了它们的简洁性.</p><h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Fakeit"><a href="#Fakeit" class="headerlink" title="Fakeit"></a><a href="https://github.com/moove-it/fakeit" target="_blank" rel="noopener">Fakeit</a></h2><p>Kotlin版的假数据生成器.</p><h2 id="Cicerone"><a href="#Cicerone" class="headerlink" title="Cicerone"></a><a href="https://github.com/terrakok/Cicerone" target="_blank" rel="noopener">Cicerone</a></h2><p>一个轻量级的Android导航库.</p><h2 id="data-binding-validator"><a href="#data-binding-validator" class="headerlink" title="data-binding-validator"></a><a href="https://github.com/Ilhasoft/data-binding-validator" target="_blank" rel="noopener">data-binding-validator</a></h2><p>表单数据验证器, 使用data binding framework实现.</p><h2 id="LabCoat"><a href="#LabCoat" class="headerlink" title="LabCoat"></a><a href="https://github.com/Commit451/LabCoat" target="_blank" rel="noopener">LabCoat</a></h2><p>GitLab client for Android.</p><h1 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h1><h2 id="O-MG-the-Developer-Preview-of-Android-O-is-here"><a href="#O-MG-the-Developer-Preview-of-Android-O-is-here" class="headerlink" title="O-MG, the Developer Preview of Android O is here!"></a><a href="https://android-developers.googleblog.com/2017/03/first-preview-of-android-o.html" target="_blank" rel="noopener">O-MG, the Developer Preview of Android O is here!</a></h2><p>Google发布了下一个系统版本Android O的开发者预览版.</p><h1 id="TOOLS"><a href="#TOOLS" class="headerlink" title="TOOLS"></a>TOOLS</h1><h2 id="Android-Studio-meets-Slack"><a href="#Android-Studio-meets-Slack" class="headerlink" title="Android Studio meets Slack"></a><a href="https://instapk.com/" target="_blank" rel="noopener">Android Studio meets Slack</a></h2><p>一个小工具, 可以直接把Android Studio打的包发到Slack去.</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Android-Weekly-Issue-250&quot;&gt;&lt;a href=&quot;#Android-Weekly-Issue-250&quot; class=&quot;headerlink&quot; title=&quot;Android Weekly Issue #250&quot;&gt;&lt;/a&gt;Android Weekly Issue #250&lt;/h1&gt;&lt;p&gt;March 26th, 2017&lt;br&gt;&lt;a href=&quot;http://androidweekly.net/issues/issue-250&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Android Weekly Issue #250&lt;/a&gt;.&lt;br&gt;本期内容: 好几篇关于Android O预览版的文章; JUnit 5的动态测试; 作为团队里唯一的Android开发如何学习和工作; Support库新推出的基于物理的动画API: SpringAnimation; Uber Rider项目重构中关于依赖注入的scope层级的改动; Kotlin和RxJava的简洁性.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Android" scheme="http://mengdd.github.io/categories/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/categories/Android/Android-Weekly/"/>
-    
-    
-      <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
-    
-      <category term="Dagger" scheme="http://mengdd.github.io/tags/Dagger/"/>
-    
-      <category term="RxJava" scheme="http://mengdd.github.io/tags/RxJava/"/>
-    
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
-      <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
-    
-      <category term="Android O" scheme="http://mengdd.github.io/tags/Android-O/"/>
-    
-      <category term="JUnit 5" scheme="http://mengdd.github.io/tags/JUnit-5/"/>
-    
-      <category term="Physics-based Animation" scheme="http://mengdd.github.io/tags/Physics-based-Animation/"/>
-    
-      <category term="SpringAnimation" scheme="http://mengdd.github.io/tags/SpringAnimation/"/>
-    
-      <category term="Injection" scheme="http://mengdd.github.io/tags/Injection/"/>
-    
-      <category term="BroadcastReceiver" scheme="http://mengdd.github.io/tags/BroadcastReceiver/"/>
     
   </entry>
   
