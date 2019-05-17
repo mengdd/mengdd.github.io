@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/</loc>
+    
+    <lastmod>2019-05-17T08:57:31.885Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://mengdd.github.io/Java/2019/05/05/effective-java-reading-notes/</loc>
     
     <lastmod>2019-05-05T09:22:52.079Z</lastmod>
@@ -37,14 +44,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/about/index.html</loc>
+    <loc>http://mengdd.github.io/categories/index.html</loc>
     
     <lastmod>2019-01-17T06:43:57.701Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/categories/index.html</loc>
+    <loc>http://mengdd.github.io/about/index.html</loc>
     
     <lastmod>2019-01-17T06:43:57.701Z</lastmod>
     
@@ -72,14 +79,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/Kotlin/2018/07/19/android-weekly-notes-issue-318/</loc>
     
     <lastmod>2019-01-17T06:43:57.698Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/Kotlin/2018/07/19/android-weekly-notes-issue-318/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/</loc>
     
     <lastmod>2019-01-17T06:43:57.698Z</lastmod>
     
@@ -93,14 +100,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/03/android-weekly-notes-issue-255/</loc>
     
     <lastmod>2019-01-17T06:43:57.697Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/03/android-weekly-notes-issue-255/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/</loc>
     
     <lastmod>2019-01-17T06:43:57.697Z</lastmod>
     
@@ -142,14 +149,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/04/18/android-weekly-notes-issue-253/</loc>
+    <loc>http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/</loc>
     
     <lastmod>2019-01-17T06:43:57.696Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/04/18/android-weekly-notes-issue-253/</loc>
     
     <lastmod>2019-01-17T06:43:57.696Z</lastmod>
     
@@ -198,14 +205,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/</loc>
+    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
@@ -226,14 +233,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/</loc>
+    <loc>http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/</loc>
     
     <lastmod>2019-01-17T06:43:57.693Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/</loc>
     
     <lastmod>2019-01-17T06:43:57.693Z</lastmod>
     
@@ -310,14 +317,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/</loc>
     
     <lastmod>2019-01-17T06:43:57.688Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/</loc>
     
     <lastmod>2019-01-17T06:43:57.688Z</lastmod>
     
@@ -345,14 +352,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/</loc>
+    <loc>http://mengdd.github.io/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/</loc>
     
     <lastmod>2019-01-17T06:43:57.685Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/</loc>
     
     <lastmod>2019-01-17T06:43:57.685Z</lastmod>
     
@@ -373,14 +380,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/09/android-weekly-notes-issue-225/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/</loc>
     
     <lastmod>2019-01-17T06:43:57.684Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/09/android-weekly-notes-issue-225/</loc>
     
     <lastmod>2019-01-17T06:43:57.684Z</lastmod>
     
