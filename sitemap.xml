@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mengdd.github.io/Android/2019/07/19/reduce-app-size/</loc>
+    
+    <lastmod>2019-07-23T02:55:43.840Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/</loc>
     
     <lastmod>2019-05-17T09:45:48.702Z</lastmod>
@@ -44,14 +51,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/categories/index.html</loc>
+    <loc>http://mengdd.github.io/about/index.html</loc>
     
     <lastmod>2019-01-17T06:43:57.701Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/about/index.html</loc>
+    <loc>http://mengdd.github.io/categories/index.html</loc>
     
     <lastmod>2019-01-17T06:43:57.701Z</lastmod>
     
@@ -170,14 +177,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/</loc>
     
     <lastmod>2019-01-17T06:43:57.695Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/</loc>
     
     <lastmod>2019-01-17T06:43:57.695Z</lastmod>
     
@@ -212,14 +219,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/</loc>
+    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
@@ -282,14 +289,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/12/30/android-weekly-notes-issue-237/</loc>
     
     <lastmod>2019-01-17T06:43:57.691Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/12/30/android-weekly-notes-issue-237/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/</loc>
     
     <lastmod>2019-01-17T06:43:57.691Z</lastmod>
     
@@ -317,14 +324,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/</loc>
     
     <lastmod>2019-01-17T06:43:57.688Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/</loc>
     
     <lastmod>2019-01-17T06:43:57.688Z</lastmod>
     
@@ -352,14 +359,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/</loc>
     
     <lastmod>2019-01-17T06:43:57.685Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/</loc>
+    <loc>http://mengdd.github.io/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/</loc>
     
     <lastmod>2019-01-17T06:43:57.685Z</lastmod>
     
@@ -380,14 +387,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/09/android-weekly-notes-issue-225/</loc>
     
     <lastmod>2019-01-17T06:43:57.684Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/09/android-weekly-notes-issue-225/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/</loc>
     
     <lastmod>2019-01-17T06:43:57.684Z</lastmod>
     
@@ -401,14 +408,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/02/android-weekly-notes-issue-224/</loc>
     
     <lastmod>2019-01-17T06:43:57.683Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/10/02/android-weekly-notes-issue-224/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/</loc>
     
     <lastmod>2019-01-17T06:43:57.683Z</lastmod>
     
@@ -464,13 +471,6 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/2016/06/16/android-fragment-usage-4-toolbar/</loc>
-    
-    <lastmod>2019-01-17T06:43:57.679Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://mengdd.github.io/Android/2016/06/24/using-dagger2-in-android/</loc>
     
     <lastmod>2019-01-17T06:43:57.679Z</lastmod>
@@ -478,7 +478,7 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/</loc>
+    <loc>http://mengdd.github.io/Android/2016/06/16/android-fragment-usage-4-toolbar/</loc>
     
     <lastmod>2019-01-17T06:43:57.679Z</lastmod>
     
@@ -486,6 +486,13 @@
   
   <url>
     <loc>http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/</loc>
+    
+    <lastmod>2019-01-17T06:43:57.679Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://mengdd.github.io/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/</loc>
     
     <lastmod>2019-01-17T06:43:57.679Z</lastmod>
     
