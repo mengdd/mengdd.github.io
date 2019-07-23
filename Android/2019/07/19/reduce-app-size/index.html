@@ -96,18 +96,20 @@
 
 
 
-  <meta name="description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法.">
+  <meta name="description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法. 本文内容归纳如下图:">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android App安装包瘦身计划">
 <meta property="og:url" content="http://mengdd.github.io/Android/2019/07/19/reduce-app-size/index.html">
 <meta property="og:site_name" content="Meng&#39;s pages">
-<meta property="og:description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法.">
+<meta property="og:description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法. 本文内容归纳如下图:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-23T02:55:43.840Z">
+<meta property="og:image" content="http://mengdd.github.io/images/reduce-apk-size.png">
+<meta property="og:updated_time" content="2019-07-23T05:35:16.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android App安装包瘦身计划">
-<meta name="twitter:description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法.">
+<meta name="twitter:description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法. 本文内容归纳如下图:">
+<meta name="twitter:image" content="http://mengdd.github.io/images/reduce-apk-size.png">
 
 
 
@@ -445,7 +447,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-23 10:55:43" itemprop="dateModified" datetime="2019-07-23T10:55:43+08:00">2019-07-23</time>
+                <time title="Modified: 2019-07-23 13:35:16" itemprop="dateModified" datetime="2019-07-23T13:35:16+08:00">2019-07-23</time>
               
             
           </span>
@@ -521,6 +523,7 @@
 
       
         <h1 id="Android-App安装包瘦身计划"><a href="#Android-App安装包瘦身计划" class="headerlink" title="Android App安装包瘦身计划"></a>Android App安装包瘦身计划</h1><p>Android App安装包体积优化: 理由, 指标和可以采用的方法.</p>
+<p>本文内容归纳如下图:<br><img src="/images/reduce-apk-size.png" alt="Reduce Apk Size"></p>
 <a id="more"></a>
 <h2 id="为什么要安装包瘦身"><a href="#为什么要安装包瘦身" class="headerlink" title="为什么要安装包瘦身"></a>为什么要安装包瘦身</h2><ul>
 <li>安装包需要瘦身吗? </li>
@@ -537,8 +540,7 @@
 <li>满足应用市场的最大包体积限制.</li>
 <li>在技术甚至业务层面, 我们可以重新审视我们的codebase, 是否需要删除一些低价值的业务, 清理无用的代码和资源, 进行进一步的重构和改善.</li>
 </ul>
-<h2 id="安装包构成-尺寸指标和分析工具"><a href="#安装包构成-尺寸指标和分析工具" class="headerlink" title="安装包构成, 尺寸指标和分析工具"></a>安装包构成, 尺寸指标和分析工具</h2><p>在做安装包体积优化之前, 建议用工具看一下当前的安装包情形, 找到当前的bottle neck, 这样才能有的放矢.<br>优化之后也好做一个比较.</p>
-<h3 id="安装包的构成"><a href="#安装包的构成" class="headerlink" title="安装包的构成"></a>安装包的构成</h3><p>Apk安装包本质上是一个zip压缩文件, 解压之后我们可以看到其中包含的内容, 通常包含:</p>
+<h2 id="安装包的构成"><a href="#安装包的构成" class="headerlink" title="安装包的构成"></a>安装包的构成</h2><p>Apk安装包本质上是一个zip压缩文件, 解压之后我们可以看到其中包含的内容, 通常包含:</p>
 <ul>
 <li>一个或多个<code>classes.dex</code>文件: 代码编译结果.</li>
 <li><code>assets/</code>文件夹.</li>
@@ -548,13 +550,14 @@
 <li><code>META-INF/</code>: 包含签名文件等.</li>
 </ul>
 <p>如果有native的库, 可能还会有<code>lib/</code>文件夹.</p>
-<h3 id="关注有用的指标"><a href="#关注有用的指标" class="headerlink" title="关注有用的指标"></a>关注有用的指标</h3><p>安装包大小有几个指标呢?<br>有三个:</p>
+<h2 id="尺寸指标"><a href="#尺寸指标" class="headerlink" title="尺寸指标"></a>尺寸指标</h2><p>安装包大小有几个指标呢?<br>有三个:</p>
 <ul>
 <li>文件尺寸: 这可能是最直观的一个, 就是我们build出来的文件大小. 但是其实它是最不重要的一个指标.</li>
 <li>下载尺寸: 下载app需要的大小, 最重要的指标. 因为下载市场(Google Play)会帮我们做优化, 下载尺寸会比文件的尺寸小.<br>一般增量安装和全新安装需要的大小是不一样的.</li>
 <li>安装尺寸: app安装到手机上, 启动解压之后的大小, 关系到app的留存率.</li>
 </ul>
-<h3 id="APK-Analzser"><a href="#APK-Analzser" class="headerlink" title="APK Analzser"></a>APK Analzser</h3><p><a href="https://developer.android.com/studio/build/apk-analyzer" target="_blank" rel="noopener">APK Analyzer</a>是Android Studio自带的工具.<br>使用APK Analyzer的三种方法: </p>
+<h2 id="安装包分析工具"><a href="#安装包分析工具" class="headerlink" title="安装包分析工具"></a>安装包分析工具</h2><p>在做安装包体积优化之前, 建议用工具看一下当前的安装包情形, 找到当前的bottle neck, 这样才能有的放矢.<br>优化之后也好做一个比较.</p>
+<h3 id="APK-Analyzer"><a href="#APK-Analyzer" class="headerlink" title="APK Analyzer"></a>APK Analyzer</h3><p><a href="https://developer.android.com/studio/build/apk-analyzer" target="_blank" rel="noopener">APK Analyzer</a>是Android Studio自带的工具.<br>使用APK Analyzer的三种方法: </p>
 <ul>
 <li><code>Build &gt; Analyze APK..</code>, 选择<code>.apk</code>文件.</li>
 <li>切换到Project View, 双击build/outputs/apk目录下的apk文件.</li>
@@ -576,7 +579,7 @@
 <p>如果你的app仅需要提供缩放图像, 你可以只在<code>drawable-nodpi</code>中提供单个资源. (建议还是至少有一个<code>xxhdpi</code>.)</p>
 <h4 id="shape的使用"><a href="#shape的使用" class="headerlink" title="shape的使用"></a>shape的使用</h4><p>很多时候我们并不需要一个图片, 比如纯色或渐变色的背景, 带边框, 带圆角等.</p>
 <p>用<code>&lt;shape&gt;</code>尺寸就会比较小, 也不用多个密度的版本.</p>
-<h4 id="重用资源"><a href="#重用资源" class="headerlink" title="重用资源"></a>重用资源</h4><p>这里的重用可以是改变了颜色和旋转方向等的重用.<br>比如改资源的tint, 或者把一个图旋转了之后再用. (thumb up变成thumb down了).</p>
+<h4 id="复用资源"><a href="#复用资源" class="headerlink" title="复用资源"></a>复用资源</h4><p>这里的复用可以是改变了颜色和旋转方向等的复用.<br>比如改资源的tint, 或者把一个图旋转了之后再用. (thumb up变成thumb down了).</p>
 <h4 id="压缩图片"><a href="#压缩图片" class="headerlink" title="压缩图片"></a>压缩图片</h4><p>可以用一些工具对PNG和JPEG图片进行无损压缩: 图片质量无损但是尺寸变小.</p>
 <h4 id="使用WebP格式的图片"><a href="#使用WebP格式的图片" class="headerlink" title="使用WebP格式的图片"></a>使用WebP格式的图片</h4><p>可以使用<a href="https://developers.google.com/speed/webp/" target="_blank" rel="noopener">WebP</a>格式的图片, 比JPEG和PNG压缩得更好.</p>
 <p>Android Studio提供了转换工具: <a href="https://developer.android.com/studio/write/convert-webp.html" target="_blank" rel="noopener">Create WebP images</a></p>
@@ -598,7 +601,7 @@
 <p>静态检查只是帮我们检测并报告, 真正要移除这些资源还得靠我们手动删除.</p>
 <h3 id="代码压缩和混淆"><a href="#代码压缩和混淆" class="headerlink" title="代码压缩和混淆"></a>代码压缩和混淆</h3><p>ProGuard -&gt; R8会帮我们删除不用的代码, 进行名称改写和代码优化.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minifyEnabled true</span><br></pre></td></tr></table></figure></p>
 <p>不用的代码被移除了, 类和成员的名称都被改得很短, 从而有效地减小了dex文件的大小.<br>这里需要注意rules的编写, 不要过度保护.</p>
-<p>比较追求极致的方法会从这个方面下手, 进一步细化优化Proguard Rules, 以达到最大限度的混淆和压缩.</p>
+<p>比较追求极致的方法会从这个方面下手, 进一步细化优化ProGuard Rules, 以达到更深度的混淆和压缩.</p>
 <h3 id="shrinkResources"><a href="#shrinkResources" class="headerlink" title="shrinkResources"></a>shrinkResources</h3><p>移除不用资源的一个有利工具<code>shrinkResources</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    // Other settings</span><br><span class="line"></span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled true</span><br><span class="line">            shrinkResources true</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>为了开启压缩资源, 必须先开启压缩代码, 即<code>minifyEnabled</code>要为<code>true</code>.<br>这样, 在打包的时候, 首先移除了不用的代码, 然后Gradle才能检测哪些资源还在被代码引用, 从而移除不用的资源.</p>
 <p>注意这个过程并没有真的删除掉资源, 只是将不用的资源替换了一个简单版本.</p>
@@ -1555,7 +1558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-App安装包瘦身计划"><span class="nav-number">1.</span> <span class="nav-text">Android App安装包瘦身计划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要安装包瘦身"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要安装包瘦身</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包构成-尺寸指标和分析工具"><span class="nav-number">1.2.</span> <span class="nav-text">安装包构成, 尺寸指标和分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装包的构成"><span class="nav-number">1.2.1.</span> <span class="nav-text">安装包的构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关注有用的指标"><span class="nav-number">1.2.2.</span> <span class="nav-text">关注有用的指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#APK-Analzser"><span class="nav-number">1.2.3.</span> <span class="nav-text">APK Analzser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#官方插件-Android-Size-Analyzer"><span class="nav-number">1.2.4.</span> <span class="nav-text">官方插件: Android Size Analyzer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-Coding阶段"><span class="nav-number">1.3.</span> <span class="nav-text">安装包瘦身措施: Coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#减少代码-native和Java代码"><span class="nav-number">1.3.1.</span> <span class="nav-text">减少代码(native和Java代码)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制资源使用"><span class="nav-number">1.3.2.</span> <span class="nav-text">控制资源使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设备屏幕支持"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">设备屏幕支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shape的使用"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">shape的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重用资源"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">重用资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩图片"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">压缩图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用WebP格式的图片"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">使用WebP格式的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用矢量图"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">使用矢量图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逐帧动画"><span class="nav-number">1.3.2.7.</span> <span class="nav-text">逐帧动画</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-Post-coding阶段"><span class="nav-number">1.4.</span> <span class="nav-text">安装包瘦身措施: Post-coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lint静态分析"><span class="nav-number">1.4.1.</span> <span class="nav-text">Lint静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码压缩和混淆"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码压缩和混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shrinkResources"><span class="nav-number">1.4.3.</span> <span class="nav-text">shrinkResources</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#这种删除方式靠谱吗-精确吗-会误删吗"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">这种删除方式靠谱吗? 精确吗? 会误删吗?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何查看都删了什么呢"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">如何查看都删了什么呢?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明支持的配置-删掉其他"><span class="nav-number">1.4.4.</span> <span class="nav-text">声明支持的配置, 删掉其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-发布阶段"><span class="nav-number">1.5.</span> <span class="nav-text">安装包瘦身措施: 发布阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build多个apks"><span class="nav-number">1.5.1.</span> <span class="nav-text">Build多个apks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-App-Bundles"><span class="nav-number">1.5.2.</span> <span class="nav-text">Android App Bundles</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-进阶补充"><span class="nav-number">1.6.</span> <span class="nav-text">安装包瘦身措施: 进阶补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-App安装包瘦身计划"><span class="nav-number">1.</span> <span class="nav-text">Android App安装包瘦身计划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要安装包瘦身"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要安装包瘦身</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包的构成"><span class="nav-number">1.2.</span> <span class="nav-text">安装包的构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尺寸指标"><span class="nav-number">1.3.</span> <span class="nav-text">尺寸指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包分析工具"><span class="nav-number">1.4.</span> <span class="nav-text">安装包分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#APK-Analyzer"><span class="nav-number">1.4.1.</span> <span class="nav-text">APK Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#官方插件-Android-Size-Analyzer"><span class="nav-number">1.4.2.</span> <span class="nav-text">官方插件: Android Size Analyzer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-Coding阶段"><span class="nav-number">1.5.</span> <span class="nav-text">安装包瘦身措施: Coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#减少代码-native和Java代码"><span class="nav-number">1.5.1.</span> <span class="nav-text">减少代码(native和Java代码)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制资源使用"><span class="nav-number">1.5.2.</span> <span class="nav-text">控制资源使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设备屏幕支持"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">设备屏幕支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shape的使用"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">shape的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复用资源"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">复用资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩图片"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">压缩图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用WebP格式的图片"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">使用WebP格式的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用矢量图"><span class="nav-number">1.5.2.6.</span> <span class="nav-text">使用矢量图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逐帧动画"><span class="nav-number">1.5.2.7.</span> <span class="nav-text">逐帧动画</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-Post-coding阶段"><span class="nav-number">1.6.</span> <span class="nav-text">安装包瘦身措施: Post-coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lint静态分析"><span class="nav-number">1.6.1.</span> <span class="nav-text">Lint静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码压缩和混淆"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码压缩和混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shrinkResources"><span class="nav-number">1.6.3.</span> <span class="nav-text">shrinkResources</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#这种删除方式靠谱吗-精确吗-会误删吗"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">这种删除方式靠谱吗? 精确吗? 会误删吗?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何查看都删了什么呢"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">如何查看都删了什么呢?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明支持的配置-删掉其他"><span class="nav-number">1.6.4.</span> <span class="nav-text">声明支持的配置, 删掉其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-发布阶段"><span class="nav-number">1.7.</span> <span class="nav-text">安装包瘦身措施: 发布阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build多个apks"><span class="nav-number">1.7.1.</span> <span class="nav-text">Build多个apks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-App-Bundles"><span class="nav-number">1.7.2.</span> <span class="nav-text">Android App Bundles</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包瘦身措施-进阶补充"><span class="nav-number">1.8.</span> <span class="nav-text">安装包瘦身措施: 进阶补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.10.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
             
 
           </div>
