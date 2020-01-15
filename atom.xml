@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://mengdd.github.io/"/>
-  <updated>2019-07-23T05:35:16.796Z</updated>
+  <updated>2020-01-15T08:01:44.390Z</updated>
   <id>http://mengdd.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Android Gradle脚本从Groovy迁移到Kotlin DSL</title>
+    <link href="http://mengdd.github.io/Android/2020/01/15/migrate-gradle-build-scripts-to-kotlin/"/>
+    <id>http://mengdd.github.io/Android/2020/01/15/migrate-gradle-build-scripts-to-kotlin/</id>
+    <published>2020-01-15T02:19:48.000Z</published>
+    <updated>2020-01-15T08:01:44.390Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Android-Gradle从Groovy迁移到Kotlin"><a href="#Android-Gradle从Groovy迁移到Kotlin" class="headerlink" title="Android Gradle从Groovy迁移到Kotlin"></a>Android Gradle从Groovy迁移到Kotlin</h1><p>Android项目用Gradle构建, 其脚本语言之前是Groovy, 目前也提供了Kotlin的支持, 所以可以迁移到Kotlin.</p><p>官方的迁移文档: <a href="https://guides.gradle.org/migrating-build-logic-from-groovy-to-kotlin/" target="_blank" rel="noopener">Migrating build logic from Groovy to Kotlin</a><br>说明的是更通用的步骤.</p><p>本文通过一个具体的Android项目来举例如何迁移, 文后附有sample.<br><a id="more"></a></p><h2 id="名词概念解释"><a href="#名词概念解释" class="headerlink" title="名词概念解释"></a>名词概念解释</h2><ul><li>Gradle: 自动化构建工具. 平行产品: Maven.</li><li>Groovy: 语言, 编译后变为JVM byte code, 兼容Java平台.</li><li>DSL: Domain Specific Language, 领域特定语言.</li><li>Groovy DSL: Gradle的API是Java的, Groovy DSL是在其之上的脚本语言. Groovy DSL脚本文件后缀: <code>.gradle</code>.</li><li>Kotlin DSL: 和前者类似, 同样根据Gradle的Java API构建, 只是替换了语言: Groovy -&gt; Kotlin. Kotlin DSL脚本文件后缀: <code>.gradle.kts</code>.</li></ul><h2 id="为什么要迁移"><a href="#为什么要迁移" class="headerlink" title="为什么要迁移"></a>为什么要迁移</h2><p>优点:</p><ul><li>可以使用Kotlin, 开发者可能对这个语言更熟悉更喜欢.</li><li>IDE支持更好, 自动补全提示, 重构, imports等.</li><li>类型安全: Kotlin是静态类型.</li><li>不用一次性迁移完: 两种语言的脚本可以共存, 也可以互相调用.</li></ul><p>缺点:</p><ul><li>据说Kotlin DSL会比Groovy DSL稍微慢一点: <a href="https://github.com/gradle/kotlin-dsl-samples/issues/902" target="_blank" rel="noopener">https://github.com/gradle/kotlin-dsl-samples/issues/902</a>.</li></ul><h2 id="迁移步骤"><a href="#迁移步骤" class="headerlink" title="迁移步骤"></a>迁移步骤</h2><h3 id="Step-0-环境支持"><a href="#Step-0-环境支持" class="headerlink" title="Step 0: 环境支持"></a>Step 0: 环境支持</h3><p>Kotlin DSL在Android Studio上是全面支持的. 确保使用的IDE版本较新.</p><p>使用最新版的Gradle, 这样会包含最新版的Kotlin DSL.</p><h3 id="Step-1-把单引号替换为双引号"><a href="#Step-1-把单引号替换为双引号" class="headerlink" title="Step 1: 把单引号替换为双引号"></a>Step 1: 把单引号替换为双引号</h3><p>这一步利用IDE的文件内搜索替换功能, 在想要改的<code>.gradle</code>文件中, 全局替换<code>&#39;</code>到<code>&quot;</code>就行.</p><p>比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    classpath &apos;com.android.tools.build:gradle:3.5.3&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>变成了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    classpath &quot;com.android.tools.build:gradle:3.5.3&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>这一步的改动可见:<br><a href="https://github.com/mengdd/KotlinDSLSample/commit/d3fc644e88fb461920a8b60a0430bb42f6a6053e" target="_blank" rel="noopener">https://github.com/mengdd/KotlinDSLSample/commit/d3fc644e88fb461920a8b60a0430bb42f6a6053e</a></p><h3 id="Step-2-区分属性赋值和方法调用"><a href="#Step-2-区分属性赋值和方法调用" class="headerlink" title="Step 2: 区分属性赋值和方法调用"></a>Step 2: 区分属性赋值和方法调用</h3><p>属性赋值用<code>=</code>, 方法调用用<code>()</code>.<br>有时候分不清是属性赋值还是方法调用, 可以先用<code>=</code>试试, 如果报错再改为方法调用.</p><p>比如<code>settings.gradle</code>在这一步, 由:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include &quot;:app&quot;</span><br><span class="line">rootProject.name=&quot;KotlinDSLSample&quot;</span><br></pre></td></tr></table></figure></p><p>变成了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include(&quot;:app&quot;)</span><br><span class="line">rootProject.name = &quot;KotlinDSLSample&quot;</span><br></pre></td></tr></table></figure></p><p>第一行是一个方法调用, 第二行是一个属性赋值.</p><p>项目根目录的<code>build.gradle</code>中发生了两处变化, 变成了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    classpath(&quot;com.android.tools.build:gradle:3.5.3&quot;)</span><br></pre></td></tr></table></figure></p><p>和:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task clean(type: Delete) &#123;</span><br><span class="line">    delete(rootProject.buildDir)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>这一步的改动见:<br><a href="https://github.com/mengdd/KotlinDSLSample/commit/b36a508e7d4f1d5d25c23a9772e1cfd9df363fad" target="_blank" rel="noopener">https://github.com/mengdd/KotlinDSLSample/commit/b36a508e7d4f1d5d25c23a9772e1cfd9df363fad</a></p><h3 id="Step-3-文件重命名"><a href="#Step-3-文件重命名" class="headerlink" title="Step 3: 文件重命名"></a>Step 3: 文件重命名</h3><p>上面两步只是准备工作, 经过上面两步, 你的脚本仍然是Groovy的, 只不过现在更接近Kotlin了.</p><p>真正的改变发生在这一步: 把后缀为<code>.gradle</code>的文件重命名, 后缀改为<code>.gradle.kts</code>.<br>没有必要全部改完, 这两种脚本是可以共存的.</p><p>改完之后各种报错了, 不要慌, 手动解决一下.</p><p>项目根目录的<code>build.gradle.kts</code>比较好修, 只有全局变量和task的问题.<br><code>app/build.gradle.kts</code>中要改plugins, build type和依赖部分.</p><h4 id="不再支持ext的全局变量定义"><a href="#不再支持ext的全局变量定义" class="headerlink" title="不再支持ext的全局变量定义."></a>不再支持ext的全局变量定义.</h4><p>这里图简单, 删掉<code>ext.kotlin_version = &quot;1.3.61&quot;</code>这句, 直接写:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    classpath(&quot;com.android.tools.build:gradle:3.5.3&quot;)</span><br><span class="line">    classpath(kotlin(&quot;gradle-plugin&quot;, version = &quot;1.3.61&quot;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h4 id="task"><a href="#task" class="headerlink" title="task"></a>task</h4><p>task本来是这:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task clean(type: Delete) &#123;</span><br><span class="line">    delete(rootProject.buildDir)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>现在要改成这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tasks.register(&quot;clean&quot;, Delete::class) &#123;</span><br><span class="line">    delete(rootProject.buildDir)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>应用plugins: 应用插件有apply和plugin两种方式.<br>强烈建议使用<code>plugins {}</code> block.</p><p>所以<code>app/build.gradle.kts</code>里面改成这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    id(&quot;com.android.application&quot;)</span><br><span class="line">    kotlin(&quot;android&quot;)</span><br><span class="line">    kotlin(&quot;android.extensions&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h4 id="build-type"><a href="#build-type" class="headerlink" title="build type"></a>build type</h4><p>build type原先是这样写的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    release &#123;</span><br><span class="line">        minifyEnabled = false</span><br><span class="line">        proguardFiles(getDefaultProguardFile(&quot;proguard-android-optimize.txt&quot;),</span><br><span class="line">                &quot;proguard-rules.pro&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>现在改成这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    getByName(&quot;release&quot;) &#123;</span><br><span class="line">        isMinifyEnabled = false</span><br><span class="line">        proguardFiles(getDefaultProguardFile(&quot;proguard-android.txt&quot;), &quot;proguard-rules.pro&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><p>libs文件依赖原先是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(fileTree(dir: &quot;libs&quot;, include: [&quot;*.jar&quot;]))</span><br></pre></td></tr></table></figure></p><p>需要改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(fileTree(mapOf(&quot;dir&quot; to &quot;libs&quot;, &quot;include&quot; to listOf(&quot;*.jar&quot;))</span><br></pre></td></tr></table></figure></p><p>另外kotlin的部分:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(kotlin(&quot;stdlib-jdk7&quot;, org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION))</span><br></pre></td></tr></table></figure></p><p>这一步的改动见:<br><a href="https://github.com/mengdd/KotlinDSLSample/commit/e392028b128bc83f1d183b880c479687d28cdcc3" target="_blank" rel="noopener">https://github.com/mengdd/KotlinDSLSample/commit/e392028b128bc83f1d183b880c479687d28cdcc3</a></p><h2 id="自动转换的方法"><a href="#自动转换的方法" class="headerlink" title="自动转换的方法"></a>自动转换的方法</h2><p>有一个自动转换的工具:<br><a href="https://github.com/bernaferrari/GradleKotlinConverter" target="_blank" rel="noopener">https://github.com/bernaferrari/GradleKotlinConverter</a></p><p>mac上首先安装kscript: <a href="https://github.com/holgerbrandl/kscript" target="_blank" rel="noopener">https://github.com/holgerbrandl/kscript</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install holgerbrandl/tap/kscript</span><br></pre></td></tr></table></figure></p><p>然后把<code>gradlekotlinconverter.kts</code>文件保存到根目录.</p><p>再运行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kscript gradlekotlinconverter.kts build.gradle</span><br></pre></td></tr></table></figure></p><p>和<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kscript gradlekotlinconverter.kts app/build.gradle</span><br></pre></td></tr></table></figure></p><p>进行文件的转换.</p><p>我测试了一下转换的结果并不是很完美, 还需要手动修改一下.</p><h2 id="Toubleshooting"><a href="#Toubleshooting" class="headerlink" title="Toubleshooting"></a>Toubleshooting</h2><ul><li>文件后缀改为<code>kts</code>之后, <code>app/build.gradle</code>中<code>android</code>关键字被标红.<br>我就遇到了这个问题, 开始以为没改好, 找不到<code>android</code>关键字了, 各种困惑找原因.<br>但是我发现build是可以过的.<br>后来突然IDE弹出一个条: <code>There is a new script context available</code>.<br>点击了<code>Apply context</code>就可以了.</li><li>要是还有问题, 参考一下官方的android sample吧: <a href="kotlin-dsl-samples/samples/hello-android/">kotlin-dsl-samples/samples/hello-android</a></li></ul><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li>我的Android项目sample: <a href="https://github.com/mengdd/KotlinDSLSample" target="_blank" rel="noopener">KotlinDSLSample</a></li><li>迁移文档: <a href="https://guides.gradle.org/migrating-build-logic-from-groovy-to-kotlin/" target="_blank" rel="noopener">Migrating build logic from Groovy to Kotlin</a></li><li>官方samples: <a href="https://github.com/gradle/kotlin-dsl-samples" target="_blank" rel="noopener">kotlin-dsl-samples</a></li><li>官方samples里面的android sample: <a href="https://github.com/gradle/kotlin-dsl-samples/tree/master/samples/hello-android" target="_blank" rel="noopener">kotlin-dsl-samples/samples/hello-android</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Android-Gradle从Groovy迁移到Kotlin&quot;&gt;&lt;a href=&quot;#Android-Gradle从Groovy迁移到Kotlin&quot; class=&quot;headerlink&quot; title=&quot;Android Gradle从Groovy迁移到Kotlin&quot;&gt;&lt;/a&gt;Android Gradle从Groovy迁移到Kotlin&lt;/h1&gt;&lt;p&gt;Android项目用Gradle构建, 其脚本语言之前是Groovy, 目前也提供了Kotlin的支持, 所以可以迁移到Kotlin.&lt;/p&gt;
+&lt;p&gt;官方的迁移文档: &lt;a href=&quot;https://guides.gradle.org/migrating-build-logic-from-groovy-to-kotlin/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Migrating build logic from Groovy to Kotlin&lt;/a&gt;&lt;br&gt;说明的是更通用的步骤.&lt;/p&gt;
+&lt;p&gt;本文通过一个具体的Android项目来举例如何迁移, 文后附有sample.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Android" scheme="http://mengdd.github.io/categories/Android/"/>
+    
+    
+      <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
+    
+      <category term="Gradle" scheme="http://mengdd.github.io/tags/Gradle/"/>
+    
+  </entry>
   
   <entry>
     <title>Android App安装包瘦身计划</title>
@@ -211,17 +239,17 @@
     
       <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
     
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
       <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
       <category term="Redux" scheme="http://mengdd.github.io/tags/Redux/"/>
     
       <category term="Permission" scheme="http://mengdd.github.io/tags/Permission/"/>
     
-      <category term="Resources" scheme="http://mengdd.github.io/tags/Resources/"/>
-    
       <category term="Style" scheme="http://mengdd.github.io/tags/Style/"/>
+    
+      <category term="Resources" scheme="http://mengdd.github.io/tags/Resources/"/>
     
       <category term="Plaid" scheme="http://mengdd.github.io/tags/Plaid/"/>
     
@@ -315,11 +343,11 @@
     
       <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
     
+      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
+    
       <category term="Gradle" scheme="http://mengdd.github.io/tags/Gradle/"/>
     
       <category term="CI" scheme="http://mengdd.github.io/tags/CI/"/>
-    
-      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
     
       <category term="LiveData" scheme="http://mengdd.github.io/tags/LiveData/"/>
     
@@ -538,8 +566,6 @@
     
       <category term="Parcelable" scheme="http://mengdd.github.io/tags/Parcelable/"/>
     
-      <category term="ViewPager" scheme="http://mengdd.github.io/tags/ViewPager/"/>
-    
       <category term="Lint" scheme="http://mengdd.github.io/tags/Lint/"/>
     
       <category term="PMD" scheme="http://mengdd.github.io/tags/PMD/"/>
@@ -557,6 +583,8 @@
       <category term="Jacoco" scheme="http://mengdd.github.io/tags/Jacoco/"/>
     
       <category term="ID" scheme="http://mengdd.github.io/tags/ID/"/>
+    
+      <category term="ViewPager" scheme="http://mengdd.github.io/tags/ViewPager/"/>
     
       <category term="Java 8" scheme="http://mengdd.github.io/tags/Java-8/"/>
     
@@ -638,9 +666,9 @@
     
       <category term="RxJava" scheme="http://mengdd.github.io/tags/RxJava/"/>
     
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
       <category term="MVP" scheme="http://mengdd.github.io/tags/MVP/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
       <category term="Firebase" scheme="http://mengdd.github.io/tags/Firebase/"/>
     
@@ -784,46 +812,6 @@
     
     
       <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Android Weekly Notes Issue 252</title>
-    <link href="http://mengdd.github.io/Android/Android-Weekly/2017/04/13/android-weekly-notes-issue-252/"/>
-    <id>http://mengdd.github.io/Android/Android-Weekly/2017/04/13/android-weekly-notes-issue-252/</id>
-    <published>2017-04-13T08:07:42.000Z</published>
-    <updated>2019-01-17T06:43:57.696Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Android-Weekly-Issue-252"><a href="#Android-Weekly-Issue-252" class="headerlink" title="Android Weekly Issue #252"></a>Android Weekly Issue #252</h1><p>April 9th, 2017<br><a href="http://androidweekly.net/issues/issue-252" target="_blank" rel="noopener">Android Weekly Issue #252</a>.<br>本期内容: 变化的渐变背景实现; Kotlin 1.1特性; Parcelable数据处理; RecyclerView动画实现; MVI模式的实现; 远程team的合作; 面向对象的原则: Law of Demeter; 用JUnit 5和Kotlin结合写测试.<br>(本期内容有点水, 不知道是我的状态不好还是Weekly的状态不好).<br><a id="more"></a></p><h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Make-a-moving-Gradient-Background-in-Android"><a href="#Make-a-moving-Gradient-Background-in-Android" class="headerlink" title="Make a moving Gradient Background in Android"></a><a href="http://thetechnocafe.com/make-a-moving-gradient-background-in-android/" target="_blank" rel="noopener">Make a moving Gradient Background in Android</a></h2><p>用AnimationList做一个不断改变的渐变色背景. </p><p>用根节点是&lt;<animation-list>的drawable作为View的背景:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:drawable</span>=<span class="string">"@drawable/gradient_blue"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"5000"</span>/&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:drawable</span>=<span class="string">"@drawable/gradient_red"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"5000"</span>/&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:drawable</span>=<span class="string">"@drawable/gradient_teal"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"5000"</span>/&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:drawable</span>=<span class="string">"@drawable/gradient_purple"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"5000"</span>/&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:drawable</span>=<span class="string">"@drawable/gradient_indigo"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"5000"</span>/&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure></animation-list></p><p>其中的item是不同的渐变色drawable, 比如:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">shape</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">gradient</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:angle</span>=<span class="string">"135"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:endColor</span>=<span class="string">"#34e89e"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:startColor</span>=<span class="string">"#0f3443"</span> /&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">shape</span>&gt;</span></span><br></pre></td></tr></table></figure></p><p>在Java代码中获取, 然后start它即可:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear_layout);</span><br><span class="line"> </span><br><span class="line">AnimationDrawable animationDrawable = (AnimationDrawable) linearLayout.getBackground();</span><br><span class="line"> </span><br><span class="line">animationDrawable.setEnterFadeDuration(<span class="number">2500</span>);</span><br><span class="line">animationDrawable.setExitFadeDuration(<span class="number">5000</span>);</span><br><span class="line"> </span><br><span class="line">animationDrawable.start();</span><br></pre></td></tr></table></figure></p><p>另外, 作者推荐一个发现渐变色组合的网站: <a href="https://uigradients.com/#Pinky" target="_blank" rel="noopener">UiGradients</a>.</p><h2 id="Kotlin-1-1-is-also-for-Android-Developers"><a href="#Kotlin-1-1-is-also-for-Android-Developers" class="headerlink" title="Kotlin 1.1 is also for Android Developers"></a><a href="https://blog.jetbrains.com/kotlin/2017/04/kotlin-1-1-is-also-for-android-developers/" target="_blank" rel="noopener">Kotlin 1.1 is also for Android Developers</a></h2><p>Kotlin 1.1带来的一些很酷的features.</p><h2 id="Proper-Parcelable-Testing"><a href="#Proper-Parcelable-Testing" class="headerlink" title="Proper Parcelable Testing"></a><a href="http://blog.danlew.net/2017/04/03/proper-parcelable-testing/amp/" target="_blank" rel="noopener">Proper Parcelable Testing</a></h2><p>作者写了一个继承<code>Parcelable</code>接口的类, 然后把它存在savedInstanceState的Bundle里, 本文是他使用时的一些小建议.</p><h2 id="RecyclerView-interaction-with-Animated-Markers-Part-3"><a href="#RecyclerView-interaction-with-Animated-Markers-Part-3" class="headerlink" title="RecyclerView interaction with Animated Markers - Part 3"></a><a href="https://www.thedroidsonroids.com/blog/workcation-app-part-3-recyclerview-interaction-with-animated-markers/" target="_blank" rel="noopener">RecyclerView interaction with Animated Markers - Part 3</a></h2><p>动画实现: 当滚动列表的时候, 对应的Marker在地图上突出显示.</p><h2 id="My-take-on-Model-View-Intent-MVI-—-Part-1-State-Renderer"><a href="#My-take-on-Model-View-Intent-MVI-—-Part-1-State-Renderer" class="headerlink" title="My take on Model View Intent (MVI) — Part 1: State Renderer"></a><a href="https://hackernoon.com/model-view-intent-mvi-part-1-state-renderer-187e270db15c" target="_blank" rel="noopener">My take on Model View Intent (MVI) — Part 1: State Renderer</a></h2><p>作者很推荐MVI模式, 讲了自己的应用是如何实现这种模式的.</p><p>简要说了用Espresso对本程序进行自动化UI测试的方法.</p><h2 id="Effective-Remote-Teams"><a href="#Effective-Remote-Teams" class="headerlink" title="Effective Remote Teams"></a><a href="http://blog.viacom.tech/2017/04/07/effective-remote-teams/" target="_blank" rel="noopener">Effective Remote Teams</a></h2><p>remote team如何工作.</p><h2 id="Object-Oriented-Tricks-2-Law-of-Demeter"><a href="#Object-Oriented-Tricks-2-Law-of-Demeter" class="headerlink" title="Object Oriented Tricks: #2 Law of Demeter"></a><a href="https://hackernoon.com/object-oriented-tricks-2-law-of-demeter-4ecc9becad85" target="_blank" rel="noopener">Object Oriented Tricks: #2 Law of Demeter</a></h2><p>面向对象编程Tricks系列之2: Law of Demeter, 德米特法则. </p><p>每一个单元应该尽量少地知道其他单元的业务, 仅知道和自己紧密联系的单元业务. <strong>Tell Don’t Ask.</strong></p><h2 id="JUnit-5-Kotlin"><a href="#JUnit-5-Kotlin" class="headerlink" title="JUnit 5: Kotlin"></a><a href="https://blog.stylingandroid.com/junit-5-kotlin/" target="_blank" rel="noopener">JUnit 5: Kotlin</a></h2><p>如何结合Kotlin和JUnit 5来写测试.</p><h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="spruce-android"><a href="#spruce-android" class="headerlink" title="spruce-android"></a><a href="https://github.com/willowtreeapps/spruce-android" target="_blank" rel="noopener">spruce-android</a></h2><p>一个轻量级的动画库.</p><h2 id="Traceur"><a href="#Traceur" class="headerlink" title="Traceur"></a><a href="https://github.com/T-Spoon/Traceur" target="_blank" rel="noopener">Traceur</a></h2><p>一个RxJava2的debug工具, 可以打出异步调用的最初崩溃信息.</p><h2 id="scratch"><a href="#scratch" class="headerlink" title="scratch"></a><a href="https://github.com/willowtreeapps/scratch" target="_blank" rel="noopener">scratch</a></h2><p>清除用户数据然后重启应用.</p><h2 id="what-the-thing"><a href="#what-the-thing" class="headerlink" title="what_the_thing"></a><a href="https://github.com/vigzmv/what_the_thing" target="_blank" rel="noopener">what_the_thing</a></h2><p>拿着相机对着东西, 然后学习如何用不同的语言来说它们的一个app, 用React Native实现.</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Android-Weekly-Issue-252&quot;&gt;&lt;a href=&quot;#Android-Weekly-Issue-252&quot; class=&quot;headerlink&quot; title=&quot;Android Weekly Issue #252&quot;&gt;&lt;/a&gt;Android Weekly Issue #252&lt;/h1&gt;&lt;p&gt;April 9th, 2017&lt;br&gt;&lt;a href=&quot;http://androidweekly.net/issues/issue-252&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Android Weekly Issue #252&lt;/a&gt;.&lt;br&gt;本期内容: 变化的渐变背景实现; Kotlin 1.1特性; Parcelable数据处理; RecyclerView动画实现; MVI模式的实现; 远程team的合作; 面向对象的原则: Law of Demeter; 用JUnit 5和Kotlin结合写测试.&lt;br&gt;(本期内容有点水, 不知道是我的状态不好还是Weekly的状态不好).&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Android" scheme="http://mengdd.github.io/categories/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/categories/Android/Android-Weekly/"/>
-    
-    
-      <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
-    
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
-      <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
-    
-      <category term="RecyclerView" scheme="http://mengdd.github.io/tags/RecyclerView/"/>
-    
-      <category term="JUnit 5" scheme="http://mengdd.github.io/tags/JUnit-5/"/>
-    
-      <category term="AnimationList" scheme="http://mengdd.github.io/tags/AnimationList/"/>
-    
-      <category term="Parcelable" scheme="http://mengdd.github.io/tags/Parcelable/"/>
-    
-      <category term="MVI" scheme="http://mengdd.github.io/tags/MVI/"/>
     
   </entry>
   
