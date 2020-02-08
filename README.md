@@ -48,3 +48,10 @@ By default at: http://localhost:4000/
 $ hexo g -d  //or hexo d -g
 ```
 
+## Markdown
+image:
+```
+![alt text](/images/image-name.png)
+```
+
+
