@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Flutter json 2 model with Built Value</title>
+      <link href="/Flutter/2020/03/13/flutter-built-value-guide/"/>
+      <url>/Flutter/2020/03/13/flutter-built-value-guide/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Flutter-json-2-model-with-Built-Value"><a href="#Flutter-json-2-model-with-Built-Value" class="headerlink" title="Flutter json 2 model with Built Value"></a>Flutter json 2 model with Built Value</h1><p>flutter中json转换model, 除了手动转之外, 就是利用第三方库做一些代码生成.<br>流行的库有: <a href="https://pub.dev/packages/json_serializable" target="_blank" rel="noopener">json_serializable</a>和<a href="https://pub.dev/packages/built_value" target="_blank" rel="noopener">built_value</a></p><p>本文介绍<a href="https://pub.dev/packages/built_value" target="_blank" rel="noopener">built_value</a>的实际使用及问题处理.</p><a id="more"></a><h2 id="Flutter中的json转model方法"><a href="#Flutter中的json转model方法" class="headerlink" title="Flutter中的json转model方法"></a>Flutter中的json转model方法</h2><p>Flutter中json到model类型的转换可以有多种方式:</p><ul><li>利用官方自带的dart convert中的json解码. 该方法只能将json转换为List或Map, 剩下的工作需要手动完成, 根据key取值赋值给model的字段.</li><li>利用第三方的库, 做代码生成, 流行的库有: <a href="https://pub.dev/packages/json_serializable" target="_blank" rel="noopener">json_serializable</a>和<a href="https://pub.dev/packages/built_value" target="_blank" rel="noopener">built_value</a>. 原理都是相同的, 先写一些模板代码, 说明一下model是什么样子的, 然后运行命令行生成一些代码, 之后就可以很方便地调用, 将json转换为model了.</li></ul><p>使用json_serializable可以看:</p><ul><li>官网的例子: <a href="https://flutter.dev/docs/development/data-and-backend/json#code-generation" target="_blank" rel="noopener">Serializing JSON using code generation libraries</a>.</li><li>Flutter实战中文的: <a href="https://book.flutterchina.club/chapter11/json_model.html" target="_blank" rel="noopener">11.7 Json转Dart Model类</a></li></ul><p>本篇文章主要介绍built value的使用.</p><h2 id="built-value使用指南"><a href="#built-value使用指南" class="headerlink" title="built value使用指南"></a>built value使用指南</h2><p>实例: 用github api拿到的events: <a href="https://api.github.com/events?per_page=10" target="_blank" rel="noopener">https://api.github.com/events?per_page=10</a><br>如何转化成model对象呢?</p><h3 id="TDD"><a href="#TDD" class="headerlink" title="TDD"></a>TDD</h3><p>先写个测试, 明确一下我们想要的目标.</p><p>在<code>test</code>下建立一个文件, 比如叫<code>json_test.dart</code>.</p><p>里面写main函数和两个测试:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void main() &#123;</span><br><span class="line">  test(&quot;parse events list&quot;, () &#123;</span><br><span class="line">    const jsonString = &quot;&quot;&quot;replace with events list json string&quot;&quot;&quot;;</span><br><span class="line"></span><br><span class="line">    expect(Event.fromEventsListJson(jsonString).first.id, &quot;11732023561&quot;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  test(&quot;parse event&quot;, () &#123;</span><br><span class="line">    const jsonString = &quot;&quot;&quot;replace with event json string&quot;&quot;&quot;;</span><br><span class="line"></span><br><span class="line">    expect(Event.fromJson(jsonString).id, &quot;11732036753&quot;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>这里面应该放json字符串的, 太长了我就省略了, 这样看比较清晰.</p><p>用<code>&quot;&quot;&quot;</code>之后可以支持多行. (IDE里面可以折叠的.)</p><p>这个<code>Event</code>类和方法我们都还没有写, 所以暂时报错.</p><h3 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h3><p>添加依赖, 去package页面看添加什么版本: <a href="https://pub.dev/packages/built_value" target="_blank" rel="noopener">https://pub.dev/packages/built_value</a></p><p>在<code>pubspec.yaml</code>中添加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  flutter:</span><br><span class="line">    sdk: flutter</span><br><span class="line"></span><br><span class="line">  # other dependencies here</span><br><span class="line"></span><br><span class="line">  built_value: ^7.0.9</span><br><span class="line">  built_collection: ^4.3.2</span><br><span class="line"></span><br><span class="line">dev_dependencies:</span><br><span class="line">  flutter_test:</span><br><span class="line">    sdk: flutter</span><br><span class="line"></span><br><span class="line">  # other dev_dependencies here</span><br><span class="line"></span><br><span class="line">  build_runner: ^1.8.0</span><br><span class="line">  built_value_generator: ^7.0.9</span><br></pre></td></tr></table></figure></p><p>然后点<code>Packages get</code>.</p><h3 id="Live-Templates"><a href="#Live-Templates" class="headerlink" title="Live Templates"></a>Live Templates</h3><p>这个是IntelliJ系IDE(包括Android Studio)的快捷设置, 目的是为了减少手动输入. (可选.)</p><p>打开<code>Preferences</code>, 搜<code>Live Templates</code>.<br>在<code>Dart</code>的部分点+号新增一个Live Template.</p><p>下面Abbreviation选一个适当的缩写, 比如<code>built</code>.<br>Template text贴入这段:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">abstract class $CLASS_NAME$ implements Built&lt;$CLASS_NAME$, $CLASS_NAME$Builder&gt; &#123;</span><br><span class="line">  $CLASS_NAME$._();</span><br><span class="line">  factory $CLASS_NAME$([void Function($CLASS_NAME$Builder) updates]) = _$$$CLASS_NAME$;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>Applicable in Dart选: top-level.</p><p>建好之后以后就直接用啦.</p><h3 id="建立models抽象类"><a href="#建立models抽象类" class="headerlink" title="建立models抽象类"></a>建立models抽象类</h3><p>输入刚才建立的live template的关键字<code>built</code>, 就会出现要生成的代码, 其中写好自己的类名.</p><p>比如我们要建立的model类型是<code>Event</code>类.<br>新建<code>event.dart</code>文件. </p><p>在其中输入<code>built</code>按确认之后, 输入类名<code>Event</code>, 就建好了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">abstract class Event implements Built&lt;Event, EventBuilder&gt; &#123;</span><br><span class="line">  Event._();</span><br><span class="line">  factory Event([void Function(EventBuilder) updates]) = _$Event;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>包括一个私有构造和一个工厂方法. 此时会有一些红色的报错.<br>这里<code>import &#39;package:built_value/built_value.dart&#39;</code>消除<code>Built</code>类的报错.</p><p>根据观察API: <a href="https://api.github.com/events" target="_blank" rel="noopener">https://api.github.com/events</a> 返回的json, 发现还应该有<code>Actor</code>, <code>Repo</code>, <code>Payload</code>三个类.<br>也都按这个方法建立好.</p><p>然后在其中添加字段, 现在看起来是这样了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:built_value/built_value.dart&apos;;</span><br><span class="line">// imports for models</span><br><span class="line"></span><br><span class="line">part &apos;event.g.dart&apos;;</span><br><span class="line"></span><br><span class="line">abstract class Event implements Built&lt;Event, EventBuilder&gt; &#123;</span><br><span class="line">  String get id;</span><br><span class="line"></span><br><span class="line">  String get type;</span><br><span class="line"></span><br><span class="line">  Actor get actor;</span><br><span class="line"></span><br><span class="line">  Repo get repo;</span><br><span class="line"></span><br><span class="line">  Payload get payload;</span><br><span class="line"></span><br><span class="line">  bool get public;</span><br><span class="line"></span><br><span class="line">  String get createdAt;</span><br><span class="line"></span><br><span class="line">  Event._();</span><br><span class="line"></span><br><span class="line">  factory Event([void Function(EventBuilder) updates]) = _$Event;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>很重要的一步, 就是在类前面添加上一句: <code>part &#39;event.g.dart&#39;;</code>.<br><code>g.dart</code>是一个惯例, 表明这个文件是生成的代码. <code>part</code>表示目前这个文件是另一个文件的一部分.</p><p>按照同样的方法把几个类都建好.</p><p>注意如果有列表字段, 要声明为<code>BuiltList</code>类型.</p><h3 id="运行生成命令"><a href="#运行生成命令" class="headerlink" title="运行生成命令"></a>运行生成命令</h3><p>生成命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner build</span><br></pre></td></tr></table></figure></p><p>需要持续构建和可以用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner watch</span><br></pre></td></tr></table></figure></p><p>这样就不用每次改完代码都需要跑一次命令了.</p><p>我们这里用watch, 因为还没有改完.<br>运行完成之后, 可以看到<code>.g.dart</code>的文件们都生成了, 报错也消失了.</p><h3 id="写Serializers"><a href="#写Serializers" class="headerlink" title="写Serializers"></a>写Serializers</h3><p>新建文件<code>serializers.dart</code>.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:built_value/serializer.dart&apos;;</span><br><span class="line">import &apos;package:built_value/standard_json_plugin.dart&apos;;</span><br><span class="line"></span><br><span class="line">// imports for models</span><br><span class="line"></span><br><span class="line">part &apos;serializers.g.dart&apos;;</span><br><span class="line"></span><br><span class="line">@SerializersFor(const [</span><br><span class="line">  Event,</span><br><span class="line">  Actor,</span><br><span class="line">  Repo,</span><br><span class="line">  Payload,</span><br><span class="line">])</span><br><span class="line">final Serializers serializers =</span><br><span class="line">    (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();</span><br></pre></td></tr></table></figure><p><code>@SerializersFor</code>里面列出想要序列化的类.</p><p>注意这里要加上<code>StandardJsonPlugin</code>, 因为built value的json格式不是标准的, 而是所有字段逗号分隔的.<br>用了<code>StandardJsonPlugin</code>之后就转换成了标准的JSON格式.</p><p>因为我们跑命令的时候用的是<code>watch</code>, 所以保存修改后<code>serializers.g.dart</code>文件此时自动生成了.</p><h3 id="添加model序列化和反序列化代码"><a href="#添加model序列化和反序列化代码" class="headerlink" title="添加model序列化和反序列化代码"></a>添加model序列化和反序列化代码</h3><p>在Event类中添加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">static Serializer&lt;Event&gt; get serializer =&gt; _$eventSerializer;</span><br><span class="line"></span><br><span class="line">String toJson() &#123;</span><br><span class="line">  return json.encode(serializers.serializeWith(Event.serializer, this));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static Event fromJson(String jsonString) &#123;</span><br><span class="line">  return serializers.deserializeWith(</span><br><span class="line">      Event.serializer, json.decode(jsonString));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>import中除了model类还有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &apos;dart:convert&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;package:built_value/built_value.dart&apos;;</span><br><span class="line">import &apos;package:built_value/serializer.dart&apos;;</span><br><span class="line">import &apos;serializers.dart&apos;;</span><br></pre></td></tr></table></figure></p><p>此时其他几个model类也要添加<code>serializer</code>, 比如<code>Actor</code>类中添加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static Serializer&lt;Actor&gt; get serializer =&gt; _$actorSerializer;</span><br></pre></td></tr></table></figure></p><p>重新build生成代码, 报错消失.</p><p>现在可以运行测试:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test(&quot;parse event&quot;, () &#123;</span><br><span class="line">  const jsonString = &quot;&quot;&quot;replace with event json string&quot;&quot;&quot;;</span><br><span class="line"></span><br><span class="line">  expect(Event.fromJson(jsonString).id, &quot;11732036753&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><p>来检验单个的Event model建立.</p><p>可能会遇到的失败情况:</p><ul><li>一些字段需要被标记为可为空<code>@nullable</code>.</li><li>一些字段名和key不匹配, 用<code>@BuiltValueField</code>的<code>wireName</code>标记.<br>详见后面的<code>Troubleshooting</code>部分.</li></ul><h3 id="如何反序列化顶层列表"><a href="#如何反序列化顶层列表" class="headerlink" title="如何反序列化顶层列表?"></a>如何反序列化顶层列表?</h3><p>Event的API返回的是一个Event的数组: <code>[]</code>. 这种怎么做呢?</p><p>这里有个issue就是关于这个问题, 里面的解决办法挺好: <a href="https://github.com/google/built_value.dart/issues/565" target="_blank" rel="noopener">https://github.com/google/built_value.dart/issues/565</a></p><p>在<code>serializers.dart</code>中添加方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">T deserialize&lt;T&gt;(dynamic value) =&gt;</span><br><span class="line">    serializers.deserializeWith&lt;T&gt;(serializers.serializerForType(T), value);</span><br><span class="line"></span><br><span class="line">BuiltList&lt;T&gt; deserializeListOf&lt;T&gt;(dynamic value) =&gt; BuiltList.from(</span><br><span class="line">    value.map((value) =&gt; deserialize&lt;T&gt;(value)).toList(growable: false));</span><br></pre></td></tr></table></figure></p><p>其中<code>BuiltList</code>需要<code>import &#39;package:built_collection/built_collection.dart&#39;;</code>.</p><p>反序列化<code>Event</code>数组的方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static List&lt;Event&gt; fromEventsListJson(String jsonString) &#123;</span><br><span class="line">  final BuiltList&lt;Event&gt; listOfEvents =</span><br><span class="line">      deserializeListOf&lt;Event&gt;(json.decode(jsonString));</span><br><span class="line">  return listOfEvents.toList();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>到这一步, 跑我们开头写的两个测试应该都绿了. 如果没绿见<code>Troubleshooting</code>部分.</p><h3 id="泛型的fromJson方法"><a href="#泛型的fromJson方法" class="headerlink" title="泛型的fromJson方法."></a>泛型的fromJson方法.</h3><p>上面给<code>serializers</code>中添加了两个方法. 其中第一个方法是一个泛型的<code>fromJson</code>方法.</p><p>我们测试中的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expect(Event.fromJson(jsonString).id, &quot;11732036753&quot;);</span><br></pre></td></tr></table></figure></p><p>也可以这样写:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expect(deserialize&lt;Event&gt;(json.decode(jsonString)).id, &quot;11732036753&quot;);</span><br></pre></td></tr></table></figure></p><p>这样不用给每一个类都写一个<code>fromJson</code>方法了.</p><h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>可能会有的报错, 问题原因和解决方式.</p><h3 id="报错1-failed-due-to-Invalid-argument-s-Unknown-type-on-deserialization-Need-either-specifiedType-or-discriminator-field"><a href="#报错1-failed-due-to-Invalid-argument-s-Unknown-type-on-deserialization-Need-either-specifiedType-or-discriminator-field" class="headerlink" title="报错1: failed due to: Invalid argument(s): Unknown type on deserialization. Need either specifiedType or discriminator field."></a>报错1: <code>failed due to: Invalid argument(s): Unknown type on deserialization. Need either specifiedType or discriminator field.</code></h3><p>比如这个样子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Deserializing &apos;[id, 11732036753, type, PushEvent, actor, &#123;id: 54496419, login: supershell201...&apos; to &apos;Event&apos; failed due to: Invalid argument(s): Unknown type on deserialization. Need either specifiedType or discriminator field.</span><br></pre></td></tr></table></figure></p><p>这是因为<code>Event</code>中依赖的类(<code>Actor</code>, <code>Repo</code>, <code>Payload</code>)没有添加serializer.</p><p>比如<code>Actor</code>中:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static Serializer&lt;Actor&gt; get serializer =&gt; _$actorSerializer;</span><br></pre></td></tr></table></figure></p><p>添加上重新build生成代码即可.</p><h3 id="报错2-Tried-to-construct-class-quot-XXX-quot-with-null-field"><a href="#报错2-Tried-to-construct-class-quot-XXX-quot-with-null-field" class="headerlink" title="报错2: Tried to construct class &quot;XXX&quot; with null field"></a>报错2: <code>Tried to construct class &quot;XXX&quot; with null field</code></h3><p>比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Deserializing &apos;[id, 11732036753, type, PushEvent, actor, &#123;id: 54496419, login: supershell201...&apos; to &apos;Event&apos; failed due to: Deserializing &apos;[id, 54496419, login, supershell2019, display_login, supershell2019, gravatar...&apos; to &apos;Actor&apos; failed due to: Tried to construct class &quot;Actor&quot; with null field &quot;displayLogin&quot;. This is forbidden; to allow it, mark &quot;displayLogin&quot; with @nullable.</span><br></pre></td></tr></table></figure></p><p>此时, 先不要着急把字段标记为<code>@nullable</code>.<br>而是要看这个字段是否真的为null, 很有可能是因为字段名称和json中的key不匹配造成的, 比如json中是个蛇形命名.</p><p>查看了一下果然就是, 解决办法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@BuiltValueField(wireName: &apos;display_login&apos;)</span><br><span class="line">String get displayLogin;</span><br></pre></td></tr></table></figure></p><p>如果字段真的是有可能为null的情况, 那么加上<code>@nullable</code>:<br>比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@BuiltValueField(wireName: &apos;ref_type&apos;)</span><br><span class="line">@nullable</span><br><span class="line">String get refType;</span><br></pre></td></tr></table></figure></p><h3 id="报错3-FormatException-Control-character-in-string"><a href="#报错3-FormatException-Control-character-in-string" class="headerlink" title="报错3: FormatException: Control character in string"></a>报错3: <code>FormatException: Control character in string</code></h3><p>比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FormatException: Control character in string (at line 25, character 129)</span><br><span class="line">... replica::on_client_write(dsn::message_ex *request, bool ignore_throttling)</span><br></pre></td></tr></table></figure></p><p>相关issue: <a href="https://github.com/dart-lang/convert/issues/10" target="_blank" rel="noopener">https://github.com/dart-lang/convert/issues/10</a></p><p>解决的办法就是在测试的字符串声明前加一个<code>r</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const jsonString = r&quot;&quot;&quot;replace with events list json string&quot;&quot;&quot;;</span><br></pre></td></tr></table></figure></p><h2 id="Model生成工具推荐"><a href="#Model生成工具推荐" class="headerlink" title="Model生成工具推荐"></a>Model生成工具推荐</h2><p>有个很棒的工具: <a href="https://charafau.github.io/json2builtvalue/" target="_blank" rel="noopener">https://charafau.github.io/json2builtvalue/</a><br>左边输入json字符串, 写好命名, 点击之后右边就会出现那些本来需要手动写的代码.</p><p>生成的<code>Event</code>类是这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">library event;</span><br><span class="line"></span><br><span class="line">import &apos;dart:convert&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;package:built_collection/built_collection.dart&apos;;</span><br><span class="line">import &apos;package:built_value/built_value.dart&apos;;</span><br><span class="line">import &apos;package:built_value/serializer.dart&apos;;</span><br><span class="line"></span><br><span class="line">part &apos;event.g.dart&apos;;</span><br><span class="line"></span><br><span class="line">abstract class Event implements Built&lt;Event, EventBuilder&gt; &#123;</span><br><span class="line">  Event._();</span><br><span class="line"></span><br><span class="line">  factory Event([updates(EventBuilder b)]) = _$Event;</span><br><span class="line"></span><br><span class="line">  @BuiltValueField(wireName: &apos;id&apos;)</span><br><span class="line">  String get id;</span><br><span class="line">  @BuiltValueField(wireName: &apos;type&apos;)</span><br><span class="line">  String get type;</span><br><span class="line">  @BuiltValueField(wireName: &apos;actor&apos;)</span><br><span class="line">  Actor get actor;</span><br><span class="line">  @BuiltValueField(wireName: &apos;repo&apos;)</span><br><span class="line">  Repo get repo;</span><br><span class="line">  @BuiltValueField(wireName: &apos;payload&apos;)</span><br><span class="line">  Payload get payload;</span><br><span class="line">  @BuiltValueField(wireName: &apos;public&apos;)</span><br><span class="line">  bool get public;</span><br><span class="line">  @BuiltValueField(wireName: &apos;created_at&apos;)</span><br><span class="line">  String get createdAt;</span><br><span class="line">  String toJson() &#123;</span><br><span class="line">    return json.encode(serializers.serializeWith(Event.serializer, this));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static Event fromJson(String jsonString) &#123;</span><br><span class="line">    return serializers.deserializeWith(</span><br><span class="line">        Event.serializer, json.decode(jsonString));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static Serializer&lt;Event&gt; get serializer =&gt; _$eventSerializer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>哈哈, 看到这里是不是有种被骗了的感觉.</p><p>有了这个很棒的工具之后根本不用自己很小心地写一个一个model类了, 只需要写一个<code>serializers.dart</code>文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">part &apos;serializers.g.dart&apos;;</span><br><span class="line"></span><br><span class="line">@SerializersFor(const [</span><br><span class="line">  Event,</span><br><span class="line">  Actor,</span><br><span class="line">  Repo,</span><br><span class="line">  Payload,</span><br><span class="line">])</span><br><span class="line">final Serializers serializers =</span><br><span class="line">    (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();</span><br><span class="line"></span><br><span class="line">T deserialize&lt;T&gt;(dynamic value) =&gt;</span><br><span class="line">    serializers.deserializeWith&lt;T&gt;(serializers.serializerForType(T), value);</span><br><span class="line"></span><br><span class="line">BuiltList&lt;T&gt; deserializeListOf&lt;T&gt;(dynamic value) =&gt; BuiltList.from(</span><br><span class="line">    value.map((value) =&gt; deserialize&lt;T&gt;(value)).toList(growable: false));</span><br></pre></td></tr></table></figure></p><p>然后把要反序列化的类加进来, 再跑命令行生成代码, 就可以了.</p><p>经历一下前面的手动过程可能理解得更好一些, 也知道各种问题的原因.<br>以后使用直接用工具就方便多了.</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li>官方文档: <a href="https://flutter.dev/docs/development/data-and-backend/json" target="_blank" rel="noopener">https://flutter.dev/docs/development/data-and-backend/json</a></li><li>Flutter实战11.7: <a href="https://book.flutterchina.club/chapter11/json_model.html" target="_blank" rel="noopener">https://book.flutterchina.club/chapter11/json_model.html</a></li><li><a href="https://github.com/google/built_value.dart" target="_blank" rel="noopener">built value github</a></li><li>生成工具: <a href="https://charafau.github.io/json2builtvalue/" target="_blank" rel="noopener">https://charafau.github.io/json2builtvalue/</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Flutter </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Flutter </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Kotlin Android项目静态检查工具的使用</title>
       <link href="/Kotlin/Android/2020/02/08/kotlin-android-lint-tools/"/>
       <url>/Kotlin/Android/2020/02/08/kotlin-android-lint-tools/</url>
@@ -231,9 +256,9 @@
             
             <tag> Network </tag>
             
-            <tag> MotionLayout </tag>
-            
             <tag> Keyboard </tag>
+            
+            <tag> MotionLayout </tag>
             
             <tag> AR </tag>
             
@@ -276,9 +301,9 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Redux </tag>
-            
             <tag> Tools </tag>
+            
+            <tag> Redux </tag>
             
             <tag> Permission </tag>
             
@@ -562,9 +587,9 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Architecture </tag>
-            
             <tag> Design </tag>
+            
+            <tag> Architecture </tag>
             
             <tag> LiveData </tag>
             
@@ -837,13 +862,13 @@
             
             <tag> SQLite </tag>
             
+            <tag> Shared Element </tag>
+            
             <tag> Android O </tag>
             
             <tag> Physics-based Animation </tag>
             
             <tag> SpringAnimation </tag>
-            
-            <tag> Shared Element </tag>
             
             <tag> Transition </tag>
             
@@ -985,11 +1010,11 @@
             
             <tag> Espresso </tag>
             
+            <tag> Mockito </tag>
+            
             <tag> Kotlin </tag>
             
             <tag> Testing </tag>
-            
-            <tag> Mockito </tag>
             
             <tag> Android O </tag>
             
@@ -1101,6 +1126,8 @@
             
             <tag> Transition </tag>
             
+            <tag> Network </tag>
+            
             <tag> ViewSwitcher </tag>
             
             <tag> Coroutines </tag>
@@ -1112,8 +1139,6 @@
             <tag> OpenGL </tag>
             
             <tag> JBox2D </tag>
-            
-            <tag> Network </tag>
             
             <tag> Etag </tag>
             
@@ -1158,17 +1183,17 @@
             
             <tag> RxJava </tag>
             
-            <tag> RxJava2 </tag>
-            
             <tag> Mockito </tag>
             
+            <tag> RxJava2 </tag>
+            
             <tag> JUnit 5 </tag>
+            
+            <tag> Realm </tag>
             
             <tag> Lint </tag>
             
             <tag> FindBugs </tag>
-            
-            <tag> Realm </tag>
             
             <tag> Crash </tag>
             
@@ -1211,13 +1236,13 @@
             
             <tag> RxJava2 </tag>
             
-            <tag> Testing </tag>
-            
             <tag> MVP </tag>
             
-            <tag> JUnit 5 </tag>
+            <tag> Testing </tag>
             
             <tag> FlexboxLayout </tag>
+            
+            <tag> JUnit 5 </tag>
             
             <tag> MVI </tag>
             
@@ -1342,15 +1367,15 @@
             
             <tag> RxJava </tag>
             
+            <tag> Mockito </tag>
+            
             <tag> Kotlin </tag>
+            
+            <tag> Memory Leak </tag>
             
             <tag> Testing </tag>
             
             <tag> Unit Test </tag>
-            
-            <tag> Mockito </tag>
-            
-            <tag> Memory Leak </tag>
             
             <tag> Android Things </tag>
             
@@ -1411,9 +1436,9 @@
             
             <tag> Testing </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> FileProvider </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> ClassyShark </tag>
             
@@ -1540,9 +1565,9 @@
             
             <tag> Animation </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> Color </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Design Patterns </tag>
             
@@ -1775,11 +1800,11 @@
             
             <tag> Android Things </tag>
             
+            <tag> Firebase </tag>
+            
             <tag> ExoPlayer </tag>
             
             <tag> Java </tag>
-            
-            <tag> Firebase </tag>
             
             <tag> ContentProvider </tag>
             
@@ -1820,9 +1845,9 @@
             
             <tag> Android Studio </tag>
             
-            <tag> Android Things </tag>
-            
             <tag> IoT </tag>
+            
+            <tag> Android Things </tag>
             
             <tag> FileProvider </tag>
             
@@ -1991,17 +2016,17 @@
             
             <tag> MVP </tag>
             
-            <tag> Java </tag>
-            
             <tag> Firebase </tag>
             
-            <tag> Custom View </tag>
+            <tag> Java </tag>
             
             <tag> Terminal </tag>
             
             <tag> Android 7.1 </tag>
             
             <tag> App Shortcuts </tag>
+            
+            <tag> Custom View </tag>
             
             <tag> Remote Config </tag>
             
@@ -2136,11 +2161,11 @@
             
             <tag> Espresso </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Audio </tag>
             
             <tag> RxJava </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Kotlin </tag>
             
@@ -2203,19 +2228,19 @@
             
             <tag> RxJava </tag>
             
-            <tag> Kotlin </tag>
-            
-            <tag> RxJava2 </tag>
-            
-            <tag> Retrofit </tag>
-            
             <tag> Mockito </tag>
             
+            <tag> Kotlin </tag>
+            
             <tag> Async-Await </tag>
+            
+            <tag> RxJava2 </tag>
             
             <tag> Activity </tag>
             
             <tag> Rotation </tag>
+            
+            <tag> Retrofit </tag>
             
             <tag> JDK </tag>
             
@@ -2510,11 +2535,11 @@
             
             <tag> Nougat </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Reductor </tag>
             
@@ -2579,9 +2604,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> Kotlin </tag>
-            
             <tag> Mockito </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> MVP </tag>
             
@@ -2628,9 +2653,9 @@
             
             <tag> Animation </tag>
             
-            <tag> ExoPlayer </tag>
-            
             <tag> Firebase </tag>
+            
+            <tag> ExoPlayer </tag>
             
             <tag> Wear </tag>
             
@@ -2681,17 +2706,17 @@
             
             <tag> Android Weekly </tag>
             
+            <tag> Memory Leak </tag>
+            
             <tag> Reductor </tag>
             
             <tag> Redux </tag>
             
-            <tag> Memory Leak </tag>
-            
             <tag> Wear </tag>
             
-            <tag> APK </tag>
-            
             <tag> Handler </tag>
+            
+            <tag> APK </tag>
             
             <tag> Annotation </tag>
             
@@ -3031,9 +3056,9 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> Security </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Java 8 </tag>
             
@@ -3125,11 +3150,11 @@
             
             <tag> Android </tag>
             
-            <tag> Toolbar </tag>
-            
             <tag> Design Support Library </tag>
             
             <tag> AppBarLayout </tag>
+            
+            <tag> Toolbar </tag>
             
         </tags>
       
