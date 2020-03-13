@@ -6,7 +6,7 @@ categories: [Flutter]
 ---
 
 # Flutter json 2 model with Built Value
-flutter中json转换model, 除了手动转之外, 就是利用第三方库做一些代码生成. 
+Flutter中json转换model, 除了手动转之外, 就是利用第三方库做一些代码生成. 
 流行的库有: [json_serializable](https://pub.dev/packages/json_serializable)和[built_value](https://pub.dev/packages/built_value)
 
 本文介绍[built_value](https://pub.dev/packages/built_value)的实际使用及问题处理.
