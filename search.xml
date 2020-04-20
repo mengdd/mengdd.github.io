@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>用Taro做个微信小程序Todo, 小白工作记录</title>
+      <link href="/Mini-Program/2020/04/20/mini-program-todo-using-taro/"/>
+      <url>/Mini-Program/2020/04/20/mini-program-todo-using-taro/</url>
+      
+        <content type="html"><![CDATA[<h2 id="微信小程序框架-Taro"><a href="#微信小程序框架-Taro" class="headerlink" title="微信小程序框架: Taro"></a>微信小程序框架: Taro</h2><p>做微信小程序的框架, 几个比较主流的:</p><ul><li>官方的<code>WePY</code>: <a href="https://tencent.github.io/wepy/document.html#/" target="_blank" rel="noopener">https://tencent.github.io/wepy/document.html#/</a></li><li>美团的<code>mpvue</code>: <a href="http://mpvue.com/mpvue/#-html" target="_blank" rel="noopener">http://mpvue.com/mpvue/#-html</a></li><li>京东的<code>Taro</code>: <a href="https://taro.aotu.io/" target="_blank" rel="noopener">https://taro.aotu.io/</a></li></ul><p>前两者都是Vue风格的, Taro是React的.</p><p>本篇本着学习的目的, 用Taro做一个简单的小程序.<br>代码在这里: <a href="https://github.com/mengdd/mini-program-todo" target="_blank" rel="noopener">https://github.com/mengdd/mini-program-todo</a></p><a id="more"></a><p>背景:<br>一直做Android开发, 最近想把其他各种技术都撸一撸, 拓展一下视野.<br>之前练过微信小程序原生开发的例子, 基本上只知道个大概, 翻书马冬梅, 合书马什么梅?<br>所以这次用框架了, 觉得还是要有个输出, 这样印象深刻一些.</p><p>所以本文是从一个小白的角度, 手把手做练习的.</p><h2 id="Taro程序环境"><a href="#Taro程序环境" class="headerlink" title="Taro程序环境"></a>Taro程序环境</h2><p>这部分参考:</p><ul><li>官方文档: <a href="https://nervjs.github.io/taro/docs/README.html" target="_blank" rel="noopener">https://nervjs.github.io/taro/docs/README.html</a></li><li>Getting Started:<br><a href="https://nervjs.github.io/taro/docs/GETTING-STARTED.html" target="_blank" rel="noopener">https://nervjs.github.io/taro/docs/GETTING-STARTED.html</a></li></ul><p>要有node环境, 推荐用nvm来管理.</p><p>需要安装CLI工具:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @tarojs/cli</span><br></pre></td></tr></table></figure></p><h2 id="创建项目并运行"><a href="#创建项目并运行" class="headerlink" title="创建项目并运行"></a>创建项目并运行</h2><h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>创建模板项目:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taro init myApp</span><br></pre></td></tr></table></figure></p><p>在这个阶段会有一些问题要回答.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* 请输入项目介绍！ My awesome project blablabla.</span><br><span class="line">* 是否需要使用 TypeScript ？ Yes</span><br><span class="line">* 请选择 CSS 预处理器（Sass/Less/Stylus） Sass</span><br><span class="line">* 请选择模板 默认模板</span><br></pre></td></tr></table></figure></p><p>完了之后会自动安装依赖:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure></p><p>然后就成功啦!</p><h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>Taro需要运行不同的命令, 将Taro代码编译成不同端的代码, 然后在对应的开发工具中查看效果.</p><p>这里仅说微信小程序. 还是需要微信开发者工具:<br><a href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html" target="_blank" rel="noopener">https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html</a></p><p>import这个项目就行了.</p><p>开发前微信开发者工具的项目设置要注意:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">需要设置关闭ES6转ES5功能, 开启可能报错.</span><br><span class="line">需要设置关闭上传代码时样式自动补全, 开启可能报错.</span><br><span class="line">需要设置关闭代码压缩上传, 开启可能报错.</span><br></pre></td></tr></table></figure></p><p>这些默认都是关闭的.</p><p>微信小程序的编译预览及打包:</p><p>npm script<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm run dev:weapp</span><br><span class="line">$ npm run build:weapp</span><br></pre></td></tr></table></figure></p><p>或者:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ taro build --type weapp --watch</span><br><span class="line">$ taro build --type weapp</span><br></pre></td></tr></table></figure></p><p>加上<code>--watch</code>会监听文件修改, 去掉会对代码进行压缩打包.</p><p>运行编译命令之后就可以在微信开发者工具中预览了. 是显示一个Hello World.</p><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><p>因为创建项目的时候用了TypeScript, 所以项目结构是这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">├── dist                   编译结果目录</span><br><span class="line">├── config                 配置目录</span><br><span class="line">|   ├── dev.js             开发时配置</span><br><span class="line">|   ├── index.js           默认配置</span><br><span class="line">|   └── prod.js            打包时配置</span><br><span class="line">├── src                    源码目录</span><br><span class="line">|   ├── pages              页面文件目录</span><br><span class="line">|   |   ├── index          index页面目录</span><br><span class="line">|   |   |   ├── index.scss index页面样式</span><br><span class="line">|   |   |   └── index.tsx  index页面逻辑</span><br><span class="line">|   ├── app.scss           项目总通用样式</span><br><span class="line">|   ├── app.tsx            项目入口文件</span><br><span class="line">|   └── index.html          </span><br><span class="line">└── package.json</span><br></pre></td></tr></table></figure></p><p>如果需要创建组件, 可以在<code>src</code>下创建<code>component</code>目录来统一存放组件.</p><p>“Hello world!”就在<code>index.tsx</code>中.</p><h2 id="IDE"><a href="#IDE" class="headerlink" title="IDE"></a>IDE</h2><p>关于IDE:<br>我发现用微信开发者工具是打不开这些后缀名为<code>scss</code>和<code>tsx</code>的文件的.<br>微信开发者工具只能用来预览.</p><p>后来用了Intellij, 是能查看文件了,<br>但是开始写代码之后, 发现没有自动提示, 也没有自动格式化工具. </p><p>又下了个VS CODE:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew cask install visual-studio-code</span><br></pre></td></tr></table></figure></p><p>格式化的快捷键是:<br><code>Shift + Alt + F</code>.</p><p>后来我在Text Editor设置里勾选了<code>Format On Save</code>.</p><h2 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h2><h3 id="Step-1-静态页面显示"><a href="#Step-1-静态页面显示" class="headerlink" title="Step 1: 静态页面显示"></a>Step 1: 静态页面显示</h3><p>先弄几个数据静态显示一下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">export default class Index extends Component &#123;</span><br><span class="line">  config: Config = &#123;</span><br><span class="line">    navigationBarTitleText: &apos;首页&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props)</span><br><span class="line">    this.state = &#123;</span><br><span class="line">      list: [&apos;get up&apos;, &apos;eat breakfast&apos;, &apos;study&apos;,]</span><br><span class="line">    &#125;</span><br><span class="line">    inputVal: &apos;&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    let &#123; list, inputVal &#125; = this.state</span><br><span class="line"></span><br><span class="line">    return (</span><br><span class="line">      &lt;View className=&apos;index&apos;&gt;</span><br><span class="line">        &lt;View className=&apos;list_wrap&apos;&gt;</span><br><span class="line">          &lt;Text&gt;Todo List&lt;/Text&gt;</span><br><span class="line">          &#123;</span><br><span class="line">            list.map((item, index) =&gt; &#123;</span><br><span class="line">              return &lt;View&gt;</span><br><span class="line">                &lt;Text&gt;&#123;index + 1&#125;.&#123;item&#125;&lt;/Text&gt;</span><br><span class="line">              &lt;/View&gt;</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">        &lt;/View&gt;</span><br><span class="line">      &lt;/View&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>然后命令行运行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taro build --type weapp --watch</span><br></pre></td></tr></table></figure></p><p>就会直接显示出来结果. 之后的修改也是随时呈现.</p><p>这里IDE报告两个TypeScript的问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Property &apos;list&apos; does not exist on type &apos;Readonly&lt;&#123;&#125;&gt;&apos;</span><br></pre></td></tr></table></figure></p><p>和:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Property &apos;inputVal&apos; does not exist on type &apos;Index&apos;.</span><br></pre></td></tr></table></figure></p><p>按照<a href="https://stackoverflow.com/questions/47561848/property-value-does-not-exist-on-type-readonly" target="_blank" rel="noopener">这里</a>的方法修改的:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">interface MyProps &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface MyState &#123;</span><br><span class="line">  list: Array&lt;string&gt;;</span><br><span class="line">  inputVal: string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default class Index extends Component&lt;MyProps, MyState&gt; &#123;</span><br><span class="line">//...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>代码中设置值的时候调用<code>this.setState()</code>.</p><h3 id="Step-2-添加和删除项目"><a href="#Step-2-添加和删除项目" class="headerlink" title="Step 2: 添加和删除项目"></a>Step 2: 添加和删除项目</h3><p>加上输入框, 添加和删除按钮的对应方法.<br>完整代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">interface MyProps &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface MyState &#123;</span><br><span class="line">  list: Array&lt;string&gt;;</span><br><span class="line">  inputVal: string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default class Index extends Component&lt;MyProps, MyState&gt; &#123;</span><br><span class="line">  config: Config = &#123;</span><br><span class="line">    navigationBarTitleText: &apos;首页&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props)</span><br><span class="line">    this.state = &#123;</span><br><span class="line">      list: [&apos;get up&apos;, &apos;eat breakfast&apos;, &apos;study&apos;,],</span><br><span class="line">      inputVal: &apos;&apos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  addItem() &#123;</span><br><span class="line">    let &#123; list &#125; = this.state</span><br><span class="line">    const inputVal = this.state.inputVal</span><br><span class="line"></span><br><span class="line">    if (inputVal == &apos;&apos;) return</span><br><span class="line">    else &#123;</span><br><span class="line">      list.push(inputVal)</span><br><span class="line">    &#125;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      list,</span><br><span class="line">      inputVal: &apos;&apos;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  removeItem(index) &#123;</span><br><span class="line">    let &#123; list &#125; = this.state</span><br><span class="line">    list.splice(index, 1)</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">      list</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  inputHandler(e) &#123;</span><br><span class="line">    this.setState(&#123; inputVal: e.target.value &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    let &#123; list, inputVal &#125; = this.state</span><br><span class="line"></span><br><span class="line">    return (</span><br><span class="line">      &lt;View className=&apos;index&apos;&gt;</span><br><span class="line">        &lt;Input className=&apos;input&apos; type=&apos;text&apos; value=&#123;inputVal&#125; onInput=&#123;this.inputHandler.bind(this)&#125; /&gt;</span><br><span class="line">        &lt;Text className=&apos;add&apos; onClick=&#123;this.addItem.bind(this)&#125;&gt;添加&lt;/Text&gt;</span><br><span class="line">        &lt;View className=&apos;list_wrap&apos;&gt;</span><br><span class="line">          &lt;Text&gt;Todo List&lt;/Text&gt;</span><br><span class="line">          &#123;</span><br><span class="line">            list.map((item, index) =&gt; &#123;</span><br><span class="line">              return &lt;View className=&apos;list_item&apos;&gt;</span><br><span class="line">                &lt;Text&gt;&#123;index + 1&#125;.&#123;item&#125;&lt;/Text&gt;</span><br><span class="line">                &lt;Text className=&apos;del&apos; onClick=&#123;this.removeItem.bind(this, index)&#125;&gt;删除&lt;/Text&gt;</span><br><span class="line">              &lt;/View&gt;</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">        &lt;/View&gt;</span><br><span class="line">      &lt;/View&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h3 id="Step-3-样式调整"><a href="#Step-3-样式调整" class="headerlink" title="Step 3: 样式调整"></a>Step 3: 样式调整</h3><p>用了这里面的样式: <a href="https://juejin.im/book/5b73a131f265da28065fb1cd" target="_blank" rel="noopener">https://juejin.im/book/5b73a131f265da28065fb1cd</a></p><p>然后企图调整button的对齐. (CSS不太擅长, 请轻拍, 请指教.)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">.input &#123;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    margin: 32px;</span><br><span class="line">    border: 1px solid #666;</span><br><span class="line">    width: 65%;</span><br><span class="line">    vertical-align: middle;</span><br><span class="line">&#125;</span><br><span class="line">.list_wrap &#123;</span><br><span class="line">    padding: 32px;</span><br><span class="line">&#125;</span><br><span class="line">.list_item &#123;</span><br><span class="line">    margin: 20px 0;</span><br><span class="line">&#125;</span><br><span class="line">.add,</span><br><span class="line">.del &#123;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    width: 120px;</span><br><span class="line">    height: 60px;</span><br><span class="line">    margin: 0 10px;</span><br><span class="line">    padding: 0 10px;</span><br><span class="line">    font-size: 22px;</span><br><span class="line">    line-height: 60px;</span><br><span class="line">    text-align: center;</span><br><span class="line">    border-radius: 10px;</span><br><span class="line">    box-sizing: border-box;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">    text-overflow: ellipsis;</span><br><span class="line">    white-space: nowrap;</span><br><span class="line">    justify-content: center;</span><br><span class="line">    vertical-align: middle;</span><br><span class="line">&#125;</span><br><span class="line">.add &#123;</span><br><span class="line">    background-color: #5c89e4;</span><br><span class="line">    color: #fff;</span><br><span class="line">    border: 1px solid #5c89e4;</span><br><span class="line">&#125;</span><br><span class="line">.del &#123;</span><br><span class="line">    background-color: #fff;</span><br><span class="line">    color: #5c89e4;</span><br><span class="line">    border: 1px solid #5c89e4;</span><br><span class="line">    position: absolute;</span><br><span class="line">    right: 32px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><h2 id="Taro命令"><a href="#Taro命令" class="headerlink" title="Taro命令"></a>Taro命令</h2><p>快速生成新的页面文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Taro create --name [页面名称]</span><br></pre></td></tr></table></figure></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://github.com/NervJS/taro" target="_blank" rel="noopener">taro github</a></li><li><a href="https://github.com/NervJS/awesome-taro" target="_blank" rel="noopener">awesome taro</a></li><li><a href="https://developers.weixin.qq.com/miniprogram/dev/devtools/page.html" target="_blank" rel="noopener">微信开发者工具</a></li><li><a href="https://juejin.im/book/5b73a131f265da28065fb1cd" target="_blank" rel="noopener">掘金小册: Taro 多端开发实现原理与项目实战</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Mini Program </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Taro </tag>
+            
+            <tag> Mini Program </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>写一个TODO App学习Flutter数据库工具Moor</title>
       <link href="/Flutter/2020/04/14/flutter-database-using-moor/"/>
       <url>/Flutter/2020/04/14/flutter-database-using-moor/</url>
@@ -451,19 +478,19 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
-            <tag> Kotlin </tag>
+            <tag> Android Studio </tag>
             
-            <tag> IDE </tag>
+            <tag> Kotlin </tag>
             
             <tag> Animation </tag>
             
             <tag> Gradle </tag>
             
             <tag> CI </tag>
+            
+            <tag> IDE </tag>
             
             <tag> LiveData </tag>
             
@@ -682,11 +709,11 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
             <tag> Shortcuts </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Kotlin </tag>
             
@@ -695,6 +722,8 @@
             <tag> Gradle </tag>
             
             <tag> Parcelable </tag>
+            
+            <tag> ViewPager </tag>
             
             <tag> Lint </tag>
             
@@ -713,8 +742,6 @@
             <tag> Jacoco </tag>
             
             <tag> ID </tag>
-            
-            <tag> ViewPager </tag>
             
             <tag> Java 8 </tag>
             
@@ -906,9 +933,9 @@
             
             <tag> Mockito </tag>
             
-            <tag> FileProvider </tag>
-            
             <tag> Animation </tag>
+            
+            <tag> FileProvider </tag>
             
             <tag> SQLite </tag>
             
@@ -1174,9 +1201,9 @@
             
             <tag> OkHttp </tag>
             
-            <tag> ViewSwitcher </tag>
-            
             <tag> Transition </tag>
+            
+            <tag> ViewSwitcher </tag>
             
             <tag> Coroutines </tag>
             
@@ -1298,11 +1325,11 @@
             
             <tag> Git </tag>
             
-            <tag> Transition </tag>
-            
             <tag> Offline </tag>
             
             <tag> Version Name </tag>
+            
+            <tag> Transition </tag>
             
         </tags>
       
@@ -1486,9 +1513,9 @@
             
             <tag> Testing </tag>
             
-            <tag> FileProvider </tag>
-            
             <tag> Firebase </tag>
+            
+            <tag> FileProvider </tag>
             
             <tag> ClassyShark </tag>
             
@@ -1613,11 +1640,11 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Color </tag>
-            
             <tag> Animation </tag>
             
             <tag> Firebase </tag>
+            
+            <tag> Color </tag>
             
             <tag> Design Patterns </tag>
             
@@ -1752,9 +1779,9 @@
             
             <tag> RxJava2 </tag>
             
-            <tag> Android Things </tag>
-            
             <tag> Gradle </tag>
+            
+            <tag> Android Things </tag>
             
             <tag> Wear </tag>
             
@@ -1799,8 +1826,6 @@
             
             <tag> Testing </tag>
             
-            <tag> Android Things </tag>
-            
             <tag> Firebase </tag>
             
             <tag> Notification </tag>
@@ -1812,6 +1837,8 @@
             <tag> Flutter </tag>
             
             <tag> Gradle </tag>
+            
+            <tag> Android Things </tag>
             
             <tag> CI </tag>
             
@@ -1848,13 +1875,13 @@
             
             <tag> Kotlin </tag>
             
+            <tag> Firebase </tag>
+            
             <tag> Android Things </tag>
             
             <tag> ExoPlayer </tag>
             
             <tag> Java </tag>
-            
-            <tag> Firebase </tag>
             
             <tag> ContentProvider </tag>
             
@@ -1891,13 +1918,13 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
-            <tag> IoT </tag>
+            <tag> Android Studio </tag>
             
             <tag> Android Things </tag>
+            
+            <tag> IoT </tag>
             
             <tag> FileProvider </tag>
             
@@ -1944,8 +1971,6 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
             <tag> Android 7 </tag>
@@ -1953,6 +1978,8 @@
             <tag> Nougat </tag>
             
             <tag> Test </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Animation </tag>
             
@@ -2066,9 +2093,9 @@
             
             <tag> Mockito </tag>
             
-            <tag> Java </tag>
-            
             <tag> Firebase </tag>
+            
+            <tag> Java </tag>
             
             <tag> Terminal </tag>
             
@@ -2201,8 +2228,6 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
             <tag> BottomNavigationView </tag>
@@ -2216,6 +2241,8 @@
             <tag> Audio </tag>
             
             <tag> RxJava </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> MVP </tag>
             
@@ -2581,8 +2608,6 @@
             
             <tag> Android </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Android Weekly </tag>
             
             <tag> Nougat </tag>
@@ -2590,6 +2615,8 @@
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Reductor </tag>
             
@@ -2703,9 +2730,9 @@
             
             <tag> Animation </tag>
             
-            <tag> ExoPlayer </tag>
-            
             <tag> Firebase </tag>
+            
+            <tag> ExoPlayer </tag>
             
             <tag> Wear </tag>
             
@@ -2768,8 +2795,6 @@
             
             <tag> APK </tag>
             
-            <tag> Annotation </tag>
-            
             <tag> pre-launch </tag>
             
             <tag> RxAndroid </tag>
@@ -2777,6 +2802,8 @@
             <tag> Profile </tag>
             
             <tag> Methods Count </tag>
+            
+            <tag> Annotation </tag>
             
             <tag> Adapter </tag>
             
@@ -2909,13 +2936,15 @@
             
             <tag> RxJava </tag>
             
-            <tag> Security </tag>
-            
             <tag> Gradle </tag>
+            
+            <tag> Security </tag>
             
             <tag> Resources </tag>
             
             <tag> Accessibility </tag>
+            
+            <tag> Annotation </tag>
             
             <tag> ScaleType </tag>
             
@@ -2924,8 +2953,6 @@
             <tag> Scrolling </tag>
             
             <tag> ExpandableRecyclerView </tag>
-            
-            <tag> Annotation </tag>
             
             <tag> ItemTouchHelper </tag>
             
@@ -3106,9 +3133,9 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Security </tag>
-            
             <tag> Firebase </tag>
+            
+            <tag> Security </tag>
             
             <tag> Java 8 </tag>
             
