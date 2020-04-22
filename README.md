@@ -54,4 +54,16 @@ image:
 ![alt text](/images/image-name.png)
 ```
 
+## Theme
+Current theme: https://github.com/theme-next/hexo-theme-next
 
+I have a fork here: https://github.com/mengdd/hexo-theme-next-1.
+
+To update the theme:
+
+cd `themes/next`
+```
+git fetch upstream
+git merge upstream/master
+```
+Fix conflicts and commit.
