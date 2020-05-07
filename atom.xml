@@ -164,9 +164,9 @@
     
       <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
     
-      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
-    
       <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
+    
+      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
     
       <category term="Lint" scheme="http://mengdd.github.io/tags/Lint/"/>
     
@@ -395,9 +395,9 @@
     
       <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
     
-      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
-    
       <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
+    
+      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
     
       <category term="Redux" scheme="http://mengdd.github.io/tags/Redux/"/>
     
@@ -499,11 +499,11 @@
     
       <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
     
+      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
+    
       <category term="Gradle" scheme="http://mengdd.github.io/tags/Gradle/"/>
     
       <category term="CI" scheme="http://mengdd.github.io/tags/CI/"/>
-    
-      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
     
       <category term="LiveData" scheme="http://mengdd.github.io/tags/LiveData/"/>
     

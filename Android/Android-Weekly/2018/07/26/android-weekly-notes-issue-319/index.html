@@ -17,11 +17,11 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Android Weekly Issue #319July 22nd, 2018.Android Weekly Issue #319本期内容包括: MotionLayout加动画; Kotlin中的when; Android Studio的快捷键; Google的开发者认证; 一个天气应用的的数据层构建; 一个Android项目的CI搭建; 用Kotlin写gradle build脚本;测试库Ko">
-<meta name="keywords" content="Android,Android Weekly,Android Studio,Kotlin,Animation,Gradle,CI,IDE,LiveData,MotionLayout,Transformations,MediatorLiveData">
+<meta name="keywords" content="Android,Android Weekly,Android Studio,Kotlin,Animation,IDE,Gradle,CI,LiveData,MotionLayout,Transformations,MediatorLiveData">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Weekly Notes Issue 319">
 <meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/index.html">
@@ -114,7 +114,6 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -149,36 +148,11 @@
     <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
 </nav>
 
 
 
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" placeholder="Searching..." spellcheck="false" type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
 
 </div>
     </header>
@@ -413,9 +387,9 @@
               <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
               <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
               <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/IDE/" rel="tag"># IDE</a>
               <a href="/tags/Gradle/" rel="tag"># Gradle</a>
               <a href="/tags/CI/" rel="tag"># CI</a>
-              <a href="/tags/IDE/" rel="tag"># IDE</a>
               <a href="/tags/LiveData/" rel="tag"># LiveData</a>
               <a href="/tags/MotionLayout/" rel="tag"># MotionLayout</a>
               <a href="/tags/Transformations/" rel="tag"># Transformations</a>
@@ -698,8 +672,6 @@
 
 
 
-
-  <script src="/js/local-search.js"></script>
 
 
 

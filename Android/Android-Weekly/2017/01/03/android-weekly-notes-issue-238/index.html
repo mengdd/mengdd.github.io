@@ -17,11 +17,11 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Android Weekly Issue #238January 1st, 2017Android Weekly Issue #238本期内容包括: Firebase发送Notification; RecyclerView的预取; 后台工作的实现方式讨论; RecyclerView分组数据; 跨平台应用工具Flutter介绍; Gradle依赖管理;写测试的一些注意事项; Android Thin">
-<meta name="keywords" content="Android,Android Weekly,Testing,Firebase,Notification,RecyclerView,Background work,Flutter,Gradle,Android Things,CI">
+<meta name="keywords" content="Android,Android Weekly,Testing,Android Things,Firebase,Notification,RecyclerView,Background work,Flutter,Gradle,CI">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Weekly Notes Issue 238">
 <meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/01/03/android-weekly-notes-issue-238/index.html">
@@ -114,7 +114,6 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -149,36 +148,11 @@
     <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
 </nav>
 
 
 
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" placeholder="Searching..." spellcheck="false" type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
 
 </div>
     </header>
@@ -361,13 +335,13 @@
               <a href="/tags/Android/" rel="tag"># Android</a>
               <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
               <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
               <a href="/tags/Firebase/" rel="tag"># Firebase</a>
               <a href="/tags/Notification/" rel="tag"># Notification</a>
               <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
               <a href="/tags/Background-work/" rel="tag"># Background work</a>
               <a href="/tags/Flutter/" rel="tag"># Flutter</a>
               <a href="/tags/Gradle/" rel="tag"># Gradle</a>
-              <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
               <a href="/tags/CI/" rel="tag"># CI</a>
           </div>
 
@@ -647,8 +621,6 @@
 
 
 
-
-  <script src="/js/local-search.js"></script>
 
 
 

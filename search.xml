@@ -126,9 +126,9 @@
             
             <tag> Android </tag>
             
-            <tag> Tools </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> Tools </tag>
             
             <tag> Lint </tag>
             
@@ -376,9 +376,9 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> Tools </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> Tools </tag>
             
             <tag> Redux </tag>
             
@@ -486,11 +486,11 @@
             
             <tag> Animation </tag>
             
+            <tag> IDE </tag>
+            
             <tag> Gradle </tag>
             
             <tag> CI </tag>
-            
-            <tag> IDE </tag>
             
             <tag> LiveData </tag>
             
@@ -829,9 +829,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Firebase </tag>
             
@@ -1087,9 +1087,9 @@
             
             <tag> Espresso </tag>
             
-            <tag> Kotlin </tag>
-            
             <tag> Mockito </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> Testing </tag>
             
@@ -1311,9 +1311,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava2 </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Testing </tag>
             
@@ -1444,11 +1444,11 @@
             
             <tag> RxJava </tag>
             
+            <tag> Mockito </tag>
+            
             <tag> Kotlin </tag>
             
             <tag> Memory Leak </tag>
-            
-            <tag> Mockito </tag>
             
             <tag> Testing </tag>
             
@@ -1513,9 +1513,9 @@
             
             <tag> Testing </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> FileProvider </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> ClassyShark </tag>
             
@@ -1636,15 +1636,15 @@
             
             <tag> MVVM </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Animation </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> Color </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Design Patterns </tag>
             
@@ -1779,9 +1779,9 @@
             
             <tag> RxJava2 </tag>
             
-            <tag> Gradle </tag>
-            
             <tag> Android Things </tag>
+            
+            <tag> Gradle </tag>
             
             <tag> Wear </tag>
             
@@ -1826,6 +1826,8 @@
             
             <tag> Testing </tag>
             
+            <tag> Android Things </tag>
+            
             <tag> Firebase </tag>
             
             <tag> Notification </tag>
@@ -1837,8 +1839,6 @@
             <tag> Flutter </tag>
             
             <tag> Gradle </tag>
-            
-            <tag> Android Things </tag>
             
             <tag> CI </tag>
             
@@ -1875,13 +1875,13 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> Android Things </tag>
             
             <tag> ExoPlayer </tag>
             
             <tag> Java </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> ContentProvider </tag>
             
@@ -1922,9 +1922,9 @@
             
             <tag> Android Studio </tag>
             
-            <tag> Android Things </tag>
-            
             <tag> IoT </tag>
+            
+            <tag> Android Things </tag>
             
             <tag> FileProvider </tag>
             
@@ -2089,13 +2089,13 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Mockito </tag>
             
-            <tag> Firebase </tag>
+            <tag> MVP </tag>
             
             <tag> Java </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Terminal </tag>
             
@@ -2238,11 +2238,13 @@
             
             <tag> Espresso </tag>
             
+            <tag> Android Studio </tag>
+            
             <tag> Audio </tag>
             
             <tag> RxJava </tag>
             
-            <tag> Android Studio </tag>
+            <tag> Kotlin </tag>
             
             <tag> MVP </tag>
             
@@ -2255,8 +2257,6 @@
             <tag> Tracking </tag>
             
             <tag> Analytics </tag>
-            
-            <tag> Kotlin </tag>
             
             <tag> Scope </tag>
             
@@ -2305,11 +2305,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
+            <tag> Mockito </tag>
             
             <tag> Kotlin </tag>
-            
-            <tag> Mockito </tag>
             
             <tag> Async-Await </tag>
             
@@ -2328,6 +2326,8 @@
             <tag> KeyStore </tag>
             
             <tag> proguard </tag>
+            
+            <tag> MVP </tag>
             
             <tag> WifiManager </tag>
             
@@ -2612,11 +2612,11 @@
             
             <tag> Nougat </tag>
             
+            <tag> Android Studio </tag>
+            
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
-            
-            <tag> Android Studio </tag>
             
             <tag> Reductor </tag>
             
@@ -2628,11 +2628,11 @@
             
             <tag> RecyclerView </tag>
             
+            <tag> Bottom Navigation </tag>
+            
             <tag> Bottom Sheet </tag>
             
             <tag> AutoValue </tag>
-            
-            <tag> Bottom Navigation </tag>
             
             <tag> Face Detection </tag>
             
@@ -2681,11 +2681,11 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
+            <tag> Mockito </tag>
             
             <tag> Kotlin </tag>
             
-            <tag> Mockito </tag>
+            <tag> MVP </tag>
             
             <tag> Animation </tag>
             
@@ -2730,9 +2730,9 @@
             
             <tag> Animation </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> ExoPlayer </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Wear </tag>
             
@@ -2795,6 +2795,8 @@
             
             <tag> APK </tag>
             
+            <tag> Annotation </tag>
+            
             <tag> pre-launch </tag>
             
             <tag> RxAndroid </tag>
@@ -2802,8 +2804,6 @@
             <tag> Profile </tag>
             
             <tag> Methods Count </tag>
-            
-            <tag> Annotation </tag>
             
             <tag> Adapter </tag>
             
@@ -2844,13 +2844,13 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
             
-            <tag> Memory Leak </tag>
-            
             <tag> RxJava2 </tag>
+            
+            <tag> MVP </tag>
+            
+            <tag> Memory Leak </tag>
             
             <tag> Gradle </tag>
             
@@ -2936,15 +2936,13 @@
             
             <tag> RxJava </tag>
             
-            <tag> Gradle </tag>
-            
             <tag> Security </tag>
+            
+            <tag> Gradle </tag>
             
             <tag> Resources </tag>
             
             <tag> Accessibility </tag>
-            
-            <tag> Annotation </tag>
             
             <tag> ScaleType </tag>
             
@@ -2953,6 +2951,8 @@
             <tag> Scrolling </tag>
             
             <tag> ExpandableRecyclerView </tag>
+            
+            <tag> Annotation </tag>
             
             <tag> ItemTouchHelper </tag>
             
@@ -3022,15 +3022,15 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Retrofit </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Gradle </tag>
             
-            <tag> Bottom Sheet </tag>
-            
             <tag> AnimatedVectorDrawable </tag>
+            
+            <tag> Bottom Sheet </tag>
             
             <tag> DiffUtil </tag>
             
@@ -3133,11 +3133,13 @@
             
             <tag> Kotlin </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> Security </tag>
             
+            <tag> Firebase </tag>
+            
             <tag> Java 8 </tag>
+            
+            <tag> Wear </tag>
             
             <tag> Bottom Sheet </tag>
             
@@ -3150,8 +3152,6 @@
             <tag> Code Style </tag>
             
             <tag> Lambda </tag>
-            
-            <tag> Wear </tag>
             
             <tag> AutoValue </tag>
             
@@ -3188,9 +3188,9 @@
             
             <tag> TV </tag>
             
-            <tag> Wear </tag>
-            
             <tag> AnimatedVectorDrawable </tag>
+            
+            <tag> Wear </tag>
             
             <tag> Router </tag>
             
