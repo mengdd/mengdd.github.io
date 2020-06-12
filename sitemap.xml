@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mengdd.github.io/Android/2020/06/12/DI-with-hilt/</loc>
+    
+    <lastmod>2020-06-12T03:08:11.116Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://mengdd.github.io/Mini-Program/2020/04/20/mini-program-todo-using-taro/</loc>
     
     <lastmod>2020-04-20T09:41:13.388Z</lastmod>
@@ -156,14 +163,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/03/android-weekly-notes-issue-255/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/</loc>
     
     <lastmod>2019-01-17T06:43:57.697Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/05/03/android-weekly-notes-issue-255/</loc>
     
     <lastmod>2019-01-17T06:43:57.697Z</lastmod>
     
@@ -226,14 +233,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/</loc>
     
     <lastmod>2019-01-17T06:43:57.695Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/</loc>
     
     <lastmod>2019-01-17T06:43:57.695Z</lastmod>
     
@@ -261,14 +268,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/</loc>
+    <loc>http://mengdd.github.io/Android/Database/Realm/2017/02/27/android-realm-guide/</loc>
     
     <lastmod>2019-01-17T06:43:57.694Z</lastmod>
     
@@ -303,14 +310,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/01/03/android-weekly-notes-issue-238/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/01/24/android-weekly-notes-issue-240/</loc>
     
     <lastmod>2019-01-17T06:43:57.692Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/01/24/android-weekly-notes-issue-240/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2017/01/03/android-weekly-notes-issue-238/</loc>
     
     <lastmod>2019-01-17T06:43:57.692Z</lastmod>
     
@@ -352,14 +359,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Java/2016/11/25/effective-java-notes-1/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/Java/2016/12/01/android-weekly-notes-issue-233/</loc>
     
     <lastmod>2019-01-17T06:43:57.690Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/Java/2016/12/01/android-weekly-notes-issue-233/</loc>
+    <loc>http://mengdd.github.io/Java/2016/11/25/effective-java-notes-1/</loc>
     
     <lastmod>2019-01-17T06:43:57.690Z</lastmod>
     
@@ -527,14 +534,14 @@
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/</loc>
+    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/</loc>
     
     <lastmod>2019-01-17T06:43:57.679Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/</loc>
+    <loc>http://mengdd.github.io/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/</loc>
     
     <lastmod>2019-01-17T06:43:57.679Z</lastmod>
     
