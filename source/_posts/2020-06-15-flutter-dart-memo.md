@@ -1,12 +1,12 @@
 ---
-title: Dart Memo for Java Kotlin Developers
+title: Dart Memo for Android Developers
 date: 2020-06-15 00:34:57
 tags: [Flutter, Dart]
 categories: [Flutter]
 ---
 
 
-# Dart Memo for Java Kotlin Developers
+# Dart Memo for Android Developers
 Dart语言一些语法特点和编程规范.
 
 本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.
