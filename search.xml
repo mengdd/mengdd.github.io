@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Dart Memo for Java Kotlin Developers</title>
+      <link href="/Flutter/2020/06/15/flutter-dart-memo/"/>
+      <url>/Flutter/2020/06/15/flutter-dart-memo/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Dart-Memo-for-Java-Kotlin-Developers"><a href="#Dart-Memo-for-Java-Kotlin-Developers" class="headerlink" title="Dart Memo for Java Kotlin Developers"></a>Dart Memo for Java Kotlin Developers</h1><p>Dart语言一些语法特点和编程规范.</p><p>本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.</p><a id="more"></a><h2 id="Dart语言"><a href="#Dart语言" class="headerlink" title="Dart语言"></a>Dart语言</h2><p>完整的请看<a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></p><ul><li>创建对象可以不用<code>new</code>. -&gt; 并且规范不让用<code>new</code>, lint会报错.</li><li>声明变量可以用<code>var</code>, 也可以用具体类型如<code>String</code>. 不变量用<code>final</code>, 常量用<code>const</code>.</li><li>没有访问修饰符, 用<code>_</code>来表示私有: 文件级别.</li><li>字符串可以用单引号<code>&#39;</code>.</li><li>语句结尾要用<code>;</code>.</li><li>创建数组可以用: <code>var list = [1, 2, 3];</code>.</li><li><code>assert()</code>常用来断定开发时不可能会出现的情况.</li><li>空测试操作符: <code>??</code>.</li><li>过滤操作符: <code>where</code>.</li><li>两个点<code>..</code>表示链式调用.</li><li><code>dynamic</code>说明类型未指定.</li><li>除了throw异常, 还可以throw别的东西, 比如字符串.</li></ul><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul><li><p>函数返回值在函数最开头, 可以不标. -&gt; 但是规范会建议标注返回值.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) &#123;</span><br><span class="line">  return _nobleGases[atomicNumber] != null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p><code>=&gt;</code>箭头符号, 用来简化一句话的方法.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) =&gt; _nobleGases[atomicNumber] != null;</span><br></pre></td></tr></table></figure></li></ul><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul><li><p>构造函数<code>{}</code>表示带名字, 参数可选, 若要必选加上<code>@required</code>.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Scrollbar(&#123;Key key, @required Widget child&#125;)</span><br></pre></td></tr></table></figure></li><li><p>构造函数名可以是<code>ClassName</code>或者<code>ClassName.identifier</code>.</p></li><li>空构造函数体可以省略, 用<code>;</code>结尾就行:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  double x, y;</span><br><span class="line">  Point(this.x, this.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>这里会初始化相应的变量, 也不用声明具体的参数类型.</p><ul><li>有<code>factory</code>构造, 可以用来返回缓存实例, 或者返回类型的子类:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">factory Logger(String name) &#123;</span><br><span class="line">    return _cache.putIfAbsent(name, () =&gt; Logger._internal(name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><h3 id="异步代码"><a href="#异步代码" class="headerlink" title="异步代码"></a>异步代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; lookUpVersion() async =&gt; &apos;1.0.0&apos;;</span><br><span class="line"></span><br><span class="line">Future checkVersion() async &#123;</span><br><span class="line">  var version = await lookUpVersion();</span><br><span class="line">  // Do something with version</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="编程规范类"><a href="#编程规范类" class="headerlink" title="编程规范类"></a>编程规范类</h2><p>完整的规范在这里: <a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a>.</p><p>有一些Good和Bad的举例, 这里仅列出比较常用的几项.</p><ul><li>文件名要蛇形命名: <code>lowercase_with_underscores</code>. 类名: <code>UpperCamelCase</code>.</li><li>对自己程序的文件, 两种import都可以(package开头或者相对路径), 但是要保持一致.</li><li>Flutter程序嵌套比较多, 要用结尾的<code>,</code>来帮助格式化.</li></ul><h2 id="本文缘由"><a href="#本文缘由" class="headerlink" title="本文缘由"></a>本文缘由</h2><p>年初的时候学了一阵子Flutter, 写了各种大小demo. 结果隔了两个月之后, 突然心血来潮想写个小东西, 打开Android Studio, 首先发现创建Flutter程序的按钮都不见了. (估计是Android Studio4.0升级之后Flutter的插件没跟上).</p><p>接着用命令行创建了工程, 打开之后稍微整理了一下心情, 然后就….懵逼了. </p><p>突然不知道如何下手.<br>宏观的东西还记得, 要用什么package, 基本常用的几个Widget都是啥, 但是微观的, 忘了函数和数组都是咋定义的了.<br>这种懵逼的状态令我很愤怒, 果然是上年纪了吗, 无缝切换个语言都不行.</p><p>于是就想着还是写个备忘录吧.</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></li><li><a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Flutter </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Flutter </tag>
+            
+            <tag> Dart </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Android官方新推的DI库 Hilt</title>
       <link href="/Android/2020/06/12/DI-with-hilt/"/>
       <url>/Android/2020/06/12/DI-with-hilt/</url>
@@ -155,9 +182,9 @@
             
             <tag> Android </tag>
             
-            <tag> Tools </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> Tools </tag>
             
             <tag> Lint </tag>
             
@@ -405,17 +432,17 @@
             
             <tag> Android Weekly </tag>
             
-            <tag> Tools </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> Tools </tag>
             
             <tag> Redux </tag>
             
             <tag> Permission </tag>
             
-            <tag> Style </tag>
-            
             <tag> Resources </tag>
+            
+            <tag> Style </tag>
             
             <tag> Plaid </tag>
             
@@ -858,9 +885,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Firebase </tag>
             
@@ -1116,9 +1143,9 @@
             
             <tag> Espresso </tag>
             
-            <tag> Kotlin </tag>
-            
             <tag> Mockito </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> Testing </tag>
             
@@ -1232,8 +1259,6 @@
             
             <tag> Transition </tag>
             
-            <tag> Network </tag>
-            
             <tag> ViewSwitcher </tag>
             
             <tag> Coroutines </tag>
@@ -1245,6 +1270,8 @@
             <tag> OpenGL </tag>
             
             <tag> JBox2D </tag>
+            
+            <tag> Network </tag>
             
             <tag> Etag </tag>
             
@@ -1340,9 +1367,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> RxJava2 </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Testing </tag>
             
@@ -1473,11 +1500,11 @@
             
             <tag> RxJava </tag>
             
+            <tag> Mockito </tag>
+            
             <tag> Kotlin </tag>
             
             <tag> Memory Leak </tag>
-            
-            <tag> Mockito </tag>
             
             <tag> Testing </tag>
             
@@ -1665,9 +1692,9 @@
             
             <tag> MVVM </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Animation </tag>
             
@@ -1906,11 +1933,11 @@
             
             <tag> Android Things </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> ExoPlayer </tag>
             
             <tag> Java </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> ContentProvider </tag>
             
@@ -2118,13 +2145,13 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Mockito </tag>
             
-            <tag> Firebase </tag>
+            <tag> MVP </tag>
             
             <tag> Java </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Terminal </tag>
             
@@ -2267,11 +2294,13 @@
             
             <tag> Espresso </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> Audio </tag>
             
             <tag> RxJava </tag>
+            
+            <tag> Android Studio </tag>
+            
+            <tag> Kotlin </tag>
             
             <tag> MVP </tag>
             
@@ -2284,8 +2313,6 @@
             <tag> Tracking </tag>
             
             <tag> Analytics </tag>
-            
-            <tag> Kotlin </tag>
             
             <tag> Scope </tag>
             
@@ -2334,11 +2361,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
+            <tag> Mockito </tag>
             
             <tag> Kotlin </tag>
-            
-            <tag> Mockito </tag>
             
             <tag> Async-Await </tag>
             
@@ -2357,6 +2382,8 @@
             <tag> KeyStore </tag>
             
             <tag> proguard </tag>
+            
+            <tag> MVP </tag>
             
             <tag> WifiManager </tag>
             
@@ -2641,11 +2668,11 @@
             
             <tag> Nougat </tag>
             
-            <tag> Android Studio </tag>
-            
             <tag> ConstraintLayout </tag>
             
             <tag> Mobile Vision </tag>
+            
+            <tag> Android Studio </tag>
             
             <tag> Reductor </tag>
             
@@ -2710,11 +2737,11 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
+            <tag> Mockito </tag>
             
             <tag> Kotlin </tag>
             
-            <tag> Mockito </tag>
+            <tag> MVP </tag>
             
             <tag> Animation </tag>
             
@@ -2759,9 +2786,9 @@
             
             <tag> Animation </tag>
             
-            <tag> Firebase </tag>
-            
             <tag> ExoPlayer </tag>
+            
+            <tag> Firebase </tag>
             
             <tag> Wear </tag>
             
@@ -2873,13 +2900,13 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Kotlin </tag>
             
-            <tag> Memory Leak </tag>
-            
             <tag> RxJava2 </tag>
+            
+            <tag> MVP </tag>
+            
+            <tag> Memory Leak </tag>
             
             <tag> Gradle </tag>
             
@@ -3051,9 +3078,9 @@
             
             <tag> RxJava </tag>
             
-            <tag> MVP </tag>
-            
             <tag> Retrofit </tag>
+            
+            <tag> MVP </tag>
             
             <tag> Gradle </tag>
             

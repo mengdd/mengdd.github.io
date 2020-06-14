@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://mengdd.github.io/"/>
-  <updated>2020-06-12T03:08:11.116Z</updated>
+  <updated>2020-06-14T16:36:22.919Z</updated>
   <id>http://mengdd.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Dart Memo for Java Kotlin Developers</title>
+    <link href="http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/"/>
+    <id>http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/</id>
+    <published>2020-06-14T16:34:57.000Z</published>
+    <updated>2020-06-14T16:36:22.919Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Dart-Memo-for-Java-Kotlin-Developers"><a href="#Dart-Memo-for-Java-Kotlin-Developers" class="headerlink" title="Dart Memo for Java Kotlin Developers"></a>Dart Memo for Java Kotlin Developers</h1><p>Dart语言一些语法特点和编程规范.</p><p>本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.</p><a id="more"></a><h2 id="Dart语言"><a href="#Dart语言" class="headerlink" title="Dart语言"></a>Dart语言</h2><p>完整的请看<a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></p><ul><li>创建对象可以不用<code>new</code>. -&gt; 并且规范不让用<code>new</code>, lint会报错.</li><li>声明变量可以用<code>var</code>, 也可以用具体类型如<code>String</code>. 不变量用<code>final</code>, 常量用<code>const</code>.</li><li>没有访问修饰符, 用<code>_</code>来表示私有: 文件级别.</li><li>字符串可以用单引号<code>&#39;</code>.</li><li>语句结尾要用<code>;</code>.</li><li>创建数组可以用: <code>var list = [1, 2, 3];</code>.</li><li><code>assert()</code>常用来断定开发时不可能会出现的情况.</li><li>空测试操作符: <code>??</code>.</li><li>过滤操作符: <code>where</code>.</li><li>两个点<code>..</code>表示链式调用.</li><li><code>dynamic</code>说明类型未指定.</li><li>除了throw异常, 还可以throw别的东西, 比如字符串.</li></ul><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul><li><p>函数返回值在函数最开头, 可以不标. -&gt; 但是规范会建议标注返回值.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) &#123;</span><br><span class="line">  return _nobleGases[atomicNumber] != null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p><code>=&gt;</code>箭头符号, 用来简化一句话的方法.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) =&gt; _nobleGases[atomicNumber] != null;</span><br></pre></td></tr></table></figure></li></ul><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul><li><p>构造函数<code>{}</code>表示带名字, 参数可选, 若要必选加上<code>@required</code>.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Scrollbar(&#123;Key key, @required Widget child&#125;)</span><br></pre></td></tr></table></figure></li><li><p>构造函数名可以是<code>ClassName</code>或者<code>ClassName.identifier</code>.</p></li><li>空构造函数体可以省略, 用<code>;</code>结尾就行:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  double x, y;</span><br><span class="line">  Point(this.x, this.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>这里会初始化相应的变量, 也不用声明具体的参数类型.</p><ul><li>有<code>factory</code>构造, 可以用来返回缓存实例, 或者返回类型的子类:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">factory Logger(String name) &#123;</span><br><span class="line">    return _cache.putIfAbsent(name, () =&gt; Logger._internal(name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><h3 id="异步代码"><a href="#异步代码" class="headerlink" title="异步代码"></a>异步代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; lookUpVersion() async =&gt; &apos;1.0.0&apos;;</span><br><span class="line"></span><br><span class="line">Future checkVersion() async &#123;</span><br><span class="line">  var version = await lookUpVersion();</span><br><span class="line">  // Do something with version</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="编程规范类"><a href="#编程规范类" class="headerlink" title="编程规范类"></a>编程规范类</h2><p>完整的规范在这里: <a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a>.</p><p>有一些Good和Bad的举例, 这里仅列出比较常用的几项.</p><ul><li>文件名要蛇形命名: <code>lowercase_with_underscores</code>. 类名: <code>UpperCamelCase</code>.</li><li>对自己程序的文件, 两种import都可以(package开头或者相对路径), 但是要保持一致.</li><li>Flutter程序嵌套比较多, 要用结尾的<code>,</code>来帮助格式化.</li></ul><h2 id="本文缘由"><a href="#本文缘由" class="headerlink" title="本文缘由"></a>本文缘由</h2><p>年初的时候学了一阵子Flutter, 写了各种大小demo. 结果隔了两个月之后, 突然心血来潮想写个小东西, 打开Android Studio, 首先发现创建Flutter程序的按钮都不见了. (估计是Android Studio4.0升级之后Flutter的插件没跟上).</p><p>接着用命令行创建了工程, 打开之后稍微整理了一下心情, 然后就….懵逼了. </p><p>突然不知道如何下手.<br>宏观的东西还记得, 要用什么package, 基本常用的几个Widget都是啥, 但是微观的, 忘了函数和数组都是咋定义的了.<br>这种懵逼的状态令我很愤怒, 果然是上年纪了吗, 无缝切换个语言都不行.</p><p>于是就想着还是写个备忘录吧.</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></li><li><a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Dart-Memo-for-Java-Kotlin-Developers&quot;&gt;&lt;a href=&quot;#Dart-Memo-for-Java-Kotlin-Developers&quot; class=&quot;headerlink&quot; title=&quot;Dart Memo for Java Kotlin Developers&quot;&gt;&lt;/a&gt;Dart Memo for Java Kotlin Developers&lt;/h1&gt;&lt;p&gt;Dart语言一些语法特点和编程规范.&lt;/p&gt;
+&lt;p&gt;本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Flutter" scheme="http://mengdd.github.io/categories/Flutter/"/>
+    
+    
+      <category term="Flutter" scheme="http://mengdd.github.io/tags/Flutter/"/>
+    
+      <category term="Dart" scheme="http://mengdd.github.io/tags/Dart/"/>
+    
+  </entry>
   
   <entry>
     <title>Android官方新推的DI库 Hilt</title>
@@ -194,9 +219,9 @@
     
       <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
     
-      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
-    
       <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
+    
+      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
     
       <category term="Lint" scheme="http://mengdd.github.io/tags/Lint/"/>
     
@@ -425,17 +450,17 @@
     
       <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
     
-      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
-    
       <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
+    
+      <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
     
       <category term="Redux" scheme="http://mengdd.github.io/tags/Redux/"/>
     
       <category term="Permission" scheme="http://mengdd.github.io/tags/Permission/"/>
     
-      <category term="Style" scheme="http://mengdd.github.io/tags/Style/"/>
-    
       <category term="Resources" scheme="http://mengdd.github.io/tags/Resources/"/>
+    
+      <category term="Style" scheme="http://mengdd.github.io/tags/Style/"/>
     
       <category term="Plaid" scheme="http://mengdd.github.io/tags/Plaid/"/>
     
@@ -663,52 +688,6 @@
       <category term="RxJava 2" scheme="http://mengdd.github.io/tags/RxJava-2/"/>
     
       <category term="Camera2" scheme="http://mengdd.github.io/tags/Camera2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Android Weekly Notes Issue 258</title>
-    <link href="http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/"/>
-    <id>http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/</id>
-    <published>2017-05-27T08:49:12.000Z</published>
-    <updated>2019-01-17T06:43:57.697Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Android-Weekly-Issue-258"><a href="#Android-Weekly-Issue-258" class="headerlink" title="Android Weekly Issue #258"></a>Android Weekly Issue #258</h1><p>May 21st, 2017<br><a href="http://androidweekly.net/issues/issue-258" target="_blank" rel="noopener">Android Weekly Issue #258</a><br>本期内容: 围绕着Google I/O的热潮, 本周的posts除了几篇小工具和软件设计原则的讨论, 其他都是在说Android Architecture Components和Kotlin.</p><a id="more"></a><h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="DebugPort-2-0"><a href="#DebugPort-2-0" class="headerlink" title="DebugPort 2.0"></a><a href="https://medium.com/@JasonWyatt/introducing-android-debugport-2-0-88ec4ed4db94" target="_blank" rel="noopener">DebugPort 2.0</a></h2><p>REPL(Read Eval Print Loop)是在命令行界面中, 读取每一行输入, 执行, 然后输出结果, 提供即时的反馈. Java 9会提供这么一个REPL的环境, 叫JShell.</p><p>考虑到在Android中能用上可能要等很长时间, 所以作者一年前开始弄了一个这个项目: <a href="https://github.com/jasonwyatt/Android-DebugPort" target="_blank" rel="noopener">Android-DebugPort</a>.</p><p>在你的应用中加入这个依赖, 然后运行, 在通知栏就会弹出通知, 然后在电脑上就可以使用telnet来连接到app.</p><p>可以调用方法, 执行脚本, 查询数据库等.</p><h2 id="Understanding-Law-of-Demeter"><a href="#Understanding-Law-of-Demeter" class="headerlink" title="Understanding Law of Demeter"></a><a href="https://medium.com/@ankit.sinhal/design-principal-understand-law-of-demeter-4a44ac18e923" target="_blank" rel="noopener">Understanding Law of Demeter</a></h2><p>软件设计要求松耦合.<br>Law of Demeter, 即迪米特原则, 亦称为最少知道原则.</p><p>文章介绍了在这种原则下应该如何设计类和它的方法.</p><h2 id="Object-Oriented-Tricks-6-SLAP-your-functions"><a href="#Object-Oriented-Tricks-6-SLAP-your-functions" class="headerlink" title="Object Oriented Tricks: #6 SLAP your functions"></a><a href="https://hackernoon.com/object-oriented-tricks-6-slap-your-functions-a13d25a7d994" target="_blank" rel="noopener">Object Oriented Tricks: #6 SLAP your functions</a></h2><p>SLAP: Single Level of Abstraction Priciple, 单层抽象原则.</p><p>一个太长的方法往往有各种缺点, 那么怎么判断一个方法过长了呢? 根据行数来判断不太科学, 所以SLAP可以用在这里:<br>一个代码块中的代码应该处于同一层抽象级别.</p><p>一个方法不应该有几个不同级别的抽象, 换言之, 一个方法只做一件事.</p><p>当你在方法代码中用注释来分割代码块的时候, 这些代码可以提取出来, 这样最初的方法就变成了一个隐藏实现细节, 只展示逻辑步骤的ComposedMethod.</p><h2 id="Android-and-Architecture"><a href="#Android-and-Architecture" class="headerlink" title="Android and Architecture"></a><a href="https://android-developers.googleblog.com/2017/05/android-and-architecture.html" target="_blank" rel="noopener">Android and Architecture</a></h2><p>Google推出Architecture Components的预览, 宣布了一种新的Android App构架指导.</p><h3 id="意见不是处方"><a href="#意见不是处方" class="headerlink" title="意见不是处方"></a>意见不是处方</h3><p>写Android应用有多种方式, 这里提供的只是一系列的指导意见, 来帮助你更好地构架Android应用. </p><p>Android framework中有一些定义良好的API, 用于处理和底层系统的交互, 比如Activity, 但是这些是你应用的入口点, 并不是你的构架块. 这些framework的组件并不强制你分离数据和UI, 也不提供清晰的方式来处理独立于生命周期的数据保存.</p><h3 id="Building-Blocks"><a href="#Building-Blocks" class="headerlink" title="Building Blocks"></a>Building Blocks</h3><p>Architecture Components帮助你实现一个更明智的架构, 它们帮助你: 自动管理activity和fragment的生命周期, 避免内存和资源泄露; 保存Java数据对象到SQLite数据库.</p><h3 id="Lifecycle-Components"><a href="#Lifecycle-Components" class="headerlink" title="Lifecycle Components"></a>Lifecycle Components</h3><p>新的<a href="https://developer.android.com/topic/libraries/architecture/lifecycle.html" target="_blank" rel="noopener">lifecycle-aware components</a>提供了一种方式来把你应用的核心组件绑定到生命周期事件上, 删除了显式的依赖路径.</p><p>这里核心的类是<a href="https://developer.android.com/reference/android/arch/lifecycle/Lifecycle.html" target="_blank" rel="noopener">Lifecycle</a>, 它使用了生命周期状态和事件(states and events)的枚举来追踪相关组件的生命周期.</p><p><code>LifecycleOwner</code>是一个接口, 其中<code>getLifecycle()</code>方法返回一个<code>Lifecycle</code>对象. <code>LifecycleObserver</code>是一个观察者, 可以监控组件的生命周期事件(通过在方法上加注解).</p><h3 id="LiveData"><a href="#LiveData" class="headerlink" title="LiveData"></a>LiveData</h3><p><a href="https://developer.android.com/topic/libraries/architecture/livedata.html" target="_blank" rel="noopener">LiveData</a><br>是一个数据持有类, 同时也是一个Obervable, 允许它的数据被监听, 同时它也知道生命周期.</p><p>当你的UI订阅了底层数据的改动, 并且绑定了一个<code>LifecycleOwner</code>, <code>LiveData</code>会确保这个observer:</p><ul><li>在生命周期处于活跃状态时得到数据更新.</li><li>当生命周期结束时取消订阅.</li><li>在<code>LifecycleOwner</code>重新开始时(比如旋转变化或从back stack中跳出), 得到最新的数据.</li></ul><h3 id="ViewModel"><a href="#ViewModel" class="headerlink" title="ViewModel"></a>ViewModel</h3><p><a href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" target="_blank" rel="noopener">ViewModel</a>是一个辅助类, 用于盛放Activity或Fragment的UI数据, 从UI controller的逻辑中分离出view的数据.</p><p>只要Activity/Fragment存在, ViewModel的数据就被保持着. 包括Activity/Fragment因为状态变化而销毁重建的情况. 这样ViewModel就在重建时提供可用的数据.</p><p>结合<code>ViewModel</code>和<code>LiveData</code>, 就为数据提供了一个了解生命周期的可观察的容器. 其中<code>LiveData</code>负责通知, <code>ViewModel</code>负责数据保存.</p><h3 id="Data-Persistence"><a href="#Data-Persistence" class="headerlink" title="Data Persistence"></a>Data Persistence</h3><p>提出了<a href="https://developer.android.com/topic/libraries/architecture/room.html" target="_blank" rel="noopener">Room library</a>, 提供了一个在SQLite之上的object-mapping抽象层, 允许流式的数据库访问. </p><p>Room中三个主要的组件:</p><ul><li><code>Entity</code>: 代码数据库中一行的数据, 用带有注解的Java数据类构建. 每一个Entity在它自己的表中被保存.</li><li><code>DAO</code> (Data Access Object): 定义了访问数据库的方法. 使用注解来绑定SQL到每个方法.</li><li><code>Database</code>. 用注解来定义entities列表和数据库版本;  定义DAO的列表; 同时也是底层数据库连接的主要访问点.</li></ul><h3 id="Guide-to-App-Architecture"><a href="#Guide-to-App-Architecture" class="headerlink" title="Guide to App Architecture"></a>Guide to App Architecture</h3><p><a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank" rel="noopener">Guide to App Architecture</a>显示如何用Architecture Components来构建一个稳健的, 模块化的, 可测试的app.</p><h2 id="Why-Kotlin"><a href="#Why-Kotlin" class="headerlink" title="Why Kotlin?"></a><a href="http://blog.danlew.net/2017/05/17/why-kotlin/" target="_blank" rel="noopener">Why Kotlin?</a></h2><p>作者分享了为什么相比于Java, 他更喜欢Kotlin.</p><h2 id="My-take-on“Architecture-Components”"><a href="#My-take-on“Architecture-Components”" class="headerlink" title="My take on“Architecture Components”"></a><a href="https://medium.com/@yonatanvlevin/weighing-in-on-the-holy-architecture-war-my-take-on-architecture-components-31f7025e9c66" target="_blank" rel="noopener">My take on“Architecture Components”</a></h2><p>作者分享了他在项目中使用Architecture components的一些心得.</p><p>他们的项目原先是MVP + Content Provider的. 为了实验加入Architecture components, 他又新写了一个MVP的<a href="https://github.com/parahall/star_wars_movies" target="_blank" rel="noopener">Demo项目</a>, 把它转化成MVVM, 又加入Architecture components的新组件来实现. (代码比较多, 我没有详细看).</p><h2 id="ConstraintLayout-com"><a href="#ConstraintLayout-com" class="headerlink" title="ConstraintLayout.com"></a><a href="https://blog.stylingandroid.com/constraintlayout-com/" target="_blank" rel="noopener">ConstraintLayout.com</a></h2><p>这个网站<a href="https://constraintlayout.com/" target="_blank" rel="noopener">ConstraintLayout.com</a>成立了, 用于讨论和<code>ConstraintLayout</code>相关的一切.</p><h2 id="Looking-at-Room-and-LiveData-Part-1"><a href="#Looking-at-Room-and-LiveData-Part-1" class="headerlink" title="Looking at Room and LiveData - Part 1"></a><a href="https://riggaroo.co.za/android-architecture-components-looking-room-livedata-part-1/" target="_blank" rel="noopener">Looking at Room and LiveData - Part 1</a></h2><p>Android之前一直没有提出过一个官方的构架模式, 所以大家总在讨论各种MVP, MVVM, MVI模式, 各种库等等. 终于在Google I/O 2017, Android团队发布了Architecture Components, 来提供一个构建Android App的最佳实践指导.</p><h3 id="什么是Architecture-Components"><a href="#什么是Architecture-Components" class="headerlink" title="什么是Architecture Components?"></a>什么是Architecture Components?</h3><p>Architecture Components是一系列的库和指导集合, 作为构建Android app的基础. 针对一些常见的使用场景, 目的是减少样板和重复代码, 让你能集中精力到你应用的核心功能代码上.</p><p>主要组件包括:</p><ul><li>Room: a SQLite object mapper.</li><li>LiveData: a lifecycle aware observable.</li><li>ViewModel: Activity/Fragment和应用其他部分的交流点.</li><li>Lifecycle: 核心部分, 包含了组件的生命周期.</li><li>LifecycleOwner: 核心接口, 用于有生命周期的组件.</li><li>LifecycleObserver: 当某个生命周期事件发生的时候, 应该做些什么呢?  </li></ul><p>之后作者写了一个小App作为例子, 用了MVVM + Android Architecture Components. 其中详细介绍了Room和LiveData的用法.</p><h2 id="Room-—-Getting-Started"><a href="#Room-—-Getting-Started" class="headerlink" title="Room — Getting Started"></a><a href="https://medium.com/@tonyowen/a-room-with-a-view-getting-started-ec010f9f5448" target="_blank" rel="noopener">Room — Getting Started</a></h2><p>一个简单的例子, 介绍如何使用Room. (例子用Kotlin).</p><h2 id="Generating-Kotlin-code-with-KotlinPoet"><a href="#Generating-Kotlin-code-with-KotlinPoet" class="headerlink" title="Generating Kotlin code with KotlinPoet"></a><a href="https://medium.com/square-corner-blog/generating-kotlin-code-with-kotlinpoet-119dc20f74d4" target="_blank" rel="noopener">Generating Kotlin code with KotlinPoet</a></h2><p>Jake Wharton的文章, Square推出了<a href="https://github.com/square/kotlinpoet" target="_blank" rel="noopener">KotlinPoet</a>, 用来生成kotlin代码.</p><h2 id="Why-you-should-totally-switch-to-Kotlin"><a href="#Why-you-should-totally-switch-to-Kotlin" class="headerlink" title="Why you should totally switch to Kotlin"></a><a href="https://medium.com/@magnus.chatt/why-you-should-totally-switch-to-kotlin-c7bbde9e10d5" target="_blank" rel="noopener">Why you should totally switch to Kotlin</a></h2><p>要转换到Kotlin的若干个理由. (有17条).</p><h2 id="30-New-Android-Libraries"><a href="#30-New-Android-Libraries" class="headerlink" title="30 New Android Libraries"></a><a href="https://medium.com/@mmbialas/30-new-android-libraries-released-in-the-spring-of-2017-which-deserve-your-attention-faea359a1915" target="_blank" rel="noopener">30 New Android Libraries</a></h2><p>30个Android的新库, 都是自2017年3月份以后发布的.<br>作者主观挑选的, 所以并没有排序.</p><p>列表比较长, 我就不一一列了, 不少库还是挺有趣的.</p><h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="android-architecture-counter-sample"><a href="#android-architecture-counter-sample" class="headerlink" title="android-architecture-counter-sample"></a><a href="https://github.com/dlew/android-architecture-counter-sample" target="_blank" rel="noopener">android-architecture-counter-sample</a></h2><p>使用Kotlin和Android architecture components写的一个sample app.</p><h2 id="KotlinPoet"><a href="#KotlinPoet" class="headerlink" title="KotlinPoet"></a><a href="https://github.com/square/kotlinpoet" target="_blank" rel="noopener">KotlinPoet</a></h2><p>Kotlin代码生成库.</p><h2 id="memechat"><a href="#memechat" class="headerlink" title="memechat"></a><a href="https://github.com/efortuna/memechat" target="_blank" rel="noopener">memechat</a></h2><p>用<a href="https://flutter.io/" target="_blank" rel="noopener">Flutter</a>构建的一个聊天应用, 用了Firebase, Google Sign in和设备相机.</p><h1 id="News"><a href="#News" class="headerlink" title="News"></a>News</h1><p>几个大新闻: </p><ul><li>Android O发布了第二个预览版.</li><li>Android team发布了Architecture Components. - Android正式宣布了支持Kotlin.</li><li>Instant App现在对所有开发者开放</li><li>Android Studio发布了3.0 Canary, 推出了一系列的新工具.</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Android-Weekly-Issue-258&quot;&gt;&lt;a href=&quot;#Android-Weekly-Issue-258&quot; class=&quot;headerlink&quot; title=&quot;Android Weekly Issue #258&quot;&gt;&lt;/a&gt;Android Weekly Issue #258&lt;/h1&gt;&lt;p&gt;May 21st, 2017&lt;br&gt;&lt;a href=&quot;http://androidweekly.net/issues/issue-258&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Android Weekly Issue #258&lt;/a&gt;&lt;br&gt;本期内容: 围绕着Google I/O的热潮, 本周的posts除了几篇小工具和软件设计原则的讨论, 其他都是在说Android Architecture Components和Kotlin.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Android" scheme="http://mengdd.github.io/categories/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/categories/Android/Android-Weekly/"/>
-    
-    
-      <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
-    
-      <category term="MVVM" scheme="http://mengdd.github.io/tags/MVVM/"/>
-    
-      <category term="ConstraintLayout" scheme="http://mengdd.github.io/tags/ConstraintLayout/"/>
-    
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
-      <category term="Design" scheme="http://mengdd.github.io/tags/Design/"/>
-    
-      <category term="Architecture" scheme="http://mengdd.github.io/tags/Architecture/"/>
-    
-      <category term="LiveData" scheme="http://mengdd.github.io/tags/LiveData/"/>
-    
-      <category term="Architecture Components" scheme="http://mengdd.github.io/tags/Architecture-Components/"/>
-    
-      <category term="Room" scheme="http://mengdd.github.io/tags/Room/"/>
-    
-      <category term="Lifecycle" scheme="http://mengdd.github.io/tags/Lifecycle/"/>
-    
-      <category term="ViewModel" scheme="http://mengdd.github.io/tags/ViewModel/"/>
     
   </entry>
   
