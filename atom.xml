@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://mengdd.github.io/"/>
-  <updated>2020-06-14T16:36:22.919Z</updated>
+  <updated>2020-12-29T16:13:40.420Z</updated>
   <id>http://mengdd.github.io/</id>
   
   <author>
@@ -17,17 +17,42 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Dart Memo for Java Kotlin Developers</title>
-    <link href="http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/"/>
-    <id>http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/</id>
-    <published>2020-06-14T16:34:57.000Z</published>
-    <updated>2020-06-14T16:36:22.919Z</updated>
+    <title>XNA已经消失10年了, 我很想念它</title>
+    <link href="http://mengdd.github.io/uncategorized/2020/12/30/bye-bye-xna/"/>
+    <id>http://mengdd.github.io/uncategorized/2020/12/30/bye-bye-xna/</id>
+    <published>2020-12-29T16:11:48.000Z</published>
+    <updated>2020-12-29T16:13:40.420Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Dart-Memo-for-Java-Kotlin-Developers"><a href="#Dart-Memo-for-Java-Kotlin-Developers" class="headerlink" title="Dart Memo for Java Kotlin Developers"></a>Dart Memo for Java Kotlin Developers</h1><p>Dart语言一些语法特点和编程规范.</p><p>本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.</p><a id="more"></a><h2 id="Dart语言"><a href="#Dart语言" class="headerlink" title="Dart语言"></a>Dart语言</h2><p>完整的请看<a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></p><ul><li>创建对象可以不用<code>new</code>. -&gt; 并且规范不让用<code>new</code>, lint会报错.</li><li>声明变量可以用<code>var</code>, 也可以用具体类型如<code>String</code>. 不变量用<code>final</code>, 常量用<code>const</code>.</li><li>没有访问修饰符, 用<code>_</code>来表示私有: 文件级别.</li><li>字符串可以用单引号<code>&#39;</code>.</li><li>语句结尾要用<code>;</code>.</li><li>创建数组可以用: <code>var list = [1, 2, 3];</code>.</li><li><code>assert()</code>常用来断定开发时不可能会出现的情况.</li><li>空测试操作符: <code>??</code>.</li><li>过滤操作符: <code>where</code>.</li><li>两个点<code>..</code>表示链式调用.</li><li><code>dynamic</code>说明类型未指定.</li><li>除了throw异常, 还可以throw别的东西, 比如字符串.</li></ul><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul><li><p>函数返回值在函数最开头, 可以不标. -&gt; 但是规范会建议标注返回值.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) &#123;</span><br><span class="line">  return _nobleGases[atomicNumber] != null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p><code>=&gt;</code>箭头符号, 用来简化一句话的方法.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) =&gt; _nobleGases[atomicNumber] != null;</span><br></pre></td></tr></table></figure></li></ul><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul><li><p>构造函数<code>{}</code>表示带名字, 参数可选, 若要必选加上<code>@required</code>.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Scrollbar(&#123;Key key, @required Widget child&#125;)</span><br></pre></td></tr></table></figure></li><li><p>构造函数名可以是<code>ClassName</code>或者<code>ClassName.identifier</code>.</p></li><li>空构造函数体可以省略, 用<code>;</code>结尾就行:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  double x, y;</span><br><span class="line">  Point(this.x, this.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>这里会初始化相应的变量, 也不用声明具体的参数类型.</p><ul><li>有<code>factory</code>构造, 可以用来返回缓存实例, 或者返回类型的子类:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">factory Logger(String name) &#123;</span><br><span class="line">    return _cache.putIfAbsent(name, () =&gt; Logger._internal(name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><h3 id="异步代码"><a href="#异步代码" class="headerlink" title="异步代码"></a>异步代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; lookUpVersion() async =&gt; &apos;1.0.0&apos;;</span><br><span class="line"></span><br><span class="line">Future checkVersion() async &#123;</span><br><span class="line">  var version = await lookUpVersion();</span><br><span class="line">  // Do something with version</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="编程规范类"><a href="#编程规范类" class="headerlink" title="编程规范类"></a>编程规范类</h2><p>完整的规范在这里: <a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a>.</p><p>有一些Good和Bad的举例, 这里仅列出比较常用的几项.</p><ul><li>文件名要蛇形命名: <code>lowercase_with_underscores</code>. 类名: <code>UpperCamelCase</code>.</li><li>对自己程序的文件, 两种import都可以(package开头或者相对路径), 但是要保持一致.</li><li>Flutter程序嵌套比较多, 要用结尾的<code>,</code>来帮助格式化.</li></ul><h2 id="本文缘由"><a href="#本文缘由" class="headerlink" title="本文缘由"></a>本文缘由</h2><p>年初的时候学了一阵子Flutter, 写了各种大小demo. 结果隔了两个月之后, 突然心血来潮想写个小东西, 打开Android Studio, 首先发现创建Flutter程序的按钮都不见了. (估计是Android Studio4.0升级之后Flutter的插件没跟上).</p><p>接着用命令行创建了工程, 打开之后稍微整理了一下心情, 然后就….懵逼了. </p><p>突然不知道如何下手.<br>宏观的东西还记得, 要用什么package, 基本常用的几个Widget都是啥, 但是微观的, 忘了函数和数组都是咋定义的了.<br>这种懵逼的状态令我很愤怒, 果然是上年纪了吗, 无缝切换个语言都不行.</p><p>于是就想着还是写个备忘录吧.</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></li><li><a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>最近机缘巧合地, 要开始学习.NET了.</p><p>想起以前也是写过C#的, 曾经在图书馆拿着笔记本认真做笔记.<br>于是好奇XNA后来怎么样了.</p><p>Wiki上的词条: <a href="https://en.wikipedia.org/wiki/Microsoft_XNA" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Microsoft_XNA</a></p><p>最后一次IDE的更新还是2010年的4.0版本, 我记得当时我还下载了, 蓝紫色的, 没有3.x版本黄黄的那个好用, 慢得不行(也可能是当时的机器不好).</p><p>刚刚才发现XNA的替代品是MonoGame:<br><a href="https://github.com/MonoGame/MonoGame" target="_blank" rel="noopener">https://github.com/MonoGame/MonoGame</a></p><p>据说是为了解决跨平台的问题.<br>下载了源码看, 果然很像. 这么多年了, 仍然记得有个更新回调和绘制回调, Shader, 管道什么的.</p><p>当时XNA图形学之类的折腾了好久, 可惜那时候也没积累什么输出和博客, 只有这一篇了: <a href="https://www.cnblogs.com/mengdd/archive/2012/05/22/2598022.html" target="_blank" rel="noopener">https://www.cnblogs.com/mengdd/archive/2012/05/22/2598022.html</a></p><p>要是当时会玩github, 没准还能留点源码呢.</p><p>一些回忆涌上心头, 当时最喜欢的上海第八中学物理组的网站:<br><a href="https://enjoyphysics.cn/Soft/Xna" target="_blank" rel="noopener">https://enjoyphysics.cn/Soft/Xna</a></p><p>我还在想当时的那个老师还在不在: <a href="https://enjoyphysics.cn/Introduce/Member" target="_blank" rel="noopener">https://enjoyphysics.cn/Introduce/Member</a><br>看到他的名字(范璟)我就知道是他. 觉得人生榜样就是这样低调又努力的人.</p><p>当时实验室的师兄弟们一起写游戏, 想起来还挺有成就感的.</p><p>当时的自己也是意气风发, 精力旺盛, 不断打怪升级. 二十多岁, 人生还充满了可能性. </p><p>怀念当时的人, 怀念当时的自己.</p><p>也许有一天, Android也不在了, 我也会唏嘘.<br>那时候不知道青春结束了没.</p>]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Dart-Memo-for-Java-Kotlin-Developers&quot;&gt;&lt;a href=&quot;#Dart-Memo-for-Java-Kotlin-Developers&quot; class=&quot;headerlink&quot; title=&quot;Dart Memo for Java Kotlin Developers&quot;&gt;&lt;/a&gt;Dart Memo for Java Kotlin Developers&lt;/h1&gt;&lt;p&gt;Dart语言一些语法特点和编程规范.&lt;/p&gt;
+      
+      
+        &lt;p&gt;最近机缘巧合地, 要开始学习.NET了.&lt;/p&gt;
+&lt;p&gt;想起以前也是写过C#的, 曾经在图书馆拿着笔记本认真做笔记.&lt;br&gt;于是好奇XNA后来怎么样了.&lt;/p&gt;
+&lt;p&gt;Wiki上的词条: &lt;a href=&quot;https://en.wikipedia.org/wiki/Micr
+      
+    
+    </summary>
+    
+    
+      <category term="XNA" scheme="http://mengdd.github.io/tags/XNA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dart Memo for Android Developers</title>
+    <link href="http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/"/>
+    <id>http://mengdd.github.io/Flutter/2020/06/15/flutter-dart-memo/</id>
+    <published>2020-06-14T16:34:57.000Z</published>
+    <updated>2020-06-14T16:47:32.946Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Dart-Memo-for-Android-Developers"><a href="#Dart-Memo-for-Android-Developers" class="headerlink" title="Dart Memo for Android Developers"></a>Dart Memo for Android Developers</h1><p>Dart语言一些语法特点和编程规范.</p><p>本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.</p><a id="more"></a><h2 id="Dart语言"><a href="#Dart语言" class="headerlink" title="Dart语言"></a>Dart语言</h2><p>完整的请看<a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></p><ul><li>创建对象可以不用<code>new</code>. -&gt; 并且规范不让用<code>new</code>, lint会报错.</li><li>声明变量可以用<code>var</code>, 也可以用具体类型如<code>String</code>. 不变量用<code>final</code>, 常量用<code>const</code>.</li><li>没有访问修饰符, 用<code>_</code>来表示私有: 文件级别.</li><li>字符串可以用单引号<code>&#39;</code>.</li><li>语句结尾要用<code>;</code>.</li><li>创建数组可以用: <code>var list = [1, 2, 3];</code>.</li><li><code>assert()</code>常用来断定开发时不可能会出现的情况.</li><li>空测试操作符: <code>??</code>.</li><li>过滤操作符: <code>where</code>.</li><li>两个点<code>..</code>表示链式调用.</li><li><code>dynamic</code>说明类型未指定.</li><li>除了throw异常, 还可以throw别的东西, 比如字符串.</li></ul><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul><li><p>函数返回值在函数最开头, 可以不标. -&gt; 但是规范会建议标注返回值.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) &#123;</span><br><span class="line">  return _nobleGases[atomicNumber] != null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p><code>=&gt;</code>箭头符号, 用来简化一句话的方法.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool isNoble(int atomicNumber) =&gt; _nobleGases[atomicNumber] != null;</span><br></pre></td></tr></table></figure></li></ul><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul><li><p>构造函数<code>{}</code>表示带名字, 参数可选, 若要必选加上<code>@required</code>.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Scrollbar(&#123;Key key, @required Widget child&#125;)</span><br></pre></td></tr></table></figure></li><li><p>构造函数名可以是<code>ClassName</code>或者<code>ClassName.identifier</code>.</p></li><li>空构造函数体可以省略, 用<code>;</code>结尾就行:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  double x, y;</span><br><span class="line">  Point(this.x, this.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>这里会初始化相应的变量, 也不用声明具体的参数类型.</p><ul><li>有<code>factory</code>构造, 可以用来返回缓存实例, 或者返回类型的子类:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">factory Logger(String name) &#123;</span><br><span class="line">    return _cache.putIfAbsent(name, () =&gt; Logger._internal(name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><h3 id="异步代码"><a href="#异步代码" class="headerlink" title="异步代码"></a>异步代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; lookUpVersion() async =&gt; &apos;1.0.0&apos;;</span><br><span class="line"></span><br><span class="line">Future checkVersion() async &#123;</span><br><span class="line">  var version = await lookUpVersion();</span><br><span class="line">  // Do something with version</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="编程规范类"><a href="#编程规范类" class="headerlink" title="编程规范类"></a>编程规范类</h2><p>完整的规范在这里: <a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a>.</p><p>有一些Good和Bad的举例, 这里仅列出比较常用的几项.</p><ul><li>文件名要蛇形命名: <code>lowercase_with_underscores</code>. 类名: <code>UpperCamelCase</code>.</li><li>对自己程序的文件, 两种import都可以(package开头或者相对路径), 但是要保持一致.</li><li>Flutter程序嵌套比较多, 要用结尾的<code>,</code>来帮助格式化.</li></ul><h2 id="本文缘由"><a href="#本文缘由" class="headerlink" title="本文缘由"></a>本文缘由</h2><p>年初的时候学了一阵子Flutter, 写了各种大小demo. 结果隔了两个月之后, 突然心血来潮想写个小东西, 打开Android Studio, 首先发现创建Flutter程序的按钮都不见了. (估计是Android Studio4.0升级之后Flutter的插件没跟上).</p><p>接着用命令行创建了工程, 打开之后稍微整理了一下心情, 然后就….懵逼了. </p><p>突然不知道如何下手.<br>宏观的东西还记得, 要用什么package, 基本常用的几个Widget都是啥, 但是微观的, 忘了函数和数组都是咋定义的了.<br>这种懵逼的状态令我很愤怒, 果然是上年纪了吗, 无缝切换个语言都不行.</p><p>于是就想着还是写个备忘录吧.</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://dart.dev/guides/language/language-tour" target="_blank" rel="noopener">A tour of the Dart language</a></li><li><a href="https://dart.dev/guides/language/effective-dart" target="_blank" rel="noopener">Effective Dart</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Dart-Memo-for-Android-Developers&quot;&gt;&lt;a href=&quot;#Dart-Memo-for-Android-Developers&quot; class=&quot;headerlink&quot; title=&quot;Dart Memo for Android Developers&quot;&gt;&lt;/a&gt;Dart Memo for Android Developers&lt;/h1&gt;&lt;p&gt;Dart语言一些语法特点和编程规范.&lt;/p&gt;
 &lt;p&gt;本文适合: 日常使用Kotlin, 突然想写个Flutter程序的Android程序员.&lt;/p&gt;
     
     </summary>
@@ -219,9 +244,9 @@
     
       <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
     
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
       <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
       <category term="Lint" scheme="http://mengdd.github.io/tags/Lint/"/>
     
@@ -450,9 +475,9 @@
     
       <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
     
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
       <category term="Tools" scheme="http://mengdd.github.io/tags/Tools/"/>
+    
+      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
     
       <category term="Redux" scheme="http://mengdd.github.io/tags/Redux/"/>
     
@@ -554,11 +579,11 @@
     
       <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
     
-      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
-    
       <category term="Gradle" scheme="http://mengdd.github.io/tags/Gradle/"/>
     
       <category term="CI" scheme="http://mengdd.github.io/tags/CI/"/>
+    
+      <category term="IDE" scheme="http://mengdd.github.io/tags/IDE/"/>
     
       <category term="LiveData" scheme="http://mengdd.github.io/tags/LiveData/"/>
     
@@ -637,57 +662,6 @@
     
     
       <category term="Design Patterns" scheme="http://mengdd.github.io/tags/Design-Patterns/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Android Weekly Notes Issue 261</title>
-    <link href="http://mengdd.github.io/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/"/>
-    <id>http://mengdd.github.io/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/</id>
-    <published>2017-06-12T10:41:02.000Z</published>
-    <updated>2019-01-17T06:43:57.698Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Android-Weekly-Issue-261"><a href="#Android-Weekly-Issue-261" class="headerlink" title="Android Weekly Issue #261"></a>Android Weekly Issue #261</h1><p>June 11th, 2017<br><a href="http://androidweekly.net/issues/issue-261" target="_blank" rel="noopener">Android Weekly Issue #261</a><br>本期内容包括: Adaptive Icons; Kotlin实现的几种常用的设计模式; Android Instant App; Kotlin中的Ranges; 一个叫Graywater的库, 可以改善RecyclerView的性能; ItemDecoration的使用; 函数式编程; 提高Gradle的build的速度; 用RxJava 2包装Camera2 API. </p><p>代码部分有一个Kotlin实现的RSS阅读器值得一看.</p><a id="more"></a><h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Adaptive-Icons-and-more"><a href="#Adaptive-Icons-and-more" class="headerlink" title="Adaptive Icons and more"></a><a href="https://blog.stylingandroid.com/adaptive-icons/" target="_blank" rel="noopener">Adaptive Icons and more</a></h2><p>关于Android O的Adaptive Icons, 这里是官方的文档: <a href="https://developer.android.com/preview/features/adaptive-icons.html" target="_blank" rel="noopener">Adaptive Icons</a>.</p><p>这篇文章介绍了如何用Android Studio制作这种icon.</p><h2 id="Gang-of-Four-Patterns-in-Kotlin"><a href="#Gang-of-Four-Patterns-in-Kotlin" class="headerlink" title="Gang of Four Patterns in Kotlin"></a><a href="https://dev.to/lovis/gang-of-four-patterns-in-kotlin" target="_blank" rel="noopener">Gang of Four Patterns in Kotlin</a></h2><p>用Kotlin实现的各种设计模式:</p><ul><li>Decorator -&gt; 用extension functions.</li><li>Builder -&gt; 用<code>apply</code>.</li><li>Prototype -&gt; 用<code>data</code>类<code>copy</code>.</li><li>Singleton -&gt; 用<code>object</code>关键字.</li><li>Template Method -&gt; 用extension functions.</li><li>Strategy -&gt; 方法参数, <code>typealias</code>, 高阶函数.</li><li>Iterator -&gt; <code>interator()</code>.</li></ul><p>这是作者实现的repo: <a href="https://github.com/lmller/gof-in-kotlin" target="_blank" rel="noopener">gof-in-kotlin</a>.</p><h2 id="From-Westinghouse-to-Android-Instant-apps"><a href="#From-Westinghouse-to-Android-Instant-apps" class="headerlink" title="From Westinghouse to Android Instant apps"></a><a href="https://tech.buzzfeed.com/from-westinghouse-to-android-instant-apps-60fbfaca4ebe" target="_blank" rel="noopener">From Westinghouse to Android Instant apps</a></h2><p>作者讲了他和Instant App的故事.</p><h2 id="Musings-on-Kotlin-Ranges"><a href="#Musings-on-Kotlin-Ranges" class="headerlink" title="Musings on Kotlin Ranges"></a><a href="http://blog.danlew.net/2017/06/05/musings-on-kotlin-ranges/amp/" target="_blank" rel="noopener">Musings on Kotlin Ranges</a></h2><p>作者讲了他发现的一些关于Kotlin的<a href="https://kotlinlang.org/docs/reference/ranges.html" target="_blank" rel="noopener">Ranges</a>的有趣的事情:</p><ul><li>IntRange如果初始值比结束值大, 会被认为是空的. 想要逆序的话就得用<code>downTo</code>或者<code>reversed()</code>.</li><li>in range会被编译器优化为两个&lt;=条件判断, 所以我们可以利用这点来简化我们本来的判断.</li><li>几种range的for循环效率比较.</li></ul><h2 id="Introducing-Graywater-for-Android"><a href="#Introducing-Graywater-for-Android" class="headerlink" title="Introducing Graywater for Android"></a><a href="https://engineering.tumblr.com/post/161546559631/introducing-graywater-for-android" target="_blank" rel="noopener">Introducing Graywater for Android</a></h2><p>介绍一个叫<a href="https://github.com/tumblr/Graywater" target="_blank" rel="noopener">Graywater</a>的库, 处理RecyclerView中的复杂项目, 据说可以改善滚动性能, 减少内存使用, 而且提供了一种组件化的构建方式.</p><h2 id="Making-the-Domain-Android-App-Instant"><a href="#Making-the-Domain-Android-App-Instant" class="headerlink" title="Making the Domain Android App Instant"></a><a href="http://tech.domain.com.au/2017/06/making-the-domain-android-app-instant-%E2%9A%A1/" target="_blank" rel="noopener">Making the Domain Android App Instant</a></h2><p>Domain的Instant App实现, 概要介绍, 不涉及太多细节.<br>文章后面说了一些Instant App的限制, 比如: 4MB大小; 只有有限的权限, intent和库.</p><h2 id="ItemDecoration-Avoid-adding-dividers-to-the-view-layout"><a href="#ItemDecoration-Avoid-adding-dividers-to-the-view-layout" class="headerlink" title="ItemDecoration - Avoid adding dividers to the view layout"></a><a href="https://medium.com/proandroiddev/itemdecoration-in-android-e18a0692d848" target="_blank" rel="noopener">ItemDecoration - Avoid adding dividers to the view layout</a></h2><p><code>ItemDecoration</code>的介绍.</p><p>首先, 不要用在布局里加View的方法来加divider, 这对性能不好. 增加了多余的View, 还可能需要增加层级.</p><p>其次, 加View的方式也有一些副作用, 比如左右滑动item动画的时候, divider会和View一起移动, 这显然不好看.</p><p>最后, 加View的方式也不如<code>ItemDecoration</code>那样具有灵活性. 比如你想加不同长度的divider给不同位置的item.</p><p>所以推荐使用<code>ItemDecoration</code>. 自动25.0.0开始, support库还添加了<code>DividerItemDecoration</code>类.</p><p>注意: </p><ul><li>一个RecyclerView可以添加多个<code>ItemDecoration</code>.</li><li><code>onDraw()</code>是在绘制item之前, <code>onDrawOver()</code>是在绘制item之后.</li></ul><h2 id="Functional-Programming-for-Android-Developers-—-Part-3"><a href="#Functional-Programming-for-Android-Developers-—-Part-3" class="headerlink" title="Functional Programming for Android Developers — Part 3"></a><a href="https://medium.com/@anupcowkur/functional-programming-for-android-developers-part-3-f9e521e96788" target="_blank" rel="noopener">Functional Programming for Android Developers — Part 3</a></h2><p>函数式编程教学第三部分, 主要讲高阶函数和Closures.</p><p>前两部分见:</p><ul><li><a href="https://medium.freecodecamp.com/functional-programming-for-android-developers-part-1-a58d40d6e742" target="_blank" rel="noopener">Functional Programming for Android Developers — Part 1</a></li><li><a href="https://medium.freecodecamp.com/functional-programming-for-android-developers-part-2-5c0834669d1a" target="_blank" rel="noopener">Functional Programming for Android Developers — Part 2</a></li></ul><h2 id="How-to-speed-up-your-slow-Gradle-builds"><a href="#How-to-speed-up-your-slow-Gradle-builds" class="headerlink" title="How to speed up your slow Gradle builds"></a><a href="https://android.jlelse.eu/how-to-speed-up-your-slow-gradle-builds-5d9a9545f91a" target="_blank" rel="noopener">How to speed up your slow Gradle builds</a></h2><p>Google I/O 2017关于如何提高gradle build速度的10个建议:</p><ul><li>1.使用最新的Gradle plugin.</li><li>2.避免使用老的multidex, 在API 21以前会有性能影响.</li><li>3.在开发时disable multi-APK.</li><li>4.最小化包含的资源.</li><li>5.在开发时关闭PNG优化.</li><li>6.使用Instant Run.</li><li>7.避免非故意的改动. 如把vesionCode和当前时间相关, 这样每次build就等于manifest会被改变. 还有<code>Crashlytics</code>会为每次build生成id.  可以在develop的时候关闭这些.</li><li>8.不要使用动态的依赖版本.</li><li>9.注意memory的设置. 在<code>gradle.properties</code>中, 如<code>org.gradle.jvmargs=-Xmx2048m</code>.</li><li>10.使能缓存. 在<code>gradle.properties</code>中, <code>org.gradle.caching=true</code>.</li></ul><h2 id="Reactive-selfies-with-Camera2-API-on-Android-Part-1"><a href="#Reactive-selfies-with-Camera2-API-on-Android-Part-1" class="headerlink" title="Reactive selfies with Camera2 API on Android - Part 1"></a><a href="https://techblog.badoo.com/blog/2017/06/07/reactive-selfies-with-camera2-api-on-android-part-1/" target="_blank" rel="noopener">Reactive selfies with Camera2 API on Android - Part 1</a></h2><p>作者的一个教程, 用RxJava2包装Camera2的API.<br>文章讲得很仔细, 项目代码见: <a href="https://github.com/ArkadyGamza/Camera2API_rxJava2" target="_blank" rel="noopener">Camera2API_rxJava2</a>.</p><h2 id="Re-animation"><a href="#Re-animation" class="headerlink" title="Re-animation"></a><a href="https://medium.com/google-developers/re-animation-7869722af206" target="_blank" rel="noopener">Re-animation</a></h2><p>作者更新了他关于向量动画的文章, 因为support库25.4中加入了对老版本的兼容.</p><h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Karchitec"><a href="#Karchitec" class="headerlink" title="Karchitec"></a><a href="https://github.com/msesma/Karchitec" target="_blank" rel="noopener">Karchitec</a></h2><p>Kotlin的RSS阅读器, 使用了Google的android architecture components库.</p><h2 id="SwiftKotlin"><a href="#SwiftKotlin" class="headerlink" title="SwiftKotlin"></a><a href="https://github.com/angelolloqui/SwiftKotlin" target="_blank" rel="noopener">SwiftKotlin</a></h2><p>一个工具, 可以把Swift代码转换为Kotlin代码.</p><h2 id="Graywater"><a href="#Graywater" class="headerlink" title="Graywater"></a><a href="https://github.com/tumblr/Graywater" target="_blank" rel="noopener">Graywater</a></h2><p>一个改善RecyclerView滚动性能的库.</p><h2 id="Fontify"><a href="#Fontify" class="headerlink" title="Fontify"></a><a href="https://github.com/mehdok/Fontify" target="_blank" rel="noopener">Fontify</a></h2><p>提供不同语言自定义字体和style的TextView, EditText和Button.</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Android-Weekly-Issue-261&quot;&gt;&lt;a href=&quot;#Android-Weekly-Issue-261&quot; class=&quot;headerlink&quot; title=&quot;Android Weekly Issue #261&quot;&gt;&lt;/a&gt;Android Weekly Issue #261&lt;/h1&gt;&lt;p&gt;June 11th, 2017&lt;br&gt;&lt;a href=&quot;http://androidweekly.net/issues/issue-261&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Android Weekly Issue #261&lt;/a&gt;&lt;br&gt;本期内容包括: Adaptive Icons; Kotlin实现的几种常用的设计模式; Android Instant App; Kotlin中的Ranges; 一个叫Graywater的库, 可以改善RecyclerView的性能; ItemDecoration的使用; 函数式编程; 提高Gradle的build的速度; 用RxJava 2包装Camera2 API. &lt;/p&gt;
-&lt;p&gt;代码部分有一个Kotlin实现的RSS阅读器值得一看.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Android" scheme="http://mengdd.github.io/categories/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/categories/Android/Android-Weekly/"/>
-    
-    
-      <category term="Android" scheme="http://mengdd.github.io/tags/Android/"/>
-    
-      <category term="Android Weekly" scheme="http://mengdd.github.io/tags/Android-Weekly/"/>
-    
-      <category term="Kotlin" scheme="http://mengdd.github.io/tags/Kotlin/"/>
-    
-      <category term="Animation" scheme="http://mengdd.github.io/tags/Animation/"/>
-    
-      <category term="RecyclerView" scheme="http://mengdd.github.io/tags/RecyclerView/"/>
-    
-      <category term="Gradle" scheme="http://mengdd.github.io/tags/Gradle/"/>
-    
-      <category term="Design Patterns" scheme="http://mengdd.github.io/tags/Design-Patterns/"/>
-    
-      <category term="Android O" scheme="http://mengdd.github.io/tags/Android-O/"/>
-    
-      <category term="Adaptive Icons" scheme="http://mengdd.github.io/tags/Adaptive-Icons/"/>
-    
-      <category term="Instant App" scheme="http://mengdd.github.io/tags/Instant-App/"/>
-    
-      <category term="ItemDecoration" scheme="http://mengdd.github.io/tags/ItemDecoration/"/>
-    
-      <category term="Functional Programming" scheme="http://mengdd.github.io/tags/Functional-Programming/"/>
-    
-      <category term="RxJava 2" scheme="http://mengdd.github.io/tags/RxJava-2/"/>
-    
-      <category term="Camera2" scheme="http://mengdd.github.io/tags/Camera2/"/>
     
   </entry>
   
