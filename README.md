@@ -1,9 +1,8 @@
 # mengdd.github.io
 Github pages of mengdd : http://mengdd.github.io/
 
-
-## branches
-**hexo** branch is for management, configurations and posts.
+## Branches
+**hexo** branch is default branch, used for management, configurations and posts.
 
 **master** branch is for static files, which is generated and deployed using Hexo.
 
@@ -20,12 +19,27 @@ $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh 
 Then restart the terminal and:
 ```
 $ nvm install stable
+```
 
+or you could use homebrew:
+```
+brew install nodejs
 ```
 
 ### Hexo
 ```
 $ npm install -g hexo-cli
+```
+
+or you could use homebrew:
+```
+brew install hexo
+```
+
+### First clone
+cd this project and run:
+```
+npm install
 ```
 
 ## Commands
