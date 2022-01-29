@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #248March 5th, 2017Android Weekly Issue #248.本期内容包括: 为什么有时候应该让你的应用崩溃(而不是一味保护); Trello离线模式实现中两个id的问题; 如何让Dagger的component按照scope保存, 在屏幕旋转时不重建; 用Dagger构建Realm的数据库迁移逻辑;利用各种mock工具写单元测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 248">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #248March 5th, 2017Android Weekly Issue #248.本期内容包括: 为什么有时候应该让你的应用崩溃(而不是一味保护); Trello离线模式实现中两个id的问题; 如何让Dagger的component按照scope保存, 在屏幕旋转时不重建; 用Dagger构建Realm的数据库迁移逻辑;利用各种mock工具写单元测">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-03-17T02:51:51.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.997Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="RxJava2">
+<meta property="article:tag" content="Mockito">
+<meta property="article:tag" content="Dagger">
+<meta property="article:tag" content="Realm">
+<meta property="article:tag" content="Crash">
+<meta property="article:tag" content="MockWebServer">
+<meta property="article:tag" content="Google Map">
+<meta property="article:tag" content="JUnit 5">
+<meta property="article:tag" content="FindBugs">
+<meta property="article:tag" content="Lint">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 248 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 248
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-03-17 10:51:51" itemprop="dateCreated datePublished" datetime="2017-03-17T10:51:51+08:00">2017-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 248" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-248"><a href="#Android-Weekly-Issue-248" class="headerlink" title="Android Weekly Issue #248"></a>Android Weekly Issue #248</h1><p>March 5th, 2017<br><a href="http://androidweekly.net/issues/issue-248" target="_blank" rel="noopener">Android Weekly Issue #248</a>.<br>本期内容包括: 为什么有时候应该让你的应用崩溃(而不是一味保护); Trello离线模式实现中两个id的问题; 如何让Dagger的component按照scope保存, 在屏幕旋转时不重建; 用Dagger构建Realm的数据库迁移逻辑;<br>利用各种mock工具写单元测试; Map上markers的动画实现; JUnit5中@DisplayName的使用; RxJava中的Single和Completable使用; 举例说明如何给FindBugs写自定义的探测器; Android中静态代码分析工具的使用; Trello离线实现中sync失败情况的处理.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Why-your-app-should-crash"><a href="#Why-your-app-should-crash" class="headerlink" title="Why your app should crash"></a><a href="http://jeroenmols.com/blog/2017/03/08/appcrash/" target="_blank" rel="noopener">Why your app should crash</a></h2><p>作者认为有时候让应用崩溃反而是有好处的.</p>
+<p>以NPE为例, 有时候我们会习惯性地加很多null判断, 有的是多余的, 有的防御型的代码反而会掩盖了真实问题所在. 比如当一个不合理的情况发生时, 让用户看到一个不可理解的页面, 比如空白, 然后我们开发者根本不知道这种情况的发生.</p>
+<p>与其这样掩盖错误, 不如让应用崩溃, 让开发者立即知道问题的原因.</p>
+<p>实用建议:</p>
+<ul>
+<li>永远让应用对外来输入(比如service的响应, UI的输入, 进来的intents)保持健壮性.</li>
+<li>在程序的入口点保证数据的完整性. 这样不合理的数据就不会到处都是, 所以你不用到处检查.</li>
+<li>如果你不确定某个错误是否会在某个地方发生, 先假装它不会发生, 在测试阶段再验证.</li>
+<li>如果某个方法在产品环境不能被调用, 或者只能被调用一次等, 抛出<code>IllegalStateException</code>.</li>
+<li>永远在发布之前进行完整测试, 这样你就会在用户之前, catch住可怕的崩溃.</li>
+</ul>
+<h2 id="The-Two-ID-Problem"><a href="#The-Two-ID-Problem" class="headerlink" title="The Two ID Problem"></a><a href="http://tech.trello.com/sync-two-id-problem/" target="_blank" rel="noopener">The Two ID Problem</a></h2><p>还是Trello开发离线模式的系列文章, 本篇讲他们遇到的一个很tricky的问题: id问题.</p>
+<p>在他们的项目里, 所有的models都有一个id, 用以和server通信, 以及定义model之间的关系.</p>
+<p>如果是在离线模式下, 就不能依靠server来提供这个id, 客户端需要自己生成. </p>
+<p>所以离线模式下有两种id, 一种是本地生成的, 一种是用来和server通信的. </p>
+<p>他们想过几个办法, 比如在sync的时候将local的id转化为server id; 或者干脆存储一个id的Pair类, 但是都有难以维护或者性能缺陷等种种问题.</p>
+<p>最后他们提出了一个叫<code>local-server barrier</code>的解决方案. 基本的原则就是, 在app中, 只使用local的id, 同server通信时, 使用server id. 好处: 首先保证了客户端代码的简洁, 只有网络通信层需要考虑到server id; 重构代码量小.</p>
+<h2 id="Retaining-Dagger-components"><a href="#Retaining-Dagger-components" class="headerlink" title="Retaining Dagger components"></a><a href="https://medium.com/@Zhuinden/retaining-dagger-components-across-configuration-change-using-service-tree-3709c78bf6d2#.114aardgd" target="_blank" rel="noopener">Retaining Dagger components</a></h2><p>如果你用dagger创建了component,  scope是Activity或者Fragment, 那么你可能遇到过这个问题: 旋转屏幕之后, 所有的依赖都重建了, 因为你创建了一个新的component.</p>
+<p>如果你想要在configuration变化的时候不重建, 你就需要把component存储在一个全局的地方, 但是这样的话, 当你真的结束你的Activity和Fragment的时候, 你如何释放这些component呢?</p>
+<p>你需要分层地(hierarchical)存储, <a href="https://github.com/Zhuinden/service-tree" target="_blank" rel="noopener">service-tree</a>就是用来做分层存储东西的一个工具. </p>
+<p>文中基本思想是把Application的component作为根节点, 然后Activity和Fragment的component作为树形结构的叶子节点逐级存储. Activity和Fragment的节点什么时候移除, 有一些判断条件和时机选择, 详见原文代码.</p>
+<h2 id="The-Burden-of-Knowledge"><a href="#The-Burden-of-Knowledge" class="headerlink" title="The Burden of Knowledge"></a><a href="https://medium.com/@trionkidnapper/the-burden-of-knowledge-52cc73508081#.1nyndcoo6" target="_blank" rel="noopener">The Burden of Knowledge</a></h2><p>鼓励在team里分享知识.</p>
+<h2 id="Realm-Migrations-Supercharged-with-Dagger"><a href="#Realm-Migrations-Supercharged-with-Dagger" class="headerlink" title="Realm Migrations Supercharged with Dagger"></a><a href="http://www.adavis.info/2017/03/realm-migrations-supercharged-with.html" target="_blank" rel="noopener">Realm Migrations Supercharged with Dagger</a></h2><p>使用Dagger2可以大幅度改善Realm中的数据迁移处理. 具体的做法是把每一步的迁移处理都放在一个统一接口的实现类里, 然后注入它们.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MigrationsModule</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@IntoMap</span></span><br><span class="line">    <span class="meta">@IntKey</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="function"><span class="keyword">static</span> VersionMigration <span class="title">provideVersion1Migration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Version1Migration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@IntoMap</span></span><br><span class="line">    <span class="meta">@IntKey</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="function"><span class="keyword">static</span> VersionMigration <span class="title">provideVersion2Migration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Version2Migration();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以最后的迁移类看起来就是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Reusable</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Migration</span> <span class="keyword">implements</span> <span class="title">RealmMigration</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;Integer, Provider&lt;VersionMigration&gt;&gt; versionMigrations;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    Migration(Map&lt;Integer, Provider&lt;VersionMigration&gt;&gt; versionMigrations) &#123;</span><br><span class="line">        <span class="keyword">this</span>.versionMigrations = versionMigrations;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">migrate</span><span class="params">(<span class="keyword">final</span> DynamicRealm realm, <span class="keyword">long</span> oldVersion, <span class="keyword">long</span> newVersion)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = (<span class="keyword">int</span>) oldVersion; i &lt; newVersion; i++) &#123;</span><br><span class="line">            <span class="keyword">final</span> Provider&lt;VersionMigration&gt; provider = versionMigrations.get(i);</span><br><span class="line">            <span class="keyword">if</span> (provider != <span class="keyword">null</span>) &#123;</span><br><span class="line">                VersionMigration versionMigration = provider.get();</span><br><span class="line">                versionMigration.migrate(realm, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样做的好处:</p>
+<ul>
+<li>1.以后再有数据库升级也不需要再改这个类了.</li>
+<li>2.不需要逐个check每个版本号, 自动只从需要的版本号开始做迁移.</li>
+<li>3.每个迁移模块都变成了可测试的单元.</li>
+</ul>
+<p>我觉得作者的这种处理结构很好, 不仅仅限于Realm数据库的迁移, 其他的数据库迁移也可以用类似的结构来处理.</p>
+<h2 id="How-to-be-a-Mock-Star…"><a href="#How-to-be-a-Mock-Star…" class="headerlink" title="How to be a Mock-Star…"></a><a href="https://medium.com/fueled-android/how-to-be-a-mock-star-fc00714d8c2f#.aff30qzf6" target="_blank" rel="noopener">How to be a Mock-Star…</a></h2><p>介绍如何用<a href="http://site.mockito.org/" target="_blank" rel="noopener">mockito</a>来测试一个MVP的程序.</p>
+<p>首先测试Presenter的部分, 这里Mock了数据源和各种错误响应.</p>
+<p>测试Repository, 需要用到<a href="https://github.com/square/okhttp/tree/master/mockwebserver" target="_blank" rel="noopener">MockWebServer</a>, 来模拟测试环境下的响应.</p>
+<h2 id="Animating-Markers-with-MapOverlayLayout"><a href="#Animating-Markers-with-MapOverlayLayout" class="headerlink" title="Animating Markers with MapOverlayLayout"></a><a href="https://www.thedroidsonroids.com/blog/workcation-app-part-2-animating-markers-with-mapoverlaylayout/" target="_blank" rel="noopener">Animating Markers with MapOverlayLayout</a></h2><p>作者App的动画实现讨论第二发, 如何让地图上的markers带缩放和渐变动画 -&gt; 用<code>MapOverlayLayout</code>.</p>
+<p>文中有详细的实现代码, 基本思路就是在这个<code>MapOverlayLayout</code>中保存一个View的列表, 然后在自定义View中实现每个marker在相应动作时的动画.</p>
+<h2 id="What-Unit-Tests-are-Trying-to-Tell-us-About-Activities-Pt-2"><a href="#What-Unit-Tests-are-Trying-to-Tell-us-About-Activities-Pt-2" class="headerlink" title="What Unit Tests are Trying to Tell us About Activities Pt 2"></a><a href="https://www.philosophicalhacker.com/post/what-unit-tests-are-trying-to-tell-us-about-activities-pt-2/" target="_blank" rel="noopener">What Unit Tests are Trying to Tell us About Activities Pt 2</a></h2><p>以Activity/Fragment作为基本构建单元, 让程序难以测试, 本文举例说明了这一点.</p>
+<h2 id="JUnit-5-DisplayName"><a href="#JUnit-5-DisplayName" class="headerlink" title="JUnit 5: DisplayName"></a><a href="https://blog.stylingandroid.com/junit-5-displayname/" target="_blank" rel="noopener">JUnit 5: DisplayName</a></h2><p>JUnit 5提供了<code>@DisplayName</code>, 这样测试报告里case显示的名字将是<code>@DisplayName</code>定义的字符串. </p>
+<p>相比原先的方法名来说, 这个字符串是可以带空格的, 所以比之前的可读性增强了.</p>
+<h2 id="Clearer-RxJava-intentions-with-Single-and-Completable"><a href="#Clearer-RxJava-intentions-with-Single-and-Completable" class="headerlink" title="Clearer RxJava intentions with Single and Completable"></a><a href="https://medium.com/@ValCanBuild/making-your-rxjava-intentions-clearer-with-single-and-completable-f064d98d53a8#.kpyh1sal0" target="_blank" rel="noopener">Clearer RxJava intentions with Single and Completable</a></h2><p>RxJava中我们经常用到的类就是<code>Observable</code>, 然后处理三个事件: <code>onNext()</code>, <code>onError()</code>和<code>onCompleted()</code>.</p>
+<p>但是有些时候我们并不需要关心全部这三个事件, 这时候我们就可以用<code>Single&lt;T&gt;</code>和<code>Completable</code>.</p>
+<p><code>Single&lt;T&gt;</code>返回一个值或者一个error.<br>它和<code>Observable</code>之间可以互相转换: 用<code>toObservable()</code>和<code>singleOrError()</code>方法.</p>
+<p><code>Completable</code>, 只有<code>onCompleted()</code>和<code>onError()</code>. 它不发射任何值, 可以在它之后用<code>andThen()</code>来添加另一个Observable, 进行后续其他操作.</p>
+<p><code>Observable</code>不能直接转换为<code>Completable</code>, 因为不知道<code>Observable</code>到底会不会停止. 可以把<code>Single</code>转换为<code>Completable</code>, 用<code>toCompletable()</code>方法.</p>
+<h2 id="Custom-FindBugs-detectors-in-Android"><a href="#Custom-FindBugs-detectors-in-Android" class="headerlink" title="Custom FindBugs detectors in Android"></a><a href="https://rhye.org/post/custom-android-findbugs/" target="_blank" rel="noopener">Custom FindBugs detectors in Android</a></h2><p>Android中有两种工具可以做进一步的编译期检查: <a href="https://developer.android.com/studio/write/lint.html" target="_blank" rel="noopener">Android Lint</a>和<a href="http://findbugs.sourceforge.net/" target="_blank" rel="noopener">FindBugs</a>. </p>
+<p>FindBugs是一个静态的分析工具. 本文的主要任务是讲解如何实现一个自定义的检测器来检测一种特定的错误.</p>
+<p>作者的例子是<code>try-with-resources</code>模式的代码.<br>这是Java 7新加的模式<a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html" target="_blank" rel="noopener">try-with-resources</a>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (Cursor c = db.query(...)) &#123;</span><br><span class="line">    c.moveToFirst();</span><br><span class="line">    <span class="keyword">while</span> (!c.isAfterLast()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Foo(</span><br><span class="line">                c.getString(c.getColumnIndex(...))</span><br><span class="line">                ...</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>try语句中声明的资源将会在这个block结束的时候自动close.</p>
+<p>但是这个特性最低需要API 19.<br>所以为了兼容旧版本, 我们不得不使用finally来自己close:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Cursor c = db.query(...);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    c.moveToFirst();</span><br><span class="line">    <span class="keyword">while</span> (!c.isAfterLast()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Foo(</span><br><span class="line">                c.getString(c.getColumnIndex(...))</span><br><span class="line">                ...</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    c.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是有时候我们会忘记close导致了泄露, 所以需要实现一个自定义的findbugs检测器来检查这种错误. 具体实现步骤和讨论见原文.</p>
+<h2 id="Static-Code-Analysis-Tools"><a href="#Static-Code-Analysis-Tools" class="headerlink" title="Static Code Analysis Tools"></a><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-static-code-analysis-tools-b6dd83282921#.e7sc5x1if" target="_blank" rel="noopener">Static Code Analysis Tools</a></h2><p>Android中流行的静态代码检测工具:</p>
+<ul>
+<li>Lint</li>
+<li>PMD</li>
+<li>FindBugs</li>
+</ul>
+<p>本文介绍它们如何配置和使用.</p>
+<h2 id="Sync-Failure-Handling"><a href="#Sync-Failure-Handling" class="headerlink" title="Sync Failure Handling"></a><a href="http://tech.trello.com/sync-failure-handling/" target="_blank" rel="noopener">Sync Failure Handling</a></h2><p>Trello离线模式文章, sync失败的处理.</p>
+<p>在发请求的时候可能会发生各种各样的错误, 分为暂时性的和永久性的两类.<br>对于永久性的错误, 我们可以直接放弃delta; 但是对于暂时性的错误, 我们需要重试. 这里就需要考虑重试的时间和重试的次数.</p>
+<p>另外还有一种情况是客户端发了请求, server也收到了, 但是客户端在收响应的时候失败了, 所以客户端可能会找机会重新发请求, 为了保证幂等性, 我们的每一个请求都有一个唯一的id, 如果server发现同样的id, 只处理第一个.</p>
+<p>对于多个用户编辑的冲突处理, 当前用的是简单的以后者为准的方式.</p>
+<p>撤销本地不合理数据, 以server数据为准, 更新本地数据, 这就需要在sync开始的时候先讲本地改动上传. </p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="LottieFiles"><a href="#LottieFiles" class="headerlink" title="LottieFiles"></a><a href="http://www.lottiefiles.com/" target="_blank" rel="noopener">LottieFiles</a></h2><p>免费的Lottie动画.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="DiscreteScrollView"><a href="#DiscreteScrollView" class="headerlink" title="DiscreteScrollView"></a><a href="https://github.com/yarolegovich/DiscreteScrollView" target="_blank" rel="noopener">DiscreteScrollView</a></h2><p>可滚动的列表, 中间的项目放大. (基于RecyclerView, 长得有点像ViewPager.)</p>
+<h2 id="SimpleRatingBar"><a href="#SimpleRatingBar" class="headerlink" title="SimpleRatingBar"></a><a href="https://github.com/borjabravo10/SimpleRatingBar" target="_blank" rel="noopener">SimpleRatingBar</a></h2><p>五星评价View, 用kotlin实现的.</p>
+<h2 id="InstaCropper"><a href="#InstaCropper" class="headerlink" title="InstaCropper"></a><a href="https://github.com/yasharpm/InstaCropper" target="_blank" rel="noopener">InstaCropper</a></h2><p>剪切图像的View, 类似于Instagram的crop.</p>
+<h2 id="GuildWars2-APIViewer"><a href="#GuildWars2-APIViewer" class="headerlink" title="GuildWars2_APIViewer"></a><a href="https://github.com/huhx0015/GuildWars2_APIViewer" target="_blank" rel="noopener">GuildWars2_APIViewer</a></h2><p>一个app, 用来查看Guild Wars 2的API响应.<br>用了Dagger2, Retrofit2, RxJava2, MVVM架构.</p>
+<h2 id="here-be-dragons"><a href="#here-be-dragons" class="headerlink" title="here-be-dragons"></a><a href="https://github.com/anupcowkur/here-be-dragons" target="_blank" rel="noopener">here-be-dragons</a></h2><p>一个Intellij/Android Studio插件, 你可以在一个方法上标记<code>@SideEffect</code>, 之后你调用这个方法的代码行左边会显示出一个龙的图标.</p>
+<h2 id="RoboGif"><a href="#RoboGif" class="headerlink" title="RoboGif"></a><a href="https://github.com/izacus/RoboGif" target="_blank" rel="noopener">RoboGif</a></h2><p>一个python的小工具, 可以把Android设备上的录屏生成一个GIF图.</p>
+<h2 id="service-tree"><a href="#service-tree" class="headerlink" title="service-tree"></a><a href="https://github.com/Zhuinden/service-tree" target="_blank" rel="noopener">service-tree</a></h2><p>一个存储service的树形结构. (本期文章<a href="https://medium.com/@Zhuinden/retaining-dagger-components-across-configuration-change-using-service-tree-3709c78bf6d2#.114aardgd" target="_blank" rel="noopener">Retaining Dagger components</a>有讲.)</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+              <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+              <a href="/tags/Realm/" rel="tag"># Realm</a>
+              <a href="/tags/Crash/" rel="tag"># Crash</a>
+              <a href="/tags/MockWebServer/" rel="tag"># MockWebServer</a>
+              <a href="/tags/Google-Map/" rel="tag"># Google Map</a>
+              <a href="/tags/JUnit-5/" rel="tag"># JUnit 5</a>
+              <a href="/tags/FindBugs/" rel="tag"># FindBugs</a>
+              <a href="/tags/Lint/" rel="tag"># Lint</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" rel="prev" title="Android Weekly Notes Issue 247">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 247
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" rel="next" title="Android Weekly Notes Issue 249">
+      Android Weekly Notes Issue 249 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-248"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #248</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-your-app-should-crash"><span class="nav-number">2.1.</span> <span class="nav-text">Why your app should crash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Two-ID-Problem"><span class="nav-number">2.2.</span> <span class="nav-text">The Two ID Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Retaining-Dagger-components"><span class="nav-number">2.3.</span> <span class="nav-text">Retaining Dagger components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Burden-of-Knowledge"><span class="nav-number">2.4.</span> <span class="nav-text">The Burden of Knowledge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Realm-Migrations-Supercharged-with-Dagger"><span class="nav-number">2.5.</span> <span class="nav-text">Realm Migrations Supercharged with Dagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-be-a-Mock-Star%E2%80%A6"><span class="nav-number">2.6.</span> <span class="nav-text">How to be a Mock-Star…</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Animating-Markers-with-MapOverlayLayout"><span class="nav-number">2.7.</span> <span class="nav-text">Animating Markers with MapOverlayLayout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Unit-Tests-are-Trying-to-Tell-us-About-Activities-Pt-2"><span class="nav-number">2.8.</span> <span class="nav-text">What Unit Tests are Trying to Tell us About Activities Pt 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-5-DisplayName"><span class="nav-number">2.9.</span> <span class="nav-text">JUnit 5: DisplayName</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clearer-RxJava-intentions-with-Single-and-Completable"><span class="nav-number">2.10.</span> <span class="nav-text">Clearer RxJava intentions with Single and Completable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Custom-FindBugs-detectors-in-Android"><span class="nav-number">2.11.</span> <span class="nav-text">Custom FindBugs detectors in Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Static-Code-Analysis-Tools"><span class="nav-number">2.12.</span> <span class="nav-text">Static Code Analysis Tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sync-Failure-Handling"><span class="nav-number">2.13.</span> <span class="nav-text">Sync Failure Handling</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LottieFiles"><span class="nav-number">3.1.</span> <span class="nav-text">LottieFiles</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DiscreteScrollView"><span class="nav-number">4.1.</span> <span class="nav-text">DiscreteScrollView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SimpleRatingBar"><span class="nav-number">4.2.</span> <span class="nav-text">SimpleRatingBar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InstaCropper"><span class="nav-number">4.3.</span> <span class="nav-text">InstaCropper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GuildWars2-APIViewer"><span class="nav-number">4.4.</span> <span class="nav-text">GuildWars2_APIViewer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#here-be-dragons"><span class="nav-number">4.5.</span> <span class="nav-text">here-be-dragons</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RoboGif"><span class="nav-number">4.6.</span> <span class="nav-text">RoboGif</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#service-tree"><span class="nav-number">4.7.</span> <span class="nav-text">service-tree</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/";
+    this.page.identifier = "Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/";
+    this.page.title = "Android Weekly Notes Issue 248";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

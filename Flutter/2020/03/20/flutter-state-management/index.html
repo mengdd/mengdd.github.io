@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app本文通过改造flutter的counter app, 展示不同的状态管理方法的用法. 可以直接去demo地址看代码:https:&#x2F;&#x2F;github.com&#x2F;mengdd&#x2F;counter_state_management切换分支对应不同的实现方式. Contents Flutter中的状态管理 状态分类 状态管理方法概述">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app">
+<meta property="og:url" content="http://mengdd.github.io/Flutter/2020/03/20/flutter-state-management/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app本文通过改造flutter的counter app, 展示不同的状态管理方法的用法. 可以直接去demo地址看代码:https:&#x2F;&#x2F;github.com&#x2F;mengdd&#x2F;counter_state_management切换分支对应不同的实现方式. Contents Flutter中的状态管理 状态分类 状态管理方法概述">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-03-20T04:19:31.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.006Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Flutter/2020/03/20/flutter-state-management/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>为了弄懂Flutter的状态管理, 我用10种方法改造了counter app | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Flutter/2020/03/20/flutter-state-management/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          为了弄懂Flutter的状态管理, 我用10种方法改造了counter app
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-20 12:19:31" itemprop="dateCreated datePublished" datetime="2020-03-20T12:19:31+08:00">2020-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Flutter/2020/03/20/flutter-state-management/" class="post-meta-item leancloud_visitors" data-flag-title="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Flutter/2020/03/20/flutter-state-management/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Flutter/2020/03/20/flutter-state-management/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="为了弄懂Flutter的状态管理-我用10种方法改造了counter-app"><a href="#为了弄懂Flutter的状态管理-我用10种方法改造了counter-app" class="headerlink" title="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app"></a>为了弄懂Flutter的状态管理, 我用10种方法改造了counter app</h1><p>本文通过改造flutter的counter app, 展示不同的状态管理方法的用法.</p>
+<p>可以直接去demo地址看代码:<br><a href="https://github.com/mengdd/counter_state_management" target="_blank" rel="noopener">https://github.com/mengdd/counter_state_management</a><br>切换分支对应不同的实现方式.</p>
+<h2 id="Contents"><a href="#Contents" class="headerlink" title="Contents"></a>Contents</h2><ul>
+<li>Flutter中的状态管理<ul>
+<li>状态分类</li>
+<li>状态管理方法概述</li>
+</ul>
+</li>
+<li>Counter sample默认实现: StatefulWidget</li>
+<li>InheritedWidget</li>
+<li>Scoped Model</li>
+<li>Provider</li>
+<li>BLoC<ul>
+<li>BLoC手动实现</li>
+<li>BLoC + InheritedWidget做传递</li>
+<li>BLoC rxdart实现</li>
+<li>BLoC用库实现</li>
+</ul>
+</li>
+<li>rxdart</li>
+<li>Redux</li>
+<li>MobX</li>
+<li>Flutter Hooks</li>
+<li>Demo说明及感想</li>
+</ul>
+<a id="more"></a>
+<h2 id="Flutter-State-Management"><a href="#Flutter-State-Management" class="headerlink" title="Flutter State Management"></a>Flutter State Management</h2><p>Flutter是描述性的(declarative), UI反映状态.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UI = f(state)</span><br></pre></td></tr></table></figure>
+<p>其中<code>f</code>代表了build方法.</p>
+<p>状态的改变会直接触发UI的重新绘制. </p>
+<p>UI reacts to the changes.</p>
+<p>相对的, Android, iOS等都是命令式的(imperative), 会有<code>setText()</code>之类的方法来改变UI.</p>
+<h3 id="状态分类"><a href="#状态分类" class="headerlink" title="状态分类"></a>状态分类</h3><p>状态分两种:</p>
+<ul>
+<li>Ephemeral state: 有时也叫UI state或local state. 这种可以包含在单个widget里.<br>比如: <code>PageView</code>的当前页, 动画的当前进度, <code>BottomNavigationBar</code>的当前选中tab.<br>这种状态不需要使用复杂的状态管理手段, 只要用一个<code>StatefulWidget</code>就可以了.</li>
+<li>App state: 需要在很多地方共享的状态, 也叫shared state或global state.<br>比如: 用户设置, 登录信息, 通知, 购物车, 新闻app中的已读/未读状态等.</li>
+</ul>
+<p>这种状态分类其实没有一个清晰的界限.<br>在简单的app里, 可以用<code>setState()</code>来管理所有的状态; 在app需要的时候, tab的index也可能被抽取到外部作为一个需要保存和管理的app state.</p>
+<h3 id="状态管理方法"><a href="#状态管理方法" class="headerlink" title="状态管理方法"></a>状态管理方法</h3><p>官方提供了一些options: <a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt/options" target="_blank" rel="noopener">Flutter官方文档 options</a><br>目前官方比较推荐的是provider.</p>
+<p>各种状态管理方法要解决的几个问题:</p>
+<ul>
+<li>状态保存哪里?</li>
+<li>状态如何获取? </li>
+<li>UI如何更新? </li>
+<li>如何改变状态?</li>
+</ul>
+<h2 id="Counter-Sample默认实现-StatefulWidget"><a href="#Counter-Sample默认实现-StatefulWidget" class="headerlink" title="Counter Sample默认实现: StatefulWidget"></a>Counter Sample默认实现: StatefulWidget</h2><p>新建Flutter app, 是一个counter app, 自动使用了<code>StatefulWidget</code>来管理状态.<br>对这个简单的app来说, 这是很合理的.</p>
+<p>我们对这个app进行一个简单的改造, 再增加一个button用来减数字.<br>同样的方式, 只需要添加一个方法来做减法就可以了. </p>
+<p>这种方法的一个变体是, 用<code>StatefulBuilder</code>, 主要好处是少写一些代码.</p>
+<p><code>StatefulWidget</code>对简单的Widget内部状态来说是合理的.</p>
+<p>对于复杂的状态, 这种方式的缺点:</p>
+<ul>
+<li>状态属性多了以后, 可能有很多地方都在调用<code>setState()</code>.</li>
+<li>不能把状态和UI分开管理.</li>
+<li>不利于跨组件/跨页面的状态共享. (如何调用另一个Widget的<code>setState()</code>? 把方法通过构造传递过来? No, don’t do this!)</li>
+</ul>
+<p>千万不要用全局变量法来解决问题.</p>
+<p>如果企图用这种方式来管理跨组件的状态, 就难免会用这些Anti patterns:</p>
+<ul>
+<li>紧耦合. Strongly coupling widgets.</li>
+<li>全局保存的state. Globally tracking state.</li>
+<li>从外部调用setState方法. Calling setState from outside.</li>
+</ul>
+<p>所以这种方法只适用于local state的管理.</p>
+<ul>
+<li>代码分支1: <a href="https://github.com/mengdd/counter_state_management/blob/starter-code/lib/main.dart" target="_blank" rel="noopener">starter-code</a>.</li>
+<li>代码分支2: <a href="https://github.com/mengdd/counter_state_management/tree/stateful-builder/lib/main.dart" target="_blank" rel="noopener">stateful-builder</a>.</li>
+</ul>
+<h2 id="InheritedWidget"><a href="#InheritedWidget" class="headerlink" title="InheritedWidget"></a>InheritedWidget</h2><p><a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html" target="_blank" rel="noopener">InheritedWidget</a>的主要作用是在Widget树中有效地传递信息.</p>
+<p>如果没有<code>InheritedWidget</code>, 我们想把一个数据从widget树的上层传到某一个child widget, 要利用途中的每一个构造函数, 一路传递下来.</p>
+<p>Flutter中常用的<code>Theme</code>, <code>Style</code>, <code>MediaQuery</code>等就是inherited widget, 所以在程序里的各种地方都可以访问到它们.</p>
+<p><code>InheritedWidget</code>也会用在其他状态管理模式中, 作为传递数据的方法.</p>
+<h3 id="InheritedWidget状态管理实现"><a href="#InheritedWidget状态管理实现" class="headerlink" title="InheritedWidget状态管理实现"></a>InheritedWidget状态管理实现</h3><p>当用<code>InheritedWidget</code>做状态管理时, 基本思想就是把状态提上去.<br>当子widgets之间需要共享状态, 那么就把状态保存在它们共有的parent中.</p>
+<p>首先定义一个<code>InheritedWidget</code>的子类, 包含状态数据.<br>覆写两个方法:</p>
+<ul>
+<li>提供一个静态方法给child用于获取自己. (命名惯例<code>of(BuildContext)</code>).</li>
+<li>判断是否发生了数据更新.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class CounterStateContainer extends InheritedWidget &#123;</span><br><span class="line">  final CounterModel data;</span><br><span class="line"></span><br><span class="line">  CounterStateContainer(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required Widget child,</span><br><span class="line">    @required this.data,</span><br><span class="line">  &#125;) : super(key: key, child: child);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  bool updateShouldNotify(CounterStateContainer oldWidget) &#123;</span><br><span class="line">    return data.counter.value != oldWidget.data.counter.value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static CounterModel of(BuildContext context) &#123;</span><br><span class="line">    return context</span><br><span class="line">        .dependOnInheritedWidgetOfExactType&lt;CounterStateContainer&gt;()</span><br><span class="line">        .data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后用这个<code>CounterStateContainer</code>放在上层, 包含了数据和所有状态相关的widgets.<br>child widget不论在哪一层都可以方便地获取到状态数据.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Text(</span><br><span class="line">  &apos;$&#123;CounterStateContainer.of(context).counter.value&#125;&apos;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/inherited-widget" target="_blank" rel="noopener">inherited-widget</a>.</p>
+<h3 id="InheritedWidget缺点"><a href="#InheritedWidget缺点" class="headerlink" title="InheritedWidget缺点"></a>InheritedWidget缺点</h3><p><code>InheritedWidget</code>解决了访问状态和根据状态更新的问题, 但是改变state却不太行.</p>
+<ul>
+<li>accessing state</li>
+<li>updating on change</li>
+<li>mutating state -&gt; X</li>
+</ul>
+<p>首先, 不支持跨页面(route)的状态, 因为widget树变了, 所以需要进行跨页面的数据传递.</p>
+<p>其次, <code>InheritedWidget</code>它包含的数据是不可变的, 如果想让它跟踪变化的数据:</p>
+<ul>
+<li>把它包在一个<code>StatefulWidget</code>里.</li>
+<li>在<code>InheritedWidget</code>中使用<code>ValueNotifier</code>, <code>ChangeNotifier</code>或steams.</li>
+</ul>
+<p>这个方案也是了解一下, 实际的全局状态管理还是用更成熟的方案.<br>但是它的原理会被用到其他方案中作为对象传递的方式.</p>
+<h2 id="Scoped-Model"><a href="#Scoped-Model" class="headerlink" title="Scoped Model"></a>Scoped Model</h2><p>scoped model是一个外部package: <a href="https://pub.dev/packages/scoped_model" target="_blank" rel="noopener">https://pub.dev/packages/scoped_model</a><br>Scoped Model是基于<code>InheritedWidget</code>的. 思想仍然是把状态提到上层去, 并且封装了状态改变的通知部分.</p>
+<h3 id="Scoped-Model实现"><a href="#Scoped-Model实现" class="headerlink" title="Scoped Model实现"></a>Scoped Model实现</h3><p>它官方提供例子就是改造counter: <a href="https://pub.dev/packages/scoped_model#-example-tab-" target="_blank" rel="noopener">https://pub.dev/packages/scoped_model#-example-tab-</a></p>
+<ul>
+<li>添加scoped_model依赖.</li>
+<li>创建数据类, 继承<code>Model</code>. </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:scoped_model/scoped_model.dart&apos;;</span><br><span class="line"></span><br><span class="line">class CounterModel extends Model &#123;</span><br><span class="line">  int _counter = 0;</span><br><span class="line"></span><br><span class="line">  int get counter =&gt; _counter;</span><br><span class="line"></span><br><span class="line">  void increment() &#123;</span><br><span class="line">    _counter++;</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void decrement() &#123;</span><br><span class="line">    _counter--;</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中数据变化的部分会通知listeners, 它们收到通知后会rebuild.</p>
+<p>在上层初始化并提供数据类, 用<code>ScopeModel</code>.</p>
+<p>访问数据有两种方法:</p>
+<ul>
+<li>用<code>ScopedModelDescendant</code>包裹widget.</li>
+<li>用<code>ScopedModel.of</code>静态方法.</li>
+</ul>
+<p>使用的时候注意要提供泛型类型, 会帮助我们找到离得最近的上层<code>ScopedModel</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ScopedModelDescendant&lt;CounterModel&gt;(</span><br><span class="line">    builder: (context, child, model) &#123;</span><br><span class="line">  return Text(</span><br><span class="line">    model.counter.toString(),</span><br><span class="line">  );</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+<p>数据改变后, 只有<code>ScopedModelDescendant</code>会收到通知, 从而rebuild.</p>
+<p><code>ScopedModelDescendant</code>有一个<code>rebuildOnChange</code>属性, 这个值默认是true.<br>对于button来说, 它只是控制改变, 自身并不需要重绘, 可以把这个属性置为false.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ScopedModelDescendant&lt;CounterModel&gt;(</span><br><span class="line">  rebuildOnChange: false,</span><br><span class="line">  builder: (context, child, model) &#123;</span><br><span class="line">    return FloatingActionButton(</span><br><span class="line">      onPressed: model.increment,</span><br><span class="line">      tooltip: &apos;Increment&apos;,</span><br><span class="line">      child: Icon(Icons.add),</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p>scoped model这个库帮我们解决了数据访问和通知的问题, 但是rebuild范围需要自己控制.</p>
+<ul>
+<li>access state</li>
+<li>notify other widgets</li>
+<li>minimal rebuild -&gt; X -&gt; 因为需要开发者自己来决定哪一部分是否需要被重建, 容易被忘记.</li>
+</ul>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/scoped-model" target="_blank" rel="noopener">scoped-model</a></p>
+<h2 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h2><p>Provider是官方文档的例子用的方法.<br>去年的Google I/O 2019也推荐了这个方法.<br>和BLoC的流式思想相比, Provider是一个观察者模式, 状态改变时要<code>notifyListeners()</code>.</p>
+<p>有一个counter版本的sample: <a href="https://github.com/flutter/samples/tree/master/provider_counter" target="_blank" rel="noopener">https://github.com/flutter/samples/tree/master/provider_counter</a></p>
+<p>Provider的实现在内部还是利用了<code>InheritedWidget</code>.<br>Provider的好处: dispose指定后会自动被调用, 支持<code>MultiProvider</code>.</p>
+<h3 id="Provider实现"><a href="#Provider实现" class="headerlink" title="Provider实现"></a>Provider实现</h3><ul>
+<li>model类继承<code>ChangeNotifer</code>, 也可以用<code>with</code>.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class CounterModel extends ChangeNotifier &#123;</span><br><span class="line">  int value = 0;</span><br><span class="line"></span><br><span class="line">  void increment() &#123;</span><br><span class="line">    value++;</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void decrement() &#123;</span><br><span class="line">    value--;</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据提供者: <code>ChangeNotifierProvider</code>.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void main() =&gt; runApp(ChangeNotifierProvider(</span><br><span class="line">      create: (context) =&gt; CounterModel(),</span><br><span class="line">      child: MyApp(),</span><br><span class="line">    ));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据消费者/操纵者, 有两种方式: <code>Consumer</code>包裹, 用<code>Provider.of</code>.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Consumer&lt;CounterModel&gt;(</span><br><span class="line">  builder: (context, counter, child) =&gt; Text(</span><br><span class="line">    &apos;$&#123;counter.value&#125;&apos;,</span><br><span class="line">  ),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p>FAB:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FloatingActionButton(</span><br><span class="line">  onPressed: () =&gt;</span><br><span class="line">      Provider.of&lt;CounterModel&gt;(context, listen: false).increment(),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>这里<code>listen</code>置为false表明状态变化时并不需要rebuild FAB widget.</p>
+<h3 id="Provider性能相关的实现细节"><a href="#Provider性能相关的实现细节" class="headerlink" title="Provider性能相关的实现细节"></a>Provider性能相关的实现细节</h3><ul>
+<li><code>Consumer</code>包裹的范围要尽量小.</li>
+<li>listen变量.</li>
+<li>child的处理. <code>Consumer</code>中builder方法的第三个参数.</li>
+</ul>
+<p>可以用于缓存一些并不需要重建的widget:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">return Consumer&lt;CartModel&gt;(</span><br><span class="line">  builder: (context, cart, child) =&gt; Stack(</span><br><span class="line">        children: [</span><br><span class="line">          // Use SomeExpensiveWidget here, without rebuilding every time.</span><br><span class="line">          child,</span><br><span class="line">          Text(&quot;Total price: $&#123;cart.totalPrice&#125;&quot;),</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">  // Build the expensive widget here.</span><br><span class="line">  child: SomeExpensiveWidget(),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/provider" target="_blank" rel="noopener">provider</a>.</p>
+<h2 id="BLoC"><a href="#BLoC" class="headerlink" title="BLoC"></a>BLoC</h2><p>BLoC模式的全称是: business logic component.</p>
+<p>所有的交互都是a stream of asynchronous events.<br><code>Widgets + Streams = Reactive</code>.</p>
+<p>BLoC的实现的主要思路: Events in -&gt; BloC -&gt; State out.</p>
+<p>Google I/O 2018上推荐的还是这个, 2019就推荐Provider了.<br>当然也不是说这个模式不好, 架构模式本来也没有对错之分, 只是技术选型不同.</p>
+<h3 id="BLoC手动实现"><a href="#BLoC手动实现" class="headerlink" title="BLoC手动实现"></a>BLoC手动实现</h3><p>不添加任何依赖可以手动实现BLoC, 利用:</p>
+<ul>
+<li>Dart SDK &gt; dart:async &gt; <code>Stream</code>.</li>
+<li>Flutter的<code>StreamBuilder</code>: 输入是一个stream, 有一个builder方法, 每次stream中有新值, 就会rebuild.</li>
+</ul>
+<p>可以有多个stream, UI只在自己感兴趣的信息发生变化的时候重建.</p>
+<p>BLoC中:</p>
+<ul>
+<li>输入事件: <code>Sink&lt;Event&gt; input</code>. </li>
+<li>输出数据: <code>Stream&lt;Data&gt; output</code>. </li>
+</ul>
+<p>CounterBloc类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">class CounterBloc &#123;</span><br><span class="line">  int _counter = 0;</span><br><span class="line"></span><br><span class="line">  final _counterStateController = StreamController&lt;int&gt;();</span><br><span class="line"></span><br><span class="line">  StreamSink&lt;int&gt; get _inCounter =&gt; _counterStateController.sink;</span><br><span class="line"></span><br><span class="line">  Stream&lt;int&gt; get counter =&gt; _counterStateController.stream;</span><br><span class="line"></span><br><span class="line">  final _counterEventController = StreamController&lt;CounterEvent&gt;();</span><br><span class="line"></span><br><span class="line">  Sink&lt;CounterEvent&gt; get counterEventSink =&gt; _counterEventController.sink;</span><br><span class="line"></span><br><span class="line">  CounterBloc() &#123;</span><br><span class="line">    _counterEventController.stream.listen(_mapEventToState);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void _mapEventToState(CounterEvent event) &#123;</span><br><span class="line">    if (event is IncrementEvent) &#123;</span><br><span class="line">      _counter++;</span><br><span class="line">    &#125; else if (event is DecrementEvent) &#123;</span><br><span class="line">      _counter--;</span><br><span class="line">    &#125;</span><br><span class="line">    _inCounter.add(_counter);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    _counterStateController.close();</span><br><span class="line">    _counterEventController.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有两个<code>StreamController</code>, 一个控制state, 一个控制event.</p>
+<p>读取状态值要用<code>StreamBuilder</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">StreamBuilder(</span><br><span class="line">  stream: _bloc.counter,</span><br><span class="line">  initialData: 0,</span><br><span class="line">  builder: (BuildContext context, AsyncSnapshot&lt;int&gt; snapshot) &#123;</span><br><span class="line">    return Text(</span><br><span class="line">      &apos;$&#123;snapshot.data&#125;&apos;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>而改变状态是发送事件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FloatingActionButton(</span><br><span class="line">  onPressed: () =&gt; _bloc.counterEventSink.add(IncrementEvent()),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>实现细节:</p>
+<ul>
+<li>每个屏幕有自己的BLoC.</li>
+<li>每个BLoC必须有自己的<code>dispose()</code>方法. -&gt; BLoC必须和<code>StatefulWidget</code>一起使用, 利用其生命周期释放.</li>
+</ul>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/bloc" target="_blank" rel="noopener">bloc</a></p>
+<h3 id="BLoC传递-用InheritedWidget"><a href="#BLoC传递-用InheritedWidget" class="headerlink" title="BLoC传递: 用InheritedWidget"></a>BLoC传递: 用InheritedWidget</h3><p>手动实现的BLoC模式, 可以结合<code>InheritedWidget</code>, 写一个Provider, 用来做BLoC的传递.</p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/bloc-with-provider" target="_blank" rel="noopener">bloc-with-provider</a></p>
+<h3 id="BLoC-rxdart实现"><a href="#BLoC-rxdart实现" class="headerlink" title="BLoC rxdart实现"></a>BLoC rxdart实现</h3><p>用了rxdart package之后, bloc模块的实现可以这样写:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class CounterBloc &#123;</span><br><span class="line">  int _counter = 0;</span><br><span class="line"></span><br><span class="line">  final _counterSubject = BehaviorSubject&lt;int&gt;();</span><br><span class="line"></span><br><span class="line">  Stream&lt;int&gt; get counter =&gt; _counterSubject.stream;</span><br><span class="line"></span><br><span class="line">  final _counterEventController = StreamController&lt;CounterEvent&gt;();</span><br><span class="line"></span><br><span class="line">  Sink&lt;CounterEvent&gt; get counterEventSink =&gt; _counterEventController.sink;</span><br><span class="line"></span><br><span class="line">  CounterBloc() &#123;</span><br><span class="line">    _counterEventController.stream.listen(_mapEventToState);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void _mapEventToState(CounterEvent event) &#123;</span><br><span class="line">    if (event is IncrementEvent) &#123;</span><br><span class="line">      _counter++;</span><br><span class="line">    &#125; else if (event is DecrementEvent) &#123;</span><br><span class="line">      _counter--;</span><br><span class="line">    &#125;</span><br><span class="line">    _counterSubject.add(_counter);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void dispose() &#123;</span><br><span class="line">    _counterSubject.close();</span><br><span class="line">    _counterEventController.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>BehaviorSubject</code>也是一种<code>StreamController</code>, 它会记住自己最新的值, 每次注册监听, 会立即给你最新的值.</p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/bloc-rxdart" target="_blank" rel="noopener">bloc-rxdart</a>.</p>
+<h3 id="BLoC-Library"><a href="#BLoC-Library" class="headerlink" title="BLoC Library"></a>BLoC Library</h3><p>可以用这个package来帮我们简化代码: <a href="https://pub.dev/packages/flutter_bloc" target="_blank" rel="noopener">https://pub.dev/packages/flutter_bloc</a></p>
+<p>自己只需要定义Event和State的类型并传入, 再写一个逻辑转化的方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class CounterBloc extends Bloc&lt;CounterEvent, CounterState&gt; &#123;</span><br><span class="line">  @override</span><br><span class="line">  CounterState get initialState =&gt; CounterState.initial();</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Stream&lt;CounterState&gt; mapEventToState(CounterEvent event) async* &#123;</span><br><span class="line">    if (event is IncrementEvent) &#123;</span><br><span class="line">      yield CounterState(counter: state.counter + 1);</span><br><span class="line">    &#125; else if (event is DecrementEvent) &#123;</span><br><span class="line">      yield CounterState(counter: state.counter - 1);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>用<code>BlocProvider</code>来做bloc的传递, 从而不用在构造函数中一传到底.</p>
+<p>访问的时候用<code>BlocBuilder</code>或<code>BlocProvider.of&lt;CounterBloc&gt;(context)</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BlocBuilder(</span><br><span class="line">  bloc: BlocProvider.of&lt;CounterBloc&gt;(context),</span><br><span class="line">  builder: (BuildContext context, CounterState state) &#123;</span><br><span class="line">    return Text(</span><br><span class="line">      &apos;$&#123;state.counter&#125;&apos;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p>这里bloc参数如果没有指定, 会自动向上寻找.</p>
+<p><code>BlocBuilder</code>有一个参数<code>condition</code>, 是一个返回bool的函数, 用来精细控制是否需要rebuild.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FloatingActionButton(</span><br><span class="line">  onPressed: () =&gt;</span><br><span class="line">      BlocProvider.of&lt;CounterBloc&gt;(context).add(IncrementEvent()),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/bloc-library" target="_blank" rel="noopener">bloc-library</a>.</p>
+<h2 id="rxdart"><a href="#rxdart" class="headerlink" title="rxdart"></a>rxdart</h2><p>这是个原始版本的流式处理.</p>
+<p>和BLoC相比, 没有专门的逻辑模块, 只是改变了数据的形式.</p>
+<p>利用rxdart, 把数据做成流:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class CounterModel &#123;</span><br><span class="line">  BehaviorSubject _counter = BehaviorSubject.seeded(0);</span><br><span class="line"></span><br><span class="line">  get stream$ =&gt; _counter.stream;</span><br><span class="line"></span><br><span class="line">  int get current =&gt; _counter.value;</span><br><span class="line"></span><br><span class="line">  increment() &#123;</span><br><span class="line">    _counter.add(current + 1);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  decrement() &#123;</span><br><span class="line">    _counter.add(current - 1);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>获取数据用<code>StreamBuilder</code>, 包围的范围尽量小.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">StreamBuilder(</span><br><span class="line">  stream: counterModel.stream$,</span><br><span class="line">  builder: (BuildContext context, AsyncSnapshot snapshot) &#123;</span><br><span class="line">    return Text(</span><br><span class="line">      &apos;$&#123;snapshot.data&#125;&apos;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>Widget dispose的时候会自动解绑.</p>
+<p>数据传递的部分还需要进一步处理.</p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/rxdart" target="_blank" rel="noopener">rxdart</a>.</p>
+<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>Redux是前端流行的, 一种单向数据流架构.</p>
+<p>概念:</p>
+<ul>
+<li><code>Store</code>: 用于存储<code>State</code>对象, 代表整个应用的状态.</li>
+<li><code>Action</code>: 事件操作.</li>
+<li><code>Reducer</code>: 用于处理和分发事件的方法, 根据收到的<code>Action</code>, 用一个新的<code>State</code>来更新<code>Store</code>.</li>
+<li><code>View</code>: 每次Store接到新的State, <code>View</code>就会重建.</li>
+</ul>
+<p><code>Reducer</code>是唯一的逻辑处理部分, 它的输入是当前<code>State</code>和<code>Action</code>, 输出是一个新的<code>State</code>.    </p>
+<h3 id="Flutter-Redux状态管理实现"><a href="#Flutter-Redux状态管理实现" class="headerlink" title="Flutter Redux状态管理实现"></a>Flutter Redux状态管理实现</h3><p>首先定义好action, state:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">enum Actions &#123;</span><br><span class="line">  Increment,</span><br><span class="line">  Decrement,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class CounterState &#123;</span><br><span class="line">  int _counter;</span><br><span class="line"></span><br><span class="line">  int get counter =&gt; _counter;</span><br><span class="line"></span><br><span class="line">  CounterState(this._counter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>reducer方法根据action和当前state产生新的state:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CounterState reducer(CounterState prev, dynamic action) &#123;</span><br><span class="line">  if (action == Actions.Increment) &#123;</span><br><span class="line">    return new CounterState(prev.counter + 1);</span><br><span class="line">  &#125; else if (action == Actions.Decrement) &#123;</span><br><span class="line">    return new CounterState(prev.counter - 1);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    return prev;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>数据提供者: <code>StoreProvider</code>.<br>放在上层:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> StoreProvider(</span><br><span class="line">  store: store,</span><br><span class="line">  child: MaterialApp(</span><br><span class="line">    title: &apos;Flutter Demo&apos;,</span><br><span class="line">    theme: ThemeData(</span><br><span class="line">      primarySwatch: Colors.blue,</span><br><span class="line">    ),</span><br><span class="line">    home: MyHomePage(title: &apos;Flutter Demo Home Page&apos;),</span><br><span class="line">  ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据消费者: <code>StoreConnector</code>, 可读可写.</li>
+</ul>
+<p>读状态:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">StoreConnector&lt;CounterState, String&gt;(</span><br><span class="line">  converter: (store) =&gt; store.state.counter.toString(),</span><br><span class="line">  builder: (context, count) &#123;</span><br><span class="line">    return Text(</span><br><span class="line">      &apos;$count&apos;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>改变状态: 发送action:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">StoreConnector&lt;CounterState, VoidCallback&gt;(</span><br><span class="line">  converter: (store) &#123;</span><br><span class="line">    return () =&gt; store.dispatch(action.Actions.Increment);</span><br><span class="line">  &#125;,</span><br><span class="line">  builder: (context, callback) &#123;</span><br><span class="line">    return FloatingActionButton(</span><br><span class="line">      onPressed: callback,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/redux" target="_blank" rel="noopener">redux</a>.</p>
+<h2 id="MobX"><a href="#MobX" class="headerlink" title="MobX"></a>MobX</h2><p>MobX本来是一个JavaScript的状态管理库, 它迁移到dart的版本: <a href="https://github.com/mobxjs/mobx.dart" target="_blank" rel="noopener">mobxjs/mobx.dart</a>.</p>
+<p>核心概念:</p>
+<ul>
+<li>Observables</li>
+<li>Actions</li>
+<li>Reactions</li>
+</ul>
+<h3 id="MobX状态管理实现"><a href="#MobX状态管理实现" class="headerlink" title="MobX状态管理实现"></a>MobX状态管理实现</h3><p>官网提供了一个counter的指导: <a href="https://mobx.netlify.com/getting-started" target="_blank" rel="noopener">https://mobx.netlify.com/getting-started</a></p>
+<p>这个库的实现需要先生成一些代码.<br>先写类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:mobx/mobx.dart&apos;;</span><br><span class="line"></span><br><span class="line">part &apos;counter.g.dart&apos;;</span><br><span class="line"></span><br><span class="line">class Counter = _Counter with _$Counter;</span><br><span class="line"></span><br><span class="line">abstract class _Counter with Store &#123;</span><br><span class="line">  @observable</span><br><span class="line">  int value = 0;</span><br><span class="line"></span><br><span class="line">  @action</span><br><span class="line">  void increment() &#123;</span><br><span class="line">    value++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @action</span><br><span class="line">  void decrement() &#123;</span><br><span class="line">    value--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行命令<code>flutter packages pub run build_runner build</code>, 生成<code>counter.g.dart</code>.</p>
+<p>改完之后就不需要再使用<code>StatefulWidget</code>了.</p>
+<p>找一个合适的地方初始化数据对象并保存:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final counter = Counter();</span><br></pre></td></tr></table></figure></p>
+<p>读取值的地方用<code>Observer</code>包裹:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observer(</span><br><span class="line">  builder: (_) =&gt; Text(</span><br><span class="line">    &apos;$&#123;counter.value&#125;&apos;,</span><br><span class="line">    style: Theme.of(context).textTheme.display1,</span><br><span class="line">  ),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>改变值的地方:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FloatingActionButton(</span><br><span class="line">  onPressed: counter.increment,</span><br><span class="line">  tooltip: &apos;Increment&apos;,</span><br><span class="line">  child: Icon(Icons.add),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/mobx" target="_blank" rel="noopener">mobx</a>.</p>
+<h2 id="Flutter-hooks"><a href="#Flutter-hooks" class="headerlink" title="Flutter hooks"></a>Flutter hooks</h2><p>React hooks的Flutter实现.<br>package: <a href="https://pub.dev/packages/flutter_hooks" target="_blank" rel="noopener">https://pub.dev/packages/flutter_hooks</a></p>
+<p>Hooks存在的目的是为了增加widgets之间的代码共享, 取代<code>StatefulWidget</code>.</p>
+<p>首页的例子是: 对一个使用了<code>AnimationController</code>的<code>StatefulWidget</code>的简化.</p>
+<p>flutter_hooks包中已经内置了一些已经写好的hooks.</p>
+<h3 id="Flutter-hooks-useState"><a href="#Flutter-hooks-useState" class="headerlink" title="Flutter hooks useState"></a>Flutter hooks useState</h3><p>counter demo一个最简单的改法, 就是将<code>StatefulWidget</code>改为<code>HookWidget</code>.</p>
+<p>在<code>build</code>方法里:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final counter = useState(0);</span><br></pre></td></tr></table></figure></p>
+<p>调用<code>useState</code>方法设定一个变量, 并设定初始值, 每次值改变的时候widget会被rebuild.</p>
+<p>使用值:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Text(</span><br><span class="line">  &apos;$&#123;counter.value&#125;&apos;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>改变值:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FloatingActionButton(</span><br><span class="line">  onPressed: () =&gt; counter.value++,</span><br><span class="line">),</span><br></pre></td></tr></table></figure></p>
+<p>实际上是把<code>StatefulWidget</code>包装了一下, 在初始化Hook的时候注册了listener, 数据改变的时候调用<code>setState()</code>方法.<br>只是把这些操作藏在hook里, 不需要开发者手动调用而已.</p>
+<p>所以本质上还是<code>StatefulWidget</code>, 之前解决不了的问题它依然解决不了.</p>
+<p>代码分支: <a href="https://github.com/mengdd/counter_state_management/tree/flutter-hooks" target="_blank" rel="noopener">flutter-hooks</a>.</p>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>本文demo地址: <a href="https://github.com/mengdd/counter_state_management" target="_blank" rel="noopener">https://github.com/mengdd/counter_state_management</a><br>每个分支对应一种实现. 切换不同分支查看不同的状态管理方法.</p>
+<p>对于代码的说明:<br>这是counter app用不同的状态管理模式进行的改造.<br>因为这个demo的逻辑和UI都比较简单, 可能实际上并不需要用上一些复杂的状态管理方法, 有种杀鸡用牛刀的感觉.<br>只是为了保持简单来突出状态管理的实现, 说明用法.</p>
+<h2 id="一些自己的感想"><a href="#一些自己的感想" class="headerlink" title="一些自己的感想"></a>一些自己的感想</h2><p>老实说, 做了这么多年Android, 各种构架MVP, MVVM, MVI, 目的就是数据和逻辑分离, 逻辑和UI分离,<br>所以初识Flutter的时候对这种万物皆widget, 一个树里面包含一切的方式有点怀疑, UI逻辑数据写成一堆, 程序功能复杂后, 肯定会越写越乱.</p>
+<p>但是了解了它的状态管理之后, 发现Flutter的状态管理就是它的程序构架, 并且也是百家争鸣各取所需.<br>只是Flutter的构架是服务于Flutter framework的设计思想的, 要遵从利用它, 而不是与之反抗.<br>爱它如是, 而不是如我所愿.</p>
+<p>印证了一些道理: </p>
+<ul>
+<li>不要只喜欢自己熟悉的东西. </li>
+<li>了解之后才有发言权.</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt" target="_blank" rel="noopener">Flutter官方文档</a></li>
+<li><a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt/options" target="_blank" rel="noopener">Flutter官方文档 options</a></li>
+<li><a href="http://fluttersamples.com/" target="_blank" rel="noopener">Flutter Architecture Samples</a></li>
+<li><a href="https://www.youtube.com/watch?v=3tm-R7ymwhc" target="_blank" rel="noopener">Flutter State Management - The Grand Tour</a></li>
+</ul>
+<h3 id="Google-I-O"><a href="#Google-I-O" class="headerlink" title="Google I/O"></a>Google I/O</h3><ul>
+<li><a href="https://www.youtube.com/watch?v=RS36gBEp8OI" target="_blank" rel="noopener">Build reactive mobile apps with Flutter (Google I/O’18)</a></li>
+<li><a href="https://www.youtube.com/watch?v=d_m5csmrf7I" target="_blank" rel="noopener">Pragmatic State Management in Flutter (Google I/O’19)</a></li>
+</ul>
+<h3 id="InheritedWidget-1"><a href="#InheritedWidget-1" class="headerlink" title="InheritedWidget"></a>InheritedWidget</h3><ul>
+<li><a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html" target="_blank" rel="noopener">InheritedWidget</a></li>
+<li><a href="https://book.flutterchina.club/chapter7/inherited_widget.html" target="_blank" rel="noopener">Flutter实战 7.2 数据共享（InheritedWidget）</a></li>
+</ul>
+<h3 id="Scoped-Model-1"><a href="#Scoped-Model-1" class="headerlink" title="Scoped Model"></a>Scoped Model</h3><ul>
+<li><a href="https://pub.dev/packages/scoped_model" target="_blank" rel="noopener">scoped_model package</a></li>
+</ul>
+<h3 id="provider"><a href="#provider" class="headerlink" title="provider"></a>provider</h3><ul>
+<li><a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple" target="_blank" rel="noopener">Flutter guide</a></li>
+<li><a href="https://github.com/flutter/samples/tree/master/provider_shopper" target="_blank" rel="noopener">Flutter samples: provider shopper</a></li>
+<li><a href="https://book.flutterchina.club/chapter7/provider.html" target="_blank" rel="noopener">Flutter实战 7.3 跨组件状态共享（Provider）</a></li>
+</ul>
+<h3 id="Bloc"><a href="#Bloc" class="headerlink" title="Bloc"></a>Bloc</h3><ul>
+<li><a href="https://medium.com/flutter/build-reactive-mobile-apps-in-flutter-companion-article-13950959e381" target="_blank" rel="noopener">Build reactive mobile apps in Flutter — companion article</a></li>
+<li><a href="https://github.com/filiph/state_experiments" target="_blank" rel="noopener">filiph/state_experiments</a></li>
+<li><a href="https://www.youtube.com/watch?v=oxeYeMHVLII&amp;list=PLB6lc7nQ1n4jCBkrirvVGr5b8rC95VAQ5" target="_blank" rel="noopener">Flutter BLoC Pattern</a></li>
+<li><a href="https://www.raywenderlich.com/4074597-getting-started-with-the-bloc-pattern" target="_blank" rel="noopener">Getting Started with the BLoC Pattern</a></li>
+<li><a href="https://medium.com/flutterpub/effective-bloc-pattern-45c36d76d5fe" target="_blank" rel="noopener">Effective BLoC pattern</a></li>
+</ul>
+<h3 id="Redux-1"><a href="#Redux-1" class="headerlink" title="Redux"></a>Redux</h3><ul>
+<li><a href="https://blog.novoda.com/introduction-to-redux-in-flutter/" target="_blank" rel="noopener">Introduction to Redux in Flutter</a></li>
+<li><a href="https://pub.dev/packages/flutter_redux" target="_blank" rel="noopener">flutter redux package</a></li>
+<li><a href="https://github.com/brianegan/flutter_redux" target="_blank" rel="noopener">flutter redux github</a></li>
+</ul>
+<h3 id="MobX-1"><a href="#MobX-1" class="headerlink" title="MobX"></a>MobX</h3><ul>
+<li><a href="https://github.com/mobxjs/mobx.dart" target="_blank" rel="noopener">mobx github</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Flutter/2020/03/13/flutter-built-value-guide/" rel="prev" title="Flutter json 2 model with Built Value">
+      <i class="fa fa-chevron-left"></i> Flutter json 2 model with Built Value
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Flutter/2020/04/14/flutter-database-using-moor/" rel="next" title="写一个TODO App学习Flutter数据库工具Moor">
+      写一个TODO App学习Flutter数据库工具Moor <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BA%86%E5%BC%84%E6%87%82Flutter%E7%9A%84%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-%E6%88%91%E7%94%A810%E7%A7%8D%E6%96%B9%E6%B3%95%E6%94%B9%E9%80%A0%E4%BA%86counter-app"><span class="nav-number">1.</span> <span class="nav-text">为了弄懂Flutter的状态管理, 我用10种方法改造了counter app</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Contents"><span class="nav-number">1.1.</span> <span class="nav-text">Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flutter-State-Management"><span class="nav-number">1.2.</span> <span class="nav-text">Flutter State Management</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.1.</span> <span class="nav-text">状态分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">状态管理方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Counter-Sample%E9%BB%98%E8%AE%A4%E5%AE%9E%E7%8E%B0-StatefulWidget"><span class="nav-number">1.3.</span> <span class="nav-text">Counter Sample默认实现: StatefulWidget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InheritedWidget"><span class="nav-number">1.4.</span> <span class="nav-text">InheritedWidget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InheritedWidget%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">InheritedWidget状态管理实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InheritedWidget%E7%BC%BA%E7%82%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">InheritedWidget缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scoped-Model"><span class="nav-number">1.5.</span> <span class="nav-text">Scoped Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scoped-Model%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">Scoped Model实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Provider"><span class="nav-number">1.6.</span> <span class="nav-text">Provider</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Provider%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.1.</span> <span class="nav-text">Provider实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Provider%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.6.2.</span> <span class="nav-text">Provider性能相关的实现细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BLoC"><span class="nav-number">1.7.</span> <span class="nav-text">BLoC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BLoC%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.7.1.</span> <span class="nav-text">BLoC手动实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BLoC%E4%BC%A0%E9%80%92-%E7%94%A8InheritedWidget"><span class="nav-number">1.7.2.</span> <span class="nav-text">BLoC传递: 用InheritedWidget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BLoC-rxdart%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.7.3.</span> <span class="nav-text">BLoC rxdart实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BLoC-Library"><span class="nav-number">1.7.4.</span> <span class="nav-text">BLoC Library</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rxdart"><span class="nav-number">1.8.</span> <span class="nav-text">rxdart</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux"><span class="nav-number">1.9.</span> <span class="nav-text">Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flutter-Redux%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.9.1.</span> <span class="nav-text">Flutter Redux状态管理实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MobX"><span class="nav-number">1.10.</span> <span class="nav-text">MobX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MobX%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.10.1.</span> <span class="nav-text">MobX状态管理实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flutter-hooks"><span class="nav-number">1.11.</span> <span class="nav-text">Flutter hooks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flutter-hooks-useState"><span class="nav-number">1.11.1.</span> <span class="nav-text">Flutter hooks useState</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo"><span class="nav-number">1.12.</span> <span class="nav-text">Demo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E8%87%AA%E5%B7%B1%E7%9A%84%E6%84%9F%E6%83%B3"><span class="nav-number">1.13.</span> <span class="nav-text">一些自己的感想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.14.</span> <span class="nav-text">参考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Google-I-O"><span class="nav-number">1.14.1.</span> <span class="nav-text">Google I&#x2F;O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InheritedWidget-1"><span class="nav-number">1.14.2.</span> <span class="nav-text">InheritedWidget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scoped-Model-1"><span class="nav-number">1.14.3.</span> <span class="nav-text">Scoped Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#provider"><span class="nav-number">1.14.4.</span> <span class="nav-text">provider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bloc"><span class="nav-number">1.14.5.</span> <span class="nav-text">Bloc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redux-1"><span class="nav-number">1.14.6.</span> <span class="nav-text">Redux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MobX-1"><span class="nav-number">1.14.7.</span> <span class="nav-text">MobX</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Flutter/2020/03/20/flutter-state-management/";
+    this.page.identifier = "Flutter/2020/03/20/flutter-state-management/";
+    this.page.title = "为了弄懂Flutter的状态管理, 我用10种方法改造了counter app";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

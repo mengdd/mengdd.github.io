@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #229October 30th, 2016Android Weekly Issue #229Android Weekly笔记, 本期内容包括: 性能库Pury的插件化; 一种新的多选设计和实现; 音频播放; Dagger的测试mock方案; ConstraintLayout的链式约束; Mobile Vision API的二维码扫描功能; RxJava的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 229">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #229October 30th, 2016Android Weekly Issue #229Android Weekly笔记, 本期内容包括: 性能库Pury的插件化; 一种新的多选设计和实现; 音频播放; Dagger的测试mock方案; ConstraintLayout的链式约束; Mobile Vision API的二维码扫描功能; RxJava的">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-11-01T10:01:50.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.993Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Test">
+<meta property="article:tag" content="Dagger">
+<meta property="article:tag" content="Mobile Vision">
+<meta property="article:tag" content="ConstraintLayout">
+<meta property="article:tag" content="Pury">
+<meta property="article:tag" content="Multiselection">
+<meta property="article:tag" content="Audio">
+<meta property="article:tag" content="Barcode Detection">
+<meta property="article:tag" content="SOLID">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 229 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 229
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-11-01 18:01:50" itemprop="dateCreated datePublished" datetime="2016-11-01T18:01:50+08:00">2016-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 229" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-229"><a href="#Android-Weekly-Issue-229" class="headerlink" title="Android Weekly Issue #229"></a>Android Weekly Issue #229</h1><p>October 30th, 2016<br><a href="http://androidweekly.net/issues/issue-229" target="_blank" rel="noopener">Android Weekly Issue #229</a><br>Android Weekly笔记, 本期内容包括: 性能库Pury的插件化; 一种新的多选设计和实现; 音频播放; Dagger的测试mock方案; ConstraintLayout的链式约束; Mobile Vision API的二维码扫描功能; RxJava的使用缺陷讨论; SOLID原则图解.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Get-access-to-raw-profiling-results-with-plugins-for-Pury"><a href="#Get-access-to-raw-profiling-results-with-plugins-for-Pury" class="headerlink" title="Get access to raw profiling results with plugins for Pury"></a><a href="https://medium.com/@nikita.kozlov/get-access-to-raw-profiling-results-with-plugins-for-pury-f9a7cc5e8345#.y26lx22wo" target="_blank" rel="noopener">Get access to raw profiling results with plugins for Pury</a></h2><p>Pury是一个做profile的工具, 前面有过一篇文章介绍: <a href="https://medium.com/@nikita.kozlov/pury-new-way-to-profile-your-android-application-7e248b5f615e#.57ggfep5p" target="_blank" rel="noopener">Pury</a>.</p>
+<p>本文是作者的另一篇文章, 讲Pury的插件化和扩展.</p>
+<p>另外, 作者最近正在集成Google Analytics到Pury中.</p>
+<h2 id="Building-a-Multiselection-Solution-for-Android-in-Kotlin"><a href="#Building-a-Multiselection-Solution-for-Android-in-Kotlin" class="headerlink" title="Building a Multiselection Solution for Android in Kotlin"></a><a href="https://yalantis.com/blog/how-we-created-a-multiselection-solution-for-android/" target="_blank" rel="noopener">Building a Multiselection Solution for Android in Kotlin</a></h2><p>在移动应用上的多选设计很难, 通常不是很灵活, 用起来也不舒服. </p>
+<p>本文推荐了一种全新的多选设计: 把屏幕分为两部分: 包括主要的列表和选中列表. 选中的项目自动移动到选中列表中去.</p>
+<p>这个设计概念的实现: <code>ViewPager</code> + 两个<code>RecyclerView</code>.</p>
+<p>作者选用了kotlin来实现. 列举了几个kotlin的features: Extension functions, Null safety, Collections, Better syntax.</p>
+<p>作者的库: <a href="https://github.com/Yalantis/Multi-Selection" target="_blank" rel="noopener">Multi-Selection</a>.</p>
+<p>本文中还介绍了如何使用这个库.</p>
+<h2 id="Audio-not-playing-in-Android"><a href="#Audio-not-playing-in-Android" class="headerlink" title="Audio (not) playing in Android"></a><a href="https://medium.com/uptech-team/audio-not-playing-in-android-cde9a0fdfafd#.kp7qsjuha" target="_blank" rel="noopener">Audio (not) playing in Android</a></h2><p>关于Android上的音频播放, 作者的总结文章. </p>
+<p>音频播放的方式有:</p>
+<ul>
+<li><a href="https://developer.android.com/reference/android/media/MediaPlayer.html" target="_blank" rel="noopener">MediaPlayer</a></li>
+<li><a href="https://developer.android.com/reference/android/media/SoundPool.html" target="_blank" rel="noopener">SoundPool</a></li>
+<li><a href="https://developer.android.com/reference/android/media/AudioTrack.html" target="_blank" rel="noopener">AudioTrack</a></li>
+<li><a href="https://github.com/google/ExoPlayer" target="_blank" rel="noopener">ExoPlayer</a></li>
+</ul>
+<p>关于<code>MediaPlayer</code>的使用, 官方文档: <a href="https://developer.android.com/guide/topics/media/mediaplayer.html" target="_blank" rel="noopener">Media Playback</a>, 本文中有一张图是<code>MediaPlayer</code>的生命周期图.</p>
+<p>作者逐个列举了实际使用这些API时可能会遇到的一些issues. 并且最终选择的最佳解决方案是Google的<a href="https://github.com/google/ExoPlayer" target="_blank" rel="noopener">ExoPlayer</a>, 2.0版本已经解决了她之前遇到的所有issues.</p>
+<h2 id="Providing-test-doubles-with-Dagger-1-and-Dagger-2"><a href="#Providing-test-doubles-with-Dagger-1-and-Dagger-2" class="headerlink" title="Providing test doubles with Dagger 1 and Dagger 2"></a><a href="https://blog.egorand.me/providing-test-doubles-with-dagger-1-and-dagger-2/" target="_blank" rel="noopener">Providing test doubles with Dagger 1 and Dagger 2</a></h2><p>这篇文章讲在使用Dagger1和Dagger2的项目中, 如何为测试mock依赖.</p>
+<h2 id="ConstraintLayout-Chains-–-Part-1"><a href="#ConstraintLayout-Chains-–-Part-1" class="headerlink" title="ConstraintLayout Chains – Part 1"></a><a href="https://blog.stylingandroid.com/constraintlayout-chains-spread-chains/" target="_blank" rel="noopener">ConstraintLayout Chains – Part 1</a></h2><p>作者讲了<code>ConstraintLayout</code>的一个重要特性: chains, 链.<br>chains是一个机制, 把一些独立的Views链起来, 然后我们可以对这一个集合来采取一些行为.</p>
+<p>比如选中一个parent下的两个TextView(这两个本来是分别对齐parent的左右), 然后选择”Center Horizontally”, 就是建立了一个链.<br>在xml中实际上给这两个view都各自加上了一条限制条件, 限制它们在对方的(左/右)边, 这两条对称性的限制条件就构成了一个链.</p>
+<p>这种链叫spread chains, 是默认的style.</p>
+<h2 id="Machine-Learning-with-the-Mobile-Vision-API-—-Part-2"><a href="#Machine-Learning-with-the-Mobile-Vision-API-—-Part-2" class="headerlink" title="Machine Learning with the Mobile Vision API — Part 2 "></a><a href="https://hackernoon.com/machine-learning-for-android-developers-with-the-mobile-vision-api-part-2-barcode-detection-61e84c858518#.3dy9fgj56" target="_blank" rel="noopener">Machine Learning with the Mobile Vision API — Part 2 </a></h2><p>使用<a href="https://developers.google.com/vision/barcodes-overview" target="_blank" rel="noopener">Mobile Vision的Barcode API</a>来进行二维码检测.<br>Code: <a href="https://github.com/moyheen/barcode-detector" target="_blank" rel="noopener">barcode-detector</a>.</p>
+<h2 id="Reactive-Frustrations"><a href="#Reactive-Frustrations" class="headerlink" title="Reactive Frustrations"></a><a href="https://upday.github.io/blog/reactive_frustrations_1/" target="_blank" rel="noopener">Reactive Frustrations</a></h2><p>大多数Rx相关的文章都说优点, 本篇不同, 作者分享了在使用RxJava过程中碰到的一些烦人的事情.<br>不过尽管有这些挫折, RxJava仍然是一个很棒的工具.</p>
+<h3 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h3><p>RxJava的文档有时候对初学者来说会很具迷惑性.<br>推荐看: <a href="http://rxmarbles.com/" target="_blank" rel="noopener">RxMarbles</a>, 有操作符图解.</p>
+<h3 id="匿名类"><a href="#匿名类" class="headerlink" title="匿名类"></a>匿名类</h3><p>RxJava的使用中会构建很多匿名类.<br>推荐使用: <a href="https://github.com/orfjackal/retrolambda" target="_blank" rel="noopener">Retrolambda</a>, <a href="https://kotlinlang.org/" target="_blank" rel="noopener">Kotlin</a>, 或<a href="https://source.android.com/source/jack.html" target="_blank" rel="noopener">Jack</a>.</p>
+<h3 id="忘记subscribe"><a href="#忘记subscribe" class="headerlink" title="忘记subscribe"></a>忘记subscribe</h3><p>这是一个常见的错误, 如果只写好了Observable但没有触发, 通常是没有subscribe, 因为Observable是被动的, 只有当被订阅的时候才会触发.</p>
+<h3 id="代码的推理"><a href="#代码的推理" class="headerlink" title="代码的推理"></a>代码的推理</h3><p>有时候很难看见一块代码就知道执行结果, 必须往上游排查.</p>
+<p>所以作者在他们的项目中规定了一项对于Observable的命名规范:<br><code>...Once</code>表示只发射一次; <code>...Stream</code>表示会发射值, 或者不发射, 但是不会completes; <code>...OnceAndStream</code>订阅时会发射值, 之后可能会继续发射, 但是不会停止.</p>
+<h3 id="map操作符"><a href="#map操作符" class="headerlink" title="...map操作符"></a><code>...map</code>操作符</h3><p>有一些比较容易混淆的操作符:</p>
+<ul>
+<li><code>flatMap</code>: 并行;</li>
+<li><code>switchMap</code>: 中断前一个, 串行;</li>
+<li><code>concatMap</code>: 等待前一个结束, 串行;</li>
+</ul>
+<h2 id="Designing-something-S-O-L-I-D"><a href="#Designing-something-S-O-L-I-D" class="headerlink" title="Designing something S.O.L.I.D"></a><a href="https://www.novoda.com/blog/designing-something-solid/" target="_blank" rel="noopener">Designing something S.O.L.I.D</a></h2><p><strong>SOLID</strong>是软件开发的五项原则:</p>
+<p>SOLID (single responsibility, open-closed, Liskov substitution, interface segregation and dependency inversion).</p>
+<p>这里是<a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design" target="_blank" rel="noopener">Wiki</a>)的解释.</p>
+<p>这篇文章图形化地解释了SOLID, 配图和例子都很有趣.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Design-Is-Never-Done"><a href="#Design-Is-Never-Done" class="headerlink" title="Design Is Never Done"></a><a href="https://design.google.com/articles/design-is-never-done/" target="_blank" rel="noopener">Design Is Never Done</a></h2><p>Material Design的新工具套件和开源项目.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="EasyMVP"><a href="#EasyMVP" class="headerlink" title="EasyMVP"></a><a href="http://6thsolution.github.io/EasyMVP/" target="_blank" rel="noopener">EasyMVP</a></h2><p>一个MVP库. 比较特别的几点:</p>
+<ul>
+<li>使用注解来注入Presenter(可以和Dagger2结合使用, 否则只能注入无参构造), 绑定Presenter和View的生命周期;</li>
+<li>使用Loaders来字啊configurations changes时保存Presenter;</li>
+<li>加上<code>easymvp-rx</code>插件后, 遵循Clean Architecture原则, 加入了domain层, 提供了UseCase的基类;</li>
+</ul>
+<h2 id="Input-Mask"><a href="#Input-Mask" class="headerlink" title="Input Mask"></a><a href="https://github.com/RedMadRobot/input-mask-android" target="_blank" rel="noopener">Input Mask</a></h2><p>一个小的工具库, 可以按格式显示用户的输入. 比如在输入上加括号, 每三位数字空一格之类的.</p>
+<h2 id="sdk-artifact-sync"><a href="#sdk-artifact-sync" class="headerlink" title="sdk-artifact-sync"></a><a href="https://github.com/JakeWharton/sdk-artifact-sync" target="_blank" rel="noopener">sdk-artifact-sync</a></h2><p>一个脚本, 同步你local Android SDK中的所有artifacts到一个remote的Maven artifact host上.</p>
+<h2 id="material-remixer"><a href="#material-remixer" class="headerlink" title="material-remixer"></a><a href="https://github.com/material-foundation/material-remixer" target="_blank" rel="noopener">material-remixer</a></h2><p>material-remixer是一个工具, 利用它可以实时调整产品的UI参数. 目标平台: Android, iOS和Web都能用的工具.</p>
+<h1 id="News"><a href="#News" class="headerlink" title="News"></a>News</h1><h2 id="ConstraintLayout-beta-2-is-now-available"><a href="#ConstraintLayout-beta-2-is-now-available" class="headerlink" title="ConstraintLayout beta 2 is now available"></a><a href="https://sites.google.com/a/android.com/tools/recent/constraintlayoutbeta2isnowavailable" target="_blank" rel="noopener">ConstraintLayout beta 2 is now available</a></h2><p>ConstraintLayout beta 2发布啦, 修改了一些issues并改善了性能.</p>
+<h2 id="Google-Play-Services-Release-Notes"><a href="#Google-Play-Services-Release-Notes" class="headerlink" title="Google Play Services Release Notes"></a><a href="https://developers.google.com/android/guides/releases#october_2016_-_v98" target="_blank" rel="noopener">Google Play Services Release Notes</a></h2><p>Google Play Service 9.8发布了.</p>
+<h2 id="Some-new-Firebase-libraries"><a href="#Some-new-Firebase-libraries" class="headerlink" title="Some new Firebase libraries"></a><a href="https://firebase.googleblog.com/2016/10/start-your-week-off-with-some-new-firebase-libraries.html" target="_blank" rel="noopener">Some new Firebase libraries</a></h2><p>Firebase也发了新版.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Test/" rel="tag"># Test</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+              <a href="/tags/Mobile-Vision/" rel="tag"># Mobile Vision</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+              <a href="/tags/Pury/" rel="tag"># Pury</a>
+              <a href="/tags/Multiselection/" rel="tag"># Multiselection</a>
+              <a href="/tags/Audio/" rel="tag"># Audio</a>
+              <a href="/tags/Barcode-Detection/" rel="tag"># Barcode Detection</a>
+              <a href="/tags/SOLID/" rel="tag"># SOLID</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/" rel="prev" title="用Android Studio开发最常用到的快捷键">
+      <i class="fa fa-chevron-left"></i> 用Android Studio开发最常用到的快捷键
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/" rel="next" title="Retrofit结合RxJava使用指南">
+      Retrofit结合RxJava使用指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-229"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #229</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Get-access-to-raw-profiling-results-with-plugins-for-Pury"><span class="nav-number">2.1.</span> <span class="nav-text">Get access to raw profiling results with plugins for Pury</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Multiselection-Solution-for-Android-in-Kotlin"><span class="nav-number">2.2.</span> <span class="nav-text">Building a Multiselection Solution for Android in Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Audio-not-playing-in-Android"><span class="nav-number">2.3.</span> <span class="nav-text">Audio (not) playing in Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Providing-test-doubles-with-Dagger-1-and-Dagger-2"><span class="nav-number">2.4.</span> <span class="nav-text">Providing test doubles with Dagger 1 and Dagger 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout-Chains-%E2%80%93-Part-1"><span class="nav-number">2.5.</span> <span class="nav-text">ConstraintLayout Chains – Part 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Machine-Learning-with-the-Mobile-Vision-API-%E2%80%94-Part-2"><span class="nav-number">2.6.</span> <span class="nav-text">Machine Learning with the Mobile Vision API — Part 2 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-Frustrations"><span class="nav-number">2.7.</span> <span class="nav-text">Reactive Frustrations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3"><span class="nav-number">2.7.1.</span> <span class="nav-text">文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E7%B1%BB"><span class="nav-number">2.7.2.</span> <span class="nav-text">匿名类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%98%E8%AE%B0subscribe"><span class="nav-number">2.7.3.</span> <span class="nav-text">忘记subscribe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%9A%84%E6%8E%A8%E7%90%86"><span class="nav-number">2.7.4.</span> <span class="nav-text">代码的推理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">2.7.5.</span> <span class="nav-text">...map操作符</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Designing-something-S-O-L-I-D"><span class="nav-number">2.8.</span> <span class="nav-text">Designing something S.O.L.I.D</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Design-Is-Never-Done"><span class="nav-number">3.1.</span> <span class="nav-text">Design Is Never Done</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EasyMVP"><span class="nav-number">4.1.</span> <span class="nav-text">EasyMVP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-Mask"><span class="nav-number">4.2.</span> <span class="nav-text">Input Mask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sdk-artifact-sync"><span class="nav-number">4.3.</span> <span class="nav-text">sdk-artifact-sync</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#material-remixer"><span class="nav-number">4.4.</span> <span class="nav-text">material-remixer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#News"><span class="nav-number">5.</span> <span class="nav-text">News</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout-beta-2-is-now-available"><span class="nav-number">5.1.</span> <span class="nav-text">ConstraintLayout beta 2 is now available</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Google-Play-Services-Release-Notes"><span class="nav-number">5.2.</span> <span class="nav-text">Google Play Services Release Notes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-new-Firebase-libraries"><span class="nav-number">5.3.</span> <span class="nav-text">Some new Firebase libraries</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/";
+    this.page.identifier = "Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/";
+    this.page.title = "Android Weekly Notes Issue 229";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

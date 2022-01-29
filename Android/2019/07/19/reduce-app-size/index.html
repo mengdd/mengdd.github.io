@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法. 本文内容归纳如下图:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android App安装包瘦身计划">
+<meta property="og:url" content="http://mengdd.github.io/Android/2019/07/19/reduce-app-size/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android App安装包瘦身计划Android App安装包体积优化: 理由, 指标和可以采用的方法. 本文内容归纳如下图:">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/reduce-apk-size.png">
+<meta property="article:published_time" content="2019-07-19T08:34:49.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.005Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/reduce-apk-size.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2019/07/19/reduce-app-size/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android App安装包瘦身计划 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2019/07/19/reduce-app-size/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android App安装包瘦身计划
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-07-19 16:34:49" itemprop="dateCreated datePublished" datetime="2019-07-19T16:34:49+08:00">2019-07-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2019/07/19/reduce-app-size/" class="post-meta-item leancloud_visitors" data-flag-title="Android App安装包瘦身计划" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2019/07/19/reduce-app-size/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2019/07/19/reduce-app-size/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-App安装包瘦身计划"><a href="#Android-App安装包瘦身计划" class="headerlink" title="Android App安装包瘦身计划"></a>Android App安装包瘦身计划</h1><p>Android App安装包体积优化: 理由, 指标和可以采用的方法.</p>
+<p>本文内容归纳如下图:<br><img src="/images/reduce-apk-size.png" alt="Reduce Apk Size"></p>
+<a id="more"></a>
+<h2 id="为什么要安装包瘦身"><a href="#为什么要安装包瘦身" class="headerlink" title="为什么要安装包瘦身"></a>为什么要安装包瘦身</h2><ul>
+<li>安装包需要瘦身吗? </li>
+<li>不需要吗?</li>
+</ul>
+<p>安装包要瘦身的主要原因就是考虑应用的下载转化率和留存率.<br>应用太大了, 用户可能就不下载了, 尤其是移动网络或者流量收费的情况下.<br>再者, 因为手机空间问题, 用户有时候可能需要选择卸载一些应用, 就会先盯上那些占空间大的, 所以应用大小也会也影响留存率.</p>
+<p>但现在什么时代了, 到处都是WiFi, 流量包又大又便宜, 网速快到飞起, 手机硬件也在不断升级, 更大更快更高级, 安装包真的还需要瘦身吗? 有人在乎吗?</p>
+<p>那当然还是有一定必要的, 不然这篇文章写到这里已经结束了.<br>因为就算用户不在乎你这个应用有多少大, 决定要下载安装了, 安装包越大, 下载时间就会越长, 没等下载完成就因为各种原因取消或者断网了.<br>或者因为下载时间稍微有点长, 等完成以后, 用户已经忘了要用这个app了.</p>
+<p>现代人的耐心很有限, 不然也不会有小程序这样轻量级的解决方案.</p>
+<p>安装包瘦身可以地定量, 在一定程度上改善问题.</p>
+<p>除了下载下载转化率和留存率, 安装包体积优化还有一些理由:</p>
+<ul>
+<li>预装应用的推广成本.</li>
+<li>满足应用市场的最大包体积限制.</li>
+<li>在技术甚至业务层面, 我们可以重新审视我们的codebase, 是否需要删除一些低价值的业务, 清理无用的代码和资源, 进行进一步的重构和改善.</li>
+</ul>
+<h2 id="安装包的构成"><a href="#安装包的构成" class="headerlink" title="安装包的构成"></a>安装包的构成</h2><p>Apk安装包本质上是一个zip压缩文件, 解压之后我们可以看到其中包含的内容, 通常包含:</p>
+<ul>
+<li>一个或多个<code>classes.dex</code>文件: 代码编译结果.</li>
+<li><code>assets/</code>文件夹.</li>
+<li><code>resources.arsc</code>: 编译后的二进制资源文件, 包含了所有<code>res/values</code>中的XML内容, 如字符串, style等, 也包括对没编译进来的资源(比如layout和图片)的路径.</li>
+<li><code>res/</code>: 没有被编译进<code>resources.arsc</code>文件的资源: layout, drawable等.</li>
+<li><code>AndroidManifest.xml</code>: merge后的manifest文件.</li>
+<li><code>META-INF/</code>: 包含签名文件等.</li>
+</ul>
+<p>如果有native的库, 可能还会有<code>lib/</code>文件夹.</p>
+<h2 id="尺寸指标"><a href="#尺寸指标" class="headerlink" title="尺寸指标"></a>尺寸指标</h2><p>安装包大小有几个指标呢?<br>有三个:</p>
+<ul>
+<li>文件尺寸: 这可能是最直观的一个, 就是我们build出来的文件大小. 但是其实它是最不重要的一个指标.</li>
+<li>下载尺寸: 下载app需要的大小, 最重要的指标. 因为下载市场(Google Play)会帮我们做优化, 下载尺寸会比文件的尺寸小.<br>一般增量安装和全新安装需要的大小是不一样的.</li>
+<li>安装尺寸: app安装到手机上, 启动解压之后的大小, 关系到app的留存率.</li>
+</ul>
+<h2 id="安装包分析工具"><a href="#安装包分析工具" class="headerlink" title="安装包分析工具"></a>安装包分析工具</h2><p>在做安装包体积优化之前, 建议用工具看一下当前的安装包情形, 找到当前的bottle neck, 这样才能有的放矢.<br>优化之后也好做一个比较.</p>
+<h3 id="APK-Analyzer"><a href="#APK-Analyzer" class="headerlink" title="APK Analyzer"></a>APK Analyzer</h3><p><a href="https://developer.android.com/studio/build/apk-analyzer" target="_blank" rel="noopener">APK Analyzer</a>是Android Studio自带的工具.<br>使用APK Analyzer的三种方法: </p>
+<ul>
+<li><code>Build &gt; Analyze APK..</code>, 选择<code>.apk</code>文件.</li>
+<li>切换到Project View, 双击build/outputs/apk目录下的apk文件.</li>
+<li>把apk文件拖到Android Studio的编辑窗口中.</li>
+</ul>
+<p>利用这个工具可以查看apk的各个组成部分以及它们各自的大小, 包括文件大小和预估的下载大小.</p>
+<p>这个工具还可以比较两个APK, 从而可以看出具体是哪个部分有尺寸的变化.</p>
+<h3 id="官方插件-Android-Size-Analyzer"><a href="#官方插件-Android-Size-Analyzer" class="headerlink" title="官方插件: Android Size Analyzer"></a>官方插件: Android Size Analyzer</h3><p>在Android Studio中可以添加Plugin: <code>Android Size Analyzer</code>.</p>
+<p>安装之后重启Android Studio, 接着就可以点击菜单<code>Analyze &gt; Analyze App Size</code>.<br>点击之后会给出建议, 显示出项目中比较大的文件, 建议转化一些图片到webp格式, 建议开启代码压缩混淆等.</p>
+<h2 id="安装包瘦身措施-Coding阶段"><a href="#安装包瘦身措施-Coding阶段" class="headerlink" title="安装包瘦身措施: Coding阶段"></a>安装包瘦身措施: Coding阶段</h2><h3 id="减少代码-native和Java代码"><a href="#减少代码-native和Java代码" class="headerlink" title="减少代码(native和Java代码)"></a>减少代码(native和Java代码)</h3><ul>
+<li>控制第三方库的使用: 依赖第三方库的时候, 尽量减小范围, 或者使用更加友好的替代. (ProGuard会移除不用的代码, 但是它不会移除库的内部依赖.)</li>
+<li>减少不必要的生成代码.</li>
+<li>减少枚举的使用.</li>
+<li>减小native库: 移除debug symbols和关闭so库压缩.</li>
+</ul>
+<h3 id="控制资源使用"><a href="#控制资源使用" class="headerlink" title="控制资源使用"></a>控制资源使用</h3><p>要控制资源的使用: 减少资源的数量, 减小资源的大小.</p>
+<h4 id="设备屏幕支持"><a href="#设备屏幕支持" class="headerlink" title="设备屏幕支持"></a>设备屏幕支持</h4><p>Android有很多屏幕密度类型:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldpi, mdpi, tvdpi, hdpi, xhdpi, xxhdpi and xxxhdpi</span><br></pre></td></tr></table></figure></p>
+<p>并不是需要每个资源都提供多密度版本的.<br>当一个屏幕密度下没有提供特定的资源, Android会自动根据这个资源其他密度的版本进行缩放.</p>
+<p>如果你的app仅需要提供缩放图像, 你可以只在<code>drawable-nodpi</code>中提供单个资源. (建议还是至少有一个<code>xxhdpi</code>.)</p>
+<h4 id="shape的使用"><a href="#shape的使用" class="headerlink" title="shape的使用"></a>shape的使用</h4><p>很多时候我们并不需要一个图片, 比如纯色或渐变色的背景, 带边框, 带圆角等.</p>
+<p>用<code>&lt;shape&gt;</code>尺寸就会比较小, 也不用多个密度的版本.</p>
+<h4 id="复用资源"><a href="#复用资源" class="headerlink" title="复用资源"></a>复用资源</h4><p>这里的复用可以是改变了颜色和旋转方向等的复用.<br>比如改资源的tint, 或者把一个图旋转了之后再用. (thumb up变成thumb down了).</p>
+<h4 id="压缩图片"><a href="#压缩图片" class="headerlink" title="压缩图片"></a>压缩图片</h4><p>可以用一些工具对PNG和JPEG图片进行无损压缩: 图片质量无损但是尺寸变小.</p>
+<h4 id="使用WebP格式的图片"><a href="#使用WebP格式的图片" class="headerlink" title="使用WebP格式的图片"></a>使用WebP格式的图片</h4><p>可以使用<a href="https://developers.google.com/speed/webp/" target="_blank" rel="noopener">WebP</a>格式的图片, 比JPEG和PNG压缩得更好.</p>
+<p>Android Studio提供了转换工具: <a href="https://developer.android.com/studio/write/convert-webp.html" target="_blank" rel="noopener">Create WebP images</a></p>
+<p>注意: Google Play只接受PNG作为launcher icon.</p>
+<h4 id="使用矢量图"><a href="#使用矢量图" class="headerlink" title="使用矢量图"></a>使用矢量图</h4><p>可以使用矢量图来作为可伸缩的资源, 在Android中是<a href="https://developer.android.com/reference/android/graphics/drawable/VectorDrawable.html" target="_blank" rel="noopener">VectorDrawable</a>对象.</p>
+<p>但是矢量图的渲染需要系统的时间花销, 所以推荐只有小的icon使用矢量图.</p>
+<h4 id="逐帧动画"><a href="#逐帧动画" class="headerlink" title="逐帧动画"></a>逐帧动画</h4><p>不要再使用很多个图片逐帧播放来实现一个动画效果了.<br>尽量用改变属性的动画来节省资源使用.</p>
+<p>另外还有一些手段比如在程序中绘制, 而不是使用图片.</p>
+<h2 id="安装包瘦身措施-Post-coding阶段"><a href="#安装包瘦身措施-Post-coding阶段" class="headerlink" title="安装包瘦身措施: Post-coding阶段"></a>安装包瘦身措施: Post-coding阶段</h2><h3 id="Lint静态分析"><a href="#Lint静态分析" class="headerlink" title="Lint静态分析"></a>Lint静态分析</h3><p>Lint是静态分析工具, 会提示项目中的各种问题.</p>
+<p>针对不用的资源, 可以专门这样检查:<br>在Android Studio中: <code>Analyze -&gt; Run Inspection by Name... -&gt; Unused Resources</code>.</p>
+<p>扫描后会对所有未使用的资源给出警告.</p>
+<p>注意, 因为是Lint静态检查, 所以会有一些错报和漏报的情况:</p>
+<ul>
+<li><code>assets/</code>目录不被扫描.</li>
+<li>检测不到第三方库中带来的不用的资源.</li>
+<li>错报: 资源在项目中实际上用了, 但是被检测出来了. 如果资源是被动态引用的, 比如用<code>getIdntifer()</code>方法, 拼名字使用, 会被lint错误地报告说没有用到.</li>
+<li>漏报: 实际上没有用到, 但是没有检测出来. 这是因为还有另一个没有用到的代码引用了这个资源.<br>比如有一个没有人用的Fragment, 它的布局文件就不会被检测出来, 因为写在了代码里. (注意: 如果是不用的布局中include了另一个布局, 这两个布局都能被检测出来.)</li>
+</ul>
+<p>静态检查只是帮我们检测并报告, 真正要移除这些资源还得靠我们手动删除.</p>
+<h3 id="代码压缩和混淆"><a href="#代码压缩和混淆" class="headerlink" title="代码压缩和混淆"></a>代码压缩和混淆</h3><p>ProGuard -&gt; R8会帮我们删除不用的代码, 进行名称改写和代码优化.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minifyEnabled true</span><br></pre></td></tr></table></figure></p>
+<p>不用的代码被移除了, 类和成员的名称都被改得很短, 从而有效地减小了dex文件的大小.<br>这里需要注意rules的编写, 不要过度保护.</p>
+<p>比较追求极致的方法会从这个方面下手, 进一步细化优化ProGuard Rules, 以达到更深度的混淆和压缩.</p>
+<h3 id="shrinkResources"><a href="#shrinkResources" class="headerlink" title="shrinkResources"></a>shrinkResources</h3><p>移除不用资源的一个有利工具<code>shrinkResources</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    // Other settings</span><br><span class="line"></span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled true</span><br><span class="line">            shrinkResources true</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>为了开启压缩资源, 必须先开启压缩代码, 即<code>minifyEnabled</code>要为<code>true</code>.<br>这样, 在打包的时候, 首先移除了不用的代码, 然后Gradle才能检测哪些资源还在被代码引用, 从而移除不用的资源.</p>
+<p>注意这个过程并没有真的删除掉资源, 只是将不用的资源替换了一个简单版本.</p>
+<p>跟代码压缩一样, 资源压缩也可以指定一个自定义的规则, 明确指明哪些资源要保留.</p>
+<p>注意开启了代码压缩和混淆之后, 编译速度会变慢, 所以一般debug版本不开启.</p>
+<h4 id="这种删除方式靠谱吗-精确吗-会误删吗"><a href="#这种删除方式靠谱吗-精确吗-会误删吗" class="headerlink" title="这种删除方式靠谱吗? 精确吗? 会误删吗?"></a>这种删除方式靠谱吗? 精确吗? 会误删吗?</h4><p>常规情况下resource shrinker还挺准确的.</p>
+<p>但是如果你的代码(或依赖的库)中有用到<code>Resources.getIdentifier()</code>方法来获取资源, (比如AppCompat中这么做), 那么说明你的代码会根据一个动态生成的字符串来查找资源.</p>
+<p>如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">val name = String.format(&quot;img_%1d&quot;, angle + 1)</span><br><span class="line">val res = resources.getIdentifier(name, &quot;drawable&quot;, packageName)</span><br></pre></td></tr></table></figure></p>
+<p>这个时候resource shrinker默认会表现得很保守, 会保留所有符合这个名字模式的资源, 认为它们都是可能会被用到的, 从而不会删除它们.</p>
+<p>而且resource shrinker还会扫描字符串, 查找符合资源格式的URLs, 比如<code>file:///android_res/drawable//ic_plus_anim_016.png</code>, 从而保留这些对应的资源.</p>
+<p>所以不用担心, 默认情况下, 资源压缩都是”better safe than sorry”的模式.</p>
+<p>如果你想激进一点, 可以在<code>keep.xml</code>里面把压缩模式指定为<code>shrinkMode=&quot;strict&quot;</code>, 这时候你就必须手动指定需要keep的动态使用的资源了.</p>
+<h4 id="如何查看都删了什么呢"><a href="#如何查看都删了什么呢" class="headerlink" title="如何查看都删了什么呢?"></a>如何查看都删了什么呢?</h4><p>用命令行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew clean assembleRelease --info | grep &quot;Skipped unused resource&quot;</span><br></pre></td></tr></table></figure></p>
+<p>注意这里<code>assembleRelease</code>可以替换成任何一个开启了资源压缩的type.</p>
+<p>执行了之后会列出所有被替换成dummy file的资源.</p>
+<p>用IDE:<br>在Android Studio的Build窗口下, Toggle View切换到详细信息模式下. Build, 然后查找信息, 可以看见信息中会有一句:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Removed unused resources: Binary resource data reduced from XXXKB to YYYKB: Removed Z%</span><br></pre></td></tr></table></figure></p>
+<p>显示资源压缩节省出来的大小.</p>
+<p>文件:<br>在app的输出路径(<code>&lt;module-name&gt;/build/outputs/mapping/release/</code>)下, 和<code>mapping.txt</code>一起, 还有一个<code>resources.txt</code>文件.<br>文件的最后会列出一系列的<code>Skipped unused resource</code>.</p>
+<p>同时这个文件里也详细地写了资源之所以会被保留下来的理由. 关键字: <code>matches string pool</code>. 这是前面说过的为了防止有动态使用资源的情况而采取的保守措施.</p>
+<p>如果有空的话可以把这些<code>Skipped unused resource</code>标注的文件都手动从代码库里删除.</p>
+<h3 id="声明支持的配置-删掉其他"><a href="#声明支持的配置-删掉其他" class="headerlink" title="声明支持的配置, 删掉其他"></a>声明支持的配置, 删掉其他</h3><p>Gradle的resource shrinker会删除没有被代码用到的资源, 但是不会删掉不同设备配置下的可替代资源<br>(<a href="https://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources" target="_blank" rel="noopener">alternative resources</a>).</p>
+<p>可以利用<code>resConfigs</code>, 来删除你的app并不需要的配置资源.</p>
+<p>原理就是声明app支持的配置, 这样其他不支持的配置的资源就会被删除, 从而减少apk的尺寸.</p>
+<p>比如你包含了一个库, 这个库中带有各种语言的资源, 这样默认你的app就会包含所有这些库中包含的语言的字符串. 你可以明确声明app支持的语言, 那么其他语言资源就会被删除:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        ...</span><br><span class="line">        resConfigs &quot;en&quot;, &quot;fr&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>见<a href="https://developer.android.com/studio/build/shrink-code.html#unused-alt-resources" target="_blank" rel="noopener">Remove unused alternative resources</a></p>
+<h2 id="安装包瘦身措施-发布阶段"><a href="#安装包瘦身措施-发布阶段" class="headerlink" title="安装包瘦身措施: 发布阶段"></a>安装包瘦身措施: 发布阶段</h2><p>因为有的资源会提供多个版本, 所以一个用户下载的apk中可能包含了一些他永远也用不到的内容.</p>
+<p>为了保证每个用户的下载尺寸都尽量小, 我们可以改进发布包的形式: 拆分成多个针对不同机型的apks;<br>如果是在Google Play发布, 还可以用App Bundle, 由Google Play帮我们做拆分.</p>
+<h3 id="Build多个apks"><a href="#Build多个apks" class="headerlink" title="Build多个apks"></a>Build多个apks</h3><p>根据屏幕密度和指令集(ABI)的不同, 可以拆分多个apk, 每种配置只下载自己需要的资源,  从而达到减小安装包大小的目的.</p>
+<p>Gradle就可以帮我们做这个拆分创建的工作.<br>具体实现见:<br><a href="https://developer.android.com/studio/build/configure-apk-splits.html" target="_blank" rel="noopener">Build multiple APKs</a>.</p>
+<h3 id="Android-App-Bundles"><a href="#Android-App-Bundles" class="headerlink" title="Android App Bundles"></a>Android App Bundles</h3><p>用Google Play发布应用时可以使用<a href="https://developer.android.com/guide/app-bundle" target="_blank" rel="noopener">Android App Bundle</a>的格式, 这是一种新的发布格式, 包含了应用所有的编译代码和资源, 把apk的生成和签名留给Google Play来做.</p>
+<p>Google Play会根据用户不同的设备配置来生成优化的apk, 这样用户下载的就只是对应自己设备的代码和资源. 开发者不用为不同设备准备多个apk, 用户也得到了更小更优化的结果.</p>
+<h2 id="安装包瘦身措施-进阶补充"><a href="#安装包瘦身措施-进阶补充" class="headerlink" title="安装包瘦身措施: 进阶补充"></a>安装包瘦身措施: 进阶补充</h2><p>要更加极致地压缩安装包, 还有一些更加复杂的手段, 比如:</p>
+<ul>
+<li>业务层面: 动态feature, 资源动态加载.</li>
+<li>Dex: 加大混淆力度, 混淆四大组件和View; 去除debug信息; 优化Dex分包; Dex压缩.</li>
+<li>native库: 去除debug信息; 压缩; 剪裁.</li>
+<li>资源: 资源名混淆成短路径; 压缩.</li>
+</ul>
+<p>另外, 还可以将对安装包体积的分析加入到CI中, 进行自动化监控, 这样可以得到各个版本的尺寸变化, 及时获知是否不经意引入大的依赖, 引入过大的资源等情况.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总结回顾一下本文内容, 对于安装包瘦身的话题:<br>首先, 讨论了我们为什么要做这个事情 -&gt; 为了增加app被下载安装使用和留存的几率. (为什么要瘦身呢? -&gt; 为了提升自己增加竞争力.)<br>其次, 介绍了安装包的构成, 相关的指标和用于检测的工具. (瘦身需要关注的指标和测量方式.)<br>重点介绍, 如何减少安装包体积的实践方法. (瘦身的各种手段.)</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://developer.android.com/topic/performance/reduce-apk-size.html" target="_blank" rel="noopener">Reduce your app size</a></li>
+<li><a href="https://developer.android.com/studio/build/shrink-code.html" target="_blank" rel="noopener">Shrink, obfuscate, and optimize your app</a></li>
+<li><a href="https://developer.android.com/studio/build/configure-apk-splits.html" target="_blank" rel="noopener">Configure APK Splits</a></li>
+<li><a href="https://developer.android.com/studio/build/configure-apk-splits.html" target="_blank" rel="noopener">Build multiple APKs</a></li>
+<li><a href="https://developer.android.com/about/dashboards/index.html#Screens" target="_blank" rel="noopener">Screen sizes and densities</a></li>
+<li><a href="https://developer.android.com/studio/build/apk-analyzer" target="_blank" rel="noopener">Analyze your build with APK Analyzer</a></li>
+<li><a href="https://mp.weixin.qq.com/s/_gnT2kjqpfMFs0kqAg4Qig" target="_blank" rel="noopener">支付宝 App 构建优化解析：Android 包大小极致压缩</a></li>
+<li><a href="https://tech.meituan.com/2017/04/07/android-shrink-overall-solution.html" target="_blank" rel="noopener">美团 - Android App包瘦身优化实践</a></li>
+<li>极客时间: Android开发高手课, 包体积优化 (上), (下)</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2019/05/17/google-io-2019-Android-TLDR/" rel="prev" title="Google IO 2019 Android 太长不看版">
+      <i class="fa fa-chevron-left"></i> Google IO 2019 Android 太长不看版
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2020/01/15/migrate-gradle-build-scripts-to-kotlin/" rel="next" title="Android Gradle脚本从Groovy迁移到Kotlin DSL">
+      Android Gradle脚本从Groovy迁移到Kotlin DSL <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-App%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB%E8%AE%A1%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">Android App安装包瘦身计划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要安装包瘦身</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E7%9A%84%E6%9E%84%E6%88%90"><span class="nav-number">1.2.</span> <span class="nav-text">安装包的构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%BA%E5%AF%B8%E6%8C%87%E6%A0%87"><span class="nav-number">1.3.</span> <span class="nav-text">尺寸指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">1.4.</span> <span class="nav-text">安装包分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#APK-Analyzer"><span class="nav-number">1.4.1.</span> <span class="nav-text">APK Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E6%8F%92%E4%BB%B6-Android-Size-Analyzer"><span class="nav-number">1.4.2.</span> <span class="nav-text">官方插件: Android Size Analyzer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB%E6%8E%AA%E6%96%BD-Coding%E9%98%B6%E6%AE%B5"><span class="nav-number">1.5.</span> <span class="nav-text">安装包瘦身措施: Coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E4%BB%A3%E7%A0%81-native%E5%92%8CJava%E4%BB%A3%E7%A0%81"><span class="nav-number">1.5.1.</span> <span class="nav-text">减少代码(native和Java代码)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E8%B5%84%E6%BA%90%E4%BD%BF%E7%94%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">控制资源使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%B1%8F%E5%B9%95%E6%94%AF%E6%8C%81"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">设备屏幕支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shape%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">shape的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E7%94%A8%E8%B5%84%E6%BA%90"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">复用资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%9B%BE%E7%89%87"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">压缩图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8WebP%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%9B%BE%E7%89%87"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">使用WebP格式的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%9F%A2%E9%87%8F%E5%9B%BE"><span class="nav-number">1.5.2.6.</span> <span class="nav-text">使用矢量图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%90%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="nav-number">1.5.2.7.</span> <span class="nav-text">逐帧动画</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB%E6%8E%AA%E6%96%BD-Post-coding%E9%98%B6%E6%AE%B5"><span class="nav-number">1.6.</span> <span class="nav-text">安装包瘦身措施: Post-coding阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lint%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-number">1.6.1.</span> <span class="nav-text">Lint静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%8E%8B%E7%BC%A9%E5%92%8C%E6%B7%B7%E6%B7%86"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码压缩和混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shrinkResources"><span class="nav-number">1.6.3.</span> <span class="nav-text">shrinkResources</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E7%A7%8D%E5%88%A0%E9%99%A4%E6%96%B9%E5%BC%8F%E9%9D%A0%E8%B0%B1%E5%90%97-%E7%B2%BE%E7%A1%AE%E5%90%97-%E4%BC%9A%E8%AF%AF%E5%88%A0%E5%90%97"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">这种删除方式靠谱吗? 精确吗? 会误删吗?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E9%83%BD%E5%88%A0%E4%BA%86%E4%BB%80%E4%B9%88%E5%91%A2"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">如何查看都删了什么呢?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E6%94%AF%E6%8C%81%E7%9A%84%E9%85%8D%E7%BD%AE-%E5%88%A0%E6%8E%89%E5%85%B6%E4%BB%96"><span class="nav-number">1.6.4.</span> <span class="nav-text">声明支持的配置, 删掉其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB%E6%8E%AA%E6%96%BD-%E5%8F%91%E5%B8%83%E9%98%B6%E6%AE%B5"><span class="nav-number">1.7.</span> <span class="nav-text">安装包瘦身措施: 发布阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build%E5%A4%9A%E4%B8%AAapks"><span class="nav-number">1.7.1.</span> <span class="nav-text">Build多个apks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-App-Bundles"><span class="nav-number">1.7.2.</span> <span class="nav-text">Android App Bundles</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85%E7%98%A6%E8%BA%AB%E6%8E%AA%E6%96%BD-%E8%BF%9B%E9%98%B6%E8%A1%A5%E5%85%85"><span class="nav-number">1.8.</span> <span class="nav-text">安装包瘦身措施: 进阶补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.10.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2019/07/19/reduce-app-size/";
+    this.page.identifier = "Android/2019/07/19/reduce-app-size/";
+    this.page.title = "Android App安装包瘦身计划";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android中的构架模式一直是一个很hot的topic, 近年来Architecture components推出之后, MVVM异军突起, 风头正在逐渐盖过之前的MVP.其实我觉得MVP还是有好处的, 比如灵活多变(其实只是我用起来更熟悉顺手一些吧).个人是没有什么偏见的, 关于项目的构架, 只要找到适合的就行.最近打算实际用一下mosby这个开源库, 帮助构建一下mvp模式, 本文是我的心路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVP模式, 开源库mosby的使用及代码分析">
+<meta property="og:url" content="http://mengdd.github.io/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android中的构架模式一直是一个很hot的topic, 近年来Architecture components推出之后, MVVM异军突起, 风头正在逐渐盖过之前的MVP.其实我觉得MVP还是有好处的, 比如灵活多变(其实只是我用起来更熟悉顺手一些吧).个人是没有什么偏见的, 关于项目的构架, 只要找到适合的就行.最近打算实际用一下mosby这个开源库, 帮助构建一下mvp模式, 本文是我的心路">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-20T08:33:08.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.004Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="mosby">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>MVP模式, 开源库mosby的使用及代码分析 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MVP模式, 开源库mosby的使用及代码分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-20 16:33:08" itemprop="dateCreated datePublished" datetime="2018-09-20T16:33:08+08:00">2018-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Architecture/" itemprop="url" rel="index"><span itemprop="name">Architecture</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/" class="post-meta-item leancloud_visitors" data-flag-title="MVP模式, 开源库mosby的使用及代码分析" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Architecture/2018/09/20/mvp-pattern-and-mosby/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Android中的构架模式一直是一个很hot的topic, 近年来Architecture components推出之后, MVVM异军突起, 风头正在逐渐盖过之前的MVP.<br>其实我觉得MVP还是有好处的, 比如灵活多变(其实只是我用起来更熟悉顺手一些吧).<br>个人是没有什么偏见的, 关于项目的构架, 只要找到适合的就行.<br>最近打算实际用一下mosby这个开源库, 帮助构建一下mvp模式, 本文是我的心路历程和代码心得记录.</p>
+<a id="more"></a>
+<h2 id="关于MVP模式"><a href="#关于MVP模式" class="headerlink" title="关于MVP模式"></a>关于MVP模式</h2><p>前几年MVP模式的风很大, 之前工作的项目也用的MVP模式, 所以对这个模式在team有很多讨论. </p>
+<p>可以说一千个人眼中有一千种MVP吧, 比如Presenter之后的数据逻辑, 是用Interactor呢, 还是用Repository呢, 如果用了CursorLoader, 那么数据和View层直接耦合怎么办. 要不要给Presenter也定义接口呢, Presenter是注入呢还是在哪里(比如基类Fragment里)初始化呢, P和V的attach到底是在P里做呢还是在V里做呢.</p>
+<h3 id="MVP的原则"><a href="#MVP的原则" class="headerlink" title="MVP的原则"></a>MVP的原则</h3><p>尽管结合项目实际, 可能有很多变种, 但是不管怎么变, MVP有几个原则是要遵守的:</p>
+<ul>
+<li>Activity/Fragment实现View接口, View中的方法都只是和UI显示相关的. View要尽可能的dummy, 不涉及业务逻辑, presenter告诉它干什么它干什么就行了.</li>
+<li>Presenter中没有Android相关的类, 是一个纯Java的程序. 这样有利于解耦和测试. (所以一个检查方法是看你的presenter的import中有没有android的包名.)</li>
+<li>注意生命周期的处理, 因为异步任务callback返回之后View的状态不一定还是活跃的, 所以要有一定的措施检查View是否还在以及处理注销等, 避免crash或内存泄露.</li>
+</ul>
+<h3 id="MVP的官方例子"><a href="#MVP的官方例子" class="headerlink" title="MVP的官方例子"></a>MVP的官方例子</h3><p>MVP模式Google有个官方例子: <a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="noopener">android-architecture</a>, 我之前写了一篇解读在这里<a href="https://www.cnblogs.com/mengdd/p/5988104.html" target="_blank" rel="noopener">Google官方MVP Sample代码解读</a>. (我刚看了一下官方sample代码又更新了, 还得再看一下.)</p>
+<p>官方的例子属于比较正统的, 比如每个界面会定义一个Contract, 里面分别定义View和Presenter的接口. 用Repository包装local和remote的数据, local和remote的数据源会和repository实现相同的data source接口, 我非常喜欢RxJava版本的三级缓存处理.</p>
+<h3 id="我的一些小Demo"><a href="#我的一些小Demo" class="headerlink" title="我的一些小Demo"></a>我的一些小Demo</h3><p>之前自己写的一些比较完整的使用MVP的Demo:</p>
+<ul>
+<li><a href="https://github.com/mengdd/TodoRealm" target="_blank" rel="noopener">TodoRealm</a>: 一个Todo任务管理器, 只有本地数据.</li>
+<li><a href="https://github.com/mengdd/ZhihuDaily" target="_blank" rel="noopener">ZhihuDaily</a>: 知乎日报, 支持离线模式.</li>
+</ul>
+<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><p>自从Google官方推出了<a href="https://developer.android.com/topic/libraries/architecture/" target="_blank" rel="noopener">Android Architecture Components</a>之后, 看起来MVVM也是一种不错的选择.</p>
+<p>这是官方的例子: <a href="https://github.com/googlesamples/android-architecture-components" target="_blank" rel="noopener">android-architecture-components</a>.</p>
+<p>我还正在学习中, 关于这个话题可能以后会单独展开来讲一下, 我先沉淀一下.</p>
+<p>目前的心得: 这一套东西也很强大, 就是用起来不太习惯. 要遵循的套路太多, 感觉没有使用MVP的时候那么自由. (可能还是不太熟的缘故吧, 我还是不多说了. ==!)</p>
+<p>所以在学习这套模式的时候我突然又怀念起MVP模式, 准备把之前一个烂尾的个人项目重新拯救一把. 就是这个: <a href="https://github.com/mengdd/GithubClient" target="_blank" rel="noopener">GithubClient</a>. 这一次准备用个mvp的库玩玩.</p>
+<h2 id="Mosby库的使用和代码分析"><a href="#Mosby库的使用和代码分析" class="headerlink" title="Mosby库的使用和代码分析"></a>Mosby库的使用和代码分析</h2><p>Mosby是一个帮你实现MVP或MVI的库.<br>最近看介绍才发现它的名字是根据How I met your mother这个美剧的主角起的. (我最近才利用生病期间看完这个剧. 觉得真是巧合啊, 注定要用一用了.)</p>
+<p>之前都是自己手动实现MVP的, 也没什么难的, 用这个库会帮你解决什么问题呢?<br>看看Mosby的介绍:</p>
+<ul>
+<li><a href="https://github.com/sockeqwe/mosby" target="_blank" rel="noopener">Mosby Github Repo</a></li>
+<li><a href="http://hannesdorfmann.com/mosby/getting-started/" target="_blank" rel="noopener">Mosby Getting Started</a></li>
+<li><a href="http://hannesdorfmann.com/mosby/mvp/" target="_blank" rel="noopener">Mosby MVP</a></li>
+</ul>
+<h3 id="使用Mosby的基本步骤"><a href="#使用Mosby的基本步骤" class="headerlink" title="使用Mosby的基本步骤:"></a>使用Mosby的基本步骤:</h3><ul>
+<li>View接口继承<code>MvpView</code>.</li>
+<li>Presenter: 如果有规定Presenter接口, 接口继承<code>MvpPresenter&lt;View&gt;</code>, 其中View是对应的View接口, 实现类继承<code>MvpBasePresenter&lt;View&gt;</code>.<br>如果没有Presenter的接口而直接是实现类也可以, 同样也是实现类继承<code>MvpBasePresenter&lt;View&gt;</code>.</li>
+<li>Activity或Fragment实现View接口, 继承<code>MvpActivity</code>或<code>MvpFragment</code>, 泛型参数类型传入对应的View接口和Presenter类型即可.</li>
+<li>Activity或Fragment实现抽象的<code>createPresenter()</code>方法, 在其中创建Presenter的实例.</li>
+</ul>
+<p>好了, 所有必须的工作就做完了, mosby的类会处理初始化和实例保存等.<br>Activity/Fragment中不需要保存presenter的字段, Presenter中也不需要保存View的字段. 这些都在基类中保存了.</p>
+<h3 id="Mosby的实现"><a href="#Mosby的实现" class="headerlink" title="Mosby的实现"></a>Mosby的实现</h3><p>关于Mosby的实现可以查看它的类, 里面有详细的注释.</p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><ul>
+<li><code>MvpActivity</code>中用了<code>ActivityMvpDelegateImpl</code>, 在Activity的每一个生命周期回调中做一些事情.<br>在<code>onCreate()</code>中创建了Presenter, 把它赋值给字段, 并且attachView(); 在<code>onDestroy()</code>中detachView()和调用presenter的destroy()来做一些清理工作.</li>
+<li><code>MvpFragment</code>中用了<code>FragmentMvpDelegateImpl</code>, 在Fragment的生命周期中做一些事情: 在<code>onCreate()</code>中创建Presenter, 赋值给字段; <code>onViewCreated()</code>中attachView(); <code>onDestroyView()</code>中detachView(); <code>onDestroy()</code>中调用presenter的destroy()来做一些清理工作.<br>所以presenter的初始化, 和view的attach/detach, 以及它们变量的保存都是mosby帮我们处理好了.</li>
+<li>mosby还支持ViewGroup作为View, 它提供了<code>MvpFrameLayout</code>, <code>MvpLinearLayout</code>和<code>MvpRelativeLayout</code>以供继承, Delegate的实现类是<code>ViewGroupMvpDelegateImpl</code>, 用到的生命周期主要是<code>onAttachedToWindow()</code>和<code>#onDetachedFromWindow()</code>.</li>
+</ul>
+<h3 id="Presenter中调用View的方法"><a href="#Presenter中调用View的方法" class="headerlink" title="Presenter中调用View的方法"></a>Presenter中调用View的方法</h3><ul>
+<li><code>MvpBasePresenter</code>的实现没有什么特殊的, 主要是存了一个View的WeakReference. 新版中推荐使用<code>ifViewAttached(ViewAction&lt;V&gt;)</code>方法来把判断和执行一次性做了. 原来的<code>isViewAttached()</code>和<code>getView()</code>已经标记为deprecated了.<br>关于这样做的原因, 在这里有讨论: <a href="https://github.com/sockeqwe/mosby/issues/233" target="_blank" rel="noopener">https://github.com/sockeqwe/mosby/issues/233</a>.</li>
+</ul>
+<h3 id="屏幕旋转时的状态保存"><a href="#屏幕旋转时的状态保存" class="headerlink" title="屏幕旋转时的状态保存"></a>屏幕旋转时的状态保存</h3><p>mosby是处理了屏幕旋转时的状态保存的, 可以看到初始化<code>ActivityMvpDelegateImpl</code>时默认第三个参数是true, 即屏幕旋转时保存状态.<br>具体做法是通过<code>PresenterManager</code>把presenter保存起来.<br>保存的时候传了activity和一个生成的viewId:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> P <span class="title">createViewIdAndCreatePresenter</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  P presenter = delegateCallback.createPresenter();</span><br><span class="line">  <span class="keyword">if</span> (presenter == <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(</span><br><span class="line">        <span class="string">"Presenter returned from createPresenter() is null. Activity is "</span> + activity);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (keepPresenterInstance) &#123;</span><br><span class="line">    mosbyViewId = UUID.randomUUID().toString();</span><br><span class="line">    PresenterManager.putPresenter(activity, mosbyViewId, presenter);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> presenter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>恢复状态的时候需要把之前存的Presenter拿出来还是用activity的实例和viewId:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span> <span class="keyword">public</span> <span class="keyword">static</span> &lt;P&gt; <span class="function">P <span class="title">getPresenter</span><span class="params">(@NonNull Activity activity, @NonNull String viewId)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (activity == <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"Activity is null"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (viewId == <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"View id is null"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ActivityScopedCache scopedCache = getActivityScope(activity);</span><br><span class="line">  <span class="keyword">return</span> scopedCache == <span class="keyword">null</span> ? <span class="keyword">null</span> : (P) scopedCache.getPresenter(viewId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中viewId是通过bundle保存和恢复出来的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (keepPresenterInstance &amp;&amp; outState != <span class="keyword">null</span>) &#123;</span><br><span class="line">    outState.putString(KEY_MOSBY_VIEW_ID, mosbyViewId);</span><br><span class="line">    <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">      Log.d(DEBUG_TAG,</span><br><span class="line">          <span class="string">"Saving MosbyViewId into Bundle. ViewId: "</span> + mosbyViewId + <span class="string">" for view "</span> + getMvpView());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么问题来了:</p>
+<ul>
+<li>1.既然我们已经有了一个viewId作为key, 为什么还需要activity来作为查询条件? </li>
+<li>2.如果真的需要这个条件, 那么屏幕旋转以后activity都重建了, 如何通过新的activity实例获得之前的Presenter呢?</li>
+</ul>
+<p>首先我是在代码中找到了第二个问题的答案, 即两个不同的activity是如何关联起来的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> Application.ActivityLifecycleCallbacks activityLifecycleCallbacks =</span><br><span class="line">      <span class="keyword">new</span> Application.ActivityLifecycleCallbacks() &#123;</span><br><span class="line">        <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityCreated</span><span class="params">(Activity activity, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) &#123;</span><br><span class="line">            String activityId = savedInstanceState.getString(KEY_ACTIVITY_ID);</span><br><span class="line">            <span class="keyword">if</span> (activityId != <span class="keyword">null</span>) &#123;</span><br><span class="line">              <span class="comment">// After a screen orientation change we map the newly created Activity to the same</span></span><br><span class="line">              <span class="comment">// Activity ID as the previous activity has had (before screen orientation change)</span></span><br><span class="line">              activityIdMap.put(activity, activityId);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivitySaveInstanceState</span><span class="params">(Activity activity, Bundle outState)</span> </span>&#123;</span><br><span class="line">          <span class="comment">// Save the activityId into bundle so that the other</span></span><br><span class="line">          String activityId = activityIdMap.get(activity);</span><br><span class="line">          <span class="keyword">if</span> (activityId != <span class="keyword">null</span>) &#123;</span><br><span class="line">            outState.putString(KEY_ACTIVITY_ID, activityId);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityDestroyed</span><span class="params">(Activity activity)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (!activity.isChangingConfigurations()) &#123;</span><br><span class="line">            <span class="comment">// Activity will be destroyed permanently, so reset the cache</span></span><br><span class="line">            String activityId = activityIdMap.get(activity);</span><br><span class="line">            <span class="keyword">if</span> (activityId != <span class="keyword">null</span>) &#123;</span><br><span class="line">              ActivityScopedCache scopedCache = activityScopedCacheMap.get(activityId);</span><br><span class="line">              <span class="keyword">if</span> (scopedCache != <span class="keyword">null</span>) &#123;</span><br><span class="line">                scopedCache.clear();</span><br><span class="line">                activityScopedCacheMap.remove(activityId);</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              <span class="comment">// No Activity Scoped cache available, so unregister</span></span><br><span class="line">              <span class="keyword">if</span> (activityScopedCacheMap.isEmpty()) &#123;</span><br><span class="line">                <span class="comment">// All Mosby related activities are destroyed, so we can remove the activity lifecylce listener</span></span><br><span class="line">                activity.getApplication()</span><br><span class="line">                    .unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);</span><br><span class="line">                <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">                  Log.d(DEBUG_TAG, <span class="string">"Unregistering ActivityLifecycleCallbacks"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          activityIdMap.remove(activity);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>通过Bundle存取传递一个activityId, 新创建的activity实例和旧的activity实例就有相同的id. 这个关系存储在<code>Map&lt;Activity, String&gt; activityIdMap</code>里.<br>这样在新的activity中通过map查询到activityId之后, 在<code>Map&lt;String, ActivityScopedCache&gt; activityScopedCacheMap</code>中再通过activityId查到了ActivityScopedCache对象, 再用viewId作为key查询到presenter.</p>
+<p>看了<code>onActivityDestroyed()</code>部分的代码之后也终于明白了第一个问题的答案, 即这样做的原因, 如果只用viewId, 我们是解决了存放和查询, 但是没有解决释放的问题.<br>因为我们的需求只是在屏幕旋转的情况下保存presenter的实例, 我们仍然需要在activity真的销毁的时候释放对presenter实例的保存.<br>这里用了<code>activity.isChangingConfigurations()</code>的条件来区分activity是真的要销毁, 还是为了屏幕旋转要销毁. </p>
+<p>PS: 说到状态保存和恢复, 之前的一篇博客写得很详细, 可以参考一下: <a href="https://www.cnblogs.com/mengdd/p/5582244.html" target="_blank" rel="noopener">Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复</a></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>Mosby还支持LCE(Loading-Content-Error)和ViewState, 为开发者省去更多套路化的代码, 还有处理屏幕旋转之后的状态恢复.<br>有空的时候再写一篇扒一扒吧.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/Architecture/" rel="tag"># Architecture</a>
+              <a href="/tags/mosby/" rel="tag"># mosby</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2018/08/14/android-weekly-notes-issue-322/" rel="prev" title="Android Weekly Notes Issue 322">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 322
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Mobile-Apps/2019/02/02/CFRs-for-mobile-apps/" rel="next" title="移动应用中的非功能性(跨职能)需求">
+      移动应用中的非功能性(跨职能)需求 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EMVP%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">关于MVP模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-number">1.1.</span> <span class="nav-text">MVP的原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP%E7%9A%84%E5%AE%98%E6%96%B9%E4%BE%8B%E5%AD%90"><span class="nav-number">1.2.</span> <span class="nav-text">MVP的官方例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8FDemo"><span class="nav-number">1.3.</span> <span class="nav-text">我的一些小Demo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVVM"><span class="nav-number">2.</span> <span class="nav-text">MVVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mosby%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8C%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">Mosby库的使用和代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Mosby%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.1.</span> <span class="nav-text">使用Mosby的基本步骤:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mosby%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">Mosby的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">3.2.1.</span> <span class="nav-text">生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Presenter%E4%B8%AD%E8%B0%83%E7%94%A8View%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">Presenter中调用View的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%8F%E5%B9%95%E6%97%8B%E8%BD%AC%E6%97%B6%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98"><span class="nav-number">3.4.</span> <span class="nav-text">屏幕旋转时的状态保存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Architecture/2018/09/20/mvp-pattern-and-mosby/";
+    this.page.identifier = "Android/Architecture/2018/09/20/mvp-pattern-and-mosby/";
+    this.page.title = "MVP模式, 开源库mosby的使用及代码分析";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

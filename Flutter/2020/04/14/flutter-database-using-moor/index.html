@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="写一个TODO App学习Flutter数据库工具MoorFlutter的数据库存储, 官方文档: https:&#x2F;&#x2F;flutter.dev&#x2F;docs&#x2F;cookbook&#x2F;persistence&#x2F;sqlite中写的是直接操纵SQLite数据库的方法. 有没有什么package可以像Android的Room一样, 帮助开发者更加方便地做数据库存储呢?  Moor就是这种目的: https:&#x2F;&#x2F;pub.d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="写一个TODO App学习Flutter数据库工具Moor">
+<meta property="og:url" content="http://mengdd.github.io/Flutter/2020/04/14/flutter-database-using-moor/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="写一个TODO App学习Flutter数据库工具MoorFlutter的数据库存储, 官方文档: https:&#x2F;&#x2F;flutter.dev&#x2F;docs&#x2F;cookbook&#x2F;persistence&#x2F;sqlite中写的是直接操纵SQLite数据库的方法. 有没有什么package可以像Android的Room一样, 帮助开发者更加方便地做数据库存储呢?  Moor就是这种目的: https:&#x2F;&#x2F;pub.d">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-04-14T01:20:46.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.006Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Flutter/2020/04/14/flutter-database-using-moor/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>写一个TODO App学习Flutter数据库工具Moor | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Flutter/2020/04/14/flutter-database-using-moor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          写一个TODO App学习Flutter数据库工具Moor
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-14 09:20:46" itemprop="dateCreated datePublished" datetime="2020-04-14T09:20:46+08:00">2020-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Flutter/2020/04/14/flutter-database-using-moor/" class="post-meta-item leancloud_visitors" data-flag-title="写一个TODO App学习Flutter数据库工具Moor" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Flutter/2020/04/14/flutter-database-using-moor/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Flutter/2020/04/14/flutter-database-using-moor/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="写一个TODO-App学习Flutter数据库工具Moor"><a href="#写一个TODO-App学习Flutter数据库工具Moor" class="headerlink" title="写一个TODO App学习Flutter数据库工具Moor"></a>写一个TODO App学习Flutter数据库工具Moor</h1><p>Flutter的数据库存储, 官方文档: <a href="https://flutter.dev/docs/cookbook/persistence/sqlite" target="_blank" rel="noopener">https://flutter.dev/docs/cookbook/persistence/sqlite</a><br>中写的是直接操纵SQLite数据库的方法.</p>
+<p>有没有什么package可以像Android的Room一样, 帮助开发者更加方便地做数据库存储呢? </p>
+<p>Moor就是这种目的: <a href="https://pub.dev/packages/moor" target="_blank" rel="noopener">https://pub.dev/packages/moor</a>.<br>它的名字是把Room反过来. 它是一个第三方的package.</p>
+<p>为了学习一下怎么用, 我做了一个小的todo app: <a href="https://github.com/mengdd/more_todo" target="_blank" rel="noopener">https://github.com/mengdd/more_todo</a>.</p>
+<p>本文是一个工作记录.<br><a id="more"></a></p>
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>用Moor做TODO app:</p>
+<ul>
+<li>基本使用: 依赖添加, 数据库和表的建立, 对表的基本操作.</li>
+<li>问题解决: 插入数据注意类型; 多个表的文件组织.</li>
+<li>常用功能: 外键和join, 数据库升级, 条件查询.</li>
+</ul>
+<p>代码: Todo app: <a href="https://github.com/mengdd/more_todo" target="_blank" rel="noopener">https://github.com/mengdd/more_todo</a></p>
+<h2 id="Moor基本使用"><a href="#Moor基本使用" class="headerlink" title="Moor基本使用"></a>Moor基本使用</h2><p>官方这里有个文档:<br><a href="https://moor.simonbinder.eu/docs/getting-started/" target="_blank" rel="noopener">Moor Getting Started</a></p>
+<h3 id="Step-1-添加依赖"><a href="#Step-1-添加依赖" class="headerlink" title="Step 1: 添加依赖"></a>Step 1: 添加依赖</h3><p><code>pubspec.yaml</code>中:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  flutter:</span><br><span class="line">    sdk: flutter</span><br><span class="line"></span><br><span class="line">  moor: ^2.4.0</span><br><span class="line">  moor_ffi: ^0.4.0</span><br><span class="line">  path_provider: ^1.6.5</span><br><span class="line">  path: ^1.6.4</span><br><span class="line">  provider: ^4.0.4</span><br><span class="line"></span><br><span class="line">dev_dependencies:</span><br><span class="line">  flutter_test:</span><br><span class="line">    sdk: flutter</span><br><span class="line">  moor_generator: ^2.4.0</span><br><span class="line">  build_runner: ^1.8.1</span><br></pre></td></tr></table></figure></p>
+<p>这里我是用的当前(2020.4)最新版本, 之后请更新各个package版本号到最新的版本.</p>
+<p>对各个packages的解释:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* moor: This is the core package defining most apis</span><br><span class="line">* moor_ffi: Contains code that will run the actual queries</span><br><span class="line">* path_provider and path: Used to find a suitable location to store the database. Maintained by the Flutter and Dart team</span><br><span class="line">* moor_generator: Generates query code based on your tables</span><br><span class="line">* build_runner: Common tool for code-generation, maintained by the Dart team</span><br></pre></td></tr></table></figure></p>
+<p>现在推荐使用<code>moor_ffi</code>而不是<code>moor_flutter</code>.</p>
+<p>网上的一些例子是使用<code>moor_flutter</code>的, 所以看那些例子的时候有些地方可能对不上了.</p>
+<h3 id="Step-2-定义数据库和表"><a href="#Step-2-定义数据库和表" class="headerlink" title="Step 2: 定义数据库和表"></a>Step 2: 定义数据库和表</h3><p>新建一个文件, 比如<code>todo_database.dart</code>:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">'dart:io'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:moor/moor.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:moor_ffi/moor_ffi.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:path/path.dart'</span> <span class="keyword">as</span> p;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:path_provider/path_provider.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">part</span> <span class="string">'todo_database.g.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this will generate a table called "todos" for us. The rows of that table will</span></span><br><span class="line"><span class="comment">// be represented by a class called "Todo".</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Todos</span> <span class="keyword">extends</span> <span class="title">Table</span> </span>&#123;</span><br><span class="line">  IntColumn <span class="keyword">get</span> id =&gt; integer().autoIncrement()();</span><br><span class="line"></span><br><span class="line">  TextColumn <span class="keyword">get</span> title =&gt; text().withLength(min: <span class="number">1</span>, max: <span class="number">50</span>)();</span><br><span class="line"></span><br><span class="line">  TextColumn <span class="keyword">get</span> content =&gt; text().nullable().named(<span class="string">'description'</span>)();</span><br><span class="line"></span><br><span class="line">  IntColumn <span class="keyword">get</span> category =&gt; integer().nullable()();</span><br><span class="line"></span><br><span class="line">  BoolColumn <span class="keyword">get</span> completed =&gt; boolean().withDefault(Constant(<span class="keyword">false</span>))();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@UseMoor</span>(tables: [Todos])</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TodoDatabase</span> <span class="keyword">extends</span> <span class="title">_</span>$<span class="title">TodoDatabase</span> </span>&#123;</span><br><span class="line">  <span class="comment">// we tell the database where to store the data with this constructor</span></span><br><span class="line">  TodoDatabase() : <span class="keyword">super</span>(_openConnection());</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> schemaVersion =&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LazyDatabase _openConnection() &#123;</span><br><span class="line">  <span class="comment">// the LazyDatabase util lets us find the right location for the file async.</span></span><br><span class="line">  <span class="keyword">return</span> LazyDatabase(() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="comment">// put the database file, called db.sqlite here, into the documents folder</span></span><br><span class="line">    <span class="comment">// for your app.</span></span><br><span class="line">    <span class="keyword">final</span> dbFolder = <span class="keyword">await</span> getApplicationDocumentsDirectory();</span><br><span class="line">    <span class="keyword">final</span> file = File(p.join(dbFolder.path, <span class="string">'db.sqlite'</span>));</span><br><span class="line">    <span class="keyword">return</span> VmDatabase(file, logStatements: <span class="keyword">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>几个知识点:</p>
+<ul>
+<li>要加<code>part &#39;todo_database.g.dart&#39;;</code>, 等一下要生成这个文件.</li>
+<li>这里定义的class是<code>Todos</code>, 生成的具体实体类会去掉s, 也即<code>Todo</code>. 如果想指定生成的类名, 可以在类上加上注解, 比如: <code>@DataClassName(&quot;Category&quot;)</code>, 生成的类就会叫”Category”.</li>
+<li>惯例: $是生成类类名前缀. <code>.g.dart</code>是生成文件.</li>
+</ul>
+<h3 id="Step-3-生成代码"><a href="#Step-3-生成代码" class="headerlink" title="Step 3: 生成代码"></a>Step 3: 生成代码</h3><p>运行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner build</span><br></pre></td></tr></table></figure></p>
+<p>or:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner watch</span><br></pre></td></tr></table></figure></p>
+<p>来进行一次性(build)或者持续性(watch)的构建.</p>
+<p>如果不顺利, 有可能还需要加上<code>--delete-conflicting-outputs</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner watch --delete-conflicting-outputs</span><br></pre></td></tr></table></figure></p>
+<p>运行成功之后, 生成<code>todo_database.g.dart</code>文件. </p>
+<p>所有的代码中报错应该消失了.</p>
+<h3 id="Step-4-添加增删改查方法"><a href="#Step-4-添加增删改查方法" class="headerlink" title="Step 4: 添加增删改查方法"></a>Step 4: 添加增删改查方法</h3><p>对于简单的例子, 把方法直接写在数据库类里:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UseMoor</span>(tables: [Todos])</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TodoDatabase</span> <span class="keyword">extends</span> <span class="title">_</span>$<span class="title">TodoDatabase</span> </span>&#123;</span><br><span class="line">  <span class="comment">// we tell the database where to store the data with this constructor</span></span><br><span class="line">  TodoDatabase() : <span class="keyword">super</span>(_openConnection());</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> schemaVersion =&gt; <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;Todo&gt;&gt; getAllTodos() =&gt; select(todos).<span class="keyword">get</span>();</span><br><span class="line"></span><br><span class="line">  Stream&lt;<span class="built_in">List</span>&lt;Todo&gt;&gt; watchAllTodos() =&gt; select(todos).watch();</span><br><span class="line"></span><br><span class="line">  Future insertTodo(TodosCompanion todo) =&gt; into(todos).insert(todo);</span><br><span class="line"></span><br><span class="line">  Future updateTodo(Todo todo) =&gt; update(todos).replace(todo);</span><br><span class="line"></span><br><span class="line">  Future deleteTodo(Todo todo) =&gt; delete(todos).delete(todo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据库的查询不但可以返回Future还可以返回Stream, 保持对数据的持续观察.</p>
+<p>这里注意插入的方法用了Companion对象. 后面会说为什么.</p>
+<p>上面这种做法把数据库操作方法都写在一起, 代码多了之后显然不好.<br>改进的方法就是写DAO:<br><a href="https://moor.simonbinder.eu/docs/advanced-features/daos/" target="_blank" rel="noopener">https://moor.simonbinder.eu/docs/advanced-features/daos/</a></p>
+<p>后面会改.</p>
+<h3 id="Step-5-把数据提供到UI中使用"><a href="#Step-5-把数据提供到UI中使用" class="headerlink" title="Step 5: 把数据提供到UI中使用"></a>Step 5: 把数据提供到UI中使用</h3><p>提供数据访问方法涉及到程序的状态管理.<br>方法很多, 之前写过一个文章: <a href="https://www.cnblogs.com/mengdd/p/flutter-state-management.html" target="_blank" rel="noopener">https://www.cnblogs.com/mengdd/p/flutter-state-management.html</a></p>
+<p>这里先选一个简单的方法用Provider直接提供数据库对象, 包在程序外层:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() =&gt; runApp(MyApp());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Provider(</span><br><span class="line">      create: (_) =&gt; TodoDatabase(),</span><br><span class="line">      child: MaterialApp(</span><br><span class="line">        title: <span class="string">'Flutter Demo'</span>,</span><br><span class="line">        theme: ThemeData(</span><br><span class="line">          primarySwatch: Colors.blue,</span><br><span class="line">        ),</span><br><span class="line">        home: MyHomePage(),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要的时候:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TodoDatabase database = Provider.of&lt;TodoDatabase&gt;(context, listen: <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure></p>
+<p>就拿到database对象, 然后可以调用它的方法了.</p>
+<p>之后就是UI怎么用的问题了, 这里不再多说.</p>
+<p>我的代码中tag: <code>v0.1.1</code>就是这种最简单的方法.<br>可以checkout过去看这个最简单版本的实现.</p>
+<h3 id="Step-6-改进-抽取方法到DAO-重构"><a href="#Step-6-改进-抽取方法到DAO-重构" class="headerlink" title="Step 6: 改进: 抽取方法到DAO, 重构"></a>Step 6: 改进: 抽取方法到DAO, 重构</h3><p>增删改查的方法从数据库中抽取出来, 写在DAO里:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> <span class="string">'todos_dao.g.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// the _TodosDaoMixin will be created by moor. It contains all the necessary</span></span><br><span class="line"><span class="comment">// fields for the tables. The &lt;MyDatabase&gt; type annotation is the database class</span></span><br><span class="line"><span class="comment">// that should use this dao.</span></span><br><span class="line"><span class="meta">@UseDao</span>(tables: [Todos])</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TodosDao</span> <span class="keyword">extends</span> <span class="title">DatabaseAccessor</span>&lt;<span class="title">TodoDatabase</span>&gt; <span class="title">with</span> <span class="title">_</span>$<span class="title">TodosDaoMixin</span> </span>&#123;</span><br><span class="line">  <span class="comment">// this constructor is required so that the main database can create an instance</span></span><br><span class="line">  <span class="comment">// of this object.</span></span><br><span class="line">  TodosDao(TodoDatabase db) : <span class="keyword">super</span>(db);</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;Todo&gt;&gt; getAllTodos() =&gt; select(todos).<span class="keyword">get</span>();</span><br><span class="line"></span><br><span class="line">  Stream&lt;<span class="built_in">List</span>&lt;Todo&gt;&gt; watchAllTodos() =&gt; select(todos).watch();</span><br><span class="line"></span><br><span class="line">  Future insertTodo(TodosCompanion todo) =&gt; into(todos).insert(todo);</span><br><span class="line"></span><br><span class="line">  Future updateTodo(Todo todo) =&gt; update(todos).replace(todo);</span><br><span class="line"></span><br><span class="line">  Future deleteTodo(Todo todo) =&gt; delete(todos).delete(todo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行命令行重新生成一下(如果是watch就不用).</p>
+<p>其实就生成了个这:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> of <span class="string">'todos_dao.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">mixin</span> _$TodosDaoMixin <span class="keyword">on</span> DatabaseAccessor&lt;TodoDatabase&gt; &#123;</span><br><span class="line">  $TodosTable <span class="keyword">get</span> todos =&gt; db.todos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的todos是其中的table对象.</p>
+<p>所以如果不是改table, 只改变DAO中的方法实现的话, 不用重新生成.</p>
+<p>这时候我们提供给UI的部分也要改了.</p>
+<p>之前是Provider直接提供了database对象, 虽然可以直接换成提供DAO对象, 但是DAO会有很多个, 硬要这么提供的话代码很快就乱了.</p>
+<p>怎么解决也有多种方法, 这是一个架构设计问题, 百花齐放, 答案很多.</p>
+<p>我这里简单封装一下:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DatabaseProvider</span> </span>&#123;</span><br><span class="line">  TodosDao _todosDao;</span><br><span class="line"></span><br><span class="line">  TodosDao <span class="keyword">get</span> todosDao =&gt; _todosDao;</span><br><span class="line"></span><br><span class="line">  DatabaseProvider() &#123;</span><br><span class="line">    TodoDatabase database = TodoDatabase();</span><br><span class="line">    _todosDao = TodosDao(database);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最外层改成提供这个:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> Provider(</span><br><span class="line">      create: (_) =&gt; DatabaseProvider(),</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">    );</span><br></pre></td></tr></table></figure></p>
+<p>用的时候把DAO get出来用就可以了.</p>
+<p>如果有其他DAO也可以加进去.</p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h3 id="插入的时候应该用Companion对象"><a href="#插入的时候应该用Companion对象" class="headerlink" title="插入的时候应该用Companion对象"></a>插入的时候应该用Companion对象</h3><p>插入数据的方法:<br>如果这样写:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Future insertTodo(Todo todo) =&gt; into(todos).insert(todo);</span><br></pre></td></tr></table></figure></p>
+<p>就坑了.</p>
+<p>因为按照定义, 我们的id是自动生成并自增的:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IntColumn <span class="keyword">get</span> id =&gt; integer().autoIncrement()();</span><br></pre></td></tr></table></figure></p>
+<p>但是生成的这个Todo类, 里面所有非空的字段都是<code>@required</code>的:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Todo(</span><br><span class="line">  &#123;<span class="meta">@required</span> <span class="keyword">this</span>.id,</span><br><span class="line">  <span class="meta">@required</span> <span class="keyword">this</span>.title,</span><br><span class="line">  <span class="keyword">this</span>.content,</span><br><span class="line">  <span class="keyword">this</span>.category,</span><br><span class="line">  <span class="meta">@required</span> <span class="keyword">this</span>.completed&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>要新建一个实例并插入, 我自己是无法指定这个递增的id的. (先查询再自己手动递增是不是太tricky了. 一般不符合直觉的古怪的做法都是不对的.)</p>
+<p>可以看这两个issue中, 作者的解释也是用Companion对象:</p>
+<ul>
+<li><a href="https://github.com/simolus3/moor/issues/62" target="_blank" rel="noopener">https://github.com/simolus3/moor/issues/62</a></li>
+<li><a href="https://github.com/simolus3/moor/issues/68" target="_blank" rel="noopener">https://github.com/simolus3/moor/issues/68</a></li>
+</ul>
+<p>所以insert方法最后写成了这样:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Future insertTodo(TodosCompanion todo) =&gt; into(todos).insert(todo);</span><br></pre></td></tr></table></figure></p>
+<p>还有一种写法是这样:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Future insertTodo(Insertable&lt;Todo&gt; todo) =&gt; into(todos).insert(todo);</span><br></pre></td></tr></table></figure></p>
+<p>添加数据:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> todo = TodosCompanion(</span><br><span class="line">  title: Value(input),</span><br><span class="line">  completed: Value(<span class="keyword">false</span>),</span><br><span class="line">);</span><br><span class="line">todosDao.insertTodo(todo);</span><br></pre></td></tr></table></figure></p>
+<p>这里构建对象的时候, 只需要把需要的值用<code>Value</code>包装起来. 没有提供的会是<code>Value.absent()</code>.</p>
+<h3 id="表定义必须和数据库类写在一起-多个表怎么办"><a href="#表定义必须和数据库类写在一起-多个表怎么办" class="headerlink" title="表定义必须和数据库类写在一起? 多个表怎么办?"></a>表定义必须和数据库类写在一起? 多个表怎么办?</h3><p>实际的项目中肯定有多个表, 我想着一个表一个文件这样比较好.</p>
+<p>于是当我天真地为我的新数据表, 比如Category, 新建一个<code>categories.dart</code>文件, 里面继承了Table类, 也指定了生成文件的名字.<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> <span class="string">'categories.g.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@DataClassName</span>(<span class="string">'Category'</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Categories</span> <span class="keyword">extends</span> <span class="title">Table</span> </span>&#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行生成build之后代码中这行是红的:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> <span class="string">'categories.g.dart'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>没有生成这个文件.</p>
+<p>查看后发现<code>Category</code>类仍然被生成在了databse的.g.dart文件中.</p>
+<p>关于这个问题的讨论: <a href="https://github.com/simolus3/moor/issues/480" target="_blank" rel="noopener">https://github.com/simolus3/moor/issues/480</a></p>
+<p>解决方法有两种思路:</p>
+<ul>
+<li>简单解决: 源码仍然分开写, 只不过所有的生成代码放一起.</li>
+</ul>
+<p>去掉part语句.<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DataClassName</span>(<span class="string">'Category'</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Categories</span> <span class="keyword">extends</span> <span class="title">Table</span> </span>&#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>生成的代码仍然是方法database的生成文件中, 但是我们的源文件看起来是分开了.<br>之后使用具体数据类型的时候, import的还是database文件对应类.</p>
+<ul>
+<li>使用<code>.moor</code>文件.</li>
+</ul>
+<h2 id="进阶需求"><a href="#进阶需求" class="headerlink" title="进阶需求"></a>进阶需求</h2><h3 id="外键和join"><a href="#外键和join" class="headerlink" title="外键和join"></a>外键和join</h3><p>把两个表关联起来这个需求还挺常见的. </p>
+<p>比如我们的todo实例, 增加了Category类之后, 想把todo放在不同的category中, 没有category的就放在inbox里, 作为未分类.</p>
+<p>moor对外键不是直接支持, 而是通过<code>customStatement</code>来实现的.</p>
+<p>这里Todos类里的这一列, 加上自定义限制, 关联到categories表:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IntColumn <span class="keyword">get</span> category =&gt; integer()</span><br><span class="line">  .nullable()</span><br><span class="line">  .customConstraint(<span class="string">'NULL REFERENCES categories(id) ON DELETE CASCADE'</span>)();</span><br></pre></td></tr></table></figure></p>
+<p><strong>要用主键id</strong>.</p>
+<p>这里指定了两遍可以null: 一次是<code>nullable()</code>, 另一次是在语句中.</p>
+<p>实际上<code>customConstraint</code>中的会覆盖前者. 但是我们仍然需要前者, 用来表明在生成类中改字段是可以为null的.</p>
+<p>另外还指定了删除category的时候删除对应的todo.</p>
+<p>外键默认不开启, 需要运行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">customStatement(&apos;PRAGMA foreign_keys = ON&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>join查询的部分, 先把两个类包装成第三个类.<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TodoWithCategory</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> Todo todo;</span><br><span class="line">  <span class="keyword">final</span> Category category;</span><br><span class="line"></span><br><span class="line">  TodoWithCategory(&#123;<span class="meta">@required</span> <span class="keyword">this</span>.todo, <span class="meta">@required</span> <span class="keyword">this</span>.category&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后更改TODO的DAO, 注意这里添加了一个table, 所以要重新生成一下.</p>
+<p>之前的查询方法改成这样:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;<span class="built_in">List</span>&lt;TodoWithCategory&gt;&gt; watchAllTodos() &#123;</span><br><span class="line"><span class="keyword">final</span> query = select(todos).join([</span><br><span class="line">  leftOuterJoin(categories, categories.id.equalsExp(todos.category)),</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> query.watch().map((rows) &#123;</span><br><span class="line">  <span class="keyword">return</span> rows.map((row) &#123;</span><br><span class="line">    <span class="keyword">return</span> TodoWithCategory(</span><br><span class="line">      todo: row.readTable(todos),</span><br><span class="line">      category: row.readTable(categories),</span><br><span class="line">    );</span><br><span class="line">  &#125;).toList();</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>join返回的结果是<code>List&lt;TypedResult&gt;</code>, 这里用map操作符转换一下.</p>
+<h3 id="数据库升级"><a href="#数据库升级" class="headerlink" title="数据库升级"></a>数据库升级</h3><p>数据库升级, 在数据库升级的时候添加新的表和列.</p>
+<p>由于外键默认是不开启的, 所以也要开启一下.</p>
+<p>PS: 这里Todo中的category之前已经建立过了.<br>迁移的时候不能修改已经存在的列. 所以只能弃表重建了.</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UseMoor</span>(tables: [Todos, Categories])</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TodoDatabase</span> <span class="keyword">extends</span> <span class="title">_</span>$<span class="title">TodoDatabase</span> </span>&#123;</span><br><span class="line">  <span class="comment">// we tell the database where to store the data with this constructor</span></span><br><span class="line">  TodoDatabase() : <span class="keyword">super</span>(_openConnection());</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> schemaVersion =&gt; <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  MigrationStrategy <span class="keyword">get</span> migration =&gt; MigrationStrategy(</span><br><span class="line">        onUpgrade: (migrator, from, to) <span class="keyword">async</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (from == <span class="number">1</span>) &#123;</span><br><span class="line">            migrator.deleteTable(todos.tableName);</span><br><span class="line">            migrator.createTable(todos);</span><br><span class="line">            migrator.createTable(categories);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        beforeOpen: (details) <span class="keyword">async</span> &#123;</span><br><span class="line">          <span class="keyword">await</span> customStatement(<span class="string">'PRAGMA foreign_keys = ON'</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">      );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没想到报错了: <code>Unhandled Exception: SqliteException: near &quot;null&quot;: syntax error</code>,<br>出错的是drop table的这句:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Moor: Sent DROP TABLE IF EXISTS null; with args []</span><br></pre></td></tr></table></figure></p>
+<p>说todos.tableName是null.</p>
+<p>这个get的设计用途原来是用来指定自定义名称的:<br><a href="https://pub.dev/documentation/moor/latest/moor_web/Table/tableName.html" target="_blank" rel="noopener">https://pub.dev/documentation/moor/latest/moor_web/Table/tableName.html</a></p>
+<p>因为我没有设置自定义名称, 所以这里返回了null.</p>
+<p>这里我改成了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">migrator.deleteTable(todos.actualTableName);</span><br></pre></td></tr></table></figure></p>
+<h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><p>查某个分类下:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;<span class="built_in">List</span>&lt;TodoWithCategory&gt;&gt; watchTodosInCategory(Category category) &#123;</span><br><span class="line">  <span class="keyword">final</span> query = select(todos).join([</span><br><span class="line">    leftOuterJoin(categories, categories.id.equalsExp(todos.category)),</span><br><span class="line">  ]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (category != <span class="keyword">null</span>) &#123;</span><br><span class="line">    query.where(categories.id.equals(category.id));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    query.where(isNull(categories.id));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> query.watch().map((rows) &#123;</span><br><span class="line">    <span class="keyword">return</span> rows.map((row) &#123;</span><br><span class="line">      <span class="keyword">return</span> TodoWithCategory(</span><br><span class="line">        todo: row.readTable(todos),</span><br><span class="line">        category: row.readTable(categories),</span><br><span class="line">      );</span><br><span class="line">    &#125;).toList();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>多个条件的组合用<code>&amp;</code>, 比如上面的查询组合未完成:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">query.where(</span><br><span class="line">        categories.id.equals(category.id) &amp; todos.completed.equals(<span class="keyword">false</span>));</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a href="https://github.com/simolus3/moor" target="_blank" rel="noopener">Moor</a>是一个第三方的package, 用来帮助Flutter程序的本地存储. 由于开放了SQL语句查询, 所以怎么定制都行. 作者很热情, 可以看到很多issue下都有他详细的回复.</p>
+<p>本文是做一个TODO app来练习使用moor.<br>包括了基本的增删改查, 外键, 数据库升级等.</p>
+<p>代码: <a href="https://github.com/mengdd/more_todo" target="_blank" rel="noopener">https://github.com/mengdd/more_todo</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/simolus3/moor" target="_blank" rel="noopener">Moor github</a></li>
+<li><a href="https://moor.simonbinder.eu/" target="_blank" rel="noopener">Moor website</a></li>
+<li><a href="https://pub.dev/packages/moor_ffi" target="_blank" rel="noopener">package: moor_ffi</a></li>
+<li><a href="https://moor.simonbinder.eu/docs/getting-started/" target="_blank" rel="noopener">Moor Getting Started</a></li>
+<li><a href="https://www.youtube.com/watch?v=zpWsedYMczM&amp;feature=youtu.be" target="_blank" rel="noopener">Moor (Room for Flutter) #1 – Tables &amp; Queries – Fluent SQLite Database</a></li>
+<li><a href="https://resocoder.com/2019/07/17/moor-room-for-flutter-3-foreign-keys-joins-migrations-fluent-sqlite-database/" target="_blank" rel="noopener">Moor (Room for Flutter) #3 – Foreign Keys, Joins &amp; Migrations – Fluent SQLite Database</a></li>
+<li><a href="https://www.sqlite.org/foreignkeys.html" target="_blank" rel="noopener">SQLite Foreign Key Support</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Flutter/2020/03/20/flutter-state-management/" rel="prev" title="为了弄懂Flutter的状态管理, 我用10种方法改造了counter app">
+      <i class="fa fa-chevron-left"></i> 为了弄懂Flutter的状态管理, 我用10种方法改造了counter app
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Mini-Program/2020/04/20/mini-program-todo-using-taro/" rel="next" title="用Taro做个微信小程序Todo, 小白工作记录">
+      用Taro做个微信小程序Todo, 小白工作记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E4%B8%80%E4%B8%AATODO-App%E5%AD%A6%E4%B9%A0Flutter%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B7%A5%E5%85%B7Moor"><span class="nav-number">1.</span> <span class="nav-text">写一个TODO App学习Flutter数据库工具Moor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">1.1.</span> <span class="nav-text">TL;DR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Moor%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">Moor基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.2.1.</span> <span class="nav-text">Step 1: 添加依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E8%A1%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">Step 2: 定义数据库和表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.3.</span> <span class="nav-text">Step 3: 生成代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-%E6%B7%BB%E5%8A%A0%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.4.</span> <span class="nav-text">Step 4: 添加增删改查方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-5-%E6%8A%8A%E6%95%B0%E6%8D%AE%E6%8F%90%E4%BE%9B%E5%88%B0UI%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.5.</span> <span class="nav-text">Step 5: 把数据提供到UI中使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-6-%E6%94%B9%E8%BF%9B-%E6%8A%BD%E5%8F%96%E6%96%B9%E6%B3%95%E5%88%B0DAO-%E9%87%8D%E6%9E%84"><span class="nav-number">1.2.6.</span> <span class="nav-text">Step 6: 改进: 抽取方法到DAO, 重构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting"><span class="nav-number">1.3.</span> <span class="nav-text">Troubleshooting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E7%9A%84%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E7%94%A8Companion%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text">插入的时候应该用Companion对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E5%AE%9A%E4%B9%89%E5%BF%85%E9%A1%BB%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B1%BB%E5%86%99%E5%9C%A8%E4%B8%80%E8%B5%B7-%E5%A4%9A%E4%B8%AA%E8%A1%A8%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">1.3.2.</span> <span class="nav-text">表定义必须和数据库类写在一起? 多个表怎么办?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E9%9C%80%E6%B1%82"><span class="nav-number">1.4.</span> <span class="nav-text">进阶需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%94%AE%E5%92%8Cjoin"><span class="nav-number">1.4.1.</span> <span class="nav-text">外键和join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%87%E7%BA%A7"><span class="nav-number">1.4.2.</span> <span class="nav-text">数据库升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.4.3.</span> <span class="nav-text">条件查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.6.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Flutter/2020/04/14/flutter-database-using-moor/";
+    this.page.identifier = "Flutter/2020/04/14/flutter-database-using-moor/";
+    this.page.title = "写一个TODO App学习Flutter数据库工具Moor";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

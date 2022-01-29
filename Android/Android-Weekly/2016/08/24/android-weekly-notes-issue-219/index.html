@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #219August 21st, 2016Android Weekly Issue #219">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 219">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #219August 21st, 2016Android Weekly Issue #219">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-08-24T09:32:23.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.989Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Wear">
+<meta property="article:tag" content="Bottom Sheet">
+<meta property="article:tag" content="Security">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="JobScheduler">
+<meta property="article:tag" content="Trello">
+<meta property="article:tag" content="TextInputLayout">
+<meta property="article:tag" content="Code Style">
+<meta property="article:tag" content="Java 8">
+<meta property="article:tag" content="Lambda">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="AutoValue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 219 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 219
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-08-24 17:32:23" itemprop="dateCreated datePublished" datetime="2016-08-24T17:32:23+08:00">2016-08-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 219" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-219"><a href="#Android-Weekly-Issue-219" class="headerlink" title="Android Weekly Issue #219"></a>Android Weekly Issue #219</h1><p>August 21st, 2016<br><a href="http://androidweekly.net/issues/issue-219" target="_blank" rel="noopener">Android Weekly Issue #219</a></p>
+<a id="more"></a>
+<h2 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h2><h3 id="Android-Bottom-Sheet"><a href="#Android-Bottom-Sheet" class="headerlink" title="Android: Bottom Sheet"></a><a href="https://medium.com/@emrullahluleci/android-bottom-sheet-30284293f066#.i3i4ggv13" target="_blank" rel="noopener">Android: Bottom Sheet</a></h3><p>Bottom Sheet是一个从底部滑上来的组件, 关于这个<a href="https://material.google.com/components/bottom-sheets.html" target="_blank" rel="noopener">Google Material Design</a>有相关的guidelines.<br>这篇文章主要讲了基本使用, 比较简单.</p>
+<p>这里私心推荐一下我自己的repo和另一个我觉得很好的教程:<br><a href="https://github.com/mengdd/AndroidDesignWidgetsSample" target="_blank" rel="noopener">AndroidDesignWidgetsSample</a><br><a href="https://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#bottom-sheets" target="_blank" rel="noopener">CodePath-handling-scrolls-with-CoordinatorLayout</a></p>
+<h3 id="DI-101-Part-1"><a href="#DI-101-Part-1" class="headerlink" title="DI 101 - Part 1"></a><a href="https://medium.com/di-101/di-101-part-1-81896c2858a0#.sdgvcu8v3" target="_blank" rel="noopener">DI 101 - Part 1</a></h3><p>Android平台的依赖注入.<br>文章开始讲了下依赖注入的概念, 当前在Android上的依赖注入最著名的是<a href="http://google.github.io/dagger/" target="_blank" rel="noopener">Dagger2</a>.<br>然后文章讲了如何set up dagger 2, 举了个例子, 写Module, Component, 然后使用.</p>
+<p>这里再私心推荐一下我自己的一篇教程:<br><a href="http://www.cnblogs.com/mengdd/p/5613889.html" target="_blank" rel="noopener">Using Dagger2 in Android</a></p>
+<h3 id="Android-Security-Welcome-to-Shell-Permissions"><a href="#Android-Security-Welcome-to-Shell-Permissions" class="headerlink" title="Android Security: Welcome to Shell (Permissions)"></a><a href="http://doridori.github.io/Android-Security-welcome-to-shell/#sthash.2BSXwRAF.dpbs" target="_blank" rel="noopener">Android Security: Welcome to Shell (Permissions)</a></h3><p>作者在Reddit上看到了这么一句话:<br><code>ADB is a shell that you get on a PC with the same permissions as if you were to run a shell/terminal app on the phone itself.</code><br>于是就写了这篇文章来讨论一下shell命令的权限问题, 关于系统底层的权限如何工作.<br>作者在里面提到了这本书<a href="https://www.amazon.co.uk/Android-Security-Internals-Depth-Architecture/dp/1593275811" target="_blank" rel="noopener">Android Security Internals: An In-Depth Guide to Android’s Security Architecture</a>.<br>关于Android安全方面的研究, 作者还建了一个repo: <a href="https://github.com/doridori/Android-Security-Reference" target="_blank" rel="noopener">Android-Security-Reference</a>, 里面是关于安全问题的各种notes, still WIP.</p>
+<h3 id="Lessons-from-converting-an-app-to-100-Kotlin"><a href="#Lessons-from-converting-an-app-to-100-Kotlin" class="headerlink" title="Lessons from converting an app to 100% Kotlin"></a><a href="https://medium.com/keepsafe-engineering/lessons-from-converting-an-app-to-100-kotlin-68984a05dcb6#.mrqsqq9ap" target="_blank" rel="noopener">Lessons from converting an app to 100% Kotlin</a></h3><p>这是关于Kotlin的系列文章之part 1, part 2的文章在这里<a href="https://medium.com/keepsafe-engineering/kotlin-the-good-the-bad-and-the-ugly-bf5f09b87e6f#.eyvm3gp5t" target="_blank" rel="noopener">Kotlin: The Good, The Bad, and The Ugly</a>, 讨论Kotlin的语言设计.<br>本篇文章讲什么呢?<br>作者是一个应用的leader engineer, 学习了几天Kotlin之后, 觉得可以解决Java存在的一些痛点, 于是把应用改为用Kotlin了, 这篇文章是在此过程中的一些想法.</p>
+<p><strong>方法数问题</strong>: 因为dex对方法数有要求, 不能超过64k, 见这里:<a href="https://developer.android.com/studio/build/multidex.html" target="_blank" rel="noopener">multidex</a>, 作者用了这个工具来统计方法数<a href="https://github.com/KeepSafe/dexcount-gradle-plugin" target="_blank" rel="noopener">dexcount-gradle-plugin</a>. 最后证明迁移到Kotlin之后, 代码行数减少了30%, 方法数减少了10%.</p>
+<p><strong>Retrolambda</strong>: 本来Retrolamda会生成匿名类, 并加上一些方法. Kotlin有内置的方法(apply), lamda可以直接传入, 不用生成匿名类, 不用添加额外的方法.</p>
+<p><strong>Guava</strong>: Guava的功能已经被Kotlin的标准库覆盖, 作者举例了Guava中的<code>ComparisonChains</code>, <code>Optional</code>, lazy fields和<code>Preconditions</code>等, 均有对应的Kotlin方法.</p>
+<p><strong>ButterKnife</strong>: ButterKnife仍然可以使用, 但是<a href="https://kotlinlang.org/docs/tutorials/android-plugin.html" target="_blank" rel="noopener">Kotlin Android Extensions</a>提供了更加自然的方式来访问绑定的views. 还有其他的方案比如<a href="https://github.com/JakeWharton/kotterknife" target="_blank" rel="noopener">Kotterknife</a>和<a href="https://github.com/Kotlin/anko" target="_blank" rel="noopener">Anko</a>, 但是这俩都各自有些缺点, 不如Kotlin Android Extensions好用.</p>
+<p><strong>RxJava</strong>: RxJava仍然是很好的, 但是由于对集合并没有函数式的方法, 所以有时候会用Kotlin替代一下.</p>
+<p>Kotlin的一个优势就是它和Java可以互相调用, 所以可以逐步改动.<br>Intellij有自动把Java转化为Kotlin的功能, 但是有时候会有错.</p>
+<p>作者推荐了学习Kotlin的资源:<a href="http://kotlinlang.org/docs/reference/" target="_blank" rel="noopener">Reference</a>.<br>最后鼓励大家使用Kotlin, 因为它现在已经足够成熟了.</p>
+<h3 id="Rewriting-Android-Priority-JobQueue-Lessons-Learned"><a href="#Rewriting-Android-Priority-JobQueue-Lessons-Learned" class="headerlink" title="Rewriting Android Priority JobQueue - Lessons Learned"></a><a href="http://www.birbit.com/rewriting-android-priority-jobqueue-lessons-learned/" target="_blank" rel="noopener">Rewriting Android Priority JobQueue - Lessons Learned</a></h3><p>作者有一个repo: <a href="https://github.com/yigit/android-priority-jobqueue" target="_blank" rel="noopener">android-priority-jobqueue</a>, 是为Android写的任务队列管理framework, 用于调度管理后台任务.<br>后来Android自己也加了这个类<a href="https://developer.android.com/reference/android/app/job/JobScheduler.html" target="_blank" rel="noopener">JobScheduler</a>.<br>最近作者重写了这个库, 改善了稳定性并加了new features, 发了V2版, 然后写个文章分享一下心得:</p>
+<ul>
+<li>不要通过share memory来通信, 应该通过通信来share memory.<br>以前是多个线程访问加锁的共享资源, 线程里的一些字段标记为volatile. 新版JobManager改为单线程, 只有它可以访问共享资源, 其他线程都和JobManager通信. 这里有个文章在说这种方法<a href="https://blog.golang.org/share-memory-by-communicating" target="_blank" rel="noopener">Share Memory By Communicating</a></li>
+<li>如果你的代码需要做时钟相关的事情, 抽象出来.<br>这主要是为测试和CI考虑.</li>
+<li>加新API之前多想想.</li>
+</ul>
+<h3 id="Trello-Android-Schema-Upgrades"><a href="#Trello-Android-Schema-Upgrades" class="headerlink" title="Trello Android Schema Upgrades"></a><a href="https://tech.trello.com/android-schemas/" target="_blank" rel="noopener">Trello Android Schema Upgrades</a></h3><p>Trello Android之前的数据库升级方式相当简单粗暴, 他们drop整个数据库, 重新创建, 然后用server上的数据填进来.<br>这样在以前是没有问题的, 因为Trello的每一个操作都会立即发送给server, 不支持离线操作, 所以server上的数据永远是最新的.<br>但是最近他们想支持离线工作了, 这就说明不能简单地删数据库了, 因为其中可能含有没有发给服务器的离线数据.<br>他们要升级数据库, 这篇文章讲了他们的升级策略和他们为数据库升级而写的测试.</p>
+<h3 id="Animating-the-text-dots-translation-on-password-field"><a href="#Animating-the-text-dots-translation-on-password-field" class="headerlink" title="Animating the text  dots translation on password field"></a><a href="https://twitter.com/crafty/status/766967057921417216?s=03" target="_blank" rel="noopener">Animating the text <-> dots translation on password field</-></a></h3><p>这个链接点进去是Twitter.<br>在新的support库升级(August 2016, v24.2.0)<a href="https://developer.android.com/topic/libraries/support-library/revisions.html" target="_blank" rel="noopener">Support Library Revision History</a>中, TextInputLayout增加了密码可见的toggle. Nick Butcher决定给按钮和文字的改变都加上动画.<br>这是他的repo: <a href="https://github.com/nickbutcher/plaid" target="_blank" rel="noopener">plaid</a>.</p>
+<h3 id="Introducing-Android-code-style-guidelines-at-Buffer"><a href="#Introducing-Android-code-style-guidelines-at-Buffer" class="headerlink" title="Introducing Android code style guidelines at Buffer"></a><a href="https://overflow.buffer.com/2016/08/18/introducing-android-code-style-guidelines-buffer/" target="_blank" rel="noopener">Introducing Android code style guidelines at Buffer</a></h3><p>团队工作中, 有统一的代码风格很重要, 代码风格主要是代码的可读性和一致性相关问题.<br>作者他们为自己的Android App归档了新的code style: <a href="https://github.com/bufferapp/android-guidelines/blob/master/project_style_guidelines.md" target="_blank" rel="noopener">project style guidelines</a>, 当然啦, 文档是在使用中不断成长的.<br>做这种事主要目标是以下几个点: 一致性, 可读性, 可维护性, 易于浏览查询, 有意义.<br>文档写得很详细, 涉及到各个方面, 值得一看.</p>
+<h3 id="Building-UserScope-with-Dagger-2"><a href="#Building-UserScope-with-Dagger-2" class="headerlink" title="Building UserScope with Dagger 2"></a><a href="http://frogermcs.github.io/building-userscope-with-dagger2/" target="_blank" rel="noopener">Building UserScope with Dagger 2</a></h3><p>关于Dagger 2里面自定义scope, 作者之前有一篇文章<a href="http://frogermcs.github.io/dependency-injection-with-dagger-2-custom-scopes/" target="_blank" rel="noopener">Dependency injection with Dagger 2 - Custom scopes</a>, 本篇文章继续了这个话题.<br>所谓scope呢, 就是限制了单例的生存周期, 有些单例可能在整个应用生命周期都存在, 另一些单例可能只需要存在一定的时间. Dagger 2默认只提供了一个scope @Singleton, 所以我们要根据需要自定义自己的scope.<br>作者的例子中定义了@UserScope, 以实例说明了他的实现, 还讨论了UserScope的状态恢复问题.<br>例子代码: <a href="https://github.com/frogermcs/Dagger2Recipes-UserScope" target="_blank" rel="noopener">Dagger2Recipes-UserScope</a></p>
+<h3 id="Using-Java-8-Lambda-expressions-in-Android"><a href="#Using-Java-8-Lambda-expressions-in-Android" class="headerlink" title="Using Java 8 Lambda expressions in Android"></a><a href="http://mayojava.github.io/android/java/using-java8-lambda-expressions-in-android/" target="_blank" rel="noopener">Using Java 8 Lambda expressions in Android</a></h3><p>Java 8的一个重要特性是加入了Lambda表达式.</p>
+<p><strong>Lambda表达式的语法</strong>:</p>
+<ul>
+<li><p>括号里是用逗号分隔的参数列表, 类型可以省略, 如果只有一个参数, 连括号也可以省略.<br>举例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TextView textView = (TextView) findViewById(R.id.text_view);</span><br><span class="line">textView.setOnLongClickListener(v -&gt; System.out.println(<span class="string">"Long Click"</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>箭头符号 <code>-&gt;</code></p>
+</li>
+<li>箭头后面的body是单个表达式或者一个语句块.<br>如果是单个表达式, java runtime会返回它的值;<br>如果是语句块, 用大括号<code>{}</code>包起来.</li>
+</ul>
+<p><strong>在Android中使用Lambda表达式</strong>:<br>需要改build.gradle:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    jackOptions &#123;</span><br><span class="line">      enabled true</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  compileOptions &#123;</span><br><span class="line">    sourceCompatibility JavaVersion.VERSION_1_8</span><br><span class="line">    targetCompatibility JavaVersion.VERSION_1_8</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还有另一种方式是使用RetroLambda plugin: <a href="https://github.com/evant/gradle-retrolambda" target="_blank" rel="noopener">gradle-retrolambda</a></p>
+<h3 id="Developing-for-Android-Wear-A-Noob’s-perspective"><a href="#Developing-for-Android-Wear-A-Noob’s-perspective" class="headerlink" title="Developing for Android Wear - A Noob’s perspective"></a><a href="https://medium.com/@moyinoluwa/developing-for-android-wear-a-noob-s-perspective-de47c4686ffb#.xjawtq69e" target="_blank" rel="noopener">Developing for Android Wear - A Noob’s perspective</a></h3><p>这篇文章讲了作者作为一个新手, 第一次开发Wear应用的时候遇到的种种问题.<br>比如, 手表和手机是需要配对的, 在手机上安装Google的这个<a href="https://play.google.com/store/apps/details?id=com.google.android.wearable.app" target="_blank" rel="noopener">软件</a>, 才能和手表配对, 配对了之后, 给手机安装release版apk的时候就会自动给手表安装应用.<br>也可以在Android Studio中选择wear来单跑Wear应用安装到手表, 但是只有配对了才能和手机有通信.<br>使用Wear的模拟器, 还需要运行这个命令adb -d forward tcp:5601 tcp:5601来和连接到电脑的手机连接.<br>还有在传输Assets时, 作者按照官方文档的例子, 却遇到了一些方法不能在UI线程调用的问题, 后来也解决了.</p>
+<h3 id="Remote-config-with-Firebase"><a href="#Remote-config-with-Firebase" class="headerlink" title="Remote config with Firebase"></a><a href="http://segunfamisa.com/posts/firebase-remote-config" target="_blank" rel="noopener">Remote config with Firebase</a></h3><p>作者讲了如何实现Firebase的Remote config.<br>Remote config可以使我们控制应用的更新, 而不用重新发布一个版本.<br>为什么要使用远程配置呢? 主要的原因是测试新的功能, 然后可以根据用户的反馈快速地做出响应, 把更好的行为呈现给用户. 简单来说就是做A/B Test.<br>Firebase的remote config很强大, 指定参数后可以指定应用条件, 包括国家, 系统, 应用版本, 随机等等.</p>
+<h2 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h2><h3 id="Updates-in-Material-design-guidelines"><a href="#Updates-in-Material-design-guidelines" class="headerlink" title="Updates in Material design guidelines"></a><a href="https://material.google.com/material-design/whats-new.html" target="_blank" rel="noopener">Updates in Material design guidelines</a></h3><p>2016年8月新发布的Material design包括了以下更新:<br>Notifications, Widgets, 确认操作和操作后的提示.<br>比较重要的更新是:<br>Navigation现在包括了如何使用Up和Back button.<br>还有使用全屏模式的三种模式:Lean back, Immersive, Lights Out以及它们相应的交互行为.</p>
+<h2 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h2><h3 id="Auto-value-firebase"><a href="#Auto-value-firebase" class="headerlink" title="Auto-value-firebase"></a><a href="https://github.com/mattlogan/auto-value-firebase" target="_blank" rel="noopener">Auto-value-firebase</a></h3><p>AutoValue的扩展, 用来创建Firebase的数据库对象.<br><a href="https://github.com/google/auto/tree/master/value" target="_blank" rel="noopener">AutoValue</a>是google的一个库. 用来创建interchangeable的对象, 即如果两个对象的所有fields是相等的, 我们认为这两个对象相等.</p>
+<h3 id="Icicle"><a href="#Icicle" class="headerlink" title="Icicle"></a><a href="https://github.com/segunfamisa/Icicle" target="_blank" rel="noopener">Icicle</a></h3><p>基于注解的一个工具, 用来保存和恢复实例的状态.<br>感觉跟<a href="https://github.com/frankiesardo/icepick" target="_blank" rel="noopener">Icepick</a>一样.</p>
+<h3 id="ReadMoreTextView"><a href="#ReadMoreTextView" class="headerlink" title="ReadMoreTextView"></a><a href="https://github.com/borjabravo10/ReadMoreTextView" target="_blank" rel="noopener">ReadMoreTextView</a></h3><p>一个自定义的TextView, 可以指定按照文字长度或者行数截取显示, 带展开和关闭按钮操作.</p>
+<h3 id="Android-priority-jobqueue"><a href="#Android-priority-jobqueue" class="headerlink" title="Android-priority-jobqueue"></a><a href="https://github.com/yigit/android-priority-jobqueue" target="_blank" rel="noopener">Android-priority-jobqueue</a></h3><p>一个为Android写的后台任务队列管理程序.</p>
+<h2 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h2><h3 id="Support-Library-Revision-History"><a href="#Support-Library-Revision-History" class="headerlink" title="Support Library Revision History"></a><a href="https://developer.android.com/topic/libraries/support-library/revisions.html" target="_blank" rel="noopener">Support Library Revision History</a></h3><p>Android Support Library 24.2.0发布啦(August 2016).</p>
+<p>v4被分成了很多小模块.</p>
+<p><strong>API更新</strong>:<br>Custom Tabs可以控制instant app是否打开.<br>TextInputLayout加了密码可见的toggle.<br>Transition兼容到API 14及其以上.<br>Custom Tabs support library支持给secondary toolbar用RemoteViews.<br>AppCompatResources加了可以通过getDrawable()方法, 以resource id加载<vector>和<animated-vector>的功能.<br>CoordinatorLayout现在支持定义inset views, 然后指定其他Views给其让路. 就是当Snackbar出现的时候, FloatingActionButton躲开的那种行为, 只不过现在给任意的child view都可以设置了.<br>DiffUtil类可以计算出两个集合的不同, 然后得出一个更新操作的list, 可以交给RecyclerView.Adapter.<br>新增了RecyclerView.OnFlingListener. 有SnapHelper和LinearSnapHelper可供选择使用.</animated-vector></vector></p>
+<p><strong>行为改变</strong>:<br>day/night模式改变的时候, activity将会自动重启.<br>如果status bar是透明的, Snacker现在会在navigation bar后面绘制.</p>
+<p>其他还有一些deprecations和bug fixes.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Wear/" rel="tag"># Wear</a>
+              <a href="/tags/Bottom-Sheet/" rel="tag"># Bottom Sheet</a>
+              <a href="/tags/Security/" rel="tag"># Security</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/JobScheduler/" rel="tag"># JobScheduler</a>
+              <a href="/tags/Trello/" rel="tag"># Trello</a>
+              <a href="/tags/TextInputLayout/" rel="tag"># TextInputLayout</a>
+              <a href="/tags/Code-Style/" rel="tag"># Code Style</a>
+              <a href="/tags/Java-8/" rel="tag"># Java 8</a>
+              <a href="/tags/Lambda/" rel="tag"># Lambda</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/AutoValue/" rel="tag"># AutoValue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/" rel="prev" title="Android Weekly Notes Issue 218">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 218
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-News/2016/08/29/android-7-0-Nougat-released/" rel="next" title="Android 7.0 Nougat released">
+      Android 7.0 Nougat released <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-219"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #219</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">1.1.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Bottom-Sheet"><span class="nav-number">1.1.1.</span> <span class="nav-text">Android: Bottom Sheet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DI-101-Part-1"><span class="nav-number">1.1.2.</span> <span class="nav-text">DI 101 - Part 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Security-Welcome-to-Shell-Permissions"><span class="nav-number">1.1.3.</span> <span class="nav-text">Android Security: Welcome to Shell (Permissions)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lessons-from-converting-an-app-to-100-Kotlin"><span class="nav-number">1.1.4.</span> <span class="nav-text">Lessons from converting an app to 100% Kotlin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rewriting-Android-Priority-JobQueue-Lessons-Learned"><span class="nav-number">1.1.5.</span> <span class="nav-text">Rewriting Android Priority JobQueue - Lessons Learned</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trello-Android-Schema-Upgrades"><span class="nav-number">1.1.6.</span> <span class="nav-text">Trello Android Schema Upgrades</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animating-the-text-dots-translation-on-password-field"><span class="nav-number">1.1.7.</span> <span class="nav-text">Animating the text &lt;-&gt; dots translation on password field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introducing-Android-code-style-guidelines-at-Buffer"><span class="nav-number">1.1.8.</span> <span class="nav-text">Introducing Android code style guidelines at Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-UserScope-with-Dagger-2"><span class="nav-number">1.1.9.</span> <span class="nav-text">Building UserScope with Dagger 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Java-8-Lambda-expressions-in-Android"><span class="nav-number">1.1.10.</span> <span class="nav-text">Using Java 8 Lambda expressions in Android</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Developing-for-Android-Wear-A-Noob%E2%80%99s-perspective"><span class="nav-number">1.1.11.</span> <span class="nav-text">Developing for Android Wear - A Noob’s perspective</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-config-with-Firebase"><span class="nav-number">1.1.12.</span> <span class="nav-text">Remote config with Firebase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DESIGN"><span class="nav-number">1.2.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Updates-in-Material-design-guidelines"><span class="nav-number">1.2.1.</span> <span class="nav-text">Updates in Material design guidelines</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">1.3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Auto-value-firebase"><span class="nav-number">1.3.1.</span> <span class="nav-text">Auto-value-firebase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Icicle"><span class="nav-number">1.3.2.</span> <span class="nav-text">Icicle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ReadMoreTextView"><span class="nav-number">1.3.3.</span> <span class="nav-text">ReadMoreTextView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-priority-jobqueue"><span class="nav-number">1.3.4.</span> <span class="nav-text">Android-priority-jobqueue</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NEWS"><span class="nav-number">1.4.</span> <span class="nav-text">NEWS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Support-Library-Revision-History"><span class="nav-number">1.4.1.</span> <span class="nav-text">Support Library Revision History</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/";
+    this.page.identifier = "Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/";
+    this.page.title = "Android Weekly Notes Issue 219";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

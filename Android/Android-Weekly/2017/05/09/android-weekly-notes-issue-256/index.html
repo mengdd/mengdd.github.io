@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #256May 7th, 2017Android Weekly Issue #256本期内容包括: 一个给ViewPager切换时加动画的库; Tail Recursion和它在Kotlin中的实现; MVI模式中的状态恢复; Dagger2的新API使用; 一个新的框架库Flax介绍.代码部分包括: ViewPager加动画的库; 悬浮菜单; RxLoa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 256">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #256May 7th, 2017Android Weekly Issue #256本期内容包括: 一个给ViewPager切换时加动画的库; Tail Recursion和它在Kotlin中的实现; MVI模式中的状态恢复; Dagger2的新API使用; 一个新的框架库Flax介绍.代码部分包括: ViewPager加动画的库; 悬浮菜单; RxLoa">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-05-09T09:34:44.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.999Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Loader">
+<meta property="article:tag" content="BottomNavigationView">
+<meta property="article:tag" content="MVI">
+<meta property="article:tag" content="ViewPager">
+<meta property="article:tag" content="Tail Recursion">
+<meta property="article:tag" content="Floating Menu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 256 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 256
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-05-09 17:34:44" itemprop="dateCreated datePublished" datetime="2017-05-09T17:34:44+08:00">2017-05-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 256" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-256"><a href="#Android-Weekly-Issue-256" class="headerlink" title="Android Weekly Issue #256"></a>Android Weekly Issue #256</h1><p>May 7th, 2017<br><a href="http://androidweekly.net/issues/issue-256" target="_blank" rel="noopener">Android Weekly Issue #256</a><br>本期内容包括: 一个给ViewPager切换时加动画的库; Tail Recursion和它在Kotlin中的实现; MVI模式中的状态恢复; Dagger2的新API使用; 一个新的框架库Flax介绍.<br>代码部分包括: ViewPager加动画的库; 悬浮菜单; RxLoader结合RxJava和Loader实现数据加载; 一个封装BottomNavigationView的库, 使得状态切换类似于ViewPager.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="ViewPagerAnimator-–-The-Basics"><a href="#ViewPagerAnimator-–-The-Basics" class="headerlink" title="ViewPagerAnimator – The Basics"></a><a href="https://blog.stylingandroid.com/viewpageranimator-the-basics/" target="_blank" rel="noopener">ViewPagerAnimator – The Basics</a></h2><p>一个轻量级的库: <a href="https://github.com/StylingAndroid/ViewPagerAnimator" target="_blank" rel="noopener">ViewPagerAnimator</a>. 本文介绍它的基本用法, 举了一个例子, 可以在切换pager的时候改变背景颜色.</p>
+<h2 id="Tail-recursion-and-how-to-use-it-in-Kotlin"><a href="#Tail-recursion-and-how-to-use-it-in-Kotlin" class="headerlink" title="Tail recursion and how to use it in Kotlin"></a><a href="https://medium.com/@JorgeCastilloPr/tail-recursion-and-how-to-use-it-in-kotlin-97353993e17f" target="_blank" rel="noopener">Tail recursion and how to use it in Kotlin</a></h2><p>尾部递归和它在Kotlin中的实现.</p>
+<p>官方文档见: <a href="https://kotlinlang.org/docs/reference/functions.html#tail-recursive-functions" target="_blank" rel="noopener">tail-recursive-functions</a>. 关键字: <code>tailrec</code>.</p>
+<h2 id="Reactive-with-MVI-Part-6-Restoring-State"><a href="#Reactive-with-MVI-Part-6-Restoring-State" class="headerlink" title="Reactive with MVI Part 6 - Restoring State"></a><a href="http://hannesdorfmann.com/android/mosby3-mvi-6" target="_blank" rel="noopener">Reactive with MVI Part 6 - Restoring State</a></h2><p>使用MVI(Model-View-Intent)模式, 保持数据流的单向性, 会很大程度上简化状态恢复. 本篇就介绍怎么做和为什么.</p>
+<p>这篇文章关注的状态分两种: 一种是memory中的状态(比如屏幕旋转时); 一种是persistent的状态, 即存在Bundle中的状态.</p>
+<h3 id="In-Memory"><a href="#In-Memory" class="headerlink" title="In Memory"></a>In Memory</h3><p>对于Memory中的状态, 很简单, 我们只需要保证我们的RxJava流在Android组件生命周期之外仍然发送新的状态.</p>
+<p>对于MVP来说, 这就是让Presenter在View的生命周期之外存活, 每当view重新attach到presenter上之后, 就按照前一个状态重新渲染. 只有当view完全被销毁了之后presenter才释放.</p>
+<p>使用情形: 屏幕旋转, back stack回退.</p>
+<h3 id="Persistent-State"><a href="#Persistent-State" class="headerlink" title="Persistent State"></a>Persistent State</h3><p>在Android中通常用<code>Activity.onSaveInstanceState(Bundle)</code>来保存状态. 在MVI中View有一个<code>render(state)</code>方法, 所以一个显而易见的方法是让state实现<code>Parcelable</code>然后保存在bundle中.</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>使用单向数据流和一个表达状态的Model以后, 很多和状态相关的事情变得很容易实现了.</p>
+<p>但是通常处于两个理由, 不会把状态放在bundle里: 第一, Bundle有大小限制; 第二, 我们仅仅讨论了如何序列化和反序列化状态, 但恢复状态可能是另一回事.</p>
+<h2 id="Dagger-2-Android-Modules"><a href="#Dagger-2-Android-Modules" class="headerlink" title="Dagger 2: Android Modules"></a><a href="https://medium.com/proandroiddev/dagger-2-android-modules-e168821cfc57" target="_blank" rel="noopener">Dagger 2: Android Modules</a></h2><p>Dagger 2发布了新版本2.11-rc2.<br>在2.11中有新的API: <code>@ContributesAndroidInjector</code>.</p>
+<p><a href="https://github.com/google/dagger/releases" target="_blank" rel="noopener">dagger2的changelog</a>.</p>
+<p>本文介绍了新API相关的用法, 和之前的实现做了比较.</p>
+<p>新的用法总结起来有以下三点:</p>
+<ul>
+<li>继承<code>DaggerApplication</code>来注入相关的dispatchers.</li>
+<li>在component中包含<code>AndroidSupportInjectionModule.class</code>.</li>
+<li>创建一个bind方法, 用<code>@ContributesAndroidInjector</code>标注.</li>
+</ul>
+<h2 id="Hello-Flax-—-A-Reactive-Architecture-For-Android"><a href="#Hello-Flax-—-A-Reactive-Architecture-For-Android" class="headerlink" title="Hello Flax — A Reactive Architecture For Android"></a><a href="https://hackernoon.com/hello-flax-a-reactive-architecture-for-android-8e56af9c575a" target="_blank" rel="noopener">Hello Flax — A Reactive Architecture For Android</a></h2><p>当前Android中的一个趋势是创建reactive的app.<br>作者最初听说这个概念是从<a href="https://facebook.github.io/flux/" target="_blank" rel="noopener">Flux</a>. 后来看了一系列<a href="http://hannesdorfmann.com/android/mosby3-mvi-1" target="_blank" rel="noopener">MVI模式的文章</a>, 作者自己也做了一个MVI的<a href="https://medium.com/@CodyEngel/lets-try-model-view-intent-with-android-3190a899c3a1" target="_blank" rel="noopener">尝试</a>. 之后他就创建了<a href="https://github.com/CodyEngel/Flax" target="_blank" rel="noopener">Flax</a>, 是一个轻量级的框架库(还在进一步开发中).</p>
+<p>本文介绍了Flax库的使用, 基本可以总结为以下几点:</p>
+<ul>
+<li>Model作为唯一的状态真相.</li>
+<li>View只做无脑的渲染.</li>
+<li>Renderer接收Model变化的通知, 调用View的渲染方法.</li>
+<li>Responder接收用户交互事件, 调用Model的更新方法.</li>
+</ul>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="ViewPagerAnimator"><a href="#ViewPagerAnimator" class="headerlink" title="ViewPagerAnimator"></a><a href="https://github.com/StylingAndroid/ViewPagerAnimator" target="_blank" rel="noopener">ViewPagerAnimator</a></h2><p>一个轻量级的ViewPager动画库.</p>
+<h2 id="floatingMenu"><a href="#floatingMenu" class="headerlink" title="floatingMenu"></a><a href="https://github.com/rjsvieira/floatingMenu" target="_blank" rel="noopener">floatingMenu</a></h2><p>一个悬浮的action menu, 点开后展开多个菜单选项.</p>
+<h2 id="RxLoader"><a href="#RxLoader" class="headerlink" title="RxLoader"></a><a href="https://github.com/kmdupr33/RxLoader" target="_blank" rel="noopener">RxLoader</a></h2><p>一个轻量级的加载数据的库, 结合Loader和RxJava, 避免了内存泄露.<br>基本使用方法: 和你的<code>Observable</code>或者<code>Single</code> <code>compose</code>一下就好.</p>
+<p>作者还有一篇文章详细介绍为什么他觉得他这个库很有必要: <a href="https://www.philosophicalhacker.com/post/rxloader-boilerplate-free-data-loading-with-loaders-and-rxjava/" target="_blank" rel="noopener">RxLoader: Lightweight, Boilerplate-Free Data loading with Loaders and RxJava</a>.</p>
+<h2 id="AdaptableBottomNavigation"><a href="#AdaptableBottomNavigation" class="headerlink" title="AdaptableBottomNavigation"></a><a href="https://github.com/bufferapp/AdaptableBottomNavigation" target="_blank" rel="noopener">AdaptableBottomNavigation</a></h2><p>使用support库的<code>BottomNavigationView</code>的时候, 需要自己处理tab间的切换. 作者他们受到<code>TabLayout</code>的启发, 创建了一个<code>ViewSwapper</code>类, 可以简化<code>BottomNavigationView</code>的View管理, 有点像<code>ViewPager</code>的变种, 但去掉了滑动切换的功能.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Loader/" rel="tag"># Loader</a>
+              <a href="/tags/BottomNavigationView/" rel="tag"># BottomNavigationView</a>
+              <a href="/tags/MVI/" rel="tag"># MVI</a>
+              <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+              <a href="/tags/Tail-Recursion/" rel="tag"># Tail Recursion</a>
+              <a href="/tags/Floating-Menu/" rel="tag"># Floating Menu</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/05/03/android-weekly-notes-issue-255/" rel="prev" title="Android Weekly Notes Issue 255">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 255
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/" rel="next" title="Android Weekly Notes Issue 257">
+      Android Weekly Notes Issue 257 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-256"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #256</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewPagerAnimator-%E2%80%93-The-Basics"><span class="nav-number">2.1.</span> <span class="nav-text">ViewPagerAnimator – The Basics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tail-recursion-and-how-to-use-it-in-Kotlin"><span class="nav-number">2.2.</span> <span class="nav-text">Tail recursion and how to use it in Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-with-MVI-Part-6-Restoring-State"><span class="nav-number">2.3.</span> <span class="nav-text">Reactive with MVI Part 6 - Restoring State</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#In-Memory"><span class="nav-number">2.3.1.</span> <span class="nav-text">In Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Persistent-State"><span class="nav-number">2.3.2.</span> <span class="nav-text">Persistent State</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">2.3.3.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dagger-2-Android-Modules"><span class="nav-number">2.4.</span> <span class="nav-text">Dagger 2: Android Modules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-Flax-%E2%80%94-A-Reactive-Architecture-For-Android"><span class="nav-number">2.5.</span> <span class="nav-text">Hello Flax — A Reactive Architecture For Android</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewPagerAnimator"><span class="nav-number">3.1.</span> <span class="nav-text">ViewPagerAnimator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#floatingMenu"><span class="nav-number">3.2.</span> <span class="nav-text">floatingMenu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RxLoader"><span class="nav-number">3.3.</span> <span class="nav-text">RxLoader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaptableBottomNavigation"><span class="nav-number">3.4.</span> <span class="nav-text">AdaptableBottomNavigation</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/";
+    this.page.identifier = "Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/";
+    this.page.title = "Android Weekly Notes Issue 256";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

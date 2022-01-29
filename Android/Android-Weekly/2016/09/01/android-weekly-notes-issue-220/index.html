@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #220August 28th, 2016Android Weekly Issue #220">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 220">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #220August 28th, 2016Android Weekly Issue #220">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-09-01T06:05:48.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.989Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Fragment">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="AnimatedVectorDrawable">
+<meta property="article:tag" content="Bottom Sheet">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Certificate">
+<meta property="article:tag" content="Retrofit">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="AsyncLayoutInflater">
+<meta property="article:tag" content="DiffUtil">
+<meta property="article:tag" content="Recorder">
+<meta property="article:tag" content="tiger">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 220 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 220
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-09-01 14:05:48" itemprop="dateCreated datePublished" datetime="2016-09-01T14:05:48+08:00">2016-09-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 220" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-220"><a href="#Android-Weekly-Issue-220" class="headerlink" title="Android Weekly Issue #220"></a>Android Weekly Issue #220</h1><p>August 28th, 2016<br><a href="http://androidweekly.net/issues/issue-220" target="_blank" rel="noopener">Android Weekly Issue #220</a></p>
+<a id="more"></a>
+<h2 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h2><h3 id="Manage-dependencies-versions-with-gradle-extra-properties"><a href="#Manage-dependencies-versions-with-gradle-extra-properties" class="headerlink" title="Manage dependencies versions with gradle extra properties"></a><a href="https://segunfamisa.com/posts/android-gradle-extra-properties" target="_blank" rel="noopener">Manage dependencies versions with gradle extra properties</a></h3><p>依赖管理的小Tip: 把依赖的版本号作为变量管理.<br>改造之后, build.gradle文件变成这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.android.application&apos;</span><br><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">ext &#123;</span><br><span class="line">    supportLibraryVersion = &apos;23.4.0&apos;</span><br><span class="line">    playServicesVersion = &apos;9.2.1&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    // support libraries</span><br><span class="line">    compile &quot;com.android.support:appcompat-v7:$supportLibraryVersion&quot;</span><br><span class="line">    compile &quot;com.android.support:design:$supportLibraryVersion&quot;</span><br><span class="line">    compile &quot;com.android.support:percent:$supportLibraryVersion&quot;</span><br><span class="line">    compile &quot;com.android.support:cardview-v7:$supportLibraryVersion&quot;</span><br><span class="line">    compile &quot;com.android.support:gridlayout-v7:$supportLibraryVersion&quot;</span><br><span class="line"></span><br><span class="line">    //play services</span><br><span class="line">    compile &quot;com.google.android.gms:play-services-location:$playServicesVersion&quot;</span><br><span class="line">    compile &quot;com.google.android.gms:play-services-gcm:$playServicesVersion&quot;</span><br><span class="line"></span><br><span class="line">    // other dependencies</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>定义了版本号变量, 原来hardcode时的单引号变成了双引号, 然后用$符号取变量值.</p>
+<p>上面这个是app module里面使用的例子, 如果你的应用有多个module怎么办呢?<br>当然一种办法是每个module里定义一组版本号变量, 更方便的办法是在项目工程总目录的build.gradle文件里定义变量.<br>可以在工程的build文件里写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ext &#123;</span><br><span class="line">    // sdk and tools</span><br><span class="line">    minSdkVersion = 14</span><br><span class="line">    targetSdkVersion = 23</span><br><span class="line">    compileSdkVersion = 23</span><br><span class="line">    buildToolsVersion = &apos;23.0.2&apos;</span><br><span class="line"></span><br><span class="line">    // dependencies versions</span><br><span class="line">    supportLibraryVersion = &apos;23.4.0&apos;</span><br><span class="line">    playServicesVersion = &apos;9.2.1&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以这样定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">project.ext.supportLibVersion = &apos;24.0.0&apos;</span><br></pre></td></tr></table></figure></p>
+<p>使用的时候可以这样取值: <code>$rootProject.supportLibraryVersion</code>.<br>也可以省略前面的rootProject, 直接取<code>$supportLibraryVersion</code></p>
+<h3 id="Android-CI-with-Docker"><a href="#Android-CI-with-Docker" class="headerlink" title="Android CI with Docker"></a><a href="https://medium.com/@Malinskiy/android-ci-with-docker-a2f522086640#.ud9unt793" target="_blank" rel="noopener">Android CI with Docker</a></h3><p>作者讲了他怎么用Docker搭建CI.</p>
+<ol>
+<li><p>环境:<br>首先, CI需要Android环境(JDK 7&amp;8, Android SDK, Gradle, Release keychain, google-services.json, etc).<br>装了这些环境之后, 需要保证他们在每一个CI实例上都是同步更新的.<br>用了Docker之后, 更新环境的步骤变为:<br>更新你的Dockerfile -&gt; Push到版本管理系统 -&gt; CI会build新的image, 然后push到docker registry.</p>
+</li>
+<li><p>Build:<br><code>docker run -v ./app:/opt/app docker-ci-android:latest gradle assembleRelease</code></p>
+</li>
+<li><p>Test:<br>有两种测试, 一种是单元测试, 只需要JVM; 另一种是UI或者功能测试, 需要Android.<br>emulator会有一些问题: <a href="https://developer.android.com/training/articles/smp.html" target="_blank" rel="noopener">why</a><br>所以你可能想要在更真实的机器上测试: <a href="https://github.com/openstf/stf" target="_blank" rel="noopener">STF</a>提供了服务, 你只需要用这个<a href="https://github.com/Malinskiy/stf-client" target="_blank" rel="noopener">stf-client</a>.</p>
+</li>
+<li><p>Deploy:<br>部署用一些gradle的task就可以完成.<br><a href="https://docs.fabric.io/android/beta/gradle.html#distribution-with-gradle" target="_blank" rel="noopener">fabric</a><br><a href="https://github.com/Triple-T/gradle-play-publisher" target="_blank" rel="noopener">gradle-play-publisher</a></p>
+</li>
+</ol>
+<p>后面还提到了一些扩展和问题.</p>
+<h3 id="Bottom-Sheets-in-Android"><a href="#Bottom-Sheets-in-Android" class="headerlink" title="Bottom Sheets in Android"></a><a href="http://mayojava.github.io/android/bottom-sheets-android/" target="_blank" rel="noopener">Bottom Sheets in Android</a></h3><p>BottomSheet是support library 23.2加入的, 是从底部滑上来的一个块块, 用来向用户展现更多内容.<br>Support Library提供了:<br><code>BottomSheetBehavior</code>: 加在<code>CoordinatorLayout</code>的直接child view上, 然后在java代码里get出来, 设置state控制其状态.<br>有HIDE, COLLAPSED和EXPANDED三种状态, 分别对应隐藏, 展开到指定高度(peekHeight)和完全展开.<br><code>BottomSheetDialog</code>:<br><code>BottomSheetDialogFragment</code>.<br>Behaviour是给View加行为, 后面这两种是更加模块化的dialog, 状态控制都一样.</p>
+<p>这里推荐一下笔者自己的demo: <a href="https://github.com/mengdd/AndroidDesignWidgetsSample" target="_blank" rel="noopener">AndroidDesignWidgetsSample</a><br>再推荐一下这篇文章里面的Bottom Sheets部分: <a href="https://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout" target="_blank" rel="noopener">CodePath-Handling-Scrolls-with-CoordinatorLayout</a></p>
+<h3 id="Certificate-public-key-pinning-using-Retrofit-2"><a href="#Certificate-public-key-pinning-using-Retrofit-2" class="headerlink" title="Certificate public key pinning using Retrofit 2"></a><a href="https://medium.com/@sreekumar_av/certificate-public-key-pinning-in-android-using-retrofit-2-0-74140800025b#.9ajsf36qp" target="_blank" rel="noopener">Certificate public key pinning using Retrofit 2</a></h3><p>SSL handshake, 交换了证书(Certificate), 这样客户端就可以通过证书来验证服务器的身份.<br>什么是Certificate public key pinning呢? 也叫作SSL pinning.</p>
+<p>把host name和<a href="https://tools.ietf.org/html/rfc7469#section-2.4" target="_blank" rel="noopener">public key</a>关联起来, 这个public key将用来和证书中的public key比较, 如果匹配了, 就证明你正在和正确的server通信.<br>而直接pinning证书相比pinning public key更容易一些, 但是也有不好的地方, 如果网站(比如Google)经常轮换证书(rotate its certificate), 你的应用就也得经常更新, 而这种情况一般证书里面的public keys是保持不变的.<br>如何在Android中用Retrofit实现pinning呢?<br>首先需要网站的public key的hash, 有很多获取方法, 参见<a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/CertificatePinner.java" target="_blank" rel="noopener">okhttp3-CertificatePinner</a>.<br>然后构建CertificatePinner类对象, 加到OkHttpClient上.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CertificatePinner certificatePinner = <span class="keyword">new</span> CertificatePinner.Builder()</span><br><span class="line">                   .add(<span class="string">"api.github.com"</span>, <span class="string">"sha256/6wJsqVDF8K19zxfLxV5DGRneLyzso9adVdUN/exDacw="</span>)</span><br><span class="line">                   .build();</span><br><span class="line"><span class="keyword">final</span> OkHttpClient client = httpBuilder.certificatePinner(certificatePinner).build();</span><br><span class="line"></span><br><span class="line"> Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">                   .baseUrl(END_POINT)</span><br><span class="line">                   .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">                   .client(client)</span><br><span class="line">                   .build();</span><br></pre></td></tr></table></figure></p>
+<p>TLSv1.2从Android16+开始支持, 但是对于20+的设备默认是disabled的, 为了强制获取支持, 可以继承<a href="http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/javax/net/ssl/SSLSocketFactory.java" target="_blank" rel="noopener">SSLSocketFactory</a>, 强制设置为enabled, 代码见原文吧.<br>Github上有完整的代码<a href="https://github.com/pollux-/PublicKeyPinning" target="_blank" rel="noopener">PublicKeyPinning</a><br>作者最后还推荐了一个测试的工具<a href="https://mitmproxy.org/" target="_blank" rel="noopener">mitmproxy</a>.</p>
+<h3 id="Isometric-AnimatedVectorDrawable-Part-3"><a href="#Isometric-AnimatedVectorDrawable-Part-3" class="headerlink" title="Isometric AnimatedVectorDrawable - Part 3"></a><a href="https://blog.stylingandroid.com/isometric-animatedvectordrawable-part-3/" target="_blank" rel="noopener">Isometric AnimatedVectorDrawable - Part 3</a></h3><p>作者继续讲了他如何构建方块地形图的动态效果.<br>一个AnimatedVectorDrawable的xml文件实际上是用来建立一个映射关系, 关联objectAnimators和VectorDrawable上的独立元素. 我们可以建立一个objectAnimator, 操纵我们的一块元素的动画效果.<br>文中实现了让方块地形动起来的动画效果.</p>
+<h3 id="The-many-flavors-of-commit"><a href="#The-many-flavors-of-commit" class="headerlink" title="The many flavors of commit()"></a><a href="https://medium.com/@bherbst/the-many-flavors-of-commit-186608a015b1#.uwl2v86cx" target="_blank" rel="noopener">The many flavors of commit()</a></h3><p><strong>FragmentTransaction的提交方法</strong>:<br>support library的<code>FragmentTransaction</code>现在提供了四种不同的方法来commit一个transaction:<br><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html#commit%28%29" target="_blank" rel="noopener">commit()</a><br><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html#commitAllowingStateLoss%28%29" target="_blank" rel="noopener">commitAllowingStateLoss()</a><br><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html#commitNow%28%29" target="_blank" rel="noopener">commitNow()</a><br><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html#commitNowAllowingStateLoss%28%29" target="_blank" rel="noopener">commitNowAllowingStateLoss()</a><br>这篇文章分析了这四个方法的不同.</p>
+<p><strong>commit() vs commitAllowingStateLoss()</strong>:<br>用<code>commit()</code>提交有时候会遇到<code>IllegalStateException</code>, 说你在<code>onSaveInstanceState()</code>之后提交, 这里有另一个文章很好地分析了这个问题:<a href="http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html" target="_blank" rel="noopener">Fragment Transactions &amp; Activity State Loss</a><br><code>commit()</code>和<code>commitAllowingStateLoss()</code>在实现上唯一的不同就是当你调用<code>commit()</code>的时候, FragmentManger会检查是否已经存储了它自己的状态, 如果已经存了, 就抛出<code>IllegalStateException</code>.<br>那么如果你调用的是<code>commitAllowingStateLoss()</code>, 并且是在<code>onSaveInstanceState()</code>之后, 你可能会丢失掉什么状态呢?<br>答案是你<strong>可能</strong>会丢掉FragmentManager的状态, 即save之后任何被添加或被移除的Fragments.<br>举例说明:<br>1.在Activity里显示一个FragmentA;<br>2.然后Activity被后台, <code>onStop()</code>和<code>onSaveInstanceState()</code>被调用;<br>3.在某个事件触发下, 你用FragmentB replace FragmentA , 使用的是 <code>commitAllowingStateLoss()</code>.<br>这时候, 用户再返回应用, 可能会有两种情况发生:<br>1.如果系统杀死了你的activity, 你的activity将会重建, 使用了上述步骤2保存的状态, 所以A会显示, B不会显示;<br>2.如果系统没有杀死你的activity, 它会被提到前台, FragmentB就会显示出来, 到下次Activity stop的时候, 这个包含了B的状态就会被存下来.<br>(上述测试可以利用开发者选项中的”Don’t Keep Activities”选项).<br>那么你要选择哪一种呢? 这就取决于你提交的是什么, 还有你是否能接受丢失.</p>
+<p><strong>commit(), commitNow() 和 executePendingTransactions()</strong>:<br>使用<code>commit()</code>的时候, 一旦调用, 这个commit并不是立即执行的, 它会被发送到主线程的任务队列当中去, 当主线程准备好执行它的时候执行.<br><code>popBackStack()</code>的工作也是这样, 发送到主线程任务队列中去. 也即说它们都是异步的.</p>
+<p>但是有时候你希望你的操作是立即执行的, 之前的开发者会在<code>commit()</code>调用之后加上 <code>executePendingTransactions()</code>来保证立即执行, 即变异步为同步.<br>support library从v24.0.0开始提供了 <code>commitNow()</code>方法, 之前用<code>executePendingTransactions()</code>会将所有pending在队列中还有你新提交的transactions都执行了, 而<code>commitNow()</code>将只会执行你当前要提交的transaction. 所以<code>commitNow()</code>避免你会不小心执行了那些你可能并不想执行的transactions.</p>
+<p>但是你不能对要加在back stack中的transaction使用<code>commitNow()</code>, 即<code>addToBackStack()</code>和<code>commitNow()</code>不能同时使用.<br>为什么呢?<br>想想一下, 如果你有一个提交使用了<code>commit()</code>, 紧接着又有另一个提交使用了<code>commitNow()</code>, 两个都想加入back stack, 那back stack会变成什么样呢? 到底是哪个transaction在上, 哪个在下? 答案将是一种不确定的状态, 因为系统并没有提供任何保证来确保顺序, 所以系统决定干脆不支持这个操作.</p>
+<p>前面提过<code>popBackStack()</code>是异步的, 所以它同样也有一个同步的兄弟<code>popBackStackImmediate()</code>.</p>
+<p>所以实际应用的时候怎么选择呢?</p>
+<ol>
+<li>如果你需要同步的操作, 并且你不需要加到back stack里, 使用<code>commitNow()</code>.<br>support library在FragmentPagerAdapter里就使用了commitNow()来保证在更新结束的时候, 正确的页面被加上或移除.</li>
+<li>如果你操作很多transactions, 并且不需要同步, 或者你需要把transactions加在back stack里, 那就使用<code>commit()</code>.</li>
+<li>如果你希望在某一个指定的点, 确保所有的transactions都被执行, 那么使用<code>executePendingTransactions()</code>.</li>
+</ol>
+<h3 id="Break-circular-dependency-with-RxJava-用RxJava打破循环依赖"><a href="#Break-circular-dependency-with-RxJava-用RxJava打破循环依赖" class="headerlink" title="Break circular dependency with RxJava 用RxJava打破循环依赖."></a><a href="https://medium.com/@ferhatparmak/break-your-circular-dependency-with-rxjava-8a487345061#.4718laogc" target="_blank" rel="noopener">Break circular dependency with RxJava</a> 用RxJava打破循环依赖.</h3><p>当你把代码分成各个部分, 比如用MVP, 这些各个部分之间可能会有相互依赖, 比如View需要Presenter, Presenter也需要View.<br>作者也没有说双向关联有什么缺点, 但是他说RxJava可以把这种双向的依赖改成单向的.<br>作者的办法是使用<a href="https://github.com/JakeWharton/RxBinding" target="_blank" rel="noopener">RxBinding</a>把button的click事件变成一个Observable, 然后Presenter监听click这个Observable, 后面接一个flatMap, 里面发网络请求, 得到结果之后再调用view的方法.<br>这么一改以后View中就不需要再持有Presenter的引用了.<br>举这个例子, 最后是想说, 如果你想从A中调用B的异步方法, 你不用总是在A中保存一个B的引用, 你可以把A中的事件作为一个Observable. 这样只需要B保存了A的引用就可以了.</p>
+<h3 id="Asynchronous-layout-inflation-异步解析layout"><a href="#Asynchronous-layout-inflation-异步解析layout" class="headerlink" title="Asynchronous layout inflation 异步解析layout"></a><a href="https://medium.com/@lupajz/asynchronous-layout-inflation-7cbca2653bf#.lld73d5uq" target="_blank" rel="noopener">Asynchronous layout inflation</a> 异步解析layout</h3><p>最近的support library revision 24中, Google的开发者在v4包中加入了一个新的辅助类<a href="https://developer.android.com/reference/android/support/v4/view/AsyncLayoutInflater.html" target="_blank" rel="noopener">AsyncLayoutInflater</a>, 来实现布局的异步解析.</p>
+<p>我们现在常用的布局解析inflate方法都是同步的, 那什么时候需要异步地做这件事情呢?<br>比如你想延迟加载布局中的一块, 或者你想把布局解析作为用户某个交互的一个响应. 这样就可以用这个异步布局解析类, 保证了主线程在inflation进行的时候仍然可响应.<br>怎么使用呢?<br>首先, 在主线程创建对象<code>AsyncLayoutInflater(this)</code>,<br>用它inflate布局的时候第三个参数是一个<code>OnInflateFinishedListener</code>回调.<br>以前同步方法的第三个参数是一个boolean, 说布局是否需要attach到parent上, 现在没有这个boolean参数了.<br>当然, 使用异步解析也有缺点:</p>
+<ul>
+<li>父类方法<code>generateLayoutParams()</code>必须是线程安全的.</li>
+<li>被创建的所有View不能创建Handler,或者调用<code>Looper.myLooper()</code>方法.</li>
+<li>不支持设置<code>LayoutInflater.Factory</code>和<code>LayoutInflater.Factory2</code></li>
+<li>不支持布局里有Fragment.<br>如果我们要异步inflate的布局不能支持异步, inflate的过程将会自动转化为在UI线程的解析.<br>作者文中附有Kotlin的例子.</li>
+</ul>
+<h3 id="Introduction-to-Automated-Android-Testing-Part-5"><a href="#Introduction-to-Automated-Android-Testing-Part-5" class="headerlink" title="Introduction to Automated Android Testing - Part 5"></a><a href="https://riggaroo.co.za/introduction-automated-android-testing-part-5/" target="_blank" rel="noopener">Introduction to Automated Android Testing - Part 5</a></h3><p>系列文章的第五篇, 之前第四篇的时候写了Presenter, 定义了V和P的接口, 本篇接着写View接口的实现.</p>
+<p>这里Presenter和View关联作者写了两个attachView()和detachView()方法, 前者在Presenter构造之后调用, 后者在Activity的onDestroy()里调用. 这里同时会unregister RxJava的subscriptions, 避免了内存泄露的发生.</p>
+<p>作者在布局时用了<code>ConstraintLayout</code>, 关于这个layout的使用她有另一个<a href="https://riggaroo.co.za/constraintlayout-101-new-layout-builder-android-studio/" target="_blank" rel="noopener">blog</a><br>另外作者还加了Toolbar上的SearchView, 到此, 作者的这个app就基本完成了.<br>作者的代码里还有一个Injection类, 用来提供retrofit的service, 即代码中UserRepo的获取, 在Presenter构造时传入.</p>
+<p>作者的代码: <a href="https://github.com/riggaroo/GithubUsersSearchApp/tree/testing-tutorial-part5-complete" target="_blank" rel="noopener">GithubUsersSearchApp</a><br>预告下一篇将会加入UI测试.</p>
+<h3 id="DiffUtil-is-a-must"><a href="#DiffUtil-is-a-must" class="headerlink" title="DiffUtil is a must!"></a><a href="https://medium.com/@nullthemall/diffutil-is-a-must-797502bc1149#.lqfl9xikm" target="_blank" rel="noopener">DiffUtil is a must!</a></h3><p>support library 24.2.0推出了一个新的辅助类<code>DiffUtil</code>, 它是用来解决什么问题的呢?<br>如果你的RecyclerView.Adapter第一次接收到了新的数据, 这很简单, 只需要将它们显示出来, 但如果已经有了数据, 新的数据又来了, 这时候怎么做才是最好的呢?<br><a href="https://developer.android.com/reference/android/support/v7/util/DiffUtil.html" target="_blank" rel="noopener">DiffUtil</a>来了, 它就是专门为了解决RecyclerView的Adapter更新而设计的, 他可以计算出前后两个list的不同, 然后返回一组更新操作, 把第一个list变为第二个list.<br><code>DiffUtil</code>需要知道你的两个list的基本信息: 长度, 基本item的比较.<br><code>DiffUtil.Callback</code>是用来向<code>DiffUtil</code>提供这些基本信息的, 它是一个抽象类, 你需要继承它, 然后覆写里面的几个方法. 它的构造传入了两个待比较的list, 覆写的方法主要是get它们的size, 比较它们的内容.<br>Callback里还有一个<code>getChangePayload()</code>方法, 它不是抽象的, 这个方法在<code>areItemsTheSame()</code> 返回<code>true</code>, 但是<code>areContentsTheSame()</code>返回<code>false</code>的时候被调用.<br>这意味着我们的item还是之前的那个item,但是可能里面的字段变化了.<br>这个方法的返回值即为两个对应item的diff, 基本来说, 这个方法返回的是为什么我们认为list变化了.<br>文中的代码例子返回了一个Bundle, 把compare不相等的字段都放进去了, 用的是new item的值.</p>
+<p>一旦我们写好了这个Callback类, 剩下的事情就很简单了, 我们只需要在新数据到来的时候计算一下diff, 然后更新.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@ Override</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNewProducts</span><span class="params">(List&lt;Product&gt; newProducts)</span> </span>&#123;</span><br><span class="line">    DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(<span class="keyword">new</span> ProductListDiffCallback(mProducts, newProducts));</span><br><span class="line">    diffResult.dispatchUpdatesTo(mProductAdapter);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然上面<code>getChangePayload()</code>返回的对象还得我们自己利用起来, 它会被<code>DiffResult</code>分发到Adapter.<br>用的是<code>notifyItemRangeChange(position, count, payload)</code>方法, 传到了Adapter的<code>onBindViewHolder()</code>方法, 我们判断payload不为空时, 从里面拿出diff做更新.</p>
+<p>文档里说<code>DiffUtil</code>对很大的数据集可能比较费时, 所以建议把计算放在后台线程.</p>
+<p>作者还给出了一个RxJava的例子, 各种flatMap.</p>
+<h2 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h2><p><a href="http://facebook.design/handskit" target="_blank" rel="noopener">Diverse Device Hands</a><br>Facebook的design资源, 很多拿着手机的手的照片.</p>
+<h2 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h2><h3 id="unipiazza-android-twostepslogin"><a href="#unipiazza-android-twostepslogin" class="headerlink" title="unipiazza-android-twostepslogin"></a><a href="https://github.com/unipiazza/unipiazza-android-twostepslogin" target="_blank" rel="noopener">unipiazza-android-twostepslogin</a></h3><p>一个实现两步登录的库, 比如Google web登录, Material Design.<br>要用它的布局, 然后设置一些属性, 还有UI交互事件的Listener.</p>
+<h3 id="Om-Recorder"><a href="#Om-Recorder" class="headerlink" title="Om Recorder"></a><a href="https://kailash09dabhi.github.io/OmRecorder/" target="_blank" rel="noopener">Om Recorder</a></h3><p>一个简单的Pcm / Wav 录音机, API简单, 可以录制Pcm和Wav音频, 可以配置输出, 有暂停功能.</p>
+<h3 id="tiger"><a href="#tiger" class="headerlink" title="tiger"></a><a href="https://github.com/google/tiger" target="_blank" rel="noopener">tiger</a></h3><p>又一个依赖注入库, 但是README里说这不算一个Google的官方产品, 官方的是<a href="https://github.com/google/dagger" target="_blank" rel="noopener">Dagger</a>和<a href="https://github.com/google/guice" target="_blank" rel="noopener">Guice</a>.<br>这个tiger好像自称是目前最快的java依赖注入.</p>
+<h2 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h2><p><a href="http://android-developers.blogspot.com.au/2016/08/taking-final-wrapper-off-of-nougat.html" target="_blank" rel="noopener">Taking the final wrapper off of Android 7.0 Nougat</a><br>Android 7.0已经问世了, 从Nexus开始, 同时API 24的source code已经push到AOSP了.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Fragment/" rel="tag"># Fragment</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/AnimatedVectorDrawable/" rel="tag"># AnimatedVectorDrawable</a>
+              <a href="/tags/Bottom-Sheet/" rel="tag"># Bottom Sheet</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/tags/Certificate/" rel="tag"># Certificate</a>
+              <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/AsyncLayoutInflater/" rel="tag"># AsyncLayoutInflater</a>
+              <a href="/tags/DiffUtil/" rel="tag"># DiffUtil</a>
+              <a href="/tags/Recorder/" rel="tag"># Recorder</a>
+              <a href="/tags/tiger/" rel="tag"># tiger</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2016/08/31/commit-commitNow-and-commitAllowingStateLoss/" rel="prev" title="commit(), commitNow()和commitAllowingStateLoss()">
+      <i class="fa fa-chevron-left"></i> commit(), commitNow()和commitAllowingStateLoss()
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2016/09/07/hello-preferences-provider/" rel="next" title="取代SharedPreferences的多进程解决方案">
+      取代SharedPreferences的多进程解决方案 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-220"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #220</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">1.1.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Manage-dependencies-versions-with-gradle-extra-properties"><span class="nav-number">1.1.1.</span> <span class="nav-text">Manage dependencies versions with gradle extra properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-CI-with-Docker"><span class="nav-number">1.1.2.</span> <span class="nav-text">Android CI with Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bottom-Sheets-in-Android"><span class="nav-number">1.1.3.</span> <span class="nav-text">Bottom Sheets in Android</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Certificate-public-key-pinning-using-Retrofit-2"><span class="nav-number">1.1.4.</span> <span class="nav-text">Certificate public key pinning using Retrofit 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Isometric-AnimatedVectorDrawable-Part-3"><span class="nav-number">1.1.5.</span> <span class="nav-text">Isometric AnimatedVectorDrawable - Part 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-many-flavors-of-commit"><span class="nav-number">1.1.6.</span> <span class="nav-text">The many flavors of commit()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Break-circular-dependency-with-RxJava-%E7%94%A8RxJava%E6%89%93%E7%A0%B4%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.7.</span> <span class="nav-text">Break circular dependency with RxJava 用RxJava打破循环依赖.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Asynchronous-layout-inflation-%E5%BC%82%E6%AD%A5%E8%A7%A3%E6%9E%90layout"><span class="nav-number">1.1.8.</span> <span class="nav-text">Asynchronous layout inflation 异步解析layout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Automated-Android-Testing-Part-5"><span class="nav-number">1.1.9.</span> <span class="nav-text">Introduction to Automated Android Testing - Part 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DiffUtil-is-a-must"><span class="nav-number">1.1.10.</span> <span class="nav-text">DiffUtil is a must!</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DESIGN"><span class="nav-number">1.2.</span> <span class="nav-text">DESIGN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">1.3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unipiazza-android-twostepslogin"><span class="nav-number">1.3.1.</span> <span class="nav-text">unipiazza-android-twostepslogin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Om-Recorder"><span class="nav-number">1.3.2.</span> <span class="nav-text">Om Recorder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tiger"><span class="nav-number">1.3.3.</span> <span class="nav-text">tiger</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NEWS"><span class="nav-number">1.4.</span> <span class="nav-text">NEWS</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/";
+    this.page.identifier = "Android/Android-Weekly/2016/09/01/android-weekly-notes-issue-220/";
+    this.page.title = "Android Weekly Notes Issue 220";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

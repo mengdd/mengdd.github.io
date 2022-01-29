@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #319July 22nd, 2018.Android Weekly Issue #319本期内容包括: MotionLayout加动画; Kotlin中的when; Android Studio的快捷键; Google的开发者认证; 一个天气应用的的数据层构建; 一个Android项目的CI搭建; 用Kotlin写gradle build脚本;测试库Ko">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 319">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #319July 22nd, 2018.Android Weekly Issue #319本期内容包括: MotionLayout加动画; Kotlin中的when; Android Studio的快捷键; Google的开发者认证; 一个天气应用的的数据层构建; 一个Android项目的CI搭建; 用Kotlin写gradle build脚本;测试库Ko">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-07-26T03:14:29.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.001Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Android Studio">
+<meta property="article:tag" content="IDE">
+<meta property="article:tag" content="CI">
+<meta property="article:tag" content="LiveData">
+<meta property="article:tag" content="MotionLayout">
+<meta property="article:tag" content="Transformations">
+<meta property="article:tag" content="MediatorLiveData">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 319 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 319
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-26 11:14:29" itemprop="dateCreated datePublished" datetime="2018-07-26T11:14:29+08:00">2018-07-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 319" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-319"><a href="#Android-Weekly-Issue-319" class="headerlink" title="Android Weekly Issue #319"></a>Android Weekly Issue #319</h1><p>July 22nd, 2018.<br><a href="https://androidweekly.net/issues/issue-319" target="_blank" rel="noopener">Android Weekly Issue #319</a><br>本期内容包括: <code>MotionLayout</code>加动画; Kotlin中的when; Android Studio的快捷键; Google的开发者认证; 一个天气应用的的数据层构建; 一个Android项目的CI搭建; 用Kotlin写gradle build脚本;<br>测试库KotlinTest的使用; <code>LiveData</code>, <code>Transformations</code>和<code>MediatorLiveData</code>的使用; Kotlin中property delegation的使用; Kotlin的一个事件分发库: KDispatcher.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Creating-Animations-With-MotionLayout-for-Android"><a href="#Creating-Animations-With-MotionLayout-for-Android" class="headerlink" title="Creating Animations With MotionLayout for Android"></a><a href="https://code.tutsplus.com/tutorials/creating-animations-with-motionlayout-for-android--cms-31497" target="_blank" rel="noopener">Creating Animations With MotionLayout for Android</a></h2><p><code>ConstraintLayout</code>非常有用, 但是想要给它的内容加复杂的动画却有点费时间. 所以Google在I/O 2018推出了<code>MotionLayout</code>.</p>
+<p><code>MotionLayout</code>在support库中, 继承了<code>ConstraintLayout</code>, 是目前唯一一个只用xml就可以为它的内容声明动画的控件, 并对于它所有的动画都提供了细粒度的控制.</p>
+<p>本篇文章讲述如何使用<code>MotionLayout</code>.</p>
+<h3 id="创建布局"><a href="#创建布局" class="headerlink" title="创建布局"></a>创建布局</h3><p>首先<code>MotionLayout</code>的使用和<code>ConstraintLayout</code>一样, 在其中放入View然后设置约束.</p>
+<h3 id="创建Motion-Scene"><a href="#创建Motion-Scene" class="headerlink" title="创建Motion Scene"></a>创建Motion Scene</h3><p>然后, 创建一个motion scene:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">MotionScene</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!-- More code here --&gt;</span></span><br><span class="line">     </span><br><span class="line"><span class="tag">&lt;/<span class="name">MotionScene</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在其中加入<code>ConstraintSet</code>, 通常是两个, 一个为动画开始, 一个为结束:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ConstraintSet</span> <span class="attr">android:id</span>=<span class="string">"@+id/starting_set"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Constraint</span> <span class="attr">android:id</span>=<span class="string">"@+id/actor"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintRight_toRightOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"60dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"60dp"</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ConstraintSet</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">ConstraintSet</span> <span class="attr">android:id</span>=<span class="string">"@+id/ending_set"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Constraint</span> <span class="attr">android:id</span>=<span class="string">"@+id/actor"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintLeft_toLeftOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"60dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"60dp"</span></span></span><br><span class="line"><span class="tag">        /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ConstraintSet</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意每一个<code>ConstraintSet</code>都必须指明大小和位置, 因为它们将会覆盖layout中的设置.</p>
+<p>还需要一个<code>Transition</code>元素:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Transition</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/my_transition"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:constraintSetStart</span>=<span class="string">"@+id/starting_set"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:constraintSetEnd</span>=<span class="string">"@+id/ending_set"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:duration</span>=<span class="string">"2000"</span>&gt;</span></span><br><span class="line">     </span><br><span class="line"><span class="tag">&lt;/<span class="name">Transition</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后在<code>MotionLayout</code>中关联motion scene文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app:layoutDescription=&quot;@xml/my_scene&quot;</span><br></pre></td></tr></table></figure></p>
+<h3 id="运行动画"><a href="#运行动画" class="headerlink" title="运行动画"></a>运行动画</h3><p>配置完成后, 当你运行程序的时候, <code>MotionLayout</code>会自动应用<code>Transition</code>中<code>constraintSetStart</code>属性指定的constraint set.<br>所以为了开启动画, 你只需调用控件的<code>transitionToEnd()</code>方法.</p>
+<h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><p>可以给<code>MotionLayout</code>附加<code>TransitionListener</code>来监听动画事件.</p>
+<h3 id="创建关键帧"><a href="#创建关键帧" class="headerlink" title="创建关键帧"></a>创建关键帧</h3><p>上面的例子只规定了起始点和重点, 所以是一个直线, 如果想要更改路径, 可以通过定义几个关键点.</p>
+<p>在motion scene的<code>Transition</code>中增加<code>KeyFrameSet</code>.</p>
+<p><code>MotionLayout</code>支持多种关键帧的类型, 本文示范了<code>KeyPosition</code>和<code>KeyCycle</code>的用法.<br>前者规定一个位置, 后者规定振荡模式.</p>
+<h3 id="和动画的元素交互"><a href="#和动画的元素交互" class="headerlink" title="和动画的元素交互"></a>和动画的元素交互</h3><p>可以直接和动画的元素交互, 目前支持点击和拖拽事件.</p>
+<p>分别是通过在<code>Transition</code>中增加:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">OnClick</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:target</span>=<span class="string">"@+id/actor"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:mode</span>=<span class="string">"transitionToEnd"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>和:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">OnSwipe</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:touchAnchorId</span>=<span class="string">"@+id/actor"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:touchAnchorSide</span>=<span class="string">"top"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:dragDirection</span>=<span class="string">"dragUp"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="When-is-“when”-exhaustive"><a href="#When-is-“when”-exhaustive" class="headerlink" title="When is “when” exhaustive?"></a><a href="https://medium.com/@ataulm/til-when-is-when-exhaustive-31d69f630a8b" target="_blank" rel="noopener">When is “when” exhaustive?</a></h2><p>Kotlin中的<code>when</code>的使用.<br>要么提供所有的分支, 要么提供一个<code>else</code>.</p>
+<p>本文提出写一个扩展, 让编译器强制我们实现一个完备的<code>when</code>.</p>
+<h2 id="Android-Studio-Taming-the-interface"><a href="#Android-Studio-Taming-the-interface" class="headerlink" title="Android Studio - Taming the interface"></a><a href="https://jeroenmols.com/blog/2018/07/16/androidstudioshortcuts3/" target="_blank" rel="noopener">Android Studio - Taming the interface</a></h2><p>Android Studio的一些快捷键:</p>
+<ul>
+<li>⌥ + number: open/close views</li>
+<li>⇧ + ⌘ + ↑: enlarge view</li>
+<li>⇧ + ⌘ + ↓: shrink view</li>
+<li>⇧ + ⌘ + →: enlarge side view</li>
+<li>⇧ + ⌘ + ←: shrink side view</li>
+<li><p>⇧ + ⌘ + F12: close all views</p>
+</li>
+<li><p>⇧ + ⌘ + ]: next tab</p>
+</li>
+<li>⇧ + ⌘ + [: previous tab</li>
+<li>^ + ⇧ + →: text view (xml layout editing)</li>
+<li>^ + ⇧ + ←: design view (visual layout editing)</li>
+<li><p>⌥ + letter: invoke button</p>
+</li>
+<li><p>⌘ + ⇧ + A: action lookup</p>
+</li>
+</ul>
+<h2 id="Becoming-Google-Certified-Associate-Android-Developer"><a href="#Becoming-Google-Certified-Associate-Android-Developer" class="headerlink" title="Becoming Google Certified Associate Android Developer"></a><a href="https://medium.com/@sodiqOladeni/becoming-google-certified-associate-android-developer-907bdb61d79f" target="_blank" rel="noopener">Becoming Google Certified Associate Android Developer</a></h2><p>一个谷歌认证的考试: Associate Android Developer Exam介绍.</p>
+<p>包括一个需要在24h内完成的项目和一个10分钟的在线视频面试. 费用$149, 完成之后可以获得Associate Android Developer称号.</p>
+<h2 id="Maintainable-Architecture-–-Daily-Forecast"><a href="#Maintainable-Architecture-–-Daily-Forecast" class="headerlink" title="Maintainable Architecture – Daily Forecast"></a><a href="https://blog.stylingandroid.com/maintainable-architecture-daily-forecast/" target="_blank" rel="noopener">Maintainable Architecture – Daily Forecast</a></h2><p>一个天气应用的数据层设计.<br>(Kotlin, dagger. 上一次介绍的是<br>UI层.)</p>
+<h2 id="Cloud-Continuous-Integration-on-Android-with-Kotlin-Project"><a href="#Cloud-Continuous-Integration-on-Android-with-Kotlin-Project" class="headerlink" title="Cloud Continuous Integration on Android with Kotlin Project"></a><a href="https://proandroiddev.com/cloud-continuous-integration-on-android-with-kotlin-project-8d6f12cbf0c4" target="_blank" rel="noopener">Cloud Continuous Integration on Android with Kotlin Project</a></h2><p>作者为自己的项目:</p>
+<ul>
+<li>搭建CI, 用<a href="https://travis-ci.org/" target="_blank" rel="noopener">Travis</a>.</li>
+<li>集成覆盖率测试报告, 用<a href="https://codecov.io/" target="_blank" rel="noopener">Codecov.io</a> + <code>JaCoCo</code>.</li>
+<li>可以把CI和覆盖率状态加在readme里.</li>
+</ul>
+<h2 id="Moving-Your-Gradle-Build-Scripts-to-Kotlin"><a href="#Moving-Your-Gradle-Build-Scripts-to-Kotlin" class="headerlink" title="Moving Your Gradle Build Scripts to Kotlin"></a><a href="https://pspdfkit.com/blog/2018/moving-your-gradle-build-scripts-to-kotlin/" target="_blank" rel="noopener">Moving Your Gradle Build Scripts to Kotlin</a></h2><p>gradle是用Groovy写的.</p>
+<p>首先讨论了Groovy写脚本的几个缺点:</p>
+<ul>
+<li>动态类型.</li>
+<li>IDE的代码提示慢, 不完整.</li>
+<li>Groovy写的Gradle不能调试.</li>
+</ul>
+<p>本文介绍解决这个问题的方法: 增加一个<code>buildSrc</code> module.<br><code>buildSrc</code>是一个特殊的module, 在gradle构建中是第一个被编译的模块, 在里面你可以做这些事情:</p>
+<ul>
+<li>写自定义的gradle插件.</li>
+<li>提取工具函数和配置, 让它们全局可见.</li>
+<li>写自定义的task类.</li>
+<li>整理自定义的task graph.</li>
+<li>单步调试.</li>
+</ul>
+<p>文中介绍了用kotlin写build脚本的详细做法.</p>
+<h2 id="Data-Driven-Testing-with-KotlinTest"><a href="#Data-Driven-Testing-with-KotlinTest" class="headerlink" title="Data Driven Testing with KotlinTest"></a><a href="https://proandroiddev.com/data-driven-testing-with-kotlintest-a07ac60e70fc" target="_blank" rel="noopener">Data Driven Testing with KotlinTest</a></h2><p><a href="http://spockframework.org/spock/docs/1.1/data_driven_testing.html" target="_blank" rel="noopener">Data driven testing</a>是指同样的测试代码, 但是要用很多不同的输入数据和期待结果来进行测试.</p>
+<p><a href="https://github.com/kotlintest/kotlintest" target="_blank" rel="noopener">KotlinTest</a>是一个Kotlin写测试的库.</p>
+<p>本文介绍了如何使用它来写一些测试.</p>
+<h2 id="Reactive-patterns-using-Transformations-and-MediatorLiveData"><a href="#Reactive-patterns-using-Transformations-and-MediatorLiveData" class="headerlink" title="Reactive patterns using Transformations and MediatorLiveData"></a><a href="https://medium.com/google-developers/livedata-beyond-the-viewmodel-reactive-patterns-using-transformations-and-mediatorlivedata-fda520ba00b7" target="_blank" rel="noopener">Reactive patterns using Transformations and MediatorLiveData</a></h2><p>利用<a href="https://developer.android.com/topic/libraries/architecture/livedata" target="_blank" rel="noopener">LiveData</a>来构建流式的构架.</p>
+<p><code>LiveData</code>的目的: 解决View controller(Activity, Fragment)和数据源(ViewModel)之间的通信, 让View只在生命周期允许的时候接收数据. 也即, 你不用手动地去取消View和ViewModel之间的订阅.</p>
+<p>你可以利用这种方式去观察应用的其他组件, 比如:</p>
+<ul>
+<li>SharedPreference的改变.</li>
+<li>Firestore的document或collection.</li>
+<li>Authentication SDK(比如FirebaseAuth)中的当前用户.</li>
+<li><a href="https://developer.android.com/topic/libraries/architecture/room" target="_blank" rel="noopener">Room</a>中的一个query.</li>
+</ul>
+<p>这种机制的好处是以为一切都绑定在一起, 一旦数据改变了, UI就会自动更新.</p>
+<p>缺点就是<code>LiveData</code>没有想Rx那样, 自带绑定流式数据或管理线程的工具集.</p>
+<p>为了在组件中传递数据, 我们需要map和combine的方法, 用了MediatorLiveData, 结合Transformations中的方法:</p>
+<ul>
+<li>一对一静态转换: <a href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#map%28android.arch.lifecycle.LiveData%3CX%3E,%20android.arch.core.util.Function%3CX,%20Y%3E%29" target="_blank" rel="noopener">Transformations.map</a>: 在ViewModel中把从repository取来的数据转化成UI model.</li>
+<li>一对一动态转换: <a href="https://developer.android.com/reference/android/arch/lifecycle/Transformations#switchMap%28android.arch.lifecycle.LiveData%3CX%3E,%20android.arch.core.util.Function%3CX,%20android.arch.lifecycle.LiveData%3CY%3E%3E%29" target="_blank" rel="noopener">Transformations.switchMap</a>: 在观察repository之前需要观察user manager得到一个用户id.</li>
+<li>一对多依赖: <a href="https://developer.android.com/reference/android/arch/lifecycle/MediatorLiveData" target="_blank" rel="noopener">MediatorLiveData</a>让你可以给单个observable加一到多个数据源.</li>
+</ul>
+<p><strong>什么时候不需要用LiveData?</strong><br>当你的组件和UI没有联系的时候, 就很可能用不上<code>LiveData</code>.</p>
+<p><strong>Antipattern:</strong> 共享<code>LiveData</code>的实例, 可能会有数据更新错误或显示错误的情况. 所以尽量不要共享<code>LiveData</code>的实例.</p>
+<p>文章后面说了一些<code>MediatorLiveData</code>, <code>map</code>和<code>switchMap</code>使用时的注意事项, 以及用Kotlin来实现时的简洁版.</p>
+<h2 id="Delegate-your-Lifecycle-to-Kotlin"><a href="#Delegate-your-Lifecycle-to-Kotlin" class="headerlink" title="Delegate your Lifecycle to Kotlin"></a><a href="https://blog.blueapron.io/delegate-your-lifecycle-to-kotlin-17c1d0d876c9" target="_blank" rel="noopener">Delegate your Lifecycle to Kotlin</a></h2><p><a href="https://kotlinlang.org/docs/reference/delegated-properties.html" target="_blank" rel="noopener">Property delegation</a>是Kotlin中非常有用的一个特性.</p>
+<p>通过这个模式, 我们可以把get和set一个property的任务交给一个类来处理. 但是表面上用起来仍然像是在直接使用这个property.</p>
+<p>本文讲如何用Kotlin的property delegation来处理Fragment和Activity之间的通信. </p>
+<p>(笔者注: 但是我觉得文中所讲的例子并没有内存泄露的情况, 所以问题不存在, 解决方案也没有必要了.)</p>
+<h2 id="KDispatcher-simple-and-light-weight-event-bus-for-Kotlin"><a href="#KDispatcher-simple-and-light-weight-event-bus-for-Kotlin" class="headerlink" title="KDispatcher simple and light-weight event bus for Kotlin"></a><a href="https://medium.com/@sphc/kdispatcher-simple-and-light-weight-event-bus-for-kotlin-e0fa4aaea1c7" target="_blank" rel="noopener">KDispatcher simple and light-weight event bus for Kotlin</a></h2><p>一个Kotlin的事件分发库: <a href="https://github.com/Rasalexman/KDispatcher" target="_blank" rel="noopener">KDispatcher</a>.</p>
+<p>类似于EventBus.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="wearfaceutils"><a href="#wearfaceutils" class="headerlink" title="wearfaceutils"></a><a href="https://github.com/purposebakery/wearfaceutils" target="_blank" rel="noopener">wearfaceutils</a></h2><p>写Android手表表面的工具类.</p>
+<h2 id="pickle"><a href="#pickle" class="headerlink" title="pickle"></a><a href="https://github.com/fourlastor/pickle" target="_blank" rel="noopener">pickle</a></h2><p>一个Android cucumber测试的代码生成库.</p>
+<h2 id="kotlintest"><a href="#kotlintest" class="headerlink" title="kotlintest"></a><a href="https://github.com/kotlintest/kotlintest" target="_blank" rel="noopener">kotlintest</a></h2><p>Kotlin测试框架.</p>
+<h2 id="SdkSearch"><a href="#SdkSearch" class="headerlink" title="SdkSearch"></a><a href="https://github.com/JakeWharton/SDKSearch" target="_blank" rel="noopener">SdkSearch</a></h2><p>Android应用和Chrome extension用来搜索Android Sdk的文档.</p>
+<h2 id="ketro"><a href="#ketro" class="headerlink" title="ketro"></a><a href="https://smilecs.github.io/ketro/" target="_blank" rel="noopener">ketro</a></h2><p>Kotlin包装的Retrofit和LiveData.</p>
+<h2 id="KDispatcher"><a href="#KDispatcher" class="headerlink" title="KDispatcher"></a><a href="https://github.com/Rasalexman/KDispatcher" target="_blank" rel="noopener">KDispatcher</a></h2><p>Kotlin的事件分发库, 功能类似于EventBus.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
+              <a href="/tags/IDE/" rel="tag"># IDE</a>
+              <a href="/tags/CI/" rel="tag"># CI</a>
+              <a href="/tags/LiveData/" rel="tag"># LiveData</a>
+              <a href="/tags/MotionLayout/" rel="tag"># MotionLayout</a>
+              <a href="/tags/Transformations/" rel="tag"># Transformations</a>
+              <a href="/tags/MediatorLiveData/" rel="tag"># MediatorLiveData</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/Kotlin/2018/07/19/android-weekly-notes-issue-318/" rel="prev" title="Android Weekly Notes Issue 318">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 318
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2018/08/01/android-weekly-notes-issue-320/" rel="next" title="Android Weekly Notes Issue 320">
+      Android Weekly Notes Issue 320 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-319"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #319</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Creating-Animations-With-MotionLayout-for-Android"><span class="nav-number">2.1.</span> <span class="nav-text">Creating Animations With MotionLayout for Android</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B8%83%E5%B1%80"><span class="nav-number">2.1.1.</span> <span class="nav-text">创建布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAMotion-Scene"><span class="nav-number">2.1.2.</span> <span class="nav-text">创建Motion Scene</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%8A%A8%E7%94%BB"><span class="nav-number">2.1.3.</span> <span class="nav-text">运行动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC"><span class="nav-number">2.1.4.</span> <span class="nav-text">事件监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%B3%E9%94%AE%E5%B8%A7"><span class="nav-number">2.1.5.</span> <span class="nav-text">创建关键帧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E5%8A%A8%E7%94%BB%E7%9A%84%E5%85%83%E7%B4%A0%E4%BA%A4%E4%BA%92"><span class="nav-number">2.1.6.</span> <span class="nav-text">和动画的元素交互</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#When-is-%E2%80%9Cwhen%E2%80%9D-exhaustive"><span class="nav-number">2.2.</span> <span class="nav-text">When is “when” exhaustive?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Studio-Taming-the-interface"><span class="nav-number">2.3.</span> <span class="nav-text">Android Studio - Taming the interface</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Becoming-Google-Certified-Associate-Android-Developer"><span class="nav-number">2.4.</span> <span class="nav-text">Becoming Google Certified Associate Android Developer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Maintainable-Architecture-%E2%80%93-Daily-Forecast"><span class="nav-number">2.5.</span> <span class="nav-text">Maintainable Architecture – Daily Forecast</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cloud-Continuous-Integration-on-Android-with-Kotlin-Project"><span class="nav-number">2.6.</span> <span class="nav-text">Cloud Continuous Integration on Android with Kotlin Project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Moving-Your-Gradle-Build-Scripts-to-Kotlin"><span class="nav-number">2.7.</span> <span class="nav-text">Moving Your Gradle Build Scripts to Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Driven-Testing-with-KotlinTest"><span class="nav-number">2.8.</span> <span class="nav-text">Data Driven Testing with KotlinTest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-patterns-using-Transformations-and-MediatorLiveData"><span class="nav-number">2.9.</span> <span class="nav-text">Reactive patterns using Transformations and MediatorLiveData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Delegate-your-Lifecycle-to-Kotlin"><span class="nav-number">2.10.</span> <span class="nav-text">Delegate your Lifecycle to Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KDispatcher-simple-and-light-weight-event-bus-for-Kotlin"><span class="nav-number">2.11.</span> <span class="nav-text">KDispatcher simple and light-weight event bus for Kotlin</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wearfaceutils"><span class="nav-number">3.1.</span> <span class="nav-text">wearfaceutils</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pickle"><span class="nav-number">3.2.</span> <span class="nav-text">pickle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kotlintest"><span class="nav-number">3.3.</span> <span class="nav-text">kotlintest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SdkSearch"><span class="nav-number">3.4.</span> <span class="nav-text">SdkSearch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ketro"><span class="nav-number">3.5.</span> <span class="nav-text">ketro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KDispatcher"><span class="nav-number">3.6.</span> <span class="nav-text">KDispatcher</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/";
+    this.page.identifier = "Android/Android-Weekly/2018/07/26/android-weekly-notes-issue-319/";
+    this.page.title = "Android Weekly Notes Issue 319";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

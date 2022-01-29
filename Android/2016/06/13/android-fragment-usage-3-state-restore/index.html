@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android中的状态保存和恢复Android中的状态保存和恢复, 包括Activity和Fragment以及其中View的状态处理.Activity的状态除了其中的View和Fragment的状态之外, 还需要用户手动保存一些成员变量.Fragment的状态有它自己的实例状态和其中的View状态, 因为其生命周期的灵活性和实际需要的不同, 情况会多一些.根据源码, 列出了Fragment中实例状">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复">
+<meta property="og:url" content="http://mengdd.github.io/Android/2016/06/13/android-fragment-usage-3-state-restore/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android中的状态保存和恢复Android中的状态保存和恢复, 包括Activity和Fragment以及其中View的状态处理.Activity的状态除了其中的View和Fragment的状态之外, 还需要用户手动保存一些成员变量.Fragment的状态有它自己的实例状态和其中的View状态, 因为其生命周期的灵活性和实际需要的不同, 情况会多一些.根据源码, 列出了Fragment中实例状">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-state-save-entries.png">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-state-restore-entries.png">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-state-debug-onRestore.png">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-states.png">
+<meta property="article:published_time" content="2016-06-13T14:26:41.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.988Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Fragment">
+<meta property="article:tag" content="WebView">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/fragment-state-save-entries.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2016/06/13/android-fragment-usage-3-state-restore/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2016/06/13/android-fragment-usage-3-state-restore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-06-13 22:26:41" itemprop="dateCreated datePublished" datetime="2016-06-13T22:26:41+08:00">2016-06-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2016/06/13/android-fragment-usage-3-state-restore/" class="post-meta-item leancloud_visitors" data-flag-title="Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2016/06/13/android-fragment-usage-3-state-restore/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2016/06/13/android-fragment-usage-3-state-restore/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android中的状态保存和恢复"><a href="#Android中的状态保存和恢复" class="headerlink" title="Android中的状态保存和恢复"></a>Android中的状态保存和恢复</h1><p>Android中的状态保存和恢复, 包括Activity和Fragment以及其中View的状态处理.<br>Activity的状态除了其中的View和Fragment的状态之外, 还需要用户手动保存一些成员变量.<br>Fragment的状态有它自己的实例状态和其中的View状态, 因为其生命周期的灵活性和实际需要的不同, 情况会多一些.<br>根据源码, 列出了Fragment中实例状态和View状态保存和恢复的几个入口, 便于分析查看.<br>最后专门讲了WebView状态保存和恢复, 问题及处理.<br>还有一个工具类icepick的介绍.</p>
+<a id="more"></a>
+<h1 id="Activity的状态保存和恢复"><a href="#Activity的状态保存和恢复" class="headerlink" title="Activity的状态保存和恢复"></a>Activity的状态保存和恢复</h1><p>作为热身, 先来讲一下Activity的状态保存和恢复.</p>
+<h2 id="什么时候需要恢复Activity"><a href="#什么时候需要恢复Activity" class="headerlink" title="什么时候需要恢复Activity"></a>什么时候需要恢复Activity</h2><p>关于Activity的销毁和重建, 之前有这么一篇博文: <a href="http://www.cnblogs.com/mengdd/archive/2012/12/17/2822291.html" target="_blank" rel="noopener">Activity的重新创建</a><br>总结来说, 就是Activity的销毁, 分为彻底销毁和留下数据的销毁两种.</p>
+<p><strong>彻底销毁</strong>是指用户主动去关闭或退出这个Activity. 此时是不需要状态恢复的, 因为下次回来又是重新创建全新的实例.<br><strong>留下数据的销毁</strong>是指系统销毁了activity, 但是当用户返回来时, 会重新创建它, 让用户觉得它一直都在.</p>
+<p>屏幕旋转重建可以归结为第二种情况, 打开Do not keep activities开关, 切换activities也是会出现第二种情况.<br>打开<strong>Do not keep activities</strong>开关就是为了模拟内存不足时的系统行为, 这里有一篇<a href="http://www.cnblogs.com/mengdd/p/4528417.html" target="_blank" rel="noopener">分析</a></p>
+<h2 id="如何恢复"><a href="#如何恢复" class="headerlink" title="如何恢复"></a>如何恢复</h2><p>实际上系统已经帮我们做好了View层面基本的恢复工作, 主要是依靠下面两个方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">    <span class="comment">// 在onStop()之前调用, 文档中说并不保证在onPause()的之前还是之后</span></span><br><span class="line">    <span class="comment">// 我的试验中一般是在onPause()之后</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onRestoreInstanceState(savedInstanceState);</span><br><span class="line">    <span class="comment">// 在onStart() 之后</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Bundle其中包含了activity中的view和fragment的各种信息, 所以调用基类的方法就可以完成基本的view层面的恢复工作.<br><strong>注意这两个方法并不是activity的生命周期回调, 对于activity来说它们不是一定会发生的.</strong><br><strong>另外需要注意的是, View必须要有id才能被恢复.</strong></p>
+<p>举一个实例来说明:<br>Activity A start B, 那么A的<code>onSaveInstanceState()</code>会在onStop()之前调用, 以防A被系统销毁.<br>但是在B中按下back键finish()了自己后, B被销毁的过程中, 并没有调用<code>onSaveInstanceState()</code>, 是因为B并没有被压入task的back stack中,<br>也即系统知道B并不需要储存自己的状态.<br>正常情况下, 返回到A, A没有被销毁, 也不会调用<code>onRestoreInstanceState()</code>, 因为所有的状态都还在, 并不需要重建.</p>
+<p>如果我们打开了<strong>Do not keep activities</strong>开关, 模拟系统内存不足时的行为, 从A到B, 可以看到当B resume的时候A会一路走到onDestroy(),<br>而关掉B之后, A会从onCreate()开始走, 此时onCreate()的参数bundle就不为空了, onStart()之后会调用<code>onRestoreInstanceState()</code>方法, 其参数bundle中内容类似于如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Bundle[&#123;android:viewHierarchyState=Bundle[mParcelledData.dataSize=272]&#125;]</span><br></pre></td></tr></table></figure>
+<p>其中包含了View的状态, 如果有Fragment, 也会包含Fragment的状态, 其实质是保存了FragmentManagerState, 内容类似于如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Bundle[&#123;android:viewHierarchyState=Bundle[&#123;android:views=&#123;16908290=android.view.AbsSavedState$1@bc382e7, 2131492950=CompoundButton.SavedState&#123;4034f96 checked=true&#125;, 2131492951=android.view.AbsSavedState$1@bc382e7&#125;&#125;], android:fragments=android.app.FragmentManagerState@bacc717&#125;]</span><br></pre></td></tr></table></figure>
+<p>对于上面的例子来说, B什么时候会调用<code>onSaveInstanceState()</code>呢?<br>当从A打开B之后, 按下Home键, B就会调用<code>onSaveInstanceState()</code>.<br>因为这时候系统不知道用户什么时候会返回, 有可能会把B也销毁了, 所以保存一下它的状态.<br>如果下次回来它没有被重建, <code>onRestoreInstanceState()</code>就不会被调用, 如果它被重建了, <code>onRestoreInstanceState()</code>才会被调用.</p>
+<h3 id="Activity保存方法的调用时机"><a href="#Activity保存方法的调用时机" class="headerlink" title="Activity保存方法的调用时机"></a>Activity保存方法的调用时机</h3><p><strong>activity的<code>onSaveInstanceState()</code>和<code>onRestoreInstanceState()</code>方法在如下情形下会调用:</strong></p>
+<ol>
+<li>屏幕旋转重建: 先save再restore.</li>
+<li>启动另一个activity: 当前activity在离开前会save, 返回时如果因为被系统杀死需要重建, 则会从onCreate()重新开始生命周期, 调用onRestoreInstanceState(); 如果没有重建, 则不会调用onCreate(), 也不会调用onRestoreInstanceState(), 生命周期从onRestart()开始, 接着onStart()和onResume().</li>
+<li>按Home键的情形和启动另一个activity一样, 当前activity在离开前会save, 用户再次点击应用图标返回时, 如果重建发生, 则会调用onCreate()和onRestoreInstanceState(); 如果activity不需要重建, 只是onRestart(), 则不会调用onRestoreInstanceState().</li>
+</ol>
+<h3 id="Activity恢复方法的调用时机"><a href="#Activity恢复方法的调用时机" class="headerlink" title="Activity恢复方法的调用时机"></a>Activity恢复方法的调用时机</h3><p><strong>activity的<code>onSaveInstanceState()</code>和<code>onRestoreInstanceState()</code>方法在如下情形下不会调用:</strong></p>
+<ol>
+<li>用户主动finish()掉的activity不会调用onSaveInstanceState(), 包括主动按back退出的情况.</li>
+<li>新建的activity, 从onCreate()开始, 不会调用onRestoreInstanceState().</li>
+</ol>
+<h2 id="Activity中还需要手动恢复什么"><a href="#Activity中还需要手动恢复什么" class="headerlink" title="Activity中还需要手动恢复什么"></a>Activity中还需要手动恢复什么</h2><p>如上, 系统已经为我们恢复了activity中的各种view和fragment, 那么我们自己需要保存和恢复一些什么呢?<br>答案是<strong>成员变量值</strong>.</p>
+<p>因为系统并不知道你的各种成员变量有什么用, 哪些值需要保存, 所以需要你自己覆写上面两个方法, 然后把自己需要保存的值加进bundle里面去. 具体例子, 这里<a href="http://www.cnblogs.com/mengdd/archive/2012/12/17/2822291.html" target="_blank" rel="noopener">Activity的重新创建</a>有, 我就不重复了.<br>重要的是不要忘记调用super的方法, 那里有系统帮我们恢复的工作.</p>
+<h1 id="工具类Icepick介绍"><a href="#工具类Icepick介绍" class="headerlink" title="工具类Icepick介绍"></a>工具类Icepick介绍</h1><p>在介绍下面的内容之前, 先介绍一个小工具: <a href="https://github.com/frankiesardo/icepick" target="_blank" rel="noopener">Icepick</a><br>这个工具的作用是, 在你想保存和重建自己的成员变量数据时, 帮你省去那些put和get方法的调用, 你也不用为每一个字段起一个常量key.<br>你需要做的就是简单地在你想要保存状态的字段上面加上一个<code>@State</code> 注解.<br>然后在保存和恢复的时候分别加上一句话:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">  Icepick.restoreInstanceState(<span class="keyword">this</span>, savedInstanceState);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">  Icepick.saveInstanceState(<span class="keyword">this</span>, outState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后你的成员变量就有了它应该有的值了, DONE!</p>
+<h1 id="Fragment的状态保存和恢复"><a href="#Fragment的状态保存和恢复" class="headerlink" title="Fragment的状态保存和恢复"></a>Fragment的状态保存和恢复</h1><p>Fragment的状态比Activity的要复杂一些, 因为它的生命周期状态比较多.</p>
+<h2 id="Fragment状态保存和恢复的相关方法"><a href="#Fragment状态保存和恢复的相关方法" class="headerlink" title="Fragment状态保存和恢复的相关方法"></a>Fragment状态保存和恢复的相关方法</h2><p>按照上面的思路, 我先去查找Fragment中保存和恢复的回调方法了.<br>Fragment的状态保存回调是这个方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// may be called any time before onDestroy()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法和之前activity的情况大体是类似的, 它不是生命周期的回调, 所以只在有需要的时候会调到.<br>onSaveInstanceState()在activity调用onSaveInstanceState()的时候发生, 用于保存实例状态.(看它的方法名: instance state).<br><code>onSaveInstanceState()</code>方法保存的bundle会返回给几个生命周期回调: <code>onCreate()</code>, <code>onCreateView()</code>, <code>onViewCreated()</code>和<code>onActivityCreated()</code>.</p>
+<p>Fragment并没有对应的onRestoreInstanceState()方法.<br>也即没有实例状态的恢复回调.</p>
+<p>Fragment只有一个onViewStateRestored()的回调方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewStateRestored</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在onActivityCreated()和onStart()之间调用</span></span><br><span class="line">    mCalled = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>onViewStateRestored()每次新建Fragment都会发生.<br>它并不是实例状态恢复的方法, 只是一个View状态恢复的回调.</p>
+<p><strong>这里需要注意, Fragment的状态分两个类型: 实例状态和View状态</strong>.<br>这里有个最佳实践: <a href="https://inthecheesefactory.com/blog/fragment-state-saving-best-practices/en" target="_blank" rel="noopener">The Real Best Practices to Save/Restore Activity’s and Fragment’s state</a><br><strong>不要把Fragment的实例状态和View状态混在一起处理.</strong></p>
+<p>在这里我先上个结论, 把查看源码中Fragment状态保存和恢复的相关方法列出来:</p>
+<p>Fragment状态保存入口:<br><img src="/images/fragment-state-save-entries.png" alt="Fragment state saving"></p>
+<p>Fragment的状态保存入口有三个:</p>
+<ol>
+<li>Activity的状态保存, 在Activity的<code>onSaveInstanceState()</code>里, 调用了FragmentManger的<code>saveAllState()</code>方法, 其中会对mActive中各个Fragment的实例状态和View状态分别进行保存.</li>
+<li>FragmentManager还提供了public方法: <code>saveFragmentInstanceState()</code>, 可以对单个Fragment进行状态保存, 这是提供给我们用的, 后面会有例子介绍这个. 其中调用的<code>saveFragmentBasicState()</code>方法即为情况一中所用, 图中已画出标记.</li>
+<li>FragmentManager的<code>moveToState()</code>方法中, 当状态回退到<code>ACTIVITY_CREATED</code>, 会调用<code>saveFragmentViewState()</code>方法, 保存View的状态.</li>
+</ol>
+<p><code>moveToState()</code>方法中有很长的switch case, 中间不带break, 基本是根据新状态和当前状态的比较, 分为正向创建和反向销毁两个方向, 一路沿着多个case走下去.</p>
+<p>Fragment状态恢复入口:<br><img src="/images/fragment-state-restore-entries.png" alt="Fragment state restoring"></p>
+<p>三个恢复的入口和三个保存的入口刚好对应.</p>
+<ol>
+<li>在Activity重新创建的时候, 恢复所有的Fragment状态.</li>
+<li>如果调用了FragmentManager的方法: <code>saveFragmentInstanceState()</code>, 返回值得到的状态可以用Fragment的<code>setInitialSavedState()</code>方法设置给新的Fragment实例, 作为初始状态.</li>
+<li>FragmentManager的<code>moveToState()</code>方法中, 当状态正向创建到<code>CREATED</code>时, Fragment自己会恢复View的状态.</li>
+</ol>
+<p>这三个入口分别对应的情况是:<br>入口1对应系统销毁和重建新实例.<br>入口2对应用户自定义销毁和创建新Fragment实例的状态传递.<br>入口3对应同一Fragment实例自身的View状态重建.</p>
+<h2 id="Fragment状态保存恢复和Activity的联系"><a href="#Fragment状态保存恢复和Activity的联系" class="headerlink" title="Fragment状态保存恢复和Activity的联系"></a>Fragment状态保存恢复和Activity的联系</h2><p>这里对应的是入口1的情况.<br>当Activity在做状态保存和恢复的时候, 在它其中的fragment自然也需要做状态保存和恢复.<br>所以Fragment的onSaveInstanceState()在activity调用onSaveInstanceState()的时候一定会发生.<br>同样的, 如果Fragment中有一些成员变量的值在此时需要保存, 也可以用@State标记, 处理方法和上面一样.<br>也即, 在Activity需要保存状态的时候, 其中的Fragments的<strong>实例状态</strong>自动被处理保存.</p>
+<h2 id="Fragment同一实例的View状态恢复"><a href="#Fragment同一实例的View状态恢复" class="headerlink" title="Fragment同一实例的View状态恢复"></a>Fragment同一实例的View状态恢复</h2><p>这里对应的是入口3的情况.<br>前面介绍过, activity在保存状态的时候, 会将所有View和Fragment的状态都保存起来等待重建的时候使用.<br>但是如果是单个Activity对应多个Fragments的架构, Activity永远是resume状态, 多个Fragments在切换的过程中, 没有activity的帮助, 如何保存自己的状态?</p>
+<p>首先, 取决于你的多个Fragments是如何初始化的.<br>我做了一个实验, 在activity的onCreate()里面初始化两个Fragment:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initFragments</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    tab1Fragment = getFragmentManager().findFragmentByTag(Tab1Fragment.TAG);</span><br><span class="line">    <span class="keyword">if</span> (tab1Fragment == <span class="keyword">null</span>) &#123;</span><br><span class="line">        tab1Fragment = <span class="keyword">new</span> Tab1Fragment();</span><br><span class="line">    &#125;</span><br><span class="line">    tab2Fragment = getFragmentManager().findFragmentByTag(Tab2Fragment.TAG);</span><br><span class="line">    <span class="keyword">if</span> (tab2Fragment == <span class="keyword">null</span>) &#123;</span><br><span class="line">        tab2Fragment = <span class="keyword">new</span> Tab2Fragment();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后点击两个按钮来切换它们, replace(), 并且不加入到back stack中:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OnClick</span>(R.id.tab1)</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onTab1Clicked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    getFragmentManager().beginTransaction()</span><br><span class="line">            .replace(R.id.content_container, tab1Fragment, Tab1Fragment.TAG)</span><br><span class="line">            .commit();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@OnClick</span>(R.id.tab2)</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onTab2Clicked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    getFragmentManager().beginTransaction()</span><br><span class="line">            .replace(R.id.content_container, tab2Fragment, Tab2Fragment.TAG)</span><br><span class="line">            .commit();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到, 每一次的切换, 都是一个Fragment的完全destroy, detach和另一个fragment的attach, create,<br>但是当我在这两个fragment中各自加上EditText, 发现只要EditText有id, 切换过程中EditText的内容是被保存的.<br>这是谁在什么时候保存并恢复的呢?<br>我在TextChange的回调里打了断点, 发现调用栈如下:<br><img src="/images/fragment-state-debug-onRestore.png" alt="Fragment view state debug"></p>
+<p>在<code>FragmentManagerImpl</code>中, <code>moveToState()</code>方法的case Fragment.CREATED中:<br>调用了: <code>f.restoreViewState(f.mSavedFragmentState);</code><br>此时我没有做任何保存状态的处理, 但是断点中可以看出:<br><img src="/images/fragment-states.png" alt="Fragment states"></p>
+<p>虽然mSavedFragmentState是null, 但是mSavedViewState却有值.<br>所以这个View状态保存和恢复对应的入口即是上面两个图中的入口三.</p>
+<p>这是因为我的两个fragment只new了一次, 然后保存了成员变量, 即便是Fragment重新onCreate(), 但是对应的实例仍然是同一个.<br>这和Activity是不同的, 因为你是无法new一个Activity的.</p>
+<p>在上面的例子中, 如果不保存Fragment的引用, 每次都new Fragment, 那么View的状态是不会被保存的, 因为不同实例间的状态传递只有在系统销毁恢复的情况下才会发生(入口一).<br>如果我们需要在不同的实例间传递状态, 就需要用到下面的方法:</p>
+<h2 id="不同Fragment实例间的状态保存和恢复"><a href="#不同Fragment实例间的状态保存和恢复" class="headerlink" title="不同Fragment实例间的状态保存和恢复"></a>不同Fragment实例间的状态保存和恢复</h2><p>这里对应的是入口2, 不同于入口1和3, 它们是自动的, 入口2是用户主动保存和恢复的情形.<br>自己主动保存Fragment的状态, 可以调用FragmentManager的这个方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract Fragment.SavedState saveFragmentInstanceState(Fragment f);</span><br></pre></td></tr></table></figure>
+<p>它的实现是这样的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Fragment.<span class="function">SavedState <span class="title">saveFragmentInstanceState</span><span class="params">(Fragment fragment)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (fragment.mIndex &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        throwException(<span class="keyword">new</span> IllegalStateException(<span class="string">"Fragment "</span> + fragment</span><br><span class="line">                + <span class="string">" is not currently in the FragmentManager"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (fragment.mState &gt; Fragment.INITIALIZING) &#123;</span><br><span class="line">        Bundle result = saveFragmentBasicState(fragment);</span><br><span class="line">        <span class="keyword">return</span> result != <span class="keyword">null</span> ? <span class="keyword">new</span> Fragment.SavedState(result) : <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回的数据类型是: Fragment.SavedState, 这个state可以通过Fragment的这个方法设置给自己:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setInitialSavedState</span><span class="params">(SavedState state)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mIndex &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Fragment already active"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mSavedFragmentState = state != <span class="keyword">null</span> &amp;&amp; state.mState != <span class="keyword">null</span></span><br><span class="line">            ? state.mState : <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是注意只能在Fragment被加入之前设置, 这是一个初始状态.<br>利用这两个方法可以更加自由地保存和恢复状态, 而不依赖于Activity.<br>这样处理以后, 不必保存Fragment的引用, 每次切换的时候虽然都new了新的实例, 但是旧的实例的状态可以设置给新实例.</p>
+<p>例子代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@State</span></span><br><span class="line">SparseArray&lt;Fragment.SavedState&gt; savedStateSparseArray = <span class="keyword">new</span> SparseArray&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onTab1Clicked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// save current tab</span></span><br><span class="line">    Fragment tab2Fragment = getSupportFragmentManager().findFragmentByTag(Tab2Fragment.TAG);</span><br><span class="line">    <span class="keyword">if</span> (tab2Fragment != <span class="keyword">null</span>) &#123;</span><br><span class="line">        saveFragmentState(<span class="number">1</span>, tab2Fragment);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// restore last state</span></span><br><span class="line">    Tab1Fragment tab1Fragment = <span class="keyword">new</span> Tab1Fragment();</span><br><span class="line">    restoreFragmentState(<span class="number">0</span>, tab1Fragment);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// show new tab</span></span><br><span class="line">    getSupportFragmentManager().beginTransaction()</span><br><span class="line">            .replace(R.id.content_container, tab1Fragment, Tab1Fragment.TAG)</span><br><span class="line">            .commit();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">saveFragmentState</span><span class="params">(<span class="keyword">int</span> index, Fragment fragment)</span> </span>&#123;</span><br><span class="line">    Fragment.SavedState savedState = getSupportFragmentManager().saveFragmentInstanceState(fragment);</span><br><span class="line">    savedStateSparseArray.put(index, savedState);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">restoreFragmentState</span><span class="params">(<span class="keyword">int</span> index, Fragment fragment)</span> </span>&#123;</span><br><span class="line">    Fragment.SavedState savedState = savedStateSparseArray.get(index);</span><br><span class="line">    fragment.setInitialSavedState(savedState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意这里用了SparseArray来存储Fragment的状态, 并且加上了<code>@State</code>, 这样在Activity重建的时候其中的内容也能够被恢复.</p>
+<h2 id="Back-stack中的fragment"><a href="#Back-stack中的fragment" class="headerlink" title="Back stack中的fragment"></a>Back stack中的fragment</h2><p>有一点很特殊的是, 当Fragment从back stack中返回, 实际上是经历了一次View的销毁和重建, 但是它本身并没有被重建.<br>即View状态需要重建, 实例状态不需要重建.</p>
+<p>举个例子说明这种情形: Fragment被另一个Fragment replace(), 并且压入back stack中, 此时它的View是被销毁的, 但是它本身并没有被销毁.<br>也即, 它走到了onDestroyView(), 却没有走<code>onDestroy()</code>和<code>onDetact()</code>.<br>等back回来的时候, 它的view会被重建, 重新从onCreateView()开始走生命周期.<br>在这整个过程中, 该Fragment中的成员变量是保持不变的, 只有View会被重新创建.<br>在这个过程中, instance state的saving并没有发生.</p>
+<p><strong>所以, 很多时候Fragment还需要考虑的是在没有Activity帮助的情形下(Activity并没有可能重建的情形), 自身View状态的保存.</strong><br>此时要注意一些不容易发现的错误, 比如List的新实例需要重新setAdapter等.</p>
+<h2 id="Fragment-setRetainInstance"><a href="#Fragment-setRetainInstance" class="headerlink" title="Fragment setRetainInstance"></a>Fragment setRetainInstance</h2><p>Fragment有一个相关方法:<br><a href="https://developer.android.com/reference/android/app/Fragment.html#setRetainInstance(boolean" target="_blank" rel="noopener">setRetainInstance</a>)<br>这个方法设置为true的时候表示, 即便activity重建了, 但是fragment的实例并不被重建.<br>注意此方法只对没有放在back stack中的fragment生效.<br>什么时候要用这个方法呢? 处理configuration change的时候:<br><a href="http://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html" target="_blank" rel="noopener">Handling Configuration Changes with Fragments</a><br>这样, 当屏幕旋转, Activity重建, 但是其中的fragment和fragment正在执行的任务不必重建.<br>更多解释可以参见:<br><a href="http://stackoverflow.com/questions/11182180/understanding-fragments-setretaininstanceboolean" target="_blank" rel="noopener">http://stackoverflow.com/questions/11182180/understanding-fragments-setretaininstanceboolean</a><br><a href="http://stackoverflow.com/questions/11160412/why-use-fragmentsetretaininstanceboolean" target="_blank" rel="noopener">http://stackoverflow.com/questions/11160412/why-use-fragmentsetretaininstanceboolean</a></p>
+<p>注意这个方法只是针对<strong>configuration change</strong>, 并不影响用户主动关闭和系统销毁的情况:<br>当activity被用户主动finish, 其中的所有fragments仍然会被销毁.<br>当activity不在最顶端, memory不够了, 系统仍然可能会销毁activity和其中的fragments.</p>
+<h1 id="View的状态保存和恢复"><a href="#View的状态保存和恢复" class="headerlink" title="View的状态保存和恢复"></a>View的状态保存和恢复</h1><p>View的状态保存和恢复主要是依赖于下面几个方法:<br>保存: <code>saveHierarchyState()</code> -&gt; <code>dispatchSaveInstanceState()</code> -&gt; <code>onSaveInstanceState()</code><br>恢复: <code>restoreHierarchyState()</code> -&gt; <code>dispatchRestoreInstanceState()</code> -&gt; <code>onRestoreInstanceState()</code><br>还有两个重要的前提条件是View要有id, 并且<code>setSavedEnabled()</code>为true.(这个值默认为true).<br>在系统的widget里(比如TextView, EditText, Checkbox等), 这些都是已经被处理好的, 我们只需要给View赋予id, Activity和Fragment重建的时候会自动恢复其中的状态. (这里的Fragment恢复对应入口一和入口三, 入口二属于跨实例新建的情况).</p>
+<p>但是如果你要使用第三方的自定义View, 就需要确认一下它们内部是否有状态保存和恢复的代码.<br>如果不行你就需要继承该自定义View, 然后实现这两个方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Assumes that SomeSmartButton is a 3rd Party view that</span></span><br><span class="line"><span class="comment">// View State Saving/Restoring are not implemented internally</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeBetterSmartButton</span> <span class="keyword">extends</span> <span class="title">SomeSmartButton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Parcelable <span class="title">onSaveInstanceState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">        <span class="comment">// Save current View's state here</span></span><br><span class="line">        <span class="keyword">return</span> bundle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Parcelable state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onRestoreInstanceState(state);</span><br><span class="line">        <span class="comment">// Restore View's state here</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="WebView的状态保存和恢复"><a href="#WebView的状态保存和恢复" class="headerlink" title="WebView的状态保存和恢复"></a>WebView的状态保存和恢复</h1><p>WebView的状态保存和恢复不像其他原生View一样是自动完成的.<br>WebView不是继承自View的.<br>如果我们把WebView放在布局里, 不加处理, 那么Activity或Fragment重建的过程中, WebView的状态就会丢失, 变成初始状态.</p>
+<p>在Fragment的onSaveInstanceState()里面可以加入如下代码来保存WebView的状态:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onSaveInstanceState(Bundle outState) &#123;</span><br><span class="line">    super.onSaveInstanceState(outState);</span><br><span class="line">    webView.saveState(outState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在初始化的时候, 增加判断, 不必每次都打开初始链接:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (savedInstanceState != null) &#123;</span><br><span class="line">    webView.restoreState(savedInstanceState);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    webView.loadUrl(TEST_URL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样处理以后, 在重新建立的时候, WebView的状态就能恢复到离开前的页面.<br>不论WebView是放在Activity里还是Fragment里, 这个方法都适用.</p>
+<p>但是Fragment还有另一种情况, 即Fragment被压入back stack, 此时它没有被destroy(), 所以没有调用onSavedInstanceState()这个方法.<br>这种情况返回的时候, 会从onCreateView()开始, 并且savedInstanceState为null, 于是其中WebView之前的状态在此时丢失了.<br>解决这种情况可以利用Fragment实例并未销毁的条件, 增加一个成员变量bundle, 保存WebView的状态, 最终解决如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Bundle webViewState;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">    ButterKnife.bind(<span class="keyword">this</span>, view);</span><br><span class="line"></span><br><span class="line">    initWebView();</span><br><span class="line">    <span class="keyword">if</span> (webViewState != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//Fragment实例并未被销毁, 重新create view</span></span><br><span class="line">        webView.restoreState(webViewState);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//Fragment实例被销毁重建</span></span><br><span class="line">        webView.restoreState(savedInstanceState);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//全新Fragment</span></span><br><span class="line">        webView.loadUrl(TEST_URL);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onPause();</span><br><span class="line">    webView.onPause();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Fragment不被销毁(Fragment被加入back stack)的情况下, 依靠Fragment中的成员变量保存WebView状态</span></span><br><span class="line">    webViewState = <span class="keyword">new</span> Bundle();</span><br><span class="line">    webView.saveState(webViewState);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">    <span class="comment">//Fragment被销毁的情况, 依靠outState保存WebView状态</span></span><br><span class="line">    <span class="keyword">if</span> (webView != <span class="keyword">null</span>) &#123;</span><br><span class="line">        webView.saveState(outState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本文完整例子相关实验代码可见:<br><a href="https://github.com/mengdd/HelloActivityAndFragment" target="_blank" rel="noopener">HelloActivityAndFragment</a><br>中的State Restore Demo.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>Developer Android:<br><a href="https://developer.android.com/reference/android/app/Fragment.html" target="_blank" rel="noopener">Android Fragment Reference</a><br><a href="https://developer.android.com/reference/android/app/FragmentManager.html" target="_blank" rel="noopener">Android FragmentManager Reference</a></p>
+<p>Posts:<br><a href="https://developer.android.com/training/basics/activity-lifecycle/recreating.html" target="_blank" rel="noopener">Recreating an Activity</a><br><a href="http://www.cnblogs.com/mengdd/archive/2012/12/17/2822291.html" target="_blank" rel="noopener">Activity的重新创建</a><br><a href="http://www.jianshu.com/p/180d2cc0feb5" target="_blank" rel="noopener">从源码角度剖析Fragment核心知识点</a><br><a href="http://www.jianshu.com/p/bd4a8be309c8" target="_blank" rel="noopener">Fragment源码阅读笔记</a><br><a href="https://inthecheesefactory.com/blog/fragment-state-saving-best-practices/en" target="_blank" rel="noopener">The Real Best Practices to Save/Restore Activity’s and Fragment’s state</a><br><a href="http://jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0327/2648.html" target="_blank" rel="noopener">Android中保存和恢复Fragment状态的最好方法</a></p>
+<p><a href="http://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html" target="_blank" rel="noopener">Handling Configuration Changes with Fragments</a><br><a href="http://trickyandroid.com/saving-android-view-state-correctly/" target="_blank" rel="noopener">Saving Android View state correctly</a></p>
+<p>Tools:<br><a href="https://github.com/frankiesardo/icepick" target="_blank" rel="noopener">icepick</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Fragment/" rel="tag"># Fragment</a>
+              <a href="/tags/WebView/" rel="tag"># WebView</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2016/06/02/android-fragment-usage-2-nested-fragments/" rel="prev" title="Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误">
+      <i class="fa fa-chevron-left"></i> Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2016/06/16/android-fragment-usage-4-toolbar/" rel="next" title="Android Fragment使用(四) Toolbar使用及Fragment中的Toolbar处理">
+      Android Fragment使用(四) Toolbar使用及Fragment中的Toolbar处理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E4%B8%AD%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">1.</span> <span class="nav-text">Android中的状态保存和恢复</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Activity%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">2.</span> <span class="nav-text">Activity的状态保存和恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E6%81%A2%E5%A4%8DActivity"><span class="nav-number">2.1.</span> <span class="nav-text">什么时候需要恢复Activity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D"><span class="nav-number">2.2.</span> <span class="nav-text">如何恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Activity%E4%BF%9D%E5%AD%98%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="nav-number">2.2.1.</span> <span class="nav-text">Activity保存方法的调用时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Activity%E6%81%A2%E5%A4%8D%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="nav-number">2.2.2.</span> <span class="nav-text">Activity恢复方法的调用时机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity%E4%B8%AD%E8%BF%98%E9%9C%80%E8%A6%81%E6%89%8B%E5%8A%A8%E6%81%A2%E5%A4%8D%E4%BB%80%E4%B9%88"><span class="nav-number">2.3.</span> <span class="nav-text">Activity中还需要手动恢复什么</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E7%B1%BBIcepick%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.</span> <span class="nav-text">工具类Icepick介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fragment%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">Fragment的状态保存和恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">Fragment状态保存和恢复的相关方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E6%81%A2%E5%A4%8D%E5%92%8CActivity%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">4.2.</span> <span class="nav-text">Fragment状态保存恢复和Activity的联系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment%E5%90%8C%E4%B8%80%E5%AE%9E%E4%BE%8B%E7%9A%84View%E7%8A%B6%E6%80%81%E6%81%A2%E5%A4%8D"><span class="nav-number">4.3.</span> <span class="nav-text">Fragment同一实例的View状态恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%90%8CFragment%E5%AE%9E%E4%BE%8B%E9%97%B4%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">4.4.</span> <span class="nav-text">不同Fragment实例间的状态保存和恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Back-stack%E4%B8%AD%E7%9A%84fragment"><span class="nav-number">4.5.</span> <span class="nav-text">Back stack中的fragment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment-setRetainInstance"><span class="nav-number">4.6.</span> <span class="nav-text">Fragment setRetainInstance</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#View%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">5.</span> <span class="nav-text">View的状态保存和恢复</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView%E7%9A%84%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D"><span class="nav-number">6.</span> <span class="nav-text">WebView的状态保存和恢复</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2016/06/13/android-fragment-usage-3-state-restore/";
+    this.page.identifier = "Android/2016/06/13/android-fragment-usage-3-state-restore/";
+    this.page.title = "Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

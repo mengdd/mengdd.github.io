@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ConstraintLayout介绍ConstraintLayout让你可以在很平的view结构(没有多层布局嵌套)中构建一个复杂的布局结构. 有点像RelativeLayout, 所有的view都是根据它和兄弟View和父layout的关系布局的, 但是它比RelativeLayout要更加灵活, 在Layout Editor中也更加好用.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Say Hello to ConstraintLayout">
+<meta property="og:url" content="http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="ConstraintLayout介绍ConstraintLayout让你可以在很平的view结构(没有多层布局嵌套)中构建一个复杂的布局结构. 有点像RelativeLayout, 所有的view都是根据它和兄弟View和父layout的关系布局的, 但是它比RelativeLayout要更加灵活, 在Layout Editor中也更加好用.">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/constraint-layout-properties-window.png">
+<meta property="article:published_time" content="2017-02-06T07:49:03.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.996Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="ConstraintLayout">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/constraint-layout-properties-window.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Say Hello to ConstraintLayout | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Say Hello to ConstraintLayout
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-06 15:49:03" itemprop="dateCreated datePublished" datetime="2017-02-06T15:49:03+08:00">2017-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2017/02/06/hello-constraint-layout/" class="post-meta-item leancloud_visitors" data-flag-title="Say Hello to ConstraintLayout" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2017/02/06/hello-constraint-layout/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2017/02/06/hello-constraint-layout/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="ConstraintLayout介绍"><a href="#ConstraintLayout介绍" class="headerlink" title="ConstraintLayout介绍"></a>ConstraintLayout介绍</h2><p><code>ConstraintLayout</code>让你可以在很平的view结构(没有多层布局嵌套)中构建一个复杂的布局结构. 有点像<code>RelativeLayout</code>, 所有的view都是根据它和兄弟View和父layout的关系布局的, 但是它比<code>RelativeLayout</code>要更加灵活, 在Layout Editor中也更加好用.</p>
+<a id="more"></a>
+<p>在Layout Editor中你可以直接靠拖拽来构建<code>ConstraintLayout</code>.</p>
+<p>为了在<code>ConstraintLayout</code>中定义一个view的位置, 你必须给view加上两条或多条约束(constraints). 每一条约束代表了一种和其他View(或parent, 或不可见的guideline)之间的联系或者对齐关系.</p>
+<p>每一条约束都规定了这个view沿着水平或竖直轴的一个位置, 所以每个View在每个轴上都必须至少有一条约束(但是通常需要更多).</p>
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><p>首先确认下载support库, 在<code>Tools &gt; Android &gt; SDK Manager</code>的<code>SDK Tools</code>tab下:<br>展开<code>Support Repository</code>, check <code>ConstraintLayout for Android</code>和<code>Solver for ConstraintLayout</code>.<br>Check <code>Show Package Details</code>, 显示版本信息.</p>
+<p>比如当前我最新的版本信息是1.0.0-beta4, 我在module的build.gradle中添加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile &apos;com.android.support.constraint:constraint-layout:1.0.0-beta4&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后点击Sync即可.</p>
+<h2 id="转换已有布局"><a href="#转换已有布局" class="headerlink" title="转换已有布局"></a>转换已有布局</h2><p>我们可以新建布局, 然后让它的根节点是<code>android.support.constraint.ConstraintLayout</code>.</p>
+<p>除此之外, 我们还可以直接转换已有布局.<br>打开Layout, 切换到<code>Design</code>tab, 然后在<code>Component Tree</code>窗口, 右击布局然后选择最底部的<code>Convert XXXLayout(这里是你布局节点的类型) to ConstraintLayout</code>.</p>
+<h2 id="添加约束"><a href="#添加约束" class="headerlink" title="添加约束"></a>添加约束</h2><p>在Design模式下, 从Palette窗口中拖一个View到editor中去. 当你把一个View加入到ConstraintLayout中之后, 它会展示出一个bounding box, 四角的四个小方块用来拖拽调节大小, 每一个边上都有一个小圆点用来建立约束.<br>这些小方块和小圆点都被称为<code>handles</code>.</p>
+<p>点击View, 然后点击并拖住一个约束handle, 把它拖拽到一个可用的anchor point(另一个View的边缘, layout的边缘, 或者一个guideline).当你松手的时候, 约束就生效了. (有一个默认的<a href="https://developer.android.com/training/constraint-layout/index.html#adjust-the-view-margins" target="_blank" rel="noopener">margin</a>)</p>
+<p>有几个规则:</p>
+<ul>
+<li>每个View都至少有两条约束: 一个水平的一个竖直的.</li>
+<li>你只能在共享平面的handle和anchor point之间建立约束. 比如一个View的竖直平面只能和另一个竖直平面建立约束, baseline也只能和其他baseline建立约束.</li>
+<li>每一个handle只能被用来建立一个约束, 但是你可以对一个anchor point建立(来自多个View的)多个约束.</li>
+</ul>
+<p>要删掉一个约束, 只需要选择这个view, 点击那个对应的handle.</p>
+<p>如果你给同一个View加了两个相反的约束, 约束的线条就会变成弹簧状, 来显示两个相反方向的约束.  当View内容的尺寸固定或者是wrap的时候, 在这种情况下View就会在两个约束下居中显示, 如果你想让它展开, 那么就应该修改它的尺寸为<a href="https://developer.android.com/training/constraint-layout/index.html#adjust-the-view-size" target="_blank" rel="noopener">Any Size</a>; 如果你想要保持当前的尺寸, 你可以<a href="https://developer.android.com/training/constraint-layout/index.html#adjust-the-constraint-bias" target="_blank" rel="noopener">调节约束的权重</a>.</p>
+<p>通常情况下可以加的有这几种约束:</p>
+<ul>
+<li>Parent constraint: View的边和Parent的边的关系.</li>
+<li>Position constraint: View之间水平和竖直的位置关系, 拖动可改变相对的margin距离.</li>
+<li>Alignment constraint: View边之间的对齐关系, 对齐后可以调节偏移量.</li>
+<li>Baseline alignment constraint: 对齐View的text baseline, 要创建baseline约束, 首先选中View, 然后把鼠标放在baseline上方两秒钟, 等它变白就可以拖到另一个baseline去建立约束了.</li>
+<li>Constrain to a guideline: 可以创建竖直或水平的guideline, 然后往上绑定约束, guideline对于用户来说是不可见的. 放置guideline的时候可以根据相对于layout边缘dp单位的距离, 也可以根据百分比.<br>Toolbar上有Guideline的按钮, 点击可选择水平或竖直.<br>点击Guideline尾部的小圆圈可以切换它到底是根据距离还是百分比放置的, 然后拖动它放到一个想要的位置.</li>
+</ul>
+<h2 id="使用Autoconnect和Infer-Constraints"><a href="#使用Autoconnect和Infer-Constraints" class="headerlink" title="使用Autoconnect和Infer Constraints"></a>使用Autoconnect和Infer Constraints</h2><p>当打开<code>Autoconnect</code>模式之后, 每一个<strong>新加的View</strong>都会自动创建约束. Autoconnect模式默认是关闭的.</p>
+<p>点击<code>Infer Constraints</code>会给layout中当前所有的View创建约束, 这是一个一次性的action. 它会选择建立最有效的约束, 所以它可能会建立离得很远的两个view之间的约束. 不像Autoconnect模式开启下, 只给新加的View建立约束, 并且只选择最近的元素.</p>
+<h2 id="调整View大小"><a href="#调整View大小" class="headerlink" title="调整View大小"></a>调整View大小</h2><p>可以通过拖拽View四个角的handles来改变View的大小, 但是这样生成的是hard-coded的尺寸, 对于适配来讲这样是不好的.</p>
+<p>你可以点击View然后在Properties窗口编辑尺寸.<br><img src="/images/constraint-layout-properties-window.png" alt="ConstraintLayout Properties Window"></p>
+<p>有三种尺寸模式:</p>
+<ul>
+<li>Wrap Content:  用<code>&gt;&gt;&gt;</code>图形表示.</li>
+<li>Any Size: 用弹簧图形表示. 说明View会一直展开到满足所有约束, 实际的值是0dp. 可以把它想象成”match constraints”. 如果此时只有单边的约束, 那么它只展开到能放下自己的内容为止. </li>
+<li>Fixed: 用图形<code>|-|</code>表示, 固定尺寸.</li>
+</ul>
+<p>可以通过点击图形符号来切换这些模式.</p>
+<p>注意: 在<code>ConstraintLayout</code>中的View中不应该使用<code>match_parent</code>, 而是用”Any Size”(0dp).</p>
+<h2 id="调整约束偏差"><a href="#调整约束偏差" class="headerlink" title="调整约束偏差"></a>调整约束偏差</h2><p>当你给一个View的对立两边都添加了约束, 而View的尺寸是fixed或者wrap_content, 那么默认情况下View就会居中显示在两个anchor point之间(bias=50%).<br>你可以通过拖拽View或者在Properties窗口中拖拽bias slider来改变它的偏移权重.</p>
+<h2 id="调节View边距"><a href="#调节View边距" class="headerlink" title="调节View边距"></a>调节View边距</h2><p>可以在toolbar上点击默认边距(8)来修改.</p>
+<p>注意这个修改只对修改后新添加的View生效.</p>
+<p>每一个View的边距都可以通过Properties窗口修改: 点击约束线条上的margin数字.</p>
+<p>注意提供的值都是8的倍数, 以确保你遵循了Material Design的建议.</p>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><ul>
+<li><a href="https://developer.android.com/training/constraint-layout/index.html" target="_blank" rel="noopener">Build a Responsive UI with ConstraintLayout</a></li>
+<li>Demo: <a href="https://github.com/mengdd/HelloConstraintLayout" target="_blank" rel="noopener">HelloConstraintLayout</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" rel="prev" title="Android Weekly Notes Issue 242">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 242
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" rel="next" title="Android Weekly Notes Issue 243">
+      Android Weekly Notes Issue 243 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">ConstraintLayout介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Setup"><span class="nav-number">2.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E5%B7%B2%E6%9C%89%E5%B8%83%E5%B1%80"><span class="nav-number">3.</span> <span class="nav-text">转换已有布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%BA%A6%E6%9D%9F"><span class="nav-number">4.</span> <span class="nav-text">添加约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Autoconnect%E5%92%8CInfer-Constraints"><span class="nav-number">5.</span> <span class="nav-text">使用Autoconnect和Infer Constraints</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E6%95%B4View%E5%A4%A7%E5%B0%8F"><span class="nav-number">6.</span> <span class="nav-text">调整View大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E7%BA%A6%E6%9D%9F%E5%81%8F%E5%B7%AE"><span class="nav-number">7.</span> <span class="nav-text">调整约束偏差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%8A%82View%E8%BE%B9%E8%B7%9D"><span class="nav-number">8.</span> <span class="nav-text">调节View边距</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Resources"><span class="nav-number">9.</span> <span class="nav-text">Resources</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2017/02/06/hello-constraint-layout/";
+    this.page.identifier = "Android/2017/02/06/hello-constraint-layout/";
+    this.page.title = "Say Hello to ConstraintLayout";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

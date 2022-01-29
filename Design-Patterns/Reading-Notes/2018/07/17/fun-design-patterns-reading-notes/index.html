@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="大话设计模式 读书笔记大话设计模式 全书读书笔记. 这本书针对各种设计模式, 属于基础书籍, 场景和例子比较生动(虽然废话比较多). 总体来说还是值得看一下.初学者学习, 工作者温故知新.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大话设计模式 读书笔记">
+<meta property="og:url" content="http://mengdd.github.io/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="大话设计模式 读书笔记大话设计模式 全书读书笔记. 这本书针对各种设计模式, 属于基础书籍, 场景和例子比较生动(虽然废话比较多). 总体来说还是值得看一下.初学者学习, 工作者温故知新.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-07-17T00:34:30.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.001Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Design Patterns">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>大话设计模式 读书笔记 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大话设计模式 读书笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-07-17 08:34:30" itemprop="dateCreated datePublished" datetime="2018-07-17T08:34:30+08:00">2018-07-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Patterns/" itemprop="url" rel="index"><span itemprop="name">Design Patterns</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Patterns/Reading-Notes/" itemprop="url" rel="index"><span itemprop="name">Reading Notes</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/" class="post-meta-item leancloud_visitors" data-flag-title="大话设计模式 读书笔记" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="大话设计模式-读书笔记"><a href="#大话设计模式-读书笔记" class="headerlink" title="大话设计模式 读书笔记"></a>大话设计模式 读书笔记</h1><p>大话设计模式 全书读书笔记. 这本书针对各种设计模式, 属于基础书籍, 场景和例子比较生动(虽然废话比较多). 总体来说还是值得看一下.<br>初学者学习, 工作者温故知新.</p>
+<a id="more"></a>
+<h2 id="第1章-代码无错就是优-–-简单工厂模式"><a href="#第1章-代码无错就是优-–-简单工厂模式" class="headerlink" title="第1章 代码无错就是优? – 简单工厂模式"></a>第1章 代码无错就是优? – 简单工厂模式</h2><p>实例程序: 计算器代码. </p>
+<h3 id="初学者问题"><a href="#初学者问题" class="headerlink" title="初学者问题:"></a>初学者问题:</h3><p>命名规范, 条件判断, 异常情况处理.</p>
+<h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程:"></a>面向对象编程:</h3><p>通过封装, 继承, 多态把程序的耦合度降低.<br>容易维护, 扩展, 复用.</p>
+<p><strong>举例: 活字印刷</strong>.</p>
+<h3 id="改动程序"><a href="#改动程序" class="headerlink" title="改动程序:"></a>改动程序:</h3><ul>
+<li>封装业务逻辑, 与界面分开.</li>
+<li>用继承和多态, 分离各种运算, 使程序可以灵活修改和扩展(增加开根运算).</li>
+<li>简单工厂模式: 处理实例化逻辑.</li>
+</ul>
+<h3 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h3><h2 id="第2章-商场促销-–-策略模式"><a href="#第2章-商场促销-–-策略模式" class="headerlink" title="第2章 商场促销 – 策略模式"></a>第2章 商场促销 – 策略模式</h2><p>实例程序: 商场收银软件.</p>
+<ul>
+<li>基本需求: 根据商品单价和数量, 计算费用.</li>
+<li>扩展需求: 增加不同的打折和满减优惠活动.</li>
+</ul>
+<h3 id="简单工厂实现"><a href="#简单工厂实现" class="headerlink" title="简单工厂实现"></a>简单工厂实现</h3><p>相同属性和功能的对象的抽象集合才是类, 所以不用为每一种折扣写一个子类.<br>收费抽象类有三个子类: 正常收费; 打折收费; 返利收费.</p>
+<p>缺点: 由于工厂本身包括了所有的收费方式, 商场是可能经常性地更改打折额度和返利额度, 每次维护或扩展收费方式都要改动这个工厂, 以致代码需要重新编译部署, 所以它不是最好的方法.</p>
+<h3 id="策略模式-Strategy"><a href="#策略模式-Strategy" class="headerlink" title="策略模式 Strategy"></a>策略模式 Strategy</h3><p>策略模式(Strategy): 它定义了算法家族, 分别封装起来, 让它们之间可以互相替换, 此模式让算法的变化, 不会影响到使用算法的客户.</p>
+<p>实现: 增加一个Context类, 维护一个对Strategy对象的引用. 这个Context类被客户端持有.</p>
+<p>进一步优化: 策略模式与简单工厂结合. 将创建具体Strategy的过程移入Context类.</p>
+<h3 id="策略模式的优点"><a href="#策略模式的优点" class="headerlink" title="策略模式的优点"></a>策略模式的优点</h3><ul>
+<li>减少了各种算法类与使用算法类之间的耦合.</li>
+<li>继承有助于析取一系列算法中的公共功能.</li>
+<li>每个算法有自己的类, 可以单独做单元测试.</li>
+<li>算法修改独立.</li>
+<li>消除客户端条件语句, 避免了大量判断. (Context中仍然有switch语句, 进一步改进: 反射. 后续章节会讲.)</li>
+</ul>
+<h2 id="第3章-拍摄UFO-–-单一职责原则"><a href="#第3章-拍摄UFO-–-单一职责原则" class="headerlink" title="第3章 拍摄UFO – 单一职责原则"></a>第3章 拍摄UFO – 单一职责原则</h2><p>场景: 散步偶遇天空中的不明飞行物, 用手机拍摄后拿回家看不清. 手机不如专业的相机.</p>
+<h3 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h3><p>单一职责原则(SRP): 就一个类而言, 应该仅有一个引起它变化的原因.</p>
+<p>如果一个类承担的职责过多, 就等于把这些职责耦合在一起, 一个职责的变化可能会削弱或者抑制这个类完成其他职责的能力. 这种耦合会导致脆弱的设计, 当变化发生时, 设计会遭受到意想不到的破坏.</p>
+<h3 id="俄罗斯方块游戏的设计"><a href="#俄罗斯方块游戏的设计" class="headerlink" title="俄罗斯方块游戏的设计"></a>俄罗斯方块游戏的设计</h3><p>考虑在不同平台上的程序逻辑复用, 将游戏逻辑和界面表示部分分离.</p>
+<p>方块可移动区域: 二维整型数组, 数组的值为是否存在方块的标志, 存在为1, 不存在为0.<br>碰撞和消层变为数值检测判断. 下落, 旋转, 移动等都是在做数组具体项的值的变化.</p>
+<p>界面表示逻辑根据数据进行绘制, 根据键盘命令调用数组的相应方法进行改变.</p>
+<h2 id="第4章-考研求职两不误-–-开放-封闭原则"><a href="#第4章-考研求职两不误-–-开放-封闭原则" class="headerlink" title="第4章 考研求职两不误 – 开放-封闭原则"></a>第4章 考研求职两不误 – 开放-封闭原则</h2><p>场景: 考研失败, 没有找工作.<br>举例: 一国两制.</p>
+<h3 id="开放-封闭原则"><a href="#开放-封闭原则" class="headerlink" title="开放-封闭原则"></a>开放-封闭原则</h3><p>开放-封闭原则, 是说软件实体(类, 模块, 函数等) 应该可以扩展, 但是不可修改. </p>
+<p>对于扩展是开放的, 对于更改是封闭的.</p>
+<p>面对需求, 对程序的改动是通过增加代码进行的, 而不是更改现有的代码.</p>
+<p>应该仅仅对呈现出频繁变化的那部分做出抽象, 对于应用程序中每个部分都刻意地进行抽象同样不是一个好主意. 拒绝不成熟的抽象和抽象本身一样重要.</p>
+<h2 id="第5章-会修电脑不会修收音机-–-依赖倒转原则"><a href="#第5章-会修电脑不会修收音机-–-依赖倒转原则" class="headerlink" title="第5章 会修电脑不会修收音机? – 依赖倒转原则"></a>第5章 会修电脑不会修收音机? – 依赖倒转原则</h2><p>场景: MM电脑蓝屏死机, 电话遥控修电脑, 拆掉一根内存条.</p>
+<p>PC易插拔, 不管哪一个部件出问题, 都可以在不影响别的部件的前提下进行修改或替换.<br>强内聚, 松耦合.</p>
+<h3 id="依赖倒转原则"><a href="#依赖倒转原则" class="headerlink" title="依赖倒转原则"></a>依赖倒转原则</h3><ul>
+<li>高层模块不应该依赖底层模块, 两个都应该依赖抽象.</li>
+<li>抽象不应该依赖于细节, 细节应该依赖于抽象.</li>
+<li>要针对接口编程, 不要针对实现编程.</li>
+</ul>
+<p>如果高层模块和底层模块都依赖于抽象(接口或抽象类), 只要接口是稳定的, 那么无论是高层模块还是低层模块都可以很容易地被复用.</p>
+<h3 id="里氏代换原则"><a href="#里氏代换原则" class="headerlink" title="里氏代换原则"></a>里氏代换原则</h3><p>里氏代换原则(LSP): 子类型必须能够替换它们的父类型.</p>
+<p>由于子类型的可替换性才使得使用父类类型的模块在无需修改的情况下就可以扩展.</p>
+<h3 id="修收音机"><a href="#修收音机" class="headerlink" title="修收音机"></a>修收音机</h3><p>收音机就是典型的耦合过度, 各个部件相互依赖, 难以维护.</p>
+<h2 id="第6章-穿什么有这么重要-–-装饰模式"><a href="#第6章-穿什么有这么重要-–-装饰模式" class="headerlink" title="第6章 穿什么有这么重要? – 装饰模式"></a>第6章 穿什么有这么重要? – 装饰模式</h2><p>代码: 搭配服饰的系统.</p>
+<ul>
+<li>增加装扮 -&gt; 开放-封闭原则. -&gt; 抽象类, 继承.</li>
+<li>把所需的功能按正确的顺序串联起来进行控制. -&gt; 装饰模式.</li>
+</ul>
+<h3 id="装饰模式-Decorator"><a href="#装饰模式-Decorator" class="headerlink" title="装饰模式 Decorator"></a>装饰模式 Decorator</h3><p>装饰模式(Decorator), 动态地给一个对象添加一些额外的职责, 就增加功能来说, 装饰模式比生成子类更为灵活.</p>
+<p>装饰模式把每个要装饰的功能放在单独的类中, 并让这个类包装它所要装饰的对象, 因此, 当需要执行特殊行为时, 客户代码就可以在运行时根据需要有选择地, 按顺序地使用装饰功能包装对象了.</p>
+<h2 id="第7章-为别人做嫁衣-–-代理模式"><a href="#第7章-为别人做嫁衣-–-代理模式" class="headerlink" title="第7章 为别人做嫁衣 – 代理模式"></a>第7章 为别人做嫁衣 – 代理模式</h2><p>场景例子: 男生A想追求女生C, 但是他们并不认识, 于是A委托一个认识C的男生B, 向C送礼物.</p>
+<p>程序设计: 两个男生实现了同样的接口, 接口中规定了送礼物的各种方法.<br>追求者包含要追求的女生对象和具体的送礼物方法, 而代理追求者包含追求者对象, 其方法实现调用追求者对象的对应方法.</p>
+<h3 id="代理模式-Proxy"><a href="#代理模式-Proxy" class="headerlink" title="代理模式 Proxy"></a>代理模式 Proxy</h3><p>代理模式(Proxy), 为其他对象提供一种代理以控制对这个对象的访问.</p>
+<p>代理模式应用:</p>
+<ul>
+<li>远程代理: 为一个对象在不同的地址空间提供局部代表.</li>
+<li>虚拟代理: 根据需要创建开销很大的对象. 通过它来存放实例化需要很长时间的真实对象.</li>
+<li>安全代理: 用来控制真实对象访问时的权限.</li>
+<li>智能指引: 当调用真实对象时, 代理处理另外一些事.</li>
+</ul>
+<h2 id="第8章-雷锋依然在人间-–-工厂方法模式"><a href="#第8章-雷锋依然在人间-–-工厂方法模式" class="headerlink" title="第8章 雷锋依然在人间 – 工厂方法模式"></a>第8章 雷锋依然在人间 – 工厂方法模式</h2><p>背景故事: 有个学雷锋做好事的同学病了, 请其他同学帮忙去孤寡老人家里干活.</p>
+<p>计算器程序的两种实现:</p>
+<ul>
+<li>简单工厂模式实现: switch-case.</li>
+<li>工厂方法模式实现: 每种算法对应一个工厂.</li>
+</ul>
+<h3 id="简单工厂-vs-工厂方法"><a href="#简单工厂-vs-工厂方法" class="headerlink" title="简单工厂 vs. 工厂方法"></a>简单工厂 vs. 工厂方法</h3><p>简单工厂模式的最大优点在于工厂类中包含了必要的逻辑判断, 根据客户端的选择条件动态实例化相关的类, 对于客户端来说, 去除了与具体产品的依赖.</p>
+<p>简单工厂的缺点: 对扩展和修改都开放, 违背了开-闭原则.</p>
+<h3 id="工厂方法模式-Factory-Method"><a href="#工厂方法模式-Factory-Method" class="headerlink" title="工厂方法模式 Factory Method"></a>工厂方法模式 Factory Method</h3><p>工厂方法模式(Factory Method), 定义一个用于创建对象的接口, 让子类决定实例化哪一个类. 工厂方法使一个类的实例化延迟到其子类.</p>
+<p>符合开-闭原则, 却把选择逻辑放在了客户端.</p>
+<p>以简单工厂和工厂方法模式实现学雷锋的例子. 工厂方法克服了简单工厂违反开-闭原则的缺点, 如果要更换对象, 不需要大的改动, 只要更换工厂就可以.</p>
+<h2 id="第9章-简历复印-–-原型模式"><a href="#第9章-简历复印-–-原型模式" class="headerlink" title="第9章 简历复印 – 原型模式"></a>第9章 简历复印 – 原型模式</h2><p>程序需求: 写一个简历类, 可以设置基本信息和工作经历. 最终产生工作经历不同的多份简历.</p>
+<p>问题: 三份简历需要三次实例化, 如何避免多次实例化?</p>
+<h3 id="原型模式-Prototype"><a href="#原型模式-Prototype" class="headerlink" title="原型模式 Prototype"></a>原型模式 Prototype</h3><p>原型模式(Prototype), 用原型实例指定创建对象的种类, 并且通过拷贝这些原型创建新的对象.</p>
+<p>原型模式其实就是从一个对象再创建另外一个可定制的对象, 而且不需知道任何创建的细节.</p>
+<p>.Net中提供了<code>ICloneable</code>接口.</p>
+<p>一般在初始化的信息不发生变化的情况下, 克隆是最好的办法. 既隐藏了对象创建的细节, 又对性能是大大的提高.</p>
+<h3 id="浅复制与深复制"><a href="#浅复制与深复制" class="headerlink" title="浅复制与深复制"></a>浅复制与深复制</h3><p>浅复制: 被复制对象的所有变量都含有与原来的对象相同的值, 而所有的对其他对象的引用都仍然指向原来的对象.</p>
+<p>浅复制对于值类型没什么问题, 对于引用类型, 就只是复制了引用, 对引用的对象还是指向了原来的对象.</p>
+<p>深复制把引用对象的变量指向复制过的新的对象, 而不是原有的被引用的对象.</p>
+<h2 id="第10章-考题抄错会做也白搭-–-模板方法模式"><a href="#第10章-考题抄错会做也白搭-–-模板方法模式" class="headerlink" title="第10章 考题抄错会做也白搭 – 模板方法模式"></a>第10章 考题抄错会做也白搭 – 模板方法模式</h2><p>程序例子: 学生抄题然后解答.</p>
+<p>程序1: 学生分别抄题然后给出答案.<br>问题: 如果老师要改题, 就得修改多处, 而且也存在某些学生可能会抄错的问题.</p>
+<p>改进1: 抽出父类, 处理抄题部分, 只有答题部分不同, 由子类完成.</p>
+<p>改进2: 答题部分也有部分内容相同, 只有答案不同. -&gt; 在基类中增加虚方法, 填写答案, 由子类覆写填答案.</p>
+<h3 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h3><p>模板方法模式, 定义一个操作中的算法的骨架, 而将一些步骤延迟到子类中. 模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤.</p>
+<p>模板方法模式通过把不变行为搬移到超类, 去除子类中的重复代码.</p>
+<h2 id="第11章-无熟人难办事-–-迪米特法则"><a href="#第11章-无熟人难办事-–-迪米特法则" class="headerlink" title="第11章 无熟人难办事? – 迪米特法则"></a>第11章 无熟人难办事? – 迪米特法则</h2><p>场景: 小菜第一天上班, 人事处带他去IT部门找一个小张领电脑装电脑. 结果小张临时出去处理其他事情, 于是小菜就一直等, 而IT部的另外两个员工很闲却不帮忙, 因为单子上写的是小张负责. 于是小菜等了一天, 快结束时小张回来才帮他处理.</p>
+<p>问题: 如果公司IT部门有主管, 或者有事直接是整个IT部门负责, 就不会出现具体到个人的资源分配问题. -&gt; 面向接口编程.</p>
+<h3 id="迪米特法则"><a href="#迪米特法则" class="headerlink" title="迪米特法则"></a>迪米特法则</h3><p>迪米特法则, 如果两个类不必彼此直接通信, 那么这两个类就不应当发生直接的相互作用. 如果其中一个类需要调用另一个类的某一个方法的话, 可以通过第三者转发这个调用.</p>
+<p>在类的结构设计上, 每一个类都应当尽量降低成员的访问权限.</p>
+<h2 id="第12章-牛市股票还会亏钱-–-外观模式"><a href="#第12章-牛市股票还会亏钱-–-外观模式" class="headerlink" title="第12章 牛市股票还会亏钱? – 外观模式"></a>第12章 牛市股票还会亏钱? – 外观模式</h2><p>举例: 股民炒股, 投资多个股票, 自己不易掌握, 买基金, 由专业的经理人进行管理. -&gt; 解除耦合, 外观模式, 又叫门面模式.</p>
+<h3 id="外观模式-Facade"><a href="#外观模式-Facade" class="headerlink" title="外观模式 Facade"></a>外观模式 Facade</h3><p>外观模式(Facade), 为子系统中的一组接口提供一个一致的界面, 此模式定义了一个高层接口, 这个接口使得这一子系统更加容易使用.</p>
+<p>何时使用外观模式:</p>
+<ul>
+<li>设计初期的逻辑分层.</li>
+<li>开发阶段增加外观提供简单接口.</li>
+<li>维护遗留系统.</li>
+</ul>
+<h2 id="第13章-好菜每回味不同-–-建造者模式"><a href="#第13章-好菜每回味不同-–-建造者模式" class="headerlink" title="第13章 好菜每回味不同 – 建造者模式"></a>第13章 好菜每回味不同 – 建造者模式</h2><p>场景: 大排档的饭, 一份好吃, 另一份忘了放盐. 中式快餐依赖于厨师.</p>
+<p>提出问题: 为什么麦当劳肯德基的食物口吻稳定? -&gt; 工作流程规范稳定.</p>
+<p>程序需求: 画小人程序, 画不同的小人, 如何复用程序, 避免关键部分缺失? -&gt; 建造者模式, 又叫生成器模式.</p>
+<h3 id="建造者模式-Builder"><a href="#建造者模式-Builder" class="headerlink" title="建造者模式 Builder"></a>建造者模式 Builder</h3><p>建造者模式(Builder), 将一个复杂对象的构建与它的表示分离, 使得同样的构建过程可以创建不同的表示.</p>
+<ul>
+<li><code>Builder</code>为创建一个<code>Product</code>对象的各个部件指定的抽象接口.</li>
+<li><code>ConcreteBuilder</code>是具体的建造者, 实现<code>Builder</code>接口, 构造和装配各个部件.</li>
+<li><code>Director</code>指挥者, 指挥建造过程,  使用<code>ConcreteBuilder</code>构建产品.</li>
+</ul>
+<p>建造者模式是当创建复杂对象的算法应该独立于该对象的组成部分以及它们的装配方式时适用的模式.</p>
+<h2 id="第14章-老板回来-我不知道-–-观察者模式"><a href="#第14章-老板回来-我不知道-–-观察者模式" class="headerlink" title="第14章 老板回来, 我不知道 – 观察者模式"></a>第14章 老板回来, 我不知道 – 观察者模式</h2><p>场景: 公司同事讨论股票, 如果老板回来, 秘书则打电话通知大家.</p>
+<p>代码实现, 解耦1: 抽象的观察者; 解耦2: 抽象的通知者接口.</p>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><p>观察者模式又叫发布-订阅(Publish/Subscribe)模式.</p>
+<p>观察者模式定义了一种一对多的依赖关系, 让多个观察者对象同时监听某一个主题对象. 这个主题对象在状态发生变化时, 会通知所有观察者对象, 使它们能够自动更新自己.</p>
+<p>关键类: <code>Subject</code>, <code>ConcreteSubject</code>, <code>Observer</code>, <code>ConcreteObserver</code>.</p>
+<p>观察者模式的不足: 有可能所有观察者对象是已经写好的控件, 它们没有办法实现同一个观察者接口; 每个具体的观察者, 有可能是不同的方法需要被调用.</p>
+<h3 id="事件委托实现"><a href="#事件委托实现" class="headerlink" title="事件委托实现"></a>事件委托实现</h3><p>多个观察者没有共同的基类, 并且有各自不同名字的更新方法.<br>此时通知者无法遍历通知 -&gt; 委托(.Net中的delegate).</p>
+<p>首先声明一个委托类型<code>EventHandler</code>. 在通知者类中声明委托事件.<br>注册观察者时将观察者的更新方法挂钩到通知者的这个委托事件上. 在通知者通知时调用该委托事件.</p>
+<p>委托就是一种引用方法的类型. 一旦为委托分配了方法, 委托将与该方法具有完全相同的行为. 委托可以看作是对函数的抽象, 是函数的”类”, 委托的实例将代表一个具体的函数.</p>
+<p>一个委托可以搭载多个方法, 所有方法被依次唤起.<br>前提: 委托对象所搭载的所有方法必须具有相同的参数列表和返回值类型.</p>
+<p>场景: 有同学的手机丢了, 委托小菜给班级所有同学发个短信通知其他人该同学已经换号, 请大家更新号码.</p>
+<h2 id="第15章-就不能不换DB吗-–-抽象工厂模式"><a href="#第15章-就不能不换DB吗-–-抽象工厂模式" class="headerlink" title="第15章 就不能不换DB吗? – 抽象工厂模式"></a>第15章 就不能不换DB吗? – 抽象工厂模式</h2><p>场景: 公司有两个项目业务相同, 但是要用两种数据库.</p>
+<p>例子代码存在的问题: 直接创建了具体的数据库操作类.</p>
+<p>解决方法: 用工厂方法模式. 工厂方法模式定义一个用于创建对象的接口, 让子类决定实例化哪一个类.</p>
+<p>代码改进1: 抽象出对数据库的一个表的访问接口, 解除与具体数据库访问的耦合.<br>并定义抽象工厂接口, 由具体的工厂实现实例化.</p>
+<p>依然存在问题: 依然存在很多指明具体工厂的代码.</p>
+<p>代码改进2: 增加了对数据库其他表的访问接口. 涉及到多个产品系列的问题 -&gt; 抽象工厂模式.</p>
+<h3 id="抽象工厂模式-Abstract-Factory"><a href="#抽象工厂模式-Abstract-Factory" class="headerlink" title="抽象工厂模式 Abstract Factory"></a>抽象工厂模式 Abstract Factory</h3><p>抽象工厂模式(Abstract Factory), 提供一个创建一系列相关或相互依赖对象的接口, 而无需指定它们具体的类.</p>
+<p>优点: </p>
+<ul>
+<li>易于交换产品系列. 只需要改变一个具体的工厂.</li>
+<li>具体的创建实例过程与客户端分离, 客户端通过接口操纵实例.<br>(开放-封闭原则, 倒转依赖原则).</li>
+</ul>
+<p>缺点: </p>
+<ul>
+<li>增加功能时要改动的类比较多.</li>
+<li>实例化具体工厂的地方比较多, 替换实现时仍需要更改多处.</li>
+</ul>
+<h3 id="用简单工厂来改进抽象工厂"><a href="#用简单工厂来改进抽象工厂" class="headerlink" title="用简单工厂来改进抽象工厂"></a>用简单工厂来改进抽象工厂</h3><p>去掉了工厂类, 增加一个数据访问类, 其中用简单工厂模式来决定实例化哪些具体的数据库访问类.</p>
+<p>缺点: 如果要增加一系列的实现, 需要在简单工厂类的每个方法switch中增加case.</p>
+<h3 id="用反射-抽象工厂的数据访问程序"><a href="#用反射-抽象工厂的数据访问程序" class="headerlink" title="用反射 + 抽象工厂的数据访问程序"></a>用反射 + 抽象工厂的数据访问程序</h3><p>解决思路1: 依赖注入框架.<br>解决思路2: 反射.</p>
+<p>利用字符串来实例化对象, 而变量是可以更换的.</p>
+<p>问题: 更改数据库还是需要去改程序(db名称)重新编译.<br>改进: 用配置文件来解决更改变量的问题.</p>
+<h2 id="第16章-无尽加班何时休-–-状态模式"><a href="#第16章-无尽加班何时休-–-状态模式" class="headerlink" title="第16章 无尽加班何时休 – 状态模式"></a>第16章 无尽加班何时休 – 状态模式</h2><p>程序: 不同的时间对应不同的工作状态.</p>
+<p>代码的坏味道: 方法过长, 有很多的判断分支.<br>违背了单一职责原则和开放-封闭原则.</p>
+<h3 id="状态模式-State"><a href="#状态模式-State" class="headerlink" title="状态模式 State"></a>状态模式 State</h3><p>状态模式(State), 当一个对象的内在状态改变时允许改变其行为, 这个对象看起来像是改变了其类.</p>
+<p>状态模式主要解决的是当控制一个对象状态转换的条件表达式过于复杂时的情况. 把状态的判断逻辑转移到表示不同状态的一系列类当中, 可以把复杂的判断逻辑简化.</p>
+<p>状态模式的好处是将与特定状态相关的行为局部化, 并且将不同状态的行为分割开来.</p>
+<p>状态模式通过把各种状态转移逻辑分布到<code>State</code>的子类之间, 来减少相互间的依赖.</p>
+<p><strong>什么时候考虑使用状态模式?</strong><br>当一个对象的行为取决于它的状态, 并且它必须在运行时刻根据状态改变它的行为时, 就可以考虑使用状态模式了.</p>
+<h2 id="第17章-在NBA我需要翻译-–-适配器模式"><a href="#第17章-在NBA我需要翻译-–-适配器模式" class="headerlink" title="第17章 在NBA我需要翻译 – 适配器模式"></a>第17章 在NBA我需要翻译 – 适配器模式</h2><p>背景: 姚明刚去NBA时需要翻译.</p>
+<h3 id="适配器模式-Adapter"><a href="#适配器模式-Adapter" class="headerlink" title="适配器模式 Adapter"></a>适配器模式 Adapter</h3><p>适配器模式(Adapter), 将一个类的接口转换成客户希望的另外一个接口. Adapter模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作.</p>
+<p>联想: 电源适配器, 翻译.</p>
+<p>类适配器模式: 通过多重继承. (某些语言不支持.)<br>对象适配器模式: 利用包含.</p>
+<p><strong>何时使用适配器模式?</strong><br>使用一个已经存在的类, 但如果它的接口, 也就是它的方法和你的要求不相同时, 就应该考虑用适配器模式.</p>
+<p>通常是在开发后期或维护期再考虑使用适配器模式; 在设计初期, 应该尽量为类似的功能设计相同的接口, 或考虑通过重构统一接口.</p>
+<p>在双方都不太容易修改时使用适配器模式: 比如使用第三方组件.</p>
+<p>.Net中的<code>DataAdapter</code>.</p>
+<p>扁鹊三兄弟医术的例子: 事后控制不如事中控制, 事中控制不如事前控制.<br>适配器模式是后期才考虑的一个模式.</p>
+<h2 id="第18章-如果再回到从前-–-备忘录模式"><a href="#第18章-如果再回到从前-–-备忘录模式" class="headerlink" title="第18章 如果再回到从前 – 备忘录模式"></a>第18章 如果再回到从前 – 备忘录模式</h2><p>背景: 游戏存档, 下棋悔棋, 文档中的撤销, 网页中的后退.</p>
+<p>程序: 游戏角色的数据存档.<br>第一版程序的缺点: 游戏角色的细节暴露给了客户端, 保存和恢复都暴露了实现细节, 不好扩展和修改.</p>
+<h3 id="备忘录模式-Memento"><a href="#备忘录模式-Memento" class="headerlink" title="备忘录模式 Memento"></a>备忘录模式 Memento</h3><p>备忘录(Memento): 在不破坏封装性的前提下, 捕获一个对象的内部状态, 并在该对象之外保存这个状态. 这样以后就可将该对象恢复到原先保存的状态.</p>
+<ul>
+<li><code>Originator</code>: 发起人, 负责创建一个备忘录<code>Memento</code>, 用以记录当前时刻它的内部状态, 并可使用备忘录恢复内部状态. <code>Originator</code>可根据需要决定<code>Memento</code>存储哪些内部状态. </li>
+<li><code>Memento</code>: 备忘录, 负责存储<code>Originator</code>对象的内部状态, 并可防止<code>Originator</code>以外的其他对象访问备忘录.</li>
+<li><code>Caretaker</code>: 管理者, 负责保存好备忘录(<code>Memento</code>), 不能对备忘录的内容进行操作或检查.</li>
+</ul>
+<p>全部状态保存可以用clone的方式实现, 更多可能的情况是保存部分状态, 用备忘录.</p>
+<p><strong>适用情形</strong>:</p>
+<ul>
+<li>备忘录模式适用于功能比较复杂的, 需要维护或记录属性历史的类, 或者需要保存的属性只是众多属性中的一小部分时.</li>
+<li>使用命令模式时, 如果需要实现命令的撤销功能, 那么可以使用备忘录模式来存储可撤销操作的状态.</li>
+<li>一些对象的内部信息必须保存在对象以外的地方, 但是必须要由对象自己读取. 这时使用备忘录可以把复杂对象内部信息对其他的对象屏蔽起来.</li>
+<li>当角色状态改变的时候, 有可能这个状态无效, 这时候可以使用暂时存起来的备忘录将状态复原.</li>
+</ul>
+<h2 id="第19章-分公司-一部门-–-组合模式"><a href="#第19章-分公司-一部门-–-组合模式" class="headerlink" title="第19章 分公司 = 一部门 – 组合模式"></a>第19章 分公司 = 一部门 – 组合模式</h2><p>场景: 为一个有很多分公司的大公司写OA系统. 每个分公司, 办事处和总公司一样都有相应的人力, 财务等部门, 但系统要求总部和分公司不是平行的, 仍保持一定的树状结构.</p>
+<p><strong>分析: 整体与部分可以一致对待.</strong><br>例子: 卖电脑的商家可以卖电脑和配件; 复制文件可以逐个文件复制也可以复制文件夹; 文本编辑, 单个文字和整段文字都可以更改样式.</p>
+<h3 id="组合模式-Composite"><a href="#组合模式-Composite" class="headerlink" title="组合模式 Composite"></a>组合模式 Composite</h3><p>组合模式(Composite), 将对象组合成树形结构以表示’部分-整体’的层次结构, 组合模式使得用户对单个对象和组合对象的使用具有一致性.</p>
+<p><code>Component</code>: 组合中的对象声明接口.<br><code>Leaf</code>: 叶子节点.<br><code>Composite</code>: 有枝节点.</p>
+<p><strong>透明方式</strong>: <code>Component</code>中声明所有用来管理子对象的方法. 好处: 叶子节点和枝节点对外没有区别, 具备完全一致的行为接口. 问题: 叶子节点中的一些方法实现是没有意义的.</p>
+<p><strong>安全方式</strong>: <code>Component</code>中不去声明用于管理子对象的方法. 好处: 叶子节点不用实现这些方法. 问题: 不够透明, 树叶和树枝将不具有相同的接口, 客户端的调用需要做相应的判断.</p>
+<p><strong>何时使用组合模式</strong>:</p>
+<ul>
+<li>需求中是提现部分与整体的层次结构.</li>
+<li>希望用户可以忽略组合对象与单个对象的区别.</li>
+</ul>
+<p>例子: 自定义控件.</p>
+<h2 id="第20章-想走-可以-先买票-–-迭代器模式"><a href="#第20章-想走-可以-先买票-–-迭代器模式" class="headerlink" title="第20章 想走? 可以! 先买票 – 迭代器模式"></a>第20章 想走? 可以! 先买票 – 迭代器模式</h2><p>场景: 公交汽车售票员对车厢里的所有人和大件行李进行遍历, 让大家买票. </p>
+<h3 id="迭代器模式-Iterator"><a href="#迭代器模式-Iterator" class="headerlink" title="迭代器模式 Iterator"></a>迭代器模式 Iterator</h3><p>迭代器模式(Iterator), 提供一种方法顺序访问一个聚合对象中各个元素, 而又不暴露该对象的内部表示.</p>
+<p>当你需要访问一个聚集对象, 而且不管这些对象是什么都需要遍历的时候, 另外, 你需要对聚集对象有多种方式遍历时, 就应该考虑用迭代器模式.  </p>
+<p>迭代器模式为遍历不同的聚集结构提供如开始, 下一个, 是否结束, 当前哪一项等统一的接口.</p>
+<p>很多高级编程语言已经吧这个模式做在语言中了.</p>
+<h2 id="第21章-有些类也需要计划生育-–-单例模式"><a href="#第21章-有些类也需要计划生育-–-单例模式" class="headerlink" title="第21章 有些类也需要计划生育 – 单例模式"></a>第21章 有些类也需要计划生育 – 单例模式</h2><p>程序实例: 窗体程序, 希望工具箱窗体只出现一次.</p>
+<p>简单解决方案1: 声明全局变量, 判断null.<br>缺点: 多个使用的地方会出现重复的判断代码. -&gt; 把它们提炼到同一个地方.</p>
+<p>改进: 由类自己控制实例化及判断.</p>
+<ul>
+<li>构造函数私有.</li>
+<li>静态变量.</li>
+<li>静态获取方法, 创建和访问唯一实例.</li>
+</ul>
+<h3 id="单例模式-Singleton"><a href="#单例模式-Singleton" class="headerlink" title="单例模式 Singleton"></a>单例模式 Singleton</h3><p>单例模式(Singleton), 保证一个类仅有一个实例, 并提供一个访问它的全局访问点.</p>
+<p>多线程时的单例: lock加锁.<br>性能进一步改良: 双重锁定(Double-Check Locking).</p>
+<p>静态初始化: sealed阻止派生; 变量标记为readonly.</p>
+<h2 id="第22章-手机软件何时统一-–-桥接模式"><a href="#第22章-手机软件何时统一-–-桥接模式" class="headerlink" title="第22章 手机软件何时统一 – 桥接模式"></a>第22章 手机软件何时统一 – 桥接模式</h2><p>场景: 不同手机品牌和不同的应用软件如何设计类.</p>
+<p>两种复杂并且不合理的设计:</p>
+<ul>
+<li>手机品牌抽象类 &lt;- 手机品牌具体类 &lt;- 手机品牌下的各种应用类.</li>
+<li>手机软件抽象类 &lt;- 手机软件具体类 &lt;- 不同品牌版本的具体应用类.</li>
+</ul>
+<p>用继承的缺点: </p>
+<ul>
+<li>对象的继承关系是在编译时就定义好了, 所以无法在运行时改变从父类继承的实现.</li>
+<li>子类的实现与父类有非常紧密的依赖关系, 以至于父类实现中的任何变化必然会导致子类发生变化.</li>
+<li>当你需要复用子类时, 如果继承下来的实现不适合解决新的问题, 则父类必须重写或被其他更适合的类替换.</li>
+</ul>
+<p><strong>继承这种依赖关系限制了灵活性并最终限制了复用性.</strong><br>(不要拿着锤子看所有东西都成了钉子.)<br><strong>一定要在是’is-a’的关系时再考虑使用继承.</strong></p>
+<h3 id="合成-聚合复用原则"><a href="#合成-聚合复用原则" class="headerlink" title="合成/聚合复用原则"></a>合成/聚合复用原则</h3><p>合成/聚合复用原则(CARP), 尽量使用合成/聚合, 尽量不要使用类继承.</p>
+<p>合成(Composition, 也有翻译成组合)和聚合(Aggregation)都是关联的特殊种类.</p>
+<ul>
+<li>合成则是一种强的’拥有’关系, 体现了严格的部分和整体的关系, 部分和整体的生命周期一样.</li>
+<li>聚合表示一种弱的’拥有’关系, 体现的是A对象可以包含B对象, 但B对象不是A对象的一部分.</li>
+</ul>
+<p>例子: 大雁和翅膀是合成关系; 大雁和雁群是聚合关系.</p>
+<p><strong>改进后的松耦合例子程序</strong>:</p>
+<ul>
+<li>手机品牌类 &lt;- 具体手机品牌类.</li>
+<li>手机软件类 &lt;- 具体软件类.</li>
+<li>手机品牌抽象类包含手机软件抽象类对象.</li>
+</ul>
+<p>改进后增加软件和手机品牌都只需要增加新的类 -&gt; 开放-封闭原则.</p>
+<h3 id="桥接模式-Bridge"><a href="#桥接模式-Bridge" class="headerlink" title="桥接模式 Bridge"></a>桥接模式 Bridge</h3><p>桥接模式(Bridge), 将抽象部分与它的实现部分分离, 使它们都可以独立地变化.<br>这里的实现指的是抽象类和它的派生类用来实现自己的对象.</p>
+<p>解释: 实现系统可能有多角度分类, 每一种分类都有可能变化, 那么就把这种多角度分离出来让它们独立变化, 减少它们之间的耦合.</p>
+<h2 id="第23章-烤羊肉串引来的思考-–-命令模式"><a href="#第23章-烤羊肉串引来的思考-–-命令模式" class="headerlink" title="第23章 烤羊肉串引来的思考 – 命令模式"></a>第23章 烤羊肉串引来的思考 – 命令模式</h2><p>场景: 烤肉摊: 烤串人和客户之间紧密耦合, 比较混乱; 烤肉店: 由服务员记录客户请求并记录, 再通知烤肉师傅, 利于管理, 支持撤销.</p>
+<p>松耦合设计: 定义抽象命令类, 其中包含烤肉师傅; 具体命令类中烤肉师傅执行具体行为; 服务员类包含命令对象, 通知方法通知命令执行.</p>
+<p>进一步扩展: 在服务员类中: 增加盛放命令的容器; 对不合理命令进行回绝判断; 记录日志和取消订单; 遍历命令通知执行.</p>
+<h3 id="命令模式-Command"><a href="#命令模式-Command" class="headerlink" title="命令模式 Command"></a>命令模式 Command</h3><p>命令模式(Command), 将一个请求封装为一个对象, 从而使你可用不同的请求对客户进行参数化; 对请求排队或记录请求日志, 以及支持可撤销的操作.</p>
+<p><strong>命令模式的作用</strong>:</p>
+<ul>
+<li>能较容易地设计一个命令队列.</li>
+<li>可以较容易地将命令记入日志.</li>
+<li>允许接收请求的一方决定是否要否决请求.</li>
+<li>可以容易地实现对请求的撤销和重做.</li>
+<li>由于新加的具体命令类不影响其他类, 因此新加具体命令类很容易.</li>
+<li>把请求一个操作的对象与知道怎么执行一个操作的对象分割开.</li>
+</ul>
+<h2 id="第24章-加薪非要老总批-–-职责链模式"><a href="#第24章-加薪非要老总批-–-职责链模式" class="headerlink" title="第24章 加薪非要老总批? – 职责链模式"></a>第24章 加薪非要老总批? – 职责链模式</h2><p>背景: 小菜要求加薪, 向经理提出, 经理向总监提出, 总监向总经理提出.<br>程序: 申请处理程序, 申请(包含类别, 内容, 数量)提交给管理者, 每个管理者根据申请细节决定自己是否能够处理(比较长的方法, 多条分支).</p>
+<h3 id="职责链模式-Chain-of-Responsibility"><a href="#职责链模式-Chain-of-Responsibility" class="headerlink" title="职责链模式 Chain of Responsibility"></a>职责链模式 Chain of Responsibility</h3><p>职责链模式(Chain of Responsibility): 使多个对象都有机会处理请求, 从而避免请求的发送者和接收者之间的耦合关系. 将这些对象连成一条链, 并沿着这条链传递该请求, 直到有一个对象处理它为止. </p>
+<p>当客户提交一个请求时, 请求是沿链传递直至有一个<code>ConcreteHandler</code>对象负责处理它.</p>
+<p>接收者和发送者都没有对方的明确信息, 且链中的对象自己也并不知道链的结构. 结果是职责链可简化对象的相互连接, 它们仅需保持一个指向其后继者的引用, 而不需保持它所有的候选接受者的引用.</p>
+<h2 id="第25章-世界需要和平-–-中介者模式"><a href="#第25章-世界需要和平-–-中介者模式" class="headerlink" title="第25章 世界需要和平 – 中介者模式"></a>第25章 世界需要和平 – 中介者模式</h2><p>中介者模式又叫调停者模式.<br>举例: 联合国组织.</p>
+<p>‘迪米特法则’, 如果两个类不必彼此直接通信, 那么这两个类就不应当发生直接的相互作用. 如果其中一个类需要调用另一个类的某一个方法的话, 可以通过第三者转发这个调用.</p>
+<p>通过中介者对象, 可以将系统的网状结构变成以中介者为中心的星形结构, 每个具体对象不再通过直接的联系与另一个对象发生相互作用, 而是通过’中介者’对象与另一个对象发生相互作用.</p>
+<p>之前’迪米特’法则的例子: 公司的IT部门管理, 由主管来协调工作.</p>
+<h3 id="中介者模式-Mediator"><a href="#中介者模式-Mediator" class="headerlink" title="中介者模式 Mediator"></a>中介者模式 Mediator</h3><p>中介者模式(Mediator), 用一个中介对象来封装一系列的对象交互. 中介者使各对象不需要显式地相互引用, 从而使其耦合松散, 而且可以独立地改变它们之间的交互.</p>
+<p>程序例子1: 不同的同事类之间通过中介者对象来通信.<br>程序例子2: 国家之间通过联合国安理会通信.</p>
+<p><strong>中介者模式优点</strong>:</p>
+<ul>
+<li><code>Mediator</code>的出现减少了各个<code>Colleague</code>的耦合, 使得可以独立改变和复用各个类.</li>
+<li>把对象协作进行了抽象, 将中介作为一个独立的概念并将其封装在一个对象中, 这样关注的对象就从对象各自本身的行为转移到它们之间的交互上来, 也就是站在一个更宏观的角度去看待系统.</li>
+</ul>
+<p><strong>中介者模式的缺点</strong>:</p>
+<ul>
+<li>具体中介类可能会变得非常复杂, 不容易维护.</li>
+</ul>
+<p>中介者模式例子: Windows程序中的Form或Web网站程序的aspx.</p>
+<p>中介者模式一般应用于一组对象以定义良好但是复杂的方式进行通信的场合, 以及想定制一个分布在多个类中的行为, 而又不想生成太多的子类的场合.</p>
+<h2 id="第26章-项目多也别傻做-–-享元模式"><a href="#第26章-项目多也别傻做-–-享元模式" class="headerlink" title="第26章 项目多也别傻做 – 享元模式"></a>第26章 项目多也别傻做 – 享元模式</h2><p>背景: 小菜接了多个小型外包项目, 给私营业主做网站. 多个网站要求类似, 形式有一些变化.</p>
+<p>问题: 真的需要每个网站都分别有一份代码, 每个网站租用一个虚拟空间吗?<br>它们本质上是一样的代码, 如果网站增多, 实例增多, 对服务器的资源浪费严重.</p>
+<p><strong>共享代码</strong>: 大型的博客网站, 电子商务网站, 里面的每一个博客或商家也可以理解为一个小的网站. -&gt; 利用用户ID来区分不同的用户, 具体数据和模板可以不同, 但代码核心和数据库却是共享的. -&gt; 节省服务器资源;  代码维护和扩展都更容易.</p>
+<h3 id="享元模式-Flyweight"><a href="#享元模式-Flyweight" class="headerlink" title="享元模式 Flyweight"></a>享元模式 Flyweight</h3><p>享元模式(Flyweight), 运用共享技术有效地支持大量细粒度的对象.</p>
+<ul>
+<li><code>FlyweightFactory</code>: 创建并管理<code>Flyweight</code>对象. 它主要用来确保合理地共享<code>Flyweight</code>, 当用户请求一个<code>Flyweight</code>时, <code>FlyweightFactory</code>对象提供一个已创建的实例或者创建一个(如果不存在的话).</li>
+<li><code>Flyweight</code>: 所有具体享元类的超类或接口, 通过这个接口, <code>Flyweight</code>可以接受并作用于外部状态. 其子类并不强制共享.</li>
+</ul>
+<p>网站共享代码: 同样类型的网站使用同一个实例, 减少实例个数.</p>
+<p>问题: 网站的数据不同? -&gt; 外部状态.</p>
+<h3 id="内部状态与外部状态"><a href="#内部状态与外部状态" class="headerlink" title="内部状态与外部状态"></a>内部状态与外部状态</h3><ul>
+<li>内部状态: 在享元对象内部并且不会随环境改变而改变的共享部分.</li>
+<li>外部状态: 随环境改变而改变的, 不可以共享的状态.</li>
+</ul>
+<p><strong>享元模式可以避免大量非常相似类的开销.</strong> 在程序设计中, 有时需要生成大量细粒度的类实例来表示数据. 如果能发现这些实例除了几个参数外基本上都是相同的, 有时就能够大幅度地减少需要实例化的类的数量. 如果能把那些参数移到类实例的外面, 在方法调用时将它们传递进来, 就可以通过共享大幅度地减少单个实例的数目.</p>
+<h3 id="享元模式应用"><a href="#享元模式应用" class="headerlink" title="享元模式应用"></a>享元模式应用</h3><ul>
+<li>如果一个应用程序使用了大量的对象, 而大量的这些对象造成了很大的存储开销.</li>
+<li>对象的大多数状态可以是外部状态, 如果删除对象的外部状态, 那么可以用相对较少的共享对象取代很多组对象, 此时可以考虑使用享元模式.</li>
+</ul>
+<p>应用: .Net中的string: 相同的字符串常量其实是共享内存的, 所以引用相同.</p>
+<p>围棋, 五子棋, 跳棋等: 颜色是内部状态, 位置是外部状态.</p>
+<h2 id="第27章-其实你不懂老板的心-–-解释器模式"><a href="#第27章-其实你不懂老板的心-–-解释器模式" class="headerlink" title="第27章 其实你不懂老板的心 – 解释器模式"></a>第27章 其实你不懂老板的心 – 解释器模式</h2><p>背景: 从老板谈话中听出弦外之音.</p>
+<h3 id="解释器模式-Interpreter"><a href="#解释器模式-Interpreter" class="headerlink" title="解释器模式 Interpreter"></a>解释器模式 Interpreter</h3><p>解释器模式(Interpreter), 给定一个语言, 定义它的文法的一种表示, 并定义一个解释器, 这个解释器使用该表示来解释语言中的句子.</p>
+<p>解释器模式需要解决的是, 如果一种特定类型的问题发生的频率足够高, 那么可能就值得将该问题的各个实例表述为一个简单语言中的句子. 这样就可以构建一个解释器, 该解释器通过解释这些句子来解决该问题.</p>
+<p>比如: </p>
+<ul>
+<li>匹配字符串 -&gt; 正则表达式.</li>
+<li>浏览器解释HTML文法, 显示网页.</li>
+<li>机器人指令.</li>
+</ul>
+<p>当有一个语言需要解释执行, 并且你可以将该语言中的句子表示为一个抽象语法树时, 可使用解释器模式.</p>
+<p><strong>好处</strong>: 可以很容易地改变和扩展文法, 因为该模式使用类来表示文法规则, 你可使用继承来改变或扩展该文法. 也比较容易实现文法, 因为定义抽象语法树中各个节点的类的实现大体类似, 这些类都易于直接编写.</p>
+<p><strong>不足</strong>: 解释器模式为文法中的每一条规则至少定义了一个类, 因此包含许多规则的文法可能难以维护和管理. 建议当文法非常复杂时, 使用其他的技术如语法分析程序或编译器生成器来处理.</p>
+<p>程序实例: 音乐解释器.</p>
+<h2 id="第28章-男人和女人-–-访问者模式"><a href="#第28章-男人和女人-–-访问者模式" class="headerlink" title="第28章 男人和女人 – 访问者模式"></a>第28章 男人和女人 – 访问者模式</h2><p>背景: 写一个程序, 输出男人和女人在相同状态下的不同反应, 比如: 男人成功时xxx; 女人成功时yyy.</p>
+<p>关键点: </p>
+<ul>
+<li>人分为男人和女人两类, 这个分类是稳定的. 所以可以在抽象的状态类中, 声明男人反应和女人反应两个方法. 这样方法个数是稳定的, 不会很容易地发生变化. </li>
+<li>而人的抽象类中有一个抽象方法接受状态对象.</li>
+<li>客户程序中将具体程序作为参数传递给具体的人的类. (第一次分派.)</li>
+<li>具体的男人或女人的类在接受方法中调用状态对象中对应自己的那个方法, 并将自己作为参数传递进去. (第二次分派.)</li>
+</ul>
+<h3 id="访问者模式-Visitor"><a href="#访问者模式-Visitor" class="headerlink" title="访问者模式 Visitor"></a>访问者模式 Visitor</h3><p>访问者模式(Visitor), 表示一个作用于某对象结构中的各元素的操作. 它使你可以在不改变各元素的类的前提下定义作用于这些元素的新操作.</p>
+<p>访问者模式适用于数据结构相对稳定的系统. 它把数据结构和作用于结构上的操作之间的耦合解脱开, 使得操作集合可以相对自由地演化. </p>
+<p>访问者模式的优点就是增加新的操作很容易, 因为增加新的操作就意味着增加一个新的访问者. 访问者模式将有关的行为集中到一个访问者对象中.</p>
+<p>访问者模式的缺点是使增加新的数据结构变得困难了.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/" rel="prev" title="Android Weekly Notes Issue 261">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 261
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/Kotlin/2018/07/19/android-weekly-notes-issue-318/" rel="next" title="Android Weekly Notes Issue 318">
+      Android Weekly Notes Issue 318 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E8%AF%9D%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">大话设计模式 读书笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC1%E7%AB%A0-%E4%BB%A3%E7%A0%81%E6%97%A0%E9%94%99%E5%B0%B1%E6%98%AF%E4%BC%98-%E2%80%93-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">第1章 代码无错就是优? – 简单工厂模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%AD%A6%E8%80%85%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">初学者问题:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">面向对象编程:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8A%A8%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">改动程序:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UML%E7%B1%BB%E5%9B%BE"><span class="nav-number">1.1.4.</span> <span class="nav-text">UML类图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC2%E7%AB%A0-%E5%95%86%E5%9C%BA%E4%BF%83%E9%94%80-%E2%80%93-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">第2章 商场促销 – 策略模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">简单工厂实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F-Strategy"><span class="nav-number">1.2.2.</span> <span class="nav-text">策略模式 Strategy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">1.2.3.</span> <span class="nav-text">策略模式的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC3%E7%AB%A0-%E6%8B%8D%E6%91%84UFO-%E2%80%93-%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99"><span class="nav-number">1.3.</span> <span class="nav-text">第3章 拍摄UFO – 单一职责原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99"><span class="nav-number">1.3.1.</span> <span class="nav-text">单一职责原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%84%E7%BD%97%E6%96%AF%E6%96%B9%E5%9D%97%E6%B8%B8%E6%88%8F%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">俄罗斯方块游戏的设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC4%E7%AB%A0-%E8%80%83%E7%A0%94%E6%B1%82%E8%81%8C%E4%B8%A4%E4%B8%8D%E8%AF%AF-%E2%80%93-%E5%BC%80%E6%94%BE-%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.</span> <span class="nav-text">第4章 考研求职两不误 – 开放-封闭原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%94%BE-%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.1.</span> <span class="nav-text">开放-封闭原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC5%E7%AB%A0-%E4%BC%9A%E4%BF%AE%E7%94%B5%E8%84%91%E4%B8%8D%E4%BC%9A%E4%BF%AE%E6%94%B6%E9%9F%B3%E6%9C%BA-%E2%80%93-%E4%BE%9D%E8%B5%96%E5%80%92%E8%BD%AC%E5%8E%9F%E5%88%99"><span class="nav-number">1.5.</span> <span class="nav-text">第5章 会修电脑不会修收音机? – 依赖倒转原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%80%92%E8%BD%AC%E5%8E%9F%E5%88%99"><span class="nav-number">1.5.1.</span> <span class="nav-text">依赖倒转原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8C%E6%B0%8F%E4%BB%A3%E6%8D%A2%E5%8E%9F%E5%88%99"><span class="nav-number">1.5.2.</span> <span class="nav-text">里氏代换原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B6%E9%9F%B3%E6%9C%BA"><span class="nav-number">1.5.3.</span> <span class="nav-text">修收音机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC6%E7%AB%A0-%E7%A9%BF%E4%BB%80%E4%B9%88%E6%9C%89%E8%BF%99%E4%B9%88%E9%87%8D%E8%A6%81-%E2%80%93-%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.6.</span> <span class="nav-text">第6章 穿什么有这么重要? – 装饰模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F-Decorator"><span class="nav-number">1.6.1.</span> <span class="nav-text">装饰模式 Decorator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC7%E7%AB%A0-%E4%B8%BA%E5%88%AB%E4%BA%BA%E5%81%9A%E5%AB%81%E8%A1%A3-%E2%80%93-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.7.</span> <span class="nav-text">第7章 为别人做嫁衣 – 代理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F-Proxy"><span class="nav-number">1.7.1.</span> <span class="nav-text">代理模式 Proxy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC8%E7%AB%A0-%E9%9B%B7%E9%94%8B%E4%BE%9D%E7%84%B6%E5%9C%A8%E4%BA%BA%E9%97%B4-%E2%80%93-%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.8.</span> <span class="nav-text">第8章 雷锋依然在人间 – 工厂方法模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82-vs-%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-number">1.8.1.</span> <span class="nav-text">简单工厂 vs. 工厂方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F-Factory-Method"><span class="nav-number">1.8.2.</span> <span class="nav-text">工厂方法模式 Factory Method</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC9%E7%AB%A0-%E7%AE%80%E5%8E%86%E5%A4%8D%E5%8D%B0-%E2%80%93-%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.9.</span> <span class="nav-text">第9章 简历复印 – 原型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-Prototype"><span class="nav-number">1.9.1.</span> <span class="nav-text">原型模式 Prototype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%85%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%B7%B1%E5%A4%8D%E5%88%B6"><span class="nav-number">1.9.2.</span> <span class="nav-text">浅复制与深复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC10%E7%AB%A0-%E8%80%83%E9%A2%98%E6%8A%84%E9%94%99%E4%BC%9A%E5%81%9A%E4%B9%9F%E7%99%BD%E6%90%AD-%E2%80%93-%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.10.</span> <span class="nav-text">第10章 考题抄错会做也白搭 – 模板方法模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.10.1.</span> <span class="nav-text">模板方法模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC11%E7%AB%A0-%E6%97%A0%E7%86%9F%E4%BA%BA%E9%9A%BE%E5%8A%9E%E4%BA%8B-%E2%80%93-%E8%BF%AA%E7%B1%B3%E7%89%B9%E6%B3%95%E5%88%99"><span class="nav-number">1.11.</span> <span class="nav-text">第11章 无熟人难办事? – 迪米特法则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AA%E7%B1%B3%E7%89%B9%E6%B3%95%E5%88%99"><span class="nav-number">1.11.1.</span> <span class="nav-text">迪米特法则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC12%E7%AB%A0-%E7%89%9B%E5%B8%82%E8%82%A1%E7%A5%A8%E8%BF%98%E4%BC%9A%E4%BA%8F%E9%92%B1-%E2%80%93-%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.12.</span> <span class="nav-text">第12章 牛市股票还会亏钱? – 外观模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F-Facade"><span class="nav-number">1.12.1.</span> <span class="nav-text">外观模式 Facade</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC13%E7%AB%A0-%E5%A5%BD%E8%8F%9C%E6%AF%8F%E5%9B%9E%E5%91%B3%E4%B8%8D%E5%90%8C-%E2%80%93-%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.13.</span> <span class="nav-text">第13章 好菜每回味不同 – 建造者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F-Builder"><span class="nav-number">1.13.1.</span> <span class="nav-text">建造者模式 Builder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC14%E7%AB%A0-%E8%80%81%E6%9D%BF%E5%9B%9E%E6%9D%A5-%E6%88%91%E4%B8%8D%E7%9F%A5%E9%81%93-%E2%80%93-%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.14.</span> <span class="nav-text">第14章 老板回来, 我不知道 – 观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.14.1.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.14.2.</span> <span class="nav-text">事件委托实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC15%E7%AB%A0-%E5%B0%B1%E4%B8%8D%E8%83%BD%E4%B8%8D%E6%8D%A2DB%E5%90%97-%E2%80%93-%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.15.</span> <span class="nav-text">第15章 就不能不换DB吗? – 抽象工厂模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-Abstract-Factory"><span class="nav-number">1.15.1.</span> <span class="nav-text">抽象工厂模式 Abstract Factory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%9D%A5%E6%94%B9%E8%BF%9B%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="nav-number">1.15.2.</span> <span class="nav-text">用简单工厂来改进抽象工厂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%8F%8D%E5%B0%84-%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E7%9A%84%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.15.3.</span> <span class="nav-text">用反射 + 抽象工厂的数据访问程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC16%E7%AB%A0-%E6%97%A0%E5%B0%BD%E5%8A%A0%E7%8F%AD%E4%BD%95%E6%97%B6%E4%BC%91-%E2%80%93-%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.16.</span> <span class="nav-text">第16章 无尽加班何时休 – 状态模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F-State"><span class="nav-number">1.16.1.</span> <span class="nav-text">状态模式 State</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC17%E7%AB%A0-%E5%9C%A8NBA%E6%88%91%E9%9C%80%E8%A6%81%E7%BF%BB%E8%AF%91-%E2%80%93-%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.17.</span> <span class="nav-text">第17章 在NBA我需要翻译 – 适配器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F-Adapter"><span class="nav-number">1.17.1.</span> <span class="nav-text">适配器模式 Adapter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC18%E7%AB%A0-%E5%A6%82%E6%9E%9C%E5%86%8D%E5%9B%9E%E5%88%B0%E4%BB%8E%E5%89%8D-%E2%80%93-%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.18.</span> <span class="nav-text">第18章 如果再回到从前 – 备忘录模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F-Memento"><span class="nav-number">1.18.1.</span> <span class="nav-text">备忘录模式 Memento</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC19%E7%AB%A0-%E5%88%86%E5%85%AC%E5%8F%B8-%E4%B8%80%E9%83%A8%E9%97%A8-%E2%80%93-%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.19.</span> <span class="nav-text">第19章 分公司 &#x3D; 一部门 – 组合模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F-Composite"><span class="nav-number">1.19.1.</span> <span class="nav-text">组合模式 Composite</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC20%E7%AB%A0-%E6%83%B3%E8%B5%B0-%E5%8F%AF%E4%BB%A5-%E5%85%88%E4%B9%B0%E7%A5%A8-%E2%80%93-%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.20.</span> <span class="nav-text">第20章 想走? 可以! 先买票 – 迭代器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F-Iterator"><span class="nav-number">1.20.1.</span> <span class="nav-text">迭代器模式 Iterator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC21%E7%AB%A0-%E6%9C%89%E4%BA%9B%E7%B1%BB%E4%B9%9F%E9%9C%80%E8%A6%81%E8%AE%A1%E5%88%92%E7%94%9F%E8%82%B2-%E2%80%93-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.21.</span> <span class="nav-text">第21章 有些类也需要计划生育 – 单例模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-Singleton"><span class="nav-number">1.21.1.</span> <span class="nav-text">单例模式 Singleton</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC22%E7%AB%A0-%E6%89%8B%E6%9C%BA%E8%BD%AF%E4%BB%B6%E4%BD%95%E6%97%B6%E7%BB%9F%E4%B8%80-%E2%80%93-%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.22.</span> <span class="nav-text">第22章 手机软件何时统一 – 桥接模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E6%88%90-%E8%81%9A%E5%90%88%E5%A4%8D%E7%94%A8%E5%8E%9F%E5%88%99"><span class="nav-number">1.22.1.</span> <span class="nav-text">合成&#x2F;聚合复用原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F-Bridge"><span class="nav-number">1.22.2.</span> <span class="nav-text">桥接模式 Bridge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC23%E7%AB%A0-%E7%83%A4%E7%BE%8A%E8%82%89%E4%B8%B2%E5%BC%95%E6%9D%A5%E7%9A%84%E6%80%9D%E8%80%83-%E2%80%93-%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.23.</span> <span class="nav-text">第23章 烤羊肉串引来的思考 – 命令模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F-Command"><span class="nav-number">1.23.1.</span> <span class="nav-text">命令模式 Command</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC24%E7%AB%A0-%E5%8A%A0%E8%96%AA%E9%9D%9E%E8%A6%81%E8%80%81%E6%80%BB%E6%89%B9-%E2%80%93-%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.24.</span> <span class="nav-text">第24章 加薪非要老总批? – 职责链模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F-Chain-of-Responsibility"><span class="nav-number">1.24.1.</span> <span class="nav-text">职责链模式 Chain of Responsibility</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC25%E7%AB%A0-%E4%B8%96%E7%95%8C%E9%9C%80%E8%A6%81%E5%92%8C%E5%B9%B3-%E2%80%93-%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.25.</span> <span class="nav-text">第25章 世界需要和平 – 中介者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F-Mediator"><span class="nav-number">1.25.1.</span> <span class="nav-text">中介者模式 Mediator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC26%E7%AB%A0-%E9%A1%B9%E7%9B%AE%E5%A4%9A%E4%B9%9F%E5%88%AB%E5%82%BB%E5%81%9A-%E2%80%93-%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.26.</span> <span class="nav-text">第26章 项目多也别傻做 – 享元模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F-Flyweight"><span class="nav-number">1.26.1.</span> <span class="nav-text">享元模式 Flyweight</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E7%8A%B6%E6%80%81%E4%B8%8E%E5%A4%96%E9%83%A8%E7%8A%B6%E6%80%81"><span class="nav-number">1.26.2.</span> <span class="nav-text">内部状态与外部状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E5%BA%94%E7%94%A8"><span class="nav-number">1.26.3.</span> <span class="nav-text">享元模式应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC27%E7%AB%A0-%E5%85%B6%E5%AE%9E%E4%BD%A0%E4%B8%8D%E6%87%82%E8%80%81%E6%9D%BF%E7%9A%84%E5%BF%83-%E2%80%93-%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.27.</span> <span class="nav-text">第27章 其实你不懂老板的心 – 解释器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F-Interpreter"><span class="nav-number">1.27.1.</span> <span class="nav-text">解释器模式 Interpreter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC28%E7%AB%A0-%E7%94%B7%E4%BA%BA%E5%92%8C%E5%A5%B3%E4%BA%BA-%E2%80%93-%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.28.</span> <span class="nav-text">第28章 男人和女人 – 访问者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F-Visitor"><span class="nav-number">1.28.1.</span> <span class="nav-text">访问者模式 Visitor</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/";
+    this.page.identifier = "Design-Patterns/Reading-Notes/2018/07/17/fun-design-patterns-reading-notes/";
+    this.page.title = "大话设计模式 读书笔记";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

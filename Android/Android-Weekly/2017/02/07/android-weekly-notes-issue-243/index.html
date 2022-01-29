@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #243February 5th, 2017Android Weekly Issue #243本期内容包括: ConstraintLayout的动画; 用Kotlin写测试; RxJava的练习项目; 一个库: Coordinators的介绍; 一个自动报告Google Play反馈的工具; Service的测试; 动画工具Lottie的介绍; Mutab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 243">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #243February 5th, 2017Android Weekly Issue #243本期内容包括: ConstraintLayout的动画; 用Kotlin写测试; RxJava的练习项目; 一个库: Coordinators的介绍; 一个自动报告Google Play反馈的工具; Service的测试; 动画工具Lottie的介绍; Mutab">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-02-07T04:52:37.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.996Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Nougat">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="RecyclerView">
+<meta property="article:tag" content="ConstraintLayout">
+<meta property="article:tag" content="Android 7">
+<meta property="article:tag" content="Testing">
+<meta property="article:tag" content="Service">
+<meta property="article:tag" content="Lottie">
+<meta property="article:tag" content="Mutability">
+<meta property="article:tag" content="Locales">
+<meta property="article:tag" content="StrictMode">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 243 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 243
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-07 12:52:37" itemprop="dateCreated datePublished" datetime="2017-02-07T12:52:37+08:00">2017-02-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 243" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-243"><a href="#Android-Weekly-Issue-243" class="headerlink" title="Android Weekly Issue #243"></a>Android Weekly Issue #243</h1><p>February 5th, 2017<br><a href="http://androidweekly.net/issues/issue-243" target="_blank" rel="noopener">Android Weekly Issue #243</a><br>本期内容包括: ConstraintLayout的动画; 用Kotlin写测试; RxJava的练习项目; 一个库: Coordinators的介绍; 一个自动报告Google Play反馈的工具; Service的测试; 动画工具Lottie的介绍; Mutability的讨论;<br>Nougat的多语言支持和相关的一个有趣的case; 使用StrictMode来发现问题.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Constraint-Layout-Animations"><a href="#Constraint-Layout-Animations" class="headerlink" title="Constraint Layout Animations"></a><a href="http://www.uwanttolearn.com/android/constraint-layout-animations-dynamic-constraints-ui-java-hell/" target="_blank" rel="noopener">Constraint Layout Animations</a></h2><p>作者举例说明了如何在Java代码中动态地改变约束条件, 从而使<code>ConstraintLayout</code>中的View动起来.</p>
+<h2 id="Android-Testing-with-Kotlin"><a href="#Android-Testing-with-Kotlin" class="headerlink" title="Android Testing with Kotlin"></a><a href="http://fernandocejas.com/2017/02/03/android-testing-with-kotlin/" target="_blank" rel="noopener">Android Testing with Kotlin</a></h2><p>如果你想逐渐地迁移代码到Kotlin, 你可以从测试开始, 这样你也不用更改产品环境的代码, 就先熟悉了Kotlin.</p>
+<p>本篇文章详细讲了如何setup, 然后写各种测试:</p>
+<h3 id="JUnit测试"><a href="#JUnit测试" class="headerlink" title="JUnit测试"></a>JUnit测试</h3><p>需要JUnit, <a href="https://github.com/nhaarman/mockito-kotlin" target="_blank" rel="noopener">mockito-kotlin</a>和<a href="https://github.com/MarkusAmshove/Kluent" target="_blank" rel="noopener">Kluent</a>.</p>
+<p>对于在<code>setUp()</code>方法中初始化的变量, 需要标记为<code>lateinit</code>.</p>
+<h3 id="Robolectric测试"><a href="#Robolectric测试" class="headerlink" title="Robolectric测试"></a>Robolectric测试</h3><p>作者封装了一个基类, 把所有Mockito相关的东东包装在里面. 这样在Mockito升级的时候不用更改每一个测试文件.</p>
+<h3 id="Espresso测试"><a href="#Espresso测试" class="headerlink" title="Espresso测试"></a>Espresso测试</h3><p>同样, 这里作者也创建了几个基类, 将所有Espresso相关的东东包装起来.</p>
+<h2 id="Practical-challenges-for-RxJava-learners"><a href="#Practical-challenges-for-RxJava-learners" class="headerlink" title="Practical challenges for RxJava learners"></a><a href="https://medium.com/@sergii/practical-challenges-for-rxjava-learners-1821c454de9#.9icb22hrr" target="_blank" rel="noopener">Practical challenges for RxJava learners</a></h2><p>作者建议通过实践来检验和学习RxJava技能, 之前他用过这个Repo: <a href="https://github.com/Froussios/Intro-To-RxJava" target="_blank" rel="noopener">Intro-To-RxJava</a>, 现在他又新推出了这个<a href="https://github.com/sergiiz/RxBasicsKata" target="_blank" rel="noopener">Repo</a>, 针对RxJava2的.</p>
+<h2 id="Coordinators-solving-a-problem-you-didn’t-even-know-you-had"><a href="#Coordinators-solving-a-problem-you-didn’t-even-know-you-had" class="headerlink" title="Coordinators: solving a problem you didn’t even know you had"></a><a href="https://hackernoon.com/coordinators-solving-a-problem-you-didnt-even-know-you-had-e86623f15ebf#.mcx15cssl" target="_blank" rel="noopener">Coordinators: solving a problem you didn’t even know you had</a></h2><p>Square发布了一个库叫<a href="https://github.com/square/coordinators" target="_blank" rel="noopener">coordinators</a>, 这个库是用来分离View中的一些控制逻辑.</p>
+<h2 id="Review-Reporter-Part-1"><a href="#Review-Reporter-Part-1" class="headerlink" title="Review-Reporter: Part 1 "></a><a href="https://medium.com/azimolabs/review-reporter-part-1-connecting-to-google-play-8abd37edc49f#.a0s5gx66j" target="_blank" rel="noopener">Review-Reporter: Part 1 </a></h2><p>作者他们做了一个小项目: <a href="https://github.com/AzimoLabs/Review-Reporter" target="_blank" rel="noopener">Review-Reporter</a>, 可以自动把Google Play上新的用户回复发到slack, firebase, Jira上. 本篇文章讲了他们是怎么做的.</p>
+<h2 id="How-to-test-a-Service"><a href="#How-to-test-a-Service" class="headerlink" title="How to test a Service"></a><a href="https://medium.com/@josiassena/android-how-to-unit-test-a-service-67e5340544a5#.qg3751nxg" target="_blank" rel="noopener">How to test a Service</a></h2><p>Android官方文档介绍了如何测试Service: <a href="https://developer.android.com/training/testing/integration-testing/service-testing.html" target="_blank" rel="noopener">Testing your Service</a>. 本文作者介绍他是如何做的.</p>
+<h2 id="Introducing-Lottie"><a href="#Introducing-Lottie" class="headerlink" title="Introducing Lottie"></a><a href="https://medium.com/airbnb-engineering/introducing-lottie-4ff4a0afac0e#.e7wojthmp" target="_blank" rel="noopener">Introducing Lottie</a></h2><p><a href="http://airbnb.design/lottie/" target="_blank" rel="noopener">Lottie</a>是一个iOS, Android和React Native的库, 可以实时渲染After Effects的动画, 让native的应用像使用静态文件一样简单地使用复杂的动画.</p>
+<h2 id="Learning-to-use-and-abuse-Mutability"><a href="#Learning-to-use-and-abuse-Mutability" class="headerlink" title="Learning to use and abuse Mutability"></a><a href="https://medium.com/google-developer-experts/learning-to-use-and-abuse-mutability-b4c71576299#.diungnuw6" target="_blank" rel="noopener">Learning to use and abuse Mutability</a></h2><blockquote>
+<p>An immutable class is a class whose state cannot be changed once it has been created.</p>
+</blockquote>
+<p>这篇文章分享了作者关于Java中的mutability &amp; immutability的一些想法.</p>
+<h2 id="A-Curious-Case-of-Multiple-Locales"><a href="#A-Curious-Case-of-Multiple-Locales" class="headerlink" title="A Curious Case of Multiple Locales"></a><a href="https://blog.egorand.me/a-curious-case-of-multiple-locales/" target="_blank" rel="noopener">A Curious Case of Multiple Locales</a></h2><p>Android N的一个新feature就是可以在设置中选择多种语言.</p>
+<p>比如一个用户, 她会说意大利语和德语, 她使用的是一个低于Android 7的手机, 她把手机语言设置为意大利语.</p>
+<p>有一个app, 支持两种语言, 默认是英语, 然后还支持德语.</p>
+<p>但是这个应用在这个用户的手机上打开时, 发现自己并不支持意大利语, 于是会显示英语(默认)而不是德语, 因为应用又不知道这个用户还会德语.</p>
+<p>后来用户把手机升级了, 用了Android 7的系统, 她发现可以设置支持多种语言, 于是, 于是她设置了两种语言, 意大利语和德语. 在新手机上装之前那个app的时候发现现在显示的是德语.</p>
+<p>因为应用现在知道了用户还会讲德语.</p>
+<p>现在, 假设我们需要进行向下兼容以前的旧版本设备, 我们加入了<code>appcompat-v7</code>, 用户更新后, 英语又出现了. </p>
+<p>这是因为<code>appcompat-v7</code>中含有一些意大利语的资源, 因为所有的资源在build的时候都会merge到一起, 所以现在app也包含了这些资源. 系统认为现在app能够支持用户的第一语言了, 然后就查找对应的资源, 当然没查找到, 于是就使用了默认资源, 也就是英语.</p>
+<p>我们有什么办法可以解决这个问题呢? 答案是这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;  </span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  resConfigs &quot;en&quot;, &quot;de&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样就告诉了Gradle我们只支持这两种语言, 所有其他的资源都不会被打包进来.</p>
+<p>验证的方法是使用Android Studio的<code>Analyze APK</code>来查看string有多少种configurations.</p>
+<h2 id="Use-StrictMode-To-Find-Things-You-Did-By-Accident"><a href="#Use-StrictMode-To-Find-Things-You-Did-By-Accident" class="headerlink" title="Use StrictMode To Find Things You Did By Accident"></a><a href="https://blog.mindorks.com/use-strictmode-to-find-things-you-did-by-accident-in-android-development-4cf0e7c8d997#.l5tbilx16" target="_blank" rel="noopener">Use StrictMode To Find Things You Did By Accident</a></h2><p><code>StrictMode</code>是一个开发工具, 用于发现一些问题, 好让你来修复它们. </p>
+<p>一个常用的情景是用来捕捉主线程的IO操作, 避免ANR弹框.</p>
+<p>如何使用呢? 很简单, 只需要在应用启动时初始化一下, 可以是你的Application, Activity或其他组件的<code>onCreate()</code>方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (DEVELOPER_MODE) &#123;</span><br><span class="line">        StrictMode.setThreadPolicy(<span class="keyword">new</span> StrictMode.ThreadPolicy.Builder()</span><br><span class="line">                .detectDiskReads()</span><br><span class="line">                .detectDiskWrites()</span><br><span class="line">                .detectNetwork()   <span class="comment">// or .detectAll() for all detectable problems</span></span><br><span class="line">                .penaltyLog()</span><br><span class="line">                .build());</span><br><span class="line">        StrictMode.setVmPolicy(<span class="keyword">new</span> StrictMode.VmPolicy.Builder()</span><br><span class="line">                .detectLeakedSqlLiteObjects()</span><br><span class="line">                .detectLeakedClosableObjects()</span><br><span class="line">                .penaltyLog()</span><br><span class="line">                .penaltyDeath()</span><br><span class="line">                .build());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">super</span>.onCreate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你可以决定检测到问题时要发生什么, 比如:</p>
+<ul>
+<li><code>penaltyDeath()</code>: 整个进程崩溃.</li>
+<li><code>penaltyDialog()</code>: 显示Dialog.</li>
+<li><code>penaltyLog()</code>: 显示log.</li>
+</ul>
+<p>更多的处理见: <a href="https://developer.android.com/reference/android/os/StrictMode.ThreadPolicy.Builder.html" target="_blank" rel="noopener">StrictMode.ThreadPolicy.Builder</a>.</p>
+<p>StrictMode文档: <a href="https://developer.android.com/reference/android/os/StrictMode.html" target="_blank" rel="noopener">StrictMode</a>.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="android-material-stepper"><a href="#android-material-stepper" class="headerlink" title="android-material-stepper"></a><a href="https://github.com/stepstone-tech/android-material-stepper" target="_blank" rel="noopener">android-material-stepper</a></h2><p>一个Material steppers的库, 类似于配合ViewPager使用的indicators.</p>
+<h2 id="AOSP-Support-Library-Contribution-Guide"><a href="#AOSP-Support-Library-Contribution-Guide" class="headerlink" title="AOSP Support Library Contribution Guide"></a><a href="https://android.googlesource.com/platform/frameworks/support/" target="_blank" rel="noopener">AOSP Support Library Contribution Guide</a></h2><p>Google开放了对support library的bug修改和文档更新.</p>
+<h2 id="sqlite-android"><a href="#sqlite-android" class="headerlink" title="sqlite-android"></a><a href="https://github.com/requery/sqlite-android" target="_blank" rel="noopener">sqlite-android</a></h2><p>一个Android的SQLite库, 包含了最新的SQLite版本.</p>
+<h2 id="Review-Reporter"><a href="#Review-Reporter" class="headerlink" title="Review-Reporter"></a><a href="https://github.com/AzimoLabs/Review-Reporter" target="_blank" rel="noopener">Review-Reporter</a></h2><p>Google Play反馈的自动提示, 支持提示到Slack和Jira.</p>
+<h2 id="SimpleRecyclerView"><a href="#SimpleRecyclerView" class="headerlink" title="SimpleRecyclerView"></a><a href="https://github.com/jaychang0917/SimpleRecyclerView" target="_blank" rel="noopener">SimpleRecyclerView</a></h2><p>更简单好用的RecyclerView.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Nougat/" rel="tag"># Nougat</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+              <a href="/tags/Android-7/" rel="tag"># Android 7</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/Service/" rel="tag"># Service</a>
+              <a href="/tags/Lottie/" rel="tag"># Lottie</a>
+              <a href="/tags/Mutability/" rel="tag"># Mutability</a>
+              <a href="/tags/Locales/" rel="tag"># Locales</a>
+              <a href="/tags/StrictMode/" rel="tag"># StrictMode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2017/02/06/hello-constraint-layout/" rel="prev" title="Say Hello to ConstraintLayout">
+      <i class="fa fa-chevron-left"></i> Say Hello to ConstraintLayout
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" rel="next" title="Android Weekly Notes Issue 244">
+      Android Weekly Notes Issue 244 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-243"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #243</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Constraint-Layout-Animations"><span class="nav-number">2.1.</span> <span class="nav-text">Constraint Layout Animations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Testing-with-Kotlin"><span class="nav-number">2.2.</span> <span class="nav-text">Android Testing with Kotlin</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JUnit%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.1.</span> <span class="nav-text">JUnit测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Robolectric%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.2.</span> <span class="nav-text">Robolectric测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Espresso%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.3.</span> <span class="nav-text">Espresso测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Practical-challenges-for-RxJava-learners"><span class="nav-number">2.3.</span> <span class="nav-text">Practical challenges for RxJava learners</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coordinators-solving-a-problem-you-didn%E2%80%99t-even-know-you-had"><span class="nav-number">2.4.</span> <span class="nav-text">Coordinators: solving a problem you didn’t even know you had</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review-Reporter-Part-1"><span class="nav-number">2.5.</span> <span class="nav-text">Review-Reporter: Part 1 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-test-a-Service"><span class="nav-number">2.6.</span> <span class="nav-text">How to test a Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introducing-Lottie"><span class="nav-number">2.7.</span> <span class="nav-text">Introducing Lottie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-to-use-and-abuse-Mutability"><span class="nav-number">2.8.</span> <span class="nav-text">Learning to use and abuse Mutability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Curious-Case-of-Multiple-Locales"><span class="nav-number">2.9.</span> <span class="nav-text">A Curious Case of Multiple Locales</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-StrictMode-To-Find-Things-You-Did-By-Accident"><span class="nav-number">2.10.</span> <span class="nav-text">Use StrictMode To Find Things You Did By Accident</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#android-material-stepper"><span class="nav-number">3.1.</span> <span class="nav-text">android-material-stepper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOSP-Support-Library-Contribution-Guide"><span class="nav-number">3.2.</span> <span class="nav-text">AOSP Support Library Contribution Guide</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlite-android"><span class="nav-number">3.3.</span> <span class="nav-text">sqlite-android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Review-Reporter"><span class="nav-number">3.4.</span> <span class="nav-text">Review-Reporter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SimpleRecyclerView"><span class="nav-number">3.5.</span> <span class="nav-text">SimpleRecyclerView</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/";
+    this.page.identifier = "Android/Android-Weekly/2017/02/07/android-weekly-notes-issue-243/";
+    this.page.title = "Android Weekly Notes Issue 243";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

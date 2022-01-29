@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #236December 18th, 2016Android Weekly Issue #236 本期内容包括: Google的物联网平台Android Things; FileProvider; Android Studio的Layout Preview使用; Retrofit2使用; Google Sign-In和SmartLock; 把敏感信息放入N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 236">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #236December 18th, 2016Android Weekly Issue #236 本期内容包括: Google的物联网平台Android Things; FileProvider; Android Studio的Layout Preview使用; Retrofit2使用; Google Sign-In和SmartLock; 把敏感信息放入N">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-12-21T02:27:39.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.995Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Security">
+<meta property="article:tag" content="Design">
+<meta property="article:tag" content="Android Studio">
+<meta property="article:tag" content="IoT">
+<meta property="article:tag" content="Android Things">
+<meta property="article:tag" content="FileProvider">
+<meta property="article:tag" content="IDE">
+<meta property="article:tag" content="Retrofit2">
+<meta property="article:tag" content="Sign In">
+<meta property="article:tag" content="SmartLock">
+<meta property="article:tag" content="NDK">
+<meta property="article:tag" content="Color">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 236 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 236
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-12-21 10:27:39" itemprop="dateCreated datePublished" datetime="2016-12-21T10:27:39+08:00">2016-12-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/Design/" itemprop="url" rel="index"><span itemprop="name">Design</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 236" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-236"><a href="#Android-Weekly-Issue-236" class="headerlink" title="Android Weekly Issue #236"></a>Android Weekly Issue #236</h1><p>December 18th, 2016<br><a href="http://androidweekly.net/issues/issue-236" target="_blank" rel="noopener">Android Weekly Issue #236</a></p>
+<p>本期内容包括: Google的物联网平台Android Things; FileProvider; Android Studio的Layout Preview使用; Retrofit2使用; Google Sign-In和SmartLock; 把敏感信息放入NDK的解决方式.</p>
+<p>设计部分讨论了调色板的灵感来源和几个开发app的时候应该注意的问题.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Getting-started-with-Android-Things"><a href="#Getting-started-with-Android-Things" class="headerlink" title="Getting started with Android Things"></a><a href="https://medium.com/@alexsimo/getting-started-with-android-things-b73be3295b42#.c1arra4ps" target="_blank" rel="noopener">Getting started with Android Things</a></h2><p>Internet of Things (物联网, IoT), 是互联网, 传统电信网等咨询承载体, 让所有能行使独立功能的物品之间实现互联互通的网络.</p>
+<p>2016年12月, Google发布了Android Things的开发者预览版, 这是一个专门为IoT设备定制的Android系统.</p>
+<p>本篇文章一步一步地教你如何写一个IoT的基本程序, 跑在Raspberry Pi 3 Model B上.</p>
+<h2 id="FileProvider"><a href="#FileProvider" class="headerlink" title="FileProvider"></a><a href="https://blog.stylingandroid.com/fileprovider/" target="_blank" rel="noopener">FileProvider</a></h2><p>上次我们提到了用<code>DownloadManager</code>下载的东西可以和其他应用分享, 那么如果我们下载的时候没有用<code>DownloadManager</code>呢? </p>
+<p>比较常见的情况是我们的应用需要分享内容到其他应用, 或者是文件的类型是我们应用不能自己处理的, 需要找一个支持这种文件类型的其他应用来帮我们打开它.</p>
+<p>怎么解决呢? 答案是用<code>FileProvider</code>.</p>
+<p>上一期有一篇文章也说过Android 7开始废弃了”file://“, 解决方案就是用<code>FileProvider</code>, 所以实现是一样的, 这里就不重复了.</p>
+<h2 id="Working-with-the-Layout-Preview"><a href="#Working-with-the-Layout-Preview" class="headerlink" title="Working with the Layout Preview"></a><a href="https://www.novoda.com/blog/layout-preview-101/" target="_blank" rel="noopener">Working with the Layout Preview</a></h2><p>Layout Preview向你展示了你的xml将如何在设备上显示. 你可以用它查看布局在不同的配置下如何显示, 比如可以切换横竖屏, 语言等等.</p>
+<p>但是它同样也有一些问题:</p>
+<p><strong>Issue #1: Preview显示空白</strong><br>当你的布局是由动态获取的数据来填充的, preview不知道如何填充, 所以你看到的是空白的. </p>
+<p>一个好的practice是使用<code>tools</code>命名空间, 指定一些只在preview阶段使用的属性. 这样你就可以指定一些text或src用来预览.</p>
+<p><strong>Tip #2: 使得动态内容在Preview可见</strong><br>如果你的图片是动态资源, 你也可以设置一些最大宽高给parent view, 以防真实的图片比期待的大太多或者是比例不对. 你可以设置<code>tools:layout_height</code> 和<code>tools:layout_width</code>, 还有<code>tools:background</code>在preview中查看view占多大.</p>
+<p>本文还推荐了另一个阅读资料: <a href="https://tips.seebrock3r.me/tools-of-the-trade-part-1-f3c1c73de898#.e038jlqyy" target="_blank" rel="noopener">Tools of the trade — Part 1</a></p>
+<p><strong>Tip #3: 修复坏掉的Previews</strong><br>当你创建一个自定义View的时候, 你需要确保你的View不需要任何外部依赖即可被实例化, 否则Preview可能看不到你的View. 因为Preview不是运行在你的app上的, 它只是运行在IDE的JVM上, 所以View framework之外的东西它是访问不到的.</p>
+<p>解决办法是在你的自定义View中做一些特殊处理, 比如把依赖注入放在<code>!isInEditMode()</code>里, 或者用<code>tools:</code>命名空间加一些默认值.</p>
+<p><strong>Tip #4: <merge> 布局没有被渲染</merge></strong></p>
+<p><merge>里面的控件在preview里会被重叠在一起.<br>解决的办法是使用<code>tools:showIn=&quot;layout&quot;</code>, 指定<merge>具体是显示在哪个布局里. 如果你有多个布局都用到这个<merge>, 你可以选一个.</merge></merge></merge></p>
+<p>从Android Studio 2.2开始, 你可以使用<code>tools:parentTag</code>来指定parent的类型, 比如<code>tools:parentTag=&quot;LinearLayout&quot;</code>.</p>
+<p><strong>Tip #5: 在Preview中显示隐藏的View</strong><br>如果你在layout中把view的visibility设置为gone, 那么它是不会在Preview中显示的. </p>
+<p>解决办法: 使用<code>tools:visibility=&quot;visible&quot;</code>.</p>
+<h2 id="Android-Things-Tutorials"><a href="#Android-Things-Tutorials" class="headerlink" title="Android Things Tutorials"></a><a href="https://blog.mindorks.com/android-things-tutorials-getting-started-8464c11009ff#.dhacx13kq" target="_blank" rel="noopener">Android Things Tutorials</a></h2><p>Android Things教程.</p>
+<h2 id="Get-Started-With-Retrofit-2-HTTP-Client"><a href="#Get-Started-With-Retrofit-2-HTTP-Client" class="headerlink" title="Get Started With Retrofit 2 HTTP Client"></a><a href="https://code.tutsplus.com/tutorials/getting-started-with-retrofit-2--cms-27792" target="_blank" rel="noopener">Get Started With Retrofit 2 HTTP Client</a></h2><p>本篇文章以实例讲述如何使用Retrofit, 虽然都是基础内容, 但讲解很详细.</p>
+<h2 id="Improving-sign-in-experience-with-Google-Sign-In-and-SmartLock"><a href="#Improving-sign-in-experience-with-Google-Sign-In-and-SmartLock" class="headerlink" title="Improving sign-in experience with Google Sign-In and SmartLock"></a><a href="https://medium.com/@p.tournaris/android-improving-sign-in-experience-with-google-sign-in-and-smartlock-f0bfd789602a#.dqh1aptm4" target="_blank" rel="noopener">Improving sign-in experience with Google Sign-In and SmartLock</a></h2><p>Google提供了两种方式来帮助我们改善用户的登录体验:<br>Google Sign-In(之前被称为Google+ Sign-In)和SmartLock.</p>
+<p>这篇文章举例解释了Google Sign-In和SmartLock的实现.</p>
+<p>Google Sign-In的部分比较简单.</p>
+<p>SmartLock让我们可以:</p>
+<ul>
+<li>让用户保存credentials.</li>
+<li>在打开应用的时候请求credentials.</li>
+<li>使用存在Chrome上的credentials, 这样我们的网站和app就可以共享credentials.</li>
+<li>显示Email提示, 让用户选择email地址.</li>
+<li>所有的这些信息都保存在Google的server里, 用户可以保存或删除.</li>
+</ul>
+<p>Demo app: <a href="https://github.com/charbgr/AuthManager" target="_blank" rel="noopener">charbgr/AuthManager</a></p>
+<h2 id="Storing-your-secure-information-in-the-NDK"><a href="#Storing-your-secure-information-in-the-NDK" class="headerlink" title="Storing your secure information in the NDK"></a><a href="https://www.androidsecurity.info/2016/12/15/storing-your-secure-information-in-the-ndk/" target="_blank" rel="noopener">Storing your secure information in the NDK</a></h2><p>这篇文章说敏感信息放在Java代码里不安全, 很容易被人反编译查看出来, 如果放在NDK里面就好一些, 你打开查看的只能是二进制文件, 很难找到.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Introduction-to-Natural-palettes"><a href="#Introduction-to-Natural-palettes" class="headerlink" title="Introduction to Natural palettes"></a><a href="https://stories.uplabs.com/introduction-to-natural-palettes-9503bfeee3d5#.z9y0xf7zc" target="_blank" rel="noopener">Introduction to Natural palettes</a></h2><p>作者从大自然的图像中得到颜色组合的灵感.<br>文章中举了几个例子, 如何用相关的照片找到相关主题的调色板.</p>
+<p>另推荐一个网站: <a href="http://color.romanuke.com/" target="_blank" rel="noopener">IN COLOR<br> BALANCE</a></p>
+<h2 id="Make-your-Android-app-look-better"><a href="#Make-your-Android-app-look-better" class="headerlink" title="Make your Android app look better"></a><a href="https://hackernoon.com/make-your-android-app-look-less-shitty-5dd63c4938f1#.4q5ro3ty8" target="_blank" rel="noopener">Make your Android app look better</a></h2><p>让你的App看起来更好的几点建议:</p>
+<ul>
+<li>使用同一个图标集的图标.<br>(这里推荐了一些图片工具和网站.)</li>
+<li>使用Material Design设计的keylines, 使用固定的格子大小.</li>
+<li>使用颜色的时候小心一些. (这里推荐了一些调色板网站)</li>
+<li>选择字体要明智一些.</li>
+</ul>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Material-Components"><a href="#Material-Components" class="headerlink" title="Material Components"></a><a href="https://github.com/material-components" target="_blank" rel="noopener">Material Components</a></h2><p>模块化和可定制的Material Design UI组件. Android, iOS, Web.</p>
+<h2 id="Android-oss-from-Kickstarter"><a href="#Android-oss-from-Kickstarter" class="headerlink" title="Android-oss from Kickstarter"></a><a href="https://github.com/kickstarter/android-oss" target="_blank" rel="noopener">Android-oss from Kickstarter</a></h2><p>Kickstarter开源了他们的Android应用.</p>
+<h2 id="stencil"><a href="#stencil" class="headerlink" title="stencil"></a><a href="https://github.com/thoughtbot/stencil" target="_blank" rel="noopener">stencil</a></h2><p>一个kotlin写的Android库, 实现一种文字路径的动画.</p>
+<h2 id="AuthManager"><a href="#AuthManager" class="headerlink" title="AuthManager"></a><a href="https://github.com/charbgr/AuthManager" target="_blank" rel="noopener">AuthManager</a></h2><p>包装了Google Sign-In和SmartLock的Manager.</p>
+<h2 id="FolioReader-Android"><a href="#FolioReader-Android" class="headerlink" title="FolioReader-Android"></a><a href="https://github.com/FolioReader/FolioReader-Android" target="_blank" rel="noopener">FolioReader-Android</a></h2><p>一个ePub阅读器和解析框架.</p>
+<h2 id="BufferTextInputLayout"><a href="#BufferTextInputLayout" class="headerlink" title="BufferTextInputLayout"></a><a href="https://github.com/bufferapp/BufferTextInputLayout" target="_blank" rel="noopener">BufferTextInputLayout</a></h2><p>对Support Library中的<code>TextInputLayout</code>的扩展, 增加了字数统计.</p>
+<h2 id="TextLayoutBuilder"><a href="#TextLayoutBuilder" class="headerlink" title="TextLayoutBuilder"></a><a href="https://facebookincubator.github.io/TextLayoutBuilder/" target="_blank" rel="noopener">TextLayoutBuilder</a></h2><p>使用Builder模式来配置创建一个Layout的属性.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Security/" rel="tag"># Security</a>
+              <a href="/tags/Design/" rel="tag"># Design</a>
+              <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
+              <a href="/tags/IoT/" rel="tag"># IoT</a>
+              <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
+              <a href="/tags/FileProvider/" rel="tag"># FileProvider</a>
+              <a href="/tags/IDE/" rel="tag"># IDE</a>
+              <a href="/tags/Retrofit2/" rel="tag"># Retrofit2</a>
+              <a href="/tags/Sign-In/" rel="tag"># Sign In</a>
+              <a href="/tags/SmartLock/" rel="tag"># SmartLock</a>
+              <a href="/tags/NDK/" rel="tag"># NDK</a>
+              <a href="/tags/Color/" rel="tag"># Color</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/" rel="prev" title="Android Weekly Notes Issue 235">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 235
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/12/30/android-weekly-notes-issue-237/" rel="next" title="Android Weekly Notes Issue 237">
+      Android Weekly Notes Issue 237 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-236"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #236</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Getting-started-with-Android-Things"><span class="nav-number">2.1.</span> <span class="nav-text">Getting started with Android Things</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FileProvider"><span class="nav-number">2.2.</span> <span class="nav-text">FileProvider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Working-with-the-Layout-Preview"><span class="nav-number">2.3.</span> <span class="nav-text">Working with the Layout Preview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Things-Tutorials"><span class="nav-number">2.4.</span> <span class="nav-text">Android Things Tutorials</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Get-Started-With-Retrofit-2-HTTP-Client"><span class="nav-number">2.5.</span> <span class="nav-text">Get Started With Retrofit 2 HTTP Client</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Improving-sign-in-experience-with-Google-Sign-In-and-SmartLock"><span class="nav-number">2.6.</span> <span class="nav-text">Improving sign-in experience with Google Sign-In and SmartLock</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storing-your-secure-information-in-the-NDK"><span class="nav-number">2.7.</span> <span class="nav-text">Storing your secure information in the NDK</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-Natural-palettes"><span class="nav-number">3.1.</span> <span class="nav-text">Introduction to Natural palettes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Make-your-Android-app-look-better"><span class="nav-number">3.2.</span> <span class="nav-text">Make your Android app look better</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Material-Components"><span class="nav-number">4.1.</span> <span class="nav-text">Material Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-oss-from-Kickstarter"><span class="nav-number">4.2.</span> <span class="nav-text">Android-oss from Kickstarter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stencil"><span class="nav-number">4.3.</span> <span class="nav-text">stencil</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AuthManager"><span class="nav-number">4.4.</span> <span class="nav-text">AuthManager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FolioReader-Android"><span class="nav-number">4.5.</span> <span class="nav-text">FolioReader-Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BufferTextInputLayout"><span class="nav-number">4.6.</span> <span class="nav-text">BufferTextInputLayout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TextLayoutBuilder"><span class="nav-number">4.7.</span> <span class="nav-text">TextLayoutBuilder</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/";
+    this.page.identifier = "Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/";
+    this.page.title = "Android Weekly Notes Issue 236";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

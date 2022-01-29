@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Dagger2是一个Java和Android的依赖注入框架.本文介绍Android中dagger2的基本使用.其中包括@Inject, @Component, @Module和@Provides注解的使用.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using Dagger2 in Android">
+<meta property="og:url" content="http://mengdd.github.io/Android/2016/06/24/using-dagger2-in-android/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Dagger2是一个Java和Android的依赖注入框架.本文介绍Android中dagger2的基本使用.其中包括@Inject, @Component, @Module和@Provides注解的使用.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-06-24T05:22:44.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.988Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2016/06/24/using-dagger2-in-android/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Using Dagger2 in Android | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2016/06/24/using-dagger2-in-android/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Using Dagger2 in Android
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-06-24 13:22:44" itemprop="dateCreated datePublished" datetime="2016-06-24T13:22:44+08:00">2016-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2016/06/24/using-dagger2-in-android/" class="post-meta-item leancloud_visitors" data-flag-title="Using Dagger2 in Android" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2016/06/24/using-dagger2-in-android/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2016/06/24/using-dagger2-in-android/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a href="https://github.com/google/dagger" target="_blank" rel="noopener">Dagger2</a>是一个Java和Android的依赖注入框架.<br>本文介绍Android中dagger2的基本使用.<br>其中包括<code>@Inject</code>, <code>@Component</code>, <code>@Module</code>和<code>@Provides</code>注解的使用.</p>
+<a id="more"></a>
+<h1 id="使用依赖注入的好处"><a href="#使用依赖注入的好处" class="headerlink" title="使用依赖注入的好处"></a>使用依赖注入的好处</h1><p>1.使用类和被依赖的对象构造分开,这样如果我们需要改变被依赖类的构造方法,不必改动每一个使用类.<br>2.对各种被依赖类的实例,可以只构造一次.<br>3.当我们需要更换一种实现时,只需要保证接口一致.<br>4.利于单元测试,我们可以方便地mock依赖类的对象.</p>
+<p>优点总结: 创建对象和使用对象分离, 模块化增强.</p>
+<h1 id="Dagger2的使用"><a href="#Dagger2的使用" class="headerlink" title="Dagger2的使用"></a>Dagger2的使用</h1><h2 id="Set-Up"><a href="#Set-Up" class="headerlink" title="Set Up"></a>Set Up</h2><p>在项目的<strong>build.gradle</strong>里加这个:<br>classpath ‘com.neenbedankt.gradle.plugins:android-apt:1.8’</p>
+<p>然后<strong>app的build.gradle</strong>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.android.application&apos;</span><br><span class="line">apply plugin: &apos;com.neenbedankt.android-apt&apos;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">    compileSdkVersion 24</span><br><span class="line">    buildToolsVersion &quot;24.0.0&quot;</span><br><span class="line"></span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        applicationId &quot;com.ddmeng.dagger2sample&quot;</span><br><span class="line">        minSdkVersion 16</span><br><span class="line">        targetSdkVersion 24</span><br><span class="line">        versionCode 1</span><br><span class="line">        versionName &quot;1.0&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled false</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</span><br><span class="line">    testCompile &apos;junit:junit:4.12&apos;</span><br><span class="line">    compile &apos;com.android.support:appcompat-v7:24.0.0&apos;</span><br><span class="line">    compile &apos;javax.annotation:jsr250-api:1.0&apos;</span><br><span class="line">    compile &apos;com.google.dagger:dagger:2.2&apos;</span><br><span class="line">    apt &apos;com.google.dagger:dagger-compiler:2.2&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><p>最常使用的主要是以下这几个注解:</p>
+<p><a href="http://google.github.io/dagger/api/latest/dagger/Component.html" target="_blank" rel="noopener">@Component</a><br>Annotates an interface or abstract class for which a fully-formed, dependency-injected implementation is to be generated from a set of modules(). The generated class will have the name of the type annotated with @Component prepended with Dagger. For example, @Component interface MyComponent {…} will produce an implementation named DaggerMyComponent.</p>
+<p><a href="http://google.github.io/dagger/api/latest/dagger/Module.html" target="_blank" rel="noopener">@Module</a><br>Annotates a class that contributes to the object graph.</p>
+<p><a href="http://docs.oracle.com/javaee/7/api/javax/inject/Inject.html" target="_blank" rel="noopener">@Inject</a><br>Dagger constructs instances of your application classes and satisfies their dependencies. It uses the javax.inject.Inject annotation to identify which constructors and fields it is interested in.</p>
+<p>Use @Inject to annotate the constructor that Dagger should use to create instances of a class. When a new instance is requested, Dagger will obtain the required parameters values and invoke this constructor.</p>
+<p><a href="http://google.github.io/dagger/api/latest/dagger/Provides.html" target="_blank" rel="noopener">@Provides</a><br>Annotates methods of a module to create a provider method binding. The method’s return type is bound to its returned value. The component implementation will pass dependencies to the method as parameters.</p>
+<h2 id="Dagger2基本使用"><a href="#Dagger2基本使用" class="headerlink" title="Dagger2基本使用"></a>Dagger2基本使用</h2><h3 id="最简单的一个实例"><a href="#最简单的一个实例" class="headerlink" title="最简单的一个实例"></a>最简单的一个实例</h3><p>首先写一个Component</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>(modules = MyApplicationModule<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">interface</span> <span class="title">MyApplicationComponent</span> </span>&#123;</span><br><span class="line">    <span class="comment">// this should be an interface or abstract class</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// write like this, and Make Project, then a DaggerMyApplicationComponent class will be generated</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时里面的Module内容可以暂时为空:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplicationModule</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写好后make一下,就生成了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ddmeng.dagger2sample.component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.ddmeng.dagger2sample.<span class="keyword">module</span>.MyApplicationModule;</span><br><span class="line"><span class="keyword">import</span> dagger.internal.Preconditions;</span><br><span class="line"><span class="keyword">import</span> javax.annotation.Generated;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Generated</span>(</span><br><span class="line">  value = <span class="string">"dagger.internal.codegen.ComponentProcessor"</span>,</span><br><span class="line">  comments = <span class="string">"https://google.github.io/dagger"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">DaggerMyApplicationComponent</span> <span class="keyword">implements</span> <span class="title">MyApplicationComponent</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">DaggerMyApplicationComponent</span><span class="params">(Builder builder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">assert</span> builder != <span class="keyword">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Builder <span class="title">builder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Builder();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MyApplicationComponent <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> builder().build();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Builder</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MyApplicationComponent <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> DaggerMyApplicationComponent(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@deprecated</span> This module is declared, but an instance is not used in the component. This method is a no-op. For more, see https://google.github.io/dagger/unused-modules.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Builder <span class="title">myApplicationModule</span><span class="params">(MyApplicationModule myApplicationModule)</span> </span>&#123;</span><br><span class="line">      Preconditions.checkNotNull(myApplicationModule);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要切换到project视图下才能看见.<br>生成的这个实现,名字是在我们自己的Component名前面加了Dagger.<br>如果我们的类名不是顶级的,即还有外部类,则会以下划线分隔连接.</p>
+<p>现在我们的生成的myApplicationModule()方法被标记为<code>@Deprecated</code>,这是因为我的module里面什么都还没有呢,所以被认为是没有必要的.</p>
+<p>现在我们添加一个要用的LogUtils类. 想要在MainActivity里面用.<br>写好LogUtils类,在构造函数上标记<code>@Inject</code>. 这时候就将LogUtils加入了dependency graph中, 相当于作为预备队员.</p>
+<p>想要在MainActivity作为一个字段用,<br>在Component里面写一句:<br><code>void inject(MainActivity activity);</code></p>
+<p>因为此时还是没有用到Module,所以在application里面可以直接build,保存component:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleApplication</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> MyApplicationComponent component;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        component = DaggerMyApplicationComponent.builder().build();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MyApplicationComponent <span class="title">getComponent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> component;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在MainActivity使用的时候, 先get到Component, 然后调用inject()方法, 字段就被注入了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    LogUtils logUtils;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        ((SampleApplication) getApplication()).getComponent().inject(<span class="keyword">this</span>);</span><br><span class="line">        logUtils.i(<span class="string">"tag"</span>, <span class="string">"hi, I'm an instance of LogUtils"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序后可以看到打出log,证明注入成功.</p>
+<p>此时我们看到生成的代码有三个类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">DaggerMyApplicationComponent</span> <span class="keyword">implements</span> <span class="title">MyApplicationComponent</span> </span>&#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> LogUtils_Factory implements Factory&lt;LogUtils&gt; &#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity_MembersInjector</span> <span class="keyword">implements</span> <span class="title">MembersInjector</span>&lt;<span class="title">MainActivity</span>&gt; </span>&#123;</span><br></pre></td></tr></table></figure>
+<p>可以通过查看调用栈来看调用关系.</p>
+<h3 id="单例-Singleton"><a href="#单例-Singleton" class="headerlink" title="单例@Singleton"></a>单例<code>@Singleton</code></h3><p>如果我们想让工具类是单例,只需要在上面的基础上,在类名前加上<code>@Singleton</code>.</p>
+<p>此时对应的Component也需要加上<code>@Singleton</code>.否则编译会不通过.<br>加好之后,可以打印hashCode()看出, 标记了<code>@Singleton</code>的这个对象,不论被注入几次,都是同一个对象.</p>
+<p>在我们的例子中, 可以让FileUtils作为一个单例被注入:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FileUtils</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.i(LogUtils.TAG, <span class="string">"new FileUtils: "</span> + hashCode());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.i(LogUtils.TAG, <span class="string">"do sth with FileUtils "</span> + hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>查看生成的代码,可以看见<code>DaggerMyApplicationComponent</code>为单例的类多保存了一个字段:<br><code>private Provider&lt;FileUtils&gt; fileUtilsProvider;</code></p>
+<p>它在init的时候被初始化为:<br><code>this.fileUtilsProvider = ScopedProvider.create(FileUtils_Factory.create());</code></p>
+<p>包了一层之后,在ScopeProvider里实现了单例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// double-check idiom from EJ2: Item 71</span></span><br><span class="line">  Object result = instance;</span><br><span class="line">  <span class="keyword">if</span> (result == UNINITIALIZED) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">      result = instance;</span><br><span class="line">      <span class="keyword">if</span> (result == UNINITIALIZED) &#123;</span><br><span class="line">        instance = result = factory.get();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> (T) result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Module-和-Provides的使用"><a href="#Module-和-Provides的使用" class="headerlink" title="@Module 和 @Provides的使用"></a><code>@Module</code> 和 <code>@Provides</code>的使用</h3><p>上面的注入都是用<code>@Inject</code>, 在构造函数和要使用的字段上标记.<br>有些情况下<code>@Inject</code>是不能满足需求的.</p>
+<p><strong>But @Inject doesn’t work everywhere</strong>.</p>
+<ol>
+<li>Interfaces can’t be constructed. 接口类型不能直接被构造.</li>
+<li>Third-party classes can’t be annotated. 第三方的类不能改动它的代码.</li>
+<li>Configurable objects must be configured! 需要配置的对象需要被配置.</li>
+</ol>
+<p>这些情况下, <code>@Inject</code>不够用啦, 这时候就要用<code>@Provides</code>标记的方法.<br>方法的返回值返回了它满足的依赖, 它实际返回的对象可以是返回值接口的实现,或者是返回值类型的子类.<br><code>@Provides</code>方法也可以有依赖, 即它的参数.<br>Dagger会注入它的参数值, 如果它的参数值不能被注入, 则编译会失败.<br>注意这个寻找参数注入的过程是在<code>@Component</code>级别的, 只要这个Component里面有这个参数类型的注入, 即便可能是在另一个Module, 就会自动采用.</p>
+<p>所有的<code>@Provides</code>方法都需要放在<code>@Module</code>里面.<br>按照命名习惯(By convention), 一般<code>@Provides</code>标记的方法都有一个provide前缀, 而module类都有一个Module后缀.<br>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplicationModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyApplicationModule</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Singleton</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Context <span class="title">providesContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inject interface, return implementation class instance</span></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HttpUtil <span class="title">provideHttpUtil</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.i(LogUtils.TAG, <span class="string">"provideHttpUtil"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyHttpUtil();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inject class from third-party, or Android framework service</span></span><br><span class="line">    <span class="comment">// This provide method need a parameter, Dagger will obtain the parameter value (injected it)</span></span><br><span class="line">    <span class="comment">// If the parameter is not injectable, then compilation failed</span></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Singleton</span></span><br><span class="line">    <span class="function">ConnectivityManager <span class="title">provideConnectivityManager</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Dagger2中几种常用注解总结"><a href="#Dagger2中几种常用注解总结" class="headerlink" title="Dagger2中几种常用注解总结"></a>Dagger2中几种常用注解总结</h1><h3 id="Inject"><a href="#Inject" class="headerlink" title="@Inject"></a><code>@Inject</code></h3><p><code>@Inject</code>的用法分为三种</p>
+<ul>
+<li>构造函数上的<code>@Inject</code>:</li>
+</ul>
+<p>如果构造函数是有参数的, 则它的所有参数都会自动从dependency graph中找到并注入.<br>同时构造的这个类也被作为dependency graph的一部分.<br>但是我们在一个类中最多只能用@Inject标记一个构造方法.</p>
+<ul>
+<li>字段上的<code>@Inject</code>: 从dependency graph中找到并注入字段.</li>
+</ul>
+<p>这里需要手动调用<br><code>(SampleApplication) getApplication()).getComponent().inject(this);</code><br>类似的方法, 在这个方法被调用之前, 字段都是null.<br>注意这里的字段不能是private的.</p>
+<ul>
+<li>public方法上的<code>@Inject</code>:</li>
+</ul>
+<p>所有方法的参数都会由dependency graph提供.<br>方法注入在构造函数<em>之后</em>立即调用, 意味着我们可以用一个构建好的this对象.</p>
+<h3 id="Module-和-Provides"><a href="#Module-和-Provides" class="headerlink" title="@Module 和 @Provides"></a><code>@Module</code> 和 <code>@Provides</code></h3><p><code>@Module</code>标记了提供依赖的类, 其中包含了一些<code>@Provides</code>标注的方法, 返回值即依赖.</p>
+<h3 id="Component"><a href="#Component" class="headerlink" title="@Component"></a><code>@Component</code></h3><p>用<code>@Component</code>标记的接口负责将所有的事情联系起来, 可以看做是<code>@Module</code>和<code>@Inject</code>之间的桥梁.<br>我们可以定义我们用的依赖来自哪些Module或者Component.</p>
+<p>在Component里可以定义哪些依赖是公有的 (提供返回值为某种依赖的无参数方法) , 也可以定义我们的component可以去哪里inject对象 (void inject()方法, 参数是去注入的地方) .</p>
+<p><code>@Component</code>可以有自己的子Component, 也可以有lifecycle.</p>
+<p>先就这么多吧, 更多更高级的使用可以期待下文, 也可以参见后面的参考资料.</p>
+<p>本文地址: <a href="http://www.cnblogs.com/mengdd/p/5613889.html" target="_blank" rel="noopener">Using Dagger2 in Android</a><br>本文Demo: <a href="https://github.com/mengdd/dagger2-sample" target="_blank" rel="noopener">dagger2-sample</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料:"></a>参考资料:</h1><p><a href="https://github.com/google/dagger" target="_blank" rel="noopener">dagger2 repo</a><br><a href="http://google.github.io/dagger/" target="_blank" rel="noopener">dagger2 website</a><br><a href="http://google.github.io/dagger/users-guide.html" target="_blank" rel="noopener">User Guide</a></p>
+<p><a href="https://docs.google.com/document/d/1fwg-NsMKYtYxeEWe82rISIHjNrtdqonfiHgp8-PQ7m8/edit" target="_blank" rel="noopener">Dagger 2.0文档</a><br><a href="https://github.com/google/dagger/tree/master/examples/simple/src/main/java/coffee" target="_blank" rel="noopener">dagger 2的sample</a></p>
+<p>这里有些guides:<br><a href="https://guides.codepath.com/android/Dependency-Injection-with-Dagger-2" target="_blank" rel="noopener">Code Path Guides: DI with dagger2</a><br><a href="https://blog.gouline.net/dagger-2-even-sharper-less-square-b52101863542#.me0ieiaph" target="_blank" rel="noopener">Dagger2</a></p>
+<p>这里有一系列关于Dagger2的文章还挺好的:<br><a href="http://frogermcs.github.io/" target="_blank" rel="noopener">Froger_mcs dev blog</a><br><a href="http://frogermcs.github.io/dagger-1-to-2-migration/" target="_blank" rel="noopener">dagger 1 to dagger 2 migration</a><br><a href="http://frogermcs.github.io/dependency-injection-with-dagger-2-introdution-to-di/" target="_blank" rel="noopener">Introduction to DI</a><br><a href="http://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/" target="_blank" rel="noopener">Dagger2 API</a><br><a href="https://medium.com/@froger_mcs/inject-everything-viewholder-and-dagger-2-e1551a76a908#.e3zxrynq4" target="_blank" rel="noopener">Inject everything - ViewHolder and Dagger2 (with Multibinding and AutoFactory example)</a><br><a href="http://frogermcs.github.io/dependency-injection-with-dagger-2-custom-scopes/" target="_blank" rel="noopener">Custom Scope</a></p>
+<p>作者的例子:<br><a href="https://github.com/frogermcs/GithubClient" target="_blank" rel="noopener">Github Client</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2016/06/16/android-fragment-usage-4-toolbar/" rel="prev" title="Android Fragment使用(四) Toolbar使用及Fragment中的Toolbar处理">
+      <i class="fa fa-chevron-left"></i> Android Fragment使用(四) Toolbar使用及Fragment中的Toolbar处理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/" rel="next" title="CoordinatorLayout, AppBarLayout, CollapsingToolbarLayout使用">
+      CoordinatorLayout, AppBarLayout, CollapsingToolbarLayout使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">1.</span> <span class="nav-text">使用依赖注入的好处</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dagger2%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">Dagger2的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-Up"><span class="nav-number">2.1.</span> <span class="nav-text">Set Up</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">2.2.</span> <span class="nav-text">常用注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dagger2%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">Dagger2基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">最简单的一个实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B-Singleton"><span class="nav-number">2.3.2.</span> <span class="nav-text">单例@Singleton</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Module-%E5%92%8C-Provides%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">@Module 和 @Provides的使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dagger2%E4%B8%AD%E5%87%A0%E7%A7%8D%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">Dagger2中几种常用注解总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Inject"><span class="nav-number">3.0.1.</span> <span class="nav-text">@Inject</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Module-%E5%92%8C-Provides"><span class="nav-number">3.0.2.</span> <span class="nav-text">@Module 和 @Provides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Component"><span class="nav-number">3.0.3.</span> <span class="nav-text">@Component</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">参考资料:</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2016/06/24/using-dagger2-in-android/";
+    this.page.identifier = "Android/2016/06/24/using-dagger2-in-android/";
+    this.page.title = "Using Dagger2 in Android";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

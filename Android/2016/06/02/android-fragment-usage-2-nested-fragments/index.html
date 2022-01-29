@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="嵌套Fragment的使用及常见错误嵌套Fragments (Nested Fragments), 是在Fragment内部又添加Fragment.使用时, 主要要依靠宿主Fragment的 getChildFragmentManager() 来获取FragmentManger.虽然看起来和在activity中添加fragment差不多, 但因为fragment生命周期及管理恢复模式不同, 其中有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误">
+<meta property="og:url" content="http://mengdd.github.io/Android/2016/06/02/android-fragment-usage-2-nested-fragments/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="嵌套Fragment的使用及常见错误嵌套Fragments (Nested Fragments), 是在Fragment内部又添加Fragment.使用时, 主要要依靠宿主Fragment的 getChildFragmentManager() 来获取FragmentManger.虽然看起来和在activity中添加fragment差不多, 但因为fragment生命周期及管理恢复模式不同, 其中有">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-06-02T05:03:04.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.987Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Fragment">
+<meta property="article:tag" content="Nested Fragments">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2016/06/02/android-fragment-usage-2-nested-fragments/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2016/06/02/android-fragment-usage-2-nested-fragments/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-06-02 13:03:04" itemprop="dateCreated datePublished" datetime="2016-06-02T13:03:04+08:00">2016-06-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2016/06/02/android-fragment-usage-2-nested-fragments/" class="post-meta-item leancloud_visitors" data-flag-title="Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2016/06/02/android-fragment-usage-2-nested-fragments/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2016/06/02/android-fragment-usage-2-nested-fragments/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="嵌套Fragment的使用及常见错误"><a href="#嵌套Fragment的使用及常见错误" class="headerlink" title="嵌套Fragment的使用及常见错误"></a>嵌套Fragment的使用及常见错误</h1><p>嵌套Fragments (Nested Fragments), 是在Fragment内部又添加Fragment.<br>使用时, 主要要依靠宿主Fragment的 <code>getChildFragmentManager()</code> 来获取FragmentManger.<br>虽然看起来和在activity中添加fragment差不多, 但因为fragment生命周期及管理恢复模式不同, 其中有一些需要特别注意的地方.<br>本文内容还包括了从Fragment迁移到v4.Fragment代码中需要改动的一些地方.</p>
+<a id="more"></a>
+<h2 id="嵌套Fragments"><a href="#嵌套Fragments" class="headerlink" title="嵌套Fragments"></a>嵌套Fragments</h2><p>嵌套Fragments <a href="https://developer.android.com/about/versions/android-4.2.html#NestedFragments" target="_blank" rel="noopener">Nested Fragments</a> 是Android 4.2 API 17 引入的.<br>目的: 进一步增强动态复用.<br>如果要在Android 4.2之前使用, 可以用support library v4的版本, 后面会有详细的迁移过程介绍.</p>
+<h3 id="嵌套Fragment的动态添加"><a href="#嵌套Fragment的动态添加" class="headerlink" title="嵌套Fragment的动态添加"></a>嵌套Fragment的动态添加</h3><p>在宿主fragment里调用<a href="https://developer.android.com/reference/android/app/Fragment.html#getChildFragmentManager(" target="_blank" rel="noopener">getChildFragmentManager()</a>)<br>即可用它来向这个fragment内部添加fragments.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Fragment videoFragment = <span class="keyword">new</span> VideoPlayerFragment();</span><br><span class="line">FragmentTransaction transaction = getChildFragmentManager().beginTransaction();</span><br><span class="line">transaction.add(R.id.video_fragment, videoFragment).commit();</span><br></pre></td></tr></table></figure>
+<p>同样, 对于内部的fragment来说, <a href="https://developer.android.com/reference/android/app/Fragment.html#getParentFragment(" target="_blank" rel="noopener">getParentFragment()</a>) 方法可以获取到fragment的宿主fragment.</p>
+<h3 id="getChildFragmentManager-和-getFragmentManager"><a href="#getChildFragmentManager-和-getFragmentManager" class="headerlink" title="getChildFragmentManager() 和 getFragmentManager()"></a>getChildFragmentManager() 和 getFragmentManager()</h3><p><code>getChildFragmentManager()</code>是fragment中的方法, 返回的是管理当前fragment内部子fragments的manager.<br><code>getFragmentManager()</code>在activity和fragment中都有.<br>在activity中, 如果用的是v4 support库, 方法应该用<code>getSupportFragmentManager()</code>, 返回的是管理activity中fragments的manager.<br>在fragment中, 还叫getFragmentManager(), 返回的是把自己加进来的那个manager.</p>
+<p>也即, 如果fragment在activity中, fragment.getFragmentManager()得到的是activity中管理fragments的那个manager.<br>如果fragment是嵌套在另一个fragment中, fragment.getFragmentManager()得到的是它的parent的getChildFragmentManager().</p>
+<p>总结就是: <strong><em>getFragmentManager()是本级别管理者, getChildFragmentManager()是下一级别管理者</em></strong>.<br>这实际上是一个树形管理结构.</p>
+<h2 id="使用Support-library"><a href="#使用Support-library" class="headerlink" title="使用Support library"></a>使用Support library</h2><h3 id="为什么要使用support-library-有两种原因"><a href="#为什么要使用support-library-有两种原因" class="headerlink" title="为什么要使用support library? 有两种原因:"></a>为什么要使用support library? 有两种原因:</h3><ol>
+<li>要在API level11之前使用fragment.</li>
+<li>要在API Level 17之前使用<code>getChildFragmentManager()</code>, 即使用嵌套Fragment.</li>
+</ol>
+<h3 id="迁移到support-library需要改动哪些地方"><a href="#迁移到support-library需要改动哪些地方" class="headerlink" title="迁移到support library需要改动哪些地方?"></a>迁移到support library需要改动哪些地方?</h3><p>把Fragment迁移到v4版本, 需要改动如下地方:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import android.app.Fragment; -&gt; import android.support.v4.app.Fragment;</span><br><span class="line">Activity -&gt; FragmentActivity / AppCompatActivity</span><br><span class="line">activity.getFragmentManager() -&gt; getSupportFragmentManager()</span><br><span class="line"></span><br><span class="line">Loader, LoaderManager, LoaderCursor也需要改成v4包的.</span><br><span class="line">activity.getLoaderManager() -&gt; getSupportLoaderManager()</span><br></pre></td></tr></table></figure>
+<p>Fragment中onTrimMemory()方法不见了<br>以前是这个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTrimMemory</span><span class="params">(<span class="keyword">int</span> level)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onTrimMemory(level);</span><br><span class="line">    imageLoader.trimMemory(level);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>v4版本需要改成这个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLowMemory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">super</span>.onLowMemory();</span><br><span class="line">     imageLoader.trimMemory(ComponentCallbacks2.TRIM_MEMORY_COMPLETE);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="嵌套Fragment使用常见错误"><a href="#嵌套Fragment使用常见错误" class="headerlink" title="嵌套Fragment使用常见错误"></a>嵌套Fragment使用常见错误</h2><h3 id="错误情形1-把嵌套Fragment放在布局里"><a href="#错误情形1-把嵌套Fragment放在布局里" class="headerlink" title="错误情形1: 把嵌套Fragment放在布局里"></a>错误情形1: 把嵌套Fragment放在布局里</h3><p>把嵌套Fragment放在布局里 -&gt; <code>InflateException in Binary XML</code></p>
+<p>看起来嵌套fragment的使用除了要用<code>getChildFragmentManager()</code>以外, 其他跟之前似乎没什么区别.<br>如果嵌套的fragment不需要太多控制, 固定地占据了一块地方, 你可能想当然地为了省事就把它放进了xml布局文件里, 写个<fragment>标签.<br>运行一下初看起来似乎没什么错, run一下也能显示出来, 但是千万不要这样做, 多玩两下更复杂的你就知道了.</fragment></p>
+<p>上面<a href="https://developer.android.com/about/versions/android-4.2.html#NestedFragments" target="_blank" rel="noopener">官网介绍时</a>就有这么一句:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Note: You cannot inflate a layout into a fragment when that layout includes a &lt;fragment&gt;.</span><br><span class="line">Nested fragments are only supported when added to a fragment dynamically.</span><br></pre></td></tr></table></figure></p>
+<p>人家这么说肯定是有原因的哇, 下面我来告诉你我知道的问题:<br>如果Fragment被嵌套写在了布局里, inflate到这个标签的时候就相当于将它加进了FragmentManager里.<br>如果嵌套的parent fragment因为需要重建View而重新走了<code>onCreateView()</code>方法, 再次inflate, 此时就会抛出异常:  <code>InflateException in Binary XML</code></p>
+<p>之前为什么可以呢? 非嵌套的情况, fragment直接加在activity里, 如果需要重新inflate, 必定是在onCreate()里, activity是重新建的, 所以没有问题, 因为不存在fragmentManager中已经持有同一个fragment的问题.</p>
+<p>举一个例子:<br>在嵌套的情况下, 如果FragmentE布局里有FragmentA, 这时候我们需要叠加一个FragmentD.<br>用了<code>replace()</code>, 并且<code>addToBackStack()</code>.<br>当D显示的时候, E实际上View是被销毁的, 然后back回来, 重建View, 即FragementE需要重新从onCreateView<br>()开始走生命周期, 走到inflate的时候又看到了fragmentA的标签.<br>但是这时候A实际上还在FragmentManager里面, 所以就会抛出如下的异常:<br><code>android.view.InflateException: Binary XML file line # XX: Binary XML file line #XX: Error inflating class fragment</code><br>崩溃的位置就在parent fragment(FragmentE) inflate的时候.<br>打印具体的异常栈信息可以看到:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">at com.example.ddmeng.helloactivityandfragment.fragment.FragmentE.onCreateView(FragmentE.java:35)</span><br><span class="line">at android.app.Fragment.performCreateView(Fragment.java:2220)</span><br><span class="line">at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:973)</span><br><span class="line">at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1148)</span><br><span class="line">at android.app.FragmentManagerImpl.popBackStackState(FragmentManager.java:1587)</span><br><span class="line">at android.app.FragmentManagerImpl.popBackStackImmediate(FragmentManager.java:578)</span><br><span class="line">at android.support.v4.app.BaseFragmentActivityEclair.onBackPressedNotHandled(BaseFragmentActivityEclair.java:27)</span><br><span class="line">at android.support.v4.app.FragmentActivity.onBackPressed(FragmentActivity.java:189)</span><br><span class="line"> Caused by: java.lang.IllegalArgumentException: Binary XML file line #16: Duplicate id 0x7f0c0059, tag null, or parent id 0xffffffff with another fragment for com.example.ddmeng.helloactivityandfragment.fragment.FragmentA</span><br><span class="line">at android.app.FragmentManagerImpl.onCreateView(FragmentManager.java:2205)</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/mengdd/HelloActivityAndFragment" target="_blank" rel="noopener">实验例子代码</a></p>
+<h4 id="Solution-1-动态添加child-fragment"><a href="#Solution-1-动态添加child-fragment" class="headerlink" title="Solution 1: 动态添加child fragment"></a>Solution 1: 动态添加child fragment</h4><p>解决上面的问题有各种方法, 最常规的做法是, 使用动态添加:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Fragment fragmentA = getChildFragmentManager().findFragmentByTag(NESTED_FRAGMENT_TAG);</span><br><span class="line"><span class="keyword">if</span> (fragmentA == <span class="keyword">null</span>) &#123;</span><br><span class="line">    Log.i(LOG_TAG, <span class="string">"add new FragmentA !!"</span>);</span><br><span class="line">    fragmentA = <span class="keyword">new</span> FragmentA();</span><br><span class="line">    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();</span><br><span class="line">    fragmentTransaction.add(R.id.fragment_container, fragmentA, NESTED_FRAGMENT_TAG).commit();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    Log.i(LOG_TAG, <span class="string">"found existing FragmentA, no need to add it again !!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Solution-2-在异常之前remove-child-fragment"><a href="#Solution-2-在异常之前remove-child-fragment" class="headerlink" title="Solution 2: 在异常之前remove child fragment"></a>Solution 2: 在异常之前remove child fragment</h4><p>如果你的子fragment非要加在布局里不可, 而你的程序确实会有重建父fragment view的情形.<br>为了避免上面的异常, 你也可以这样做(tricky and not recommended):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeChildFragment</span><span class="params">(Fragment parentFragment)</span> </span>&#123;</span><br><span class="line">    FragmentManager fragmentManager = parentFragment.getChildFragmentManager();</span><br><span class="line">    Fragment child = fragmentManager.findFragmentById(R.id.child);</span><br><span class="line">    <span class="keyword">if</span> (child != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fragmentManager.beginTransaction()</span><br><span class="line">        .remove(child)</span><br><span class="line">        .commitAllowingStateLoss();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在parentFragment的<code>onCreateView()</code>方法中inflate之前和<code>onSaveInstanceState()</code>方法中做save工作之前调用它.<br>这两个地方是发生异常的地方, 只要在其之前remove就好.</p>
+<h3 id="错误情形2-把fragment放在一个动态布局里"><a href="#错误情形2-把fragment放在一个动态布局里" class="headerlink" title="错误情形2: 把fragment放在一个动态布局里"></a>错误情形2: 把fragment放在一个动态布局里</h3><p>把fragment放在一个动态布局里 -&gt; <code>java.lang.IllegalArgumentException: No view found for id</code></p>
+<p>发现这个错误是因为项目中的一个子Fragment是添加在RecyclerView里面的一块的.<br>RecyclerView要等到Loader的数据取到了之后再populate每一块的布局.<br>还是上面的流程, 启动父fragment, load数据, 添加子fragment, 这都没有问题.<br>但是一旦如果是上面的<code>replace()</code>加<code>addToBackStack()</code> , 并且再次返回, 就会出现异常.</p>
+<p>因为当重建View的时候, fragmentManager其中是持有child fragment的, 但是找不到它的container, 于是就会抛出异常.<br>我也同样做了一个小实验, 在我的demo程序里:<br><a href="https://github.com/mengdd/HelloActivityAndFragment" target="_blank" rel="noopener">HelloActivityAndFragment</a><br>Nested Fragment in Dynamic Container:<br>在Fragment F中, 先添加一个FrameLayout, 再把child fragment A加进去.<br>然后在Activity中, 用D replace F, 按back键返回, 就会有crash:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalArgumentException: No view found for id 0x7f0c0062 (com.example.ddmeng.helloactivityandfragment:id/frame_container) for fragment FragmentA&#123;b37763 #0 id=0x7f0c0062 FragmentA&#125;</span><br><span class="line">    at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:965)</span><br><span class="line">    at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1148)</span><br><span class="line">    at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1130)</span><br><span class="line">    at android.app.FragmentManagerImpl.dispatchActivityCreated(FragmentManager.java:1953)</span><br><span class="line">    at android.app.Fragment.performActivityCreated(Fragment.java:2234)</span><br><span class="line">    at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:992)</span><br><span class="line">    at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1148)</span><br><span class="line">    at android.app.BackStackRecord.popFromBackStack(BackStackRecord.java:1670)</span><br><span class="line">    at android.app.FragmentManagerImpl.popBackStackState(FragmentManager.java:1587)</span><br><span class="line">    at android.app.FragmentManagerImpl.popBackStackImmediate(FragmentManager.java:578)</span><br><span class="line">    at android.app.Activity.onBackPressed(Activity.java:2503)</span><br></pre></td></tr></table></figure>
+<p>这是因为返回的时候FragmentManager找不到对应的container了.<br>所以应该避免这种做法, 尽量把fragment加进parent的根布局里, 而不是某个动态添加的布局.</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>关于嵌套fragments的情况, 可能和ViewPager结合使用的情形比较多.<br>这个感觉说来话长了, 以为有很多系统帮忙做的事情, 改天有空再说吧.</p>
+<p>这里有个大哥写了个工具类<a href="https://github.com/YoKeyword/Fragmentation" target="_blank" rel="noopener">Fragmentation</a>.<br>他也有几篇博文分析遇到的坑和原因(见上面repo的README给出的链接), 里面有一些back stack的问题, 还有动画什么的, 大家有兴趣可以看看.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://guides.codepath.com/android/Creating-and-Using-Fragments#nesting-fragments-within-fragments" target="_blank" rel="noopener">Guide: Nested Fragments</a></p>
+<p><a href="https://github.com/mengdd/HelloActivityAndFragment" target="_blank" rel="noopener">相关Demo</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Fragment/" rel="tag"># Fragment</a>
+              <a href="/tags/Nested-Fragments/" rel="tag"># Nested Fragments</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2016/05/31/android-fragment-usage-1-basic-part/" rel="prev" title="Android Fragment使用(一) 基础篇 温故知新">
+      <i class="fa fa-chevron-left"></i> Android Fragment使用(一) 基础篇 温故知新
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2016/06/13/android-fragment-usage-3-state-restore/" rel="next" title="Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复">
+      Android Fragment使用(三) Activity, Fragment, WebView的状态保存和恢复 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97Fragment%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">嵌套Fragment的使用及常见错误</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97Fragments"><span class="nav-number">1.1.</span> <span class="nav-text">嵌套Fragments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97Fragment%E7%9A%84%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.1.1.</span> <span class="nav-text">嵌套Fragment的动态添加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getChildFragmentManager-%E5%92%8C-getFragmentManager"><span class="nav-number">1.1.2.</span> <span class="nav-text">getChildFragmentManager() 和 getFragmentManager()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Support-library"><span class="nav-number">1.2.</span> <span class="nav-text">使用Support library</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8support-library-%E6%9C%89%E4%B8%A4%E7%A7%8D%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.2.1.</span> <span class="nav-text">为什么要使用support library? 有两种原因:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%81%E7%A7%BB%E5%88%B0support-library%E9%9C%80%E8%A6%81%E6%94%B9%E5%8A%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9"><span class="nav-number">1.2.2.</span> <span class="nav-text">迁移到support library需要改动哪些地方?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97Fragment%E4%BD%BF%E7%94%A8%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="nav-number">1.3.</span> <span class="nav-text">嵌套Fragment使用常见错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%83%85%E5%BD%A21-%E6%8A%8A%E5%B5%8C%E5%A5%97Fragment%E6%94%BE%E5%9C%A8%E5%B8%83%E5%B1%80%E9%87%8C"><span class="nav-number">1.3.1.</span> <span class="nav-text">错误情形1: 把嵌套Fragment放在布局里</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution-1-%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0child-fragment"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">Solution 1: 动态添加child fragment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution-2-%E5%9C%A8%E5%BC%82%E5%B8%B8%E4%B9%8B%E5%89%8Dremove-child-fragment"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">Solution 2: 在异常之前remove child fragment</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%83%85%E5%BD%A22-%E6%8A%8Afragment%E6%94%BE%E5%9C%A8%E4%B8%80%E4%B8%AA%E5%8A%A8%E6%80%81%E5%B8%83%E5%B1%80%E9%87%8C"><span class="nav-number">1.3.2.</span> <span class="nav-text">错误情形2: 把fragment放在一个动态布局里</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2016/06/02/android-fragment-usage-2-nested-fragments/";
+    this.page.identifier = "Android/2016/06/02/android-fragment-usage-2-nested-fragments/";
+    this.page.title = "Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

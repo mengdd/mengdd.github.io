@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #228October 23rd, 2016Android Weekly Issue #228 本期内容包括:Android 7.1的App Shortcuts; Searchbar的设计讨论; Nougat的Direct Reply; Alarms API讨论; Support Library的BottomNavigationView; MVVM模式;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 228">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #228October 23rd, 2016Android Weekly Issue #228 本期内容包括:Android 7.1的App Shortcuts; Searchbar的设计讨论; Nougat的Direct Reply; Alarms API讨论; Support Library的BottomNavigationView; MVVM模式;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-10-26T04:00:24.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.992Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Espresso">
+<meta property="article:tag" content="Test">
+<meta property="article:tag" content="Nougat">
+<meta property="article:tag" content="MVVM">
+<meta property="article:tag" content="Dagger">
+<meta property="article:tag" content="Android 7">
+<meta property="article:tag" content="Shortcuts">
+<meta property="article:tag" content="Alarm">
+<meta property="article:tag" content="BottomNavigationView">
+<meta property="article:tag" content="TensorFlow">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 228 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 228
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-10-26 12:00:24" itemprop="dateCreated datePublished" datetime="2016-10-26T12:00:24+08:00">2016-10-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/Nougat/" itemprop="url" rel="index"><span itemprop="name">Nougat</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/Nougat/Design-Support-Library/" itemprop="url" rel="index"><span itemprop="name">Design Support Library</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 228" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-228"><a href="#Android-Weekly-Issue-228" class="headerlink" title="Android Weekly Issue #228"></a>Android Weekly Issue #228</h1><p>October 23rd, 2016<br><a href="http://androidweekly.net/issues/issue-228" target="_blank" rel="noopener">Android Weekly Issue #228</a></p>
+<p>本期内容包括:<br>Android 7.1的App Shortcuts; Searchbar的设计讨论; Nougat的Direct Reply; Alarms API讨论; Support Library的BottomNavigationView; MVVM模式; Dagger2的subcomponent实现; Test Rules介绍等.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Android-7-1-Static-Shortcut"><a href="#Android-7-1-Static-Shortcut" class="headerlink" title="Android 7.1 Static Shortcut"></a><a href="https://medium.com/@tonyowen/android-7-1-static-shortcut-6c42d81ba11b#.8emk7ssh1" target="_blank" rel="noopener">Android 7.1 Static Shortcut</a></h2><h2 id="Exploring-Android-Nougat-7-1-App-Shortcuts"><a href="#Exploring-Android-Nougat-7-1-App-Shortcuts" class="headerlink" title="Exploring Android Nougat 7.1 App Shortcuts"></a><a href="https://catinean.com/2016/10/20/exploring-android-nougat-7-1-app-shortcuts/" target="_blank" rel="noopener">Exploring Android Nougat 7.1 App Shortcuts</a></h2><p>这两篇文章都在介绍Android 7.1的App Shortcuts.</p>
+<p>本博客相关文章: <a href="http://www.cnblogs.com/mengdd/p/5996665.html" target="_blank" rel="noopener">Android 7.1 App Shortcuts使用
+</a> .</p>
+<h2 id="Exposing-the-Searchbar"><a href="#Exposing-the-Searchbar" class="headerlink" title="Exposing the Searchbar"></a><a href="https://medium.com/@alexstyl/https-medium-com-alexstyl-animating-the-toolbar-7a8f1aab39dd#.283nz252o" target="_blank" rel="noopener">Exposing the Searchbar</a></h2><p>比起点击一个search icon, 然后进入搜索屏, 用户更喜欢一个search bar, 然后直接就可以在主屏上进行搜索.</p>
+<p>作者对于他们的应用想到的解决方式就是, 在主屏上放一个search bar,然后 用一个transition, 把主屏和搜索屏(两个Activity)衔接起来, 这样用户在点击search bar之后, 不会感觉到他们打开了一个新屏.</p>
+<p>另一个效果就是, 在点击search bar之后, 当前屏fade away, search bar展开, 在第二屏直接打开键盘, 用户可以进行搜索.</p>
+<p>Code: <a href="https://github.com/alexstyl/Material-SearchTransition" target="_blank" rel="noopener">Material-SearchTransition</a>.</p>
+<h2 id="Nougat-Direct-Reply"><a href="#Nougat-Direct-Reply" class="headerlink" title="Nougat - Direct Reply"></a><a href="https://blog.stylingandroid.com/nougat-direct-reply/" target="_blank" rel="noopener">Nougat - Direct Reply</a></h2><p>Direct Reply是指用户可以直接回复Notification, 而不用打开app.<br>这篇文章作者示例了如何实现在message app中用Direct Reply清除消息和直接回复.</p>
+<h2 id="Da-Real-Fragmentation-Alarms"><a href="#Da-Real-Fragmentation-Alarms" class="headerlink" title="Da Real Fragmentation - Alarms"></a><a href="http://pguardiola.com/blog/darealfragmentation-alarms/" target="_blank" rel="noopener">Da Real Fragmentation - Alarms</a></h2><p>作者这篇文章先是详细介绍了Alarm的各个选项和使用情形, 以及它的API版本变化.</p>
+<h2 id="Bottom-Navigation-View-in-the-Design-Support-Library"><a href="#Bottom-Navigation-View-in-the-Design-Support-Library" class="headerlink" title="Bottom Navigation View in the Design Support Library"></a><a href="https://blog.autsoft.hu/now-you-can-use-the-bottom-navigation-view-in-the-design-support-library/" target="_blank" rel="noopener">Bottom Navigation View in the Design Support Library</a></h2><p>在Design Support Library 25.0.0中, Google发布了Bottom Navigation的官方实现: <a href="https://developer.android.com/reference/android/support/design/widget/BottomNavigationView.html" target="_blank" rel="noopener">BottomNavigationView</a>.<br>这篇文章写了如何使用这个View, 并且最后列出了一些第三方库.</p>
+<h2 id="Shades-of-MVVM"><a href="#Shades-of-MVVM" class="headerlink" title="Shades of MVVM"></a><a href="https://www.bignerdranch.com/blog/shades-of-mvvm/" target="_blank" rel="noopener">Shades of MVVM</a></h2><p>作者讨论了MVVM模式及它的几种变形.</p>
+<h2 id="Activities-Subcomponents-Multibinding-in-Dagger-2"><a href="#Activities-Subcomponents-Multibinding-in-Dagger-2" class="headerlink" title="Activities Subcomponents Multibinding in Dagger 2"></a><a href="https://medium.com/azimolabs/activities-subcomponents-multibinding-in-dagger-2-85d6053d6a95#.p9bh8bjoc" target="_blank" rel="noopener">Activities Subcomponents Multibinding in Dagger 2</a></h2><p><a href="https://github.com/google/dagger/releases/tag/dagger-2.7" target="_blank" rel="noopener">dagger-2.7</a> 添加了<a href="mailto:`@Modules.subcomponents" target="_blank" rel="noopener">`@Modules.subcomponents</a>`.<br>本文演示了如何用这个更好地添加子ActivityComponent. 而不用每次都借助AppComponent. 这样做除了解耦之外, 对于测试时很有帮助.</p>
+<p>例子代码: <a href="https://github.com/frogermcs/Dagger2Recipes-ActivitiesMultibinding" target="_blank" rel="noopener">Dagger2Recipes-ActivitiesMultibinding</a></p>
+<h2 id="Experimenting-with-TensorFlow-on-Android-Part-1"><a href="#Experimenting-with-TensorFlow-on-Android-Part-1" class="headerlink" title="Experimenting with TensorFlow on Android Part 1 "></a><a href="https://medium.com/@mgazar/experimenting-with-tensorflow-on-android-pt-1-362683b31838#.ylwet4d3p" target="_blank" rel="noopener">Experimenting with TensorFlow on Android Part 1 </a></h2><p><a href="https://www.tensorflow.org/" target="_blank" rel="noopener">TensorFlow</a>是一个Machine Intelligence开源库, 主要的用途是数据计算, deep learning等.</p>
+<p><a href="https://www.bazel.io/" target="_blank" rel="noopener">bazel</a>是一个build tool, 功能类似于gradle.</p>
+<p>本文讲了如何setup.</p>
+<h2 id="Understanding-Test-Rules"><a href="#Understanding-Test-Rules" class="headerlink" title="Understanding Test Rules"></a><a href="https://blog.egorand.me/understanding-test-rules/" target="_blank" rel="noopener">Understanding Test Rules</a></h2><p>Espresso中的Rule是如何工作的呢?<br>之前有一个文章: <a href="http://cwd.dhemery.com/2010/12/junit-rules/" target="_blank" rel="noopener">Using Rules To Influence JUnit Test Execution</a>说明JUnit中的Rule是如何工作的.</p>
+<p>然后作者讲了如何自定义一个TestRule.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Sketch-template-for-app-shortcuts"><a href="#Sketch-template-for-app-shortcuts" class="headerlink" title="Sketch template for app shortcuts"></a><a href="https://plus.google.com/+RomanNurik/posts/3HMBgjn546j" target="_blank" rel="noopener">Sketch template for app shortcuts</a></h2><p>作者分享了为Android 7.1的app shortcuts功能而准备的sketch模板.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="PageIndicatorView"><a href="#PageIndicatorView" class="headerlink" title="PageIndicatorView"></a><a href="https://github.com/romandanylyk/PageIndicatorView" target="_blank" rel="noopener">PageIndicatorView</a></h2><p>Page Indicator, 结合Android ViewPager使用的, 转换时有点点连接的功能.</p>
+<h2 id="PermissionUtil"><a href="#PermissionUtil" class="headerlink" title="PermissionUtil"></a><a href="https://github.com/kayvannj/PermissionUtil" target="_blank" rel="noopener">PermissionUtil</a></h2><p>一个Android 6.0 permission请求的库.</p>
+<h2 id="DeviceAnimationTestRule"><a href="#DeviceAnimationTestRule" class="headerlink" title="DeviceAnimationTestRule"></a><a href="https://github.com/VictorAlbertos/DeviceAnimationTestRule" target="_blank" rel="noopener">DeviceAnimationTestRule</a></h2><p>一个JUnit rule, 用来disable和enable设备动画.</p>
+<h2 id="DiagonalLayout"><a href="#DiagonalLayout" class="headerlink" title="DiagonalLayout"></a><a href="https://github.com/florent37/DiagonalLayout" target="_blank" rel="noopener">DiagonalLayout</a></h2><p>对角线布局, 感觉怪怪的.</p>
+<h1 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h1><h2 id="Android-7-1-Developer-Preview"><a href="#Android-7-1-Developer-Preview" class="headerlink" title="Android 7.1 Developer Preview"></a><a href="http://android-developers.blogspot.com.au/2016/10/android71-dev-preview-available.html" target="_blank" rel="noopener">Android 7.1 Developer Preview</a></h2><p>Android 7.1发了Developer Preview啦.<br>官网Overview在这里: <a href="https://developer.android.com/preview/api-overview.html" target="_blank" rel="noopener">Android 7.1 for Developers</a></p>
+<h2 id="ConstraintLayout-beta-1-is-now-available"><a href="#ConstraintLayout-beta-1-is-now-available" class="headerlink" title="ConstraintLayout beta 1 is now available"></a><a href="https://sites.google.com/a/android.com/tools/recent/constraintlayoutbeta1isnowavailable" target="_blank" rel="noopener">ConstraintLayout beta 1 is now available</a></h2><p>ConstraintLayout beta 1发布啦.</p>
+<h1 id="TOOLS"><a href="#TOOLS" class="headerlink" title="TOOLS"></a>TOOLS</h1><h2 id="Learn-You-a-Git"><a href="#Learn-You-a-Git" class="headerlink" title="Learn You a Git"></a><a href="https://karumi.github.io/learnyougit/" target="_blank" rel="noopener">Learn You a Git</a></h2><p>教你学习Git的工具.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Espresso/" rel="tag"># Espresso</a>
+              <a href="/tags/Test/" rel="tag"># Test</a>
+              <a href="/tags/Nougat/" rel="tag"># Nougat</a>
+              <a href="/tags/MVVM/" rel="tag"># MVVM</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+              <a href="/tags/Android-7/" rel="tag"># Android 7</a>
+              <a href="/tags/Shortcuts/" rel="tag"># Shortcuts</a>
+              <a href="/tags/Alarm/" rel="tag"># Alarm</a>
+              <a href="/tags/BottomNavigationView/" rel="tag"># BottomNavigationView</a>
+              <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Nougat/2016/10/25/nougat-app-shortcuts/" rel="prev" title="Android 7.1 App Shortcuts使用">
+      <i class="fa fa-chevron-left"></i> Android 7.1 App Shortcuts使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Tools/IDE/2016/10/27/android-studio-shortcuts-used-frequently/" rel="next" title="用Android Studio开发最常用到的快捷键">
+      用Android Studio开发最常用到的快捷键 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-228"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #228</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-1-Static-Shortcut"><span class="nav-number">2.1.</span> <span class="nav-text">Android 7.1 Static Shortcut</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploring-Android-Nougat-7-1-App-Shortcuts"><span class="nav-number">2.2.</span> <span class="nav-text">Exploring Android Nougat 7.1 App Shortcuts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exposing-the-Searchbar"><span class="nav-number">2.3.</span> <span class="nav-text">Exposing the Searchbar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nougat-Direct-Reply"><span class="nav-number">2.4.</span> <span class="nav-text">Nougat - Direct Reply</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Da-Real-Fragmentation-Alarms"><span class="nav-number">2.5.</span> <span class="nav-text">Da Real Fragmentation - Alarms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bottom-Navigation-View-in-the-Design-Support-Library"><span class="nav-number">2.6.</span> <span class="nav-text">Bottom Navigation View in the Design Support Library</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shades-of-MVVM"><span class="nav-number">2.7.</span> <span class="nav-text">Shades of MVVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Activities-Subcomponents-Multibinding-in-Dagger-2"><span class="nav-number">2.8.</span> <span class="nav-text">Activities Subcomponents Multibinding in Dagger 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experimenting-with-TensorFlow-on-Android-Part-1"><span class="nav-number">2.9.</span> <span class="nav-text">Experimenting with TensorFlow on Android Part 1 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Understanding-Test-Rules"><span class="nav-number">2.10.</span> <span class="nav-text">Understanding Test Rules</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sketch-template-for-app-shortcuts"><span class="nav-number">3.1.</span> <span class="nav-text">Sketch template for app shortcuts</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PageIndicatorView"><span class="nav-number">4.1.</span> <span class="nav-text">PageIndicatorView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PermissionUtil"><span class="nav-number">4.2.</span> <span class="nav-text">PermissionUtil</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DeviceAnimationTestRule"><span class="nav-number">4.3.</span> <span class="nav-text">DeviceAnimationTestRule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DiagonalLayout"><span class="nav-number">4.4.</span> <span class="nav-text">DiagonalLayout</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NEWS"><span class="nav-number">5.</span> <span class="nav-text">NEWS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-1-Developer-Preview"><span class="nav-number">5.1.</span> <span class="nav-text">Android 7.1 Developer Preview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout-beta-1-is-now-available"><span class="nav-number">5.2.</span> <span class="nav-text">ConstraintLayout beta 1 is now available</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TOOLS"><span class="nav-number">6.</span> <span class="nav-text">TOOLS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Learn-You-a-Git"><span class="nav-number">6.1.</span> <span class="nav-text">Learn You a Git</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/";
+    this.page.identifier = "Android/Android-Weekly/Nougat/Design-Support-Library/2016/10/26/android-weekly-notes-issue-228/";
+    this.page.title = "Android Weekly Notes Issue 228";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #222September 11th, 2016Android Weekly Issue #222">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 222">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #222September 11th, 2016Android Weekly Issue #222">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-09-15T09:44:39.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.990Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Espresso">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="Resources">
+<meta property="article:tag" content="Okio">
+<meta property="article:tag" content="Tools">
+<meta property="article:tag" content="Support Annotations">
+<meta property="article:tag" content="Design">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 222 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 222
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-09-15 17:44:39" itemprop="dateCreated datePublished" datetime="2016-09-15T17:44:39+08:00">2016-09-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 222" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-222"><a href="#Android-Weekly-Issue-222" class="headerlink" title="Android Weekly Issue #222"></a>Android Weekly Issue #222</h1><p>September 11th, 2016<br><a href="http://androidweekly.net/issues/issue-222" target="_blank" rel="noopener">Android Weekly Issue #222</a></p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Forcing-bytes-download-in-Okio"><a href="#Forcing-bytes-download-in-Okio" class="headerlink" title="Forcing bytes download in Okio"></a><a href="http://jakewharton.com/forcing-bytes-downward-in-okio/" target="_blank" rel="noopener">Forcing bytes download in Okio</a></h2><p>这是Jake Wharton的文章, 关于Okio的<code>BufferedSink</code>.</p>
+<p><a href="https://github.com/square/okio" target="_blank" rel="noopener">okio</a> 是一个java io库, 包装了一套API用来读写和处理数据. 文档见: <a href="http://square.github.io/okio/1.x/okio/" target="_blank" rel="noopener">okio doc</a>.</p>
+<p>很多库都是在其之上写的, 比如okhttp, Retrofit, Moshi. 这里有个视频: <a href="http://jakewharton.com/a-few-ok-libraries/" target="_blank" rel="noopener">A Few OK libraries</a></p>
+<p>有三个方法可以强制把bytes放入底层的<code>Sink</code>.</p>
+<h3 id="flush-emit-and-emitCompleteSegments"><a href="#flush-emit-and-emitCompleteSegments" class="headerlink" title="flush(), emit() and emitCompleteSegments()"></a>flush(), emit() and emitCompleteSegments()</h3><p><code>flush()</code></p>
+<p>调用这个方法会使得所有缓存的字节移动到Sink, 然后Sink立即flush自己. 所以调用<code>flush()</code>方法返回后, 你可以保证所有的字节都到了目的地Sink.</p>
+<p>当用多级buffer时, <code>flush()</code>会清除所有level的buffer. Okio中多级buffer的花销很小, 一个flush会让每一级把自己的segments移到下一级.</p>
+<p>java io中的多级buffer每一级都自己管理自己的字节, 所以flush操作会让每一级都拷贝数据到下一级.</p>
+<p>流类型的<code>close()</code>和<code>flush()</code>的行为类似, 在关闭流之前把所有的字节都写了.</p>
+<p><code>emit()</code></p>
+<p>发射字节的行为和flush类似, 但是不是递归的. 调用<code>emit()</code>会使得所有缓存的字节移动到Sink, 但是与<code>flush()</code>不同, 此时Sink并不会做其他的操作.</p>
+<p><code>emitCompleteSegments()</code></p>
+<p>调用这个<code>emitCompleteSegments()</code>方法仅仅移动那些完整<code>segment</code>的字节移动到Sink.</p>
+<p><code>segment</code>是okio的一个概念.</p>
+<p>原文中有动图图解, 看起来更清楚一些.</p>
+<h3 id="Use-cases"><a href="#Use-cases" class="headerlink" title="Use cases"></a>Use cases</h3><p>Writing messages to a WebSocket -&gt; <code>flush()</code></p>
+<p>Encoding a video to a file -&gt; <code>emitCompleteSegments()</code> + <code>emit()</code>/<code>flush()</code> at the end</p>
+<p>Serializing an object to JSON -&gt; <code>emit()</code></p>
+<h2 id="Using-Android-Studio’s-Performance-Monitors"><a href="#Using-Android-Studio’s-Performance-Monitors" class="headerlink" title="Using Android Studio’s Performance Monitors"></a><a href="https://medium.com/@andreworobator/debugging-without-a-stacktrace-using-android-studios-performance-monitors-a0d601afd814#.wnqu72q21" target="_blank" rel="noopener">Using Android Studio’s Performance Monitors</a></h2><p>作者他的音乐应用遇到了不响应的问题, 然后他打开Android Studio的performance monitor看到了是内存问题, 然后他track了一下出问题的时候的memory allocation, 最后发现是有一张要下载的图太大了.</p>
+<h2 id="The-hidden-cost-of-code-coverage"><a href="#The-hidden-cost-of-code-coverage" class="headerlink" title="The hidden cost of code coverage"></a><a href="http://jeroenmols.com/blog/2016/09/01/coveragecost/" target="_blank" rel="noopener">The hidden cost of code coverage</a></h2><p>测试覆盖率是一个很好的方法来激励你和你的团队多写一些测试, 但是你知道吗, 打开测试覆盖率的检测会让你的build变慢.</p>
+<p>要测量build时间:</p>
+<p><code>./gradlew clean assembleDebug --profile</code></p>
+<p>然后作者发现其中<code>:app:transformClassesWithJacocoForDailyDebug</code>占用的时间达到了build时间的14%.</p>
+<p>就是因为这句:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    debug &#123;</span><br><span class="line">        ...</span><br><span class="line">        testCoverageEnabled true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>解决办法</strong><br>只在需要测试覆盖率的时候用它, 所以加一个变量:<br><code>/gradlew -Pcoverage clean connectedDebugAndroidTest</code></p>
+<p>gradle里这样写:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    debug &#123;</span><br><span class="line">        ...</span><br><span class="line">        testCoverageEnabled (project.hasProperty(&apos;coverage&apos;) ? true : false)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当你不加这个flag的时候就不会检查测试覆盖率.</p>
+<h2 id="Android-Development-Useful-Tools"><a href="#Android-Development-Useful-Tools" class="headerlink" title="Android Development Useful Tools"></a><a href="https://medium.freecodecamp.com/android-development-useful-tools-fd73283e82e3#.ru47kg8kt" target="_blank" rel="noopener">Android Development Useful Tools</a></h2><p><a href="http://www.methodscount.com/" target="_blank" rel="noopener">methodscount</a> 可以统计library的方法数, 因为Android有64k的方法数限制.</p>
+<p><a href="http://facebook.github.io/stetho/" target="_blank" rel="noopener">Stetho</a><br>可以看网络请求, 数据库, shared preferences等.</p>
+<p><a href="https://github.com/square/leakcanary" target="_blank" rel="noopener">LeakCanary</a> 检测内存泄露的库.</p>
+<p><a href="http://inloop.github.io/apk-method-count/" target="_blank" rel="noopener">apk-method-count</a> 这个网站可以检测apk中的方法数, 根据包分别显示.</p>
+<p><a href="http://romannurik.github.io/AndroidAssetStudio/" target="_blank" rel="noopener">Android Asset Studio</a><br>生成图片, 9-patch等的一系列工具.</p>
+<p><a href="https://buckbuild.com/" target="_blank" rel="noopener">Buck</a> Facebook开发的一套build系统.</p>
+<p><a href="http://gradleplease.appspot.com/" target="_blank" rel="noopener">Gradle, please</a> 输入你要的库, 然后就可以找到对应的dependencies里应该写的 compile xxx.</p>
+<p><a href="https://developer.android.com/studio/build/shrink-code.html" target="_blank" rel="noopener">Proguard</a>或<a href="https://www.guardsquare.com/dexguard" target="_blank" rel="noopener">DexGuard</a></p>
+<p><a href="https://www.genymotion.com/" target="_blank" rel="noopener">Genymotion</a></p>
+<p><a href="https://materialdesignicons.com/" target="_blank" rel="noopener">Material Design Icons</a></p>
+<h2 id="Introduction-to-Automated-Android-Testing-Part-6"><a href="#Introduction-to-Automated-Android-Testing-Part-6" class="headerlink" title="Introduction to Automated Android Testing - Part 6"></a><a href="https://riggaroo.co.za/introduction-automated-android-testing-part-6/" target="_blank" rel="noopener">Introduction to Automated Android Testing - Part 6</a></h2><p>系列文章的最后一篇, 作者讲用Espresso写UI测试.</p>
+<p>如果数据是动态的, 那么要测试View包含指定的信息是很难的. 数据有可能变化, 但是我们的测试不能因此而失败. 所以为了测试可靠和可重复, 我们不应该调用production的API.</p>
+<p>所以第一步是mock API, 有几种方法:</p>
+<ul>
+<li><ol>
+<li>用<a href="http://wiremock.org/" target="_blank" rel="noopener">WireMock</a> (需要server).</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>用OkHttp的<a href="https://github.com/square/okhttp/tree/master/mockwebserver" target="_blank" rel="noopener">MockWebServer</a>, 在你的设备上跑一个webserver.</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>创建一个Retrofit REST接口, 返回一些dummy对象.</li>
+</ol>
+</li>
+</ul>
+<p>Mock数据的时候利用了Gradle的flavor, 可以创建一个mockDebug flavor, 然后在src目录下建一个mock目录, 放一些mock的代码进去, 然后再建一个prod目录, 把真实的实现移动到那里去.</p>
+<h3 id="Espresso基础"><a href="#Espresso基础" class="headerlink" title="Espresso基础"></a>Espresso基础</h3><p>用<a href="https://google.github.io/android-testing-support-library/docs/espresso/index.html" target="_blank" rel="noopener">Espresso</a>写测试, 基本格式是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onView(withId(R.id.menu_search))      <span class="comment">// withId(R.id.menu_search) is a ViewMatcher</span></span><br><span class="line">  .perform(click())               <span class="comment">// click() is a ViewAction</span></span><br><span class="line">  .check(matches(isDisplayed())); <span class="comment">// matches(isDisplayed()) is a ViewAssertion</span></span><br></pre></td></tr></table></figure></p>
+<p><code>ViewMatchers</code> 是用来定位View的 有withId, withText, withTag等.</p>
+<p><code>ViewActions</code> 是用来跟View交互的, 比如点击, 输入等.</p>
+<p><code>ViewAssertations</code> 是用来做出断言的.</p>
+<p>这里有个cheat-sheet可以查: <a href="https://google.github.io/android-testing-support-library/downloads/espresso-cheat-sheet-2.1.0.pdf" target="_blank" rel="noopener">android-expresso-testing.pdf</a></p>
+<h3 id="Writing-Espresso-UI-Tests"><a href="#Writing-Espresso-UI-Tests" class="headerlink" title="Writing Espresso UI Tests"></a>Writing Espresso UI Tests</h3><p>这部分具体讲了作者例子的UI测试写法, 见原文.<br>最后作者还看了一下测试覆盖率.</p>
+<h2 id="What-2-years-of-Android-Development-Have-Taught-Me"><a href="#What-2-years-of-Android-Development-Have-Taught-Me" class="headerlink" title="What 2 years of Android Development Have Taught Me"></a><a href="https://blog.aritraroy.in/what-my-2-years-of-android-development-have-taught-me-the-hard-way-52b495ba5c51#.ur0ez1ouq" target="_blank" rel="noopener">What 2 years of Android Development Have Taught Me</a></h2><p>作者讲了他两年来的心路历程, 以及他总结的一些To do和Not to do.</p>
+<ol>
+<li><p>不要重复造轮子.<br>可以用<a href="https://android-arsenal.com/" target="_blank" rel="noopener">android-arsenal</a>来查库.</p>
+</li>
+<li><p>明智地选择库.<br>选择库的时候看看星多不多, 作者有没有什么其他流行的库. 再看看issues, 有时间的话可以看代码.<br><a href="https://github.com/cesarferreira/dryrun" target="_blank" rel="noopener">Dryrun</a>可以用来跑sample.</p>
+</li>
+<li><p>坐下来看代码. 我们应该花费多数的时间阅读别人的代码, 而不是写自己的代码.<br>你能写出来的代码是你已经知道的东西的一个反映, 要不断成长和提高自己, 只能不断阅读和学习别人的代码.<br>这里有<a href="https://snowdream.github.io/awesome-android/" target="_blank" rel="noopener">Library列表</a>和<a href="https://github.com/pcqpcq/open-source-android-apps" target="_blank" rel="noopener">app列表</a>.</p>
+</li>
+<li><p>保持一个好的代码风格. 这里有一些参考: <a href="https://source.android.com/source/code-style.html" target="_blank" rel="noopener">code-style</a>, <a href="https://github.com/ribot/android-guidelines/blob/master/project_and_code_guidelines.md" target="_blank" rel="noopener">android-guidelines</a>.</p>
+</li>
+<li><p>用Proguard, 这样release版本不但缩小了代码也做了混淆. 这里还有一个<a href="https://www.guardsquare.com/dexguard" target="_blank" rel="noopener">DexGuard</a>.</p>
+</li>
+<li><p>使用一个合理的架构. 可以用MVP来解耦, 这里有个demo: <a href="https://github.com/android10/Android-CleanArchitecture" target="_blank" rel="noopener">Android-CleanArchitecture</a>, 这里是它相关的Guide文章: <a href="https://medium.com/@dmilicic/a-detailed-guide-on-developing-android-apps-using-the-clean-architecture-pattern-d38d71e94029#.j970cogwt" target="_blank" rel="noopener">Guide on Clean Architecture</a>.<br>更多资源:<br><a href="https://github.com/antoniolg/androidmvp" target="_blank" rel="noopener">androidmvp</a>,<br><a href="https://github.com/sockeqwe/mosby" target="_blank" rel="noopener">mosby</a>,<br><a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="noopener">android-architecture</a>.</p>
+</li>
+<li><p>对于独立工作的开发, 还需要注意一些UI/UX相关的原则. 可以上<a href="https://dribbble.com/" target="_blank" rel="noopener">Dribble</a>和<a href="https://material.uplabs.com/" target="_blank" rel="noopener">MaterialUp</a>多看看.</p>
+</li>
+<li><p>分析是你的好朋友. 分析包括了crash报告和app使用记录, 可以用<a href="https://firebase.google.com/" target="_blank" rel="noopener">Firebase</a>.</p>
+</li>
+<li><p>做一个市场忍者. 对于独立开发者来说, 需要marketing. 这是一个市场分析工具: <a href="https://sensortower.com/#" target="_blank" rel="noopener">sensor tower</a>.</p>
+</li>
+<li><p>优化你的App. 推荐检查内存泄露的工具: <a href="https://github.com/square/leakcanary" target="_blank" rel="noopener">leakcanary</a>.</p>
+</li>
+<li><p>优化gradle的build时间. 这里有两个Guides: <a href="https://medium.com/@cesarmcferreira/speeding-up-gradle-builds-619c442113cb#.6ezl2rgec" target="_blank" rel="noopener">speeding up gradle build</a>, <a href="http://zeroturnaround.com/rebellabs/making-gradle-builds-faster/" target="_blank" rel="noopener">making gradle builds faster</a></p>
+</li>
+<li><p>多做测试. 发布前花时间测试, 不要急.</p>
+</li>
+<li><p>兼顾多种机型, 包括屏幕尺寸, API level, 不同厂商的OS等.</p>
+</li>
+<li><p>用Git. 这是一个<a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="noopener">Git branch model</a>. 如果你不能负担github上的private repo, 你可以试试<a href="https://bitbucket.org/" target="_blank" rel="noopener">BitBucket</a></p>
+</li>
+<li><p>让黑客觉得难处理. Android很容易被攻击, app可以被轻易地反编译和分析. 你需要知道如何处理你的API keys, 如果你需要处理用户的敏感信息, 你应该知道如何加密. 秘钥也要妥善存储. 任何存储在数据库中的敏感信息也都要加密. 相关的资料可以看<a href="https://www.airpair.com/android/posts/adding-tampering-detection-to-your-android-app" target="_blank" rel="noopener">Adding Tampering Detection to Your app</a>和<a href="https://rammic.github.io/2015/07/28/hiding-secrets-in-android-apps/" target="_blank" rel="noopener">Hiding Secrets in Android Apps</a>.</p>
+</li>
+<li><p>在低级设备上开发. 低级的设备容易暴露问题.</p>
+</li>
+<li><p>学习设计模式. 这里有一个repo讲了所有的Java中的设计模式: <a href="https://github.com/iluwatar/java-design-patterns" target="_blank" rel="noopener">java-design-patterns</a>. 另外还推荐书籍: GoF的设计模式, Martin Fowler的重构, Joshua Bloch的Effective Java.</p>
+</li>
+<li><p>贡献自己的力量. StackOverflow, Github, blog posts…</p>
+</li>
+</ol>
+<h2 id="Android-Support-Annotations"><a href="#Android-Support-Annotations" class="headerlink" title="Android Support Annotations"></a><a href="http://mayojava.github.io/android/android-support-annotations/" target="_blank" rel="noopener">Android Support Annotations</a></h2><p>使用Annotation library:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compile &apos;com.android.support:support-annotations:&lt;latest-library-version&gt;&apos;</span><br></pre></td></tr></table></figure>
+<p>如果你已经用了<code>appcompat library</code>, 你就已经可以用annotations了, 因为appcompat自己就用了它.</p>
+<p>annotations按照用法和功能来分组:</p>
+<ul>
+<li>Nullness Annotations</li>
+<li>Resource Annotations</li>
+<li>Thread Annotations</li>
+<li>Value Constraints Annotations</li>
+<li>Others : Permissions Annotations, CheckResults Annotations and CallSuper Annotations.</li>
+</ul>
+<h3 id="Nullness-Annotations"><a href="#Nullness-Annotations" class="headerlink" title="Nullness Annotations"></a>Nullness Annotations</h3><p><code>@Nullalbe</code>和<code>@NonNull</code>用来检查变量, 参数和方法返回值为null与否.</p>
+<p><code>@NonNull</code>表示变量, 参数或返回值不能为null, 如果为null了编译器会给出警告.</p>
+<p><code>@Nullalbe</code>表示可能为null, 用这个注解的时候表示代码中应该加上null check.</p>
+<h3 id="Resource-Annotations"><a href="#Resource-Annotations" class="headerlink" title="Resource Annotations"></a>Resource Annotations</h3><p>因为资源号都是int值, 所以如果你把一个drawable的int传给一个期待string resource的代码, 编译器是会接受的.<br>资源注解就是用来做这种情况的类型检查的.</p>
+<p>比如用<code>@StringRes</code>来标记参数, 如果你传入一个drawable的id, IDE就会把它标记出来.</p>
+<p>每一个Android的资源类型都有一个对应的资源注解, 比如类型是<code>Foo</code>, 那么对应的资源类型注解就是<code>FooRes</code>.</p>
+<p>有一个特殊的<code>@AnyRes</code>, 用来表示任意的资源类型.</p>
+<h3 id="Thread-Annotations"><a href="#Thread-Annotations" class="headerlink" title="Thread Annotations"></a>Thread Annotations</h3><p>这种注解用来检查方法是不是在特定的线程调用的. 有:</p>
+<ul>
+<li><code>@UiThread</code></li>
+<li><code>@MainThread</code></li>
+<li><code>@WorkerThread</code></li>
+<li><code>@BinderThread</code></li>
+</ul>
+<p><code>@UiThread</code>和<code>@MainThread</code>是可互换的.</p>
+<p>如果一个类中的所有方法都是从同样的线程调用搞得, 那么可以直接把类给标记了.</p>
+<h3 id="Value-Constraints-Annotations"><a href="#Value-Constraints-Annotations" class="headerlink" title="Value Constraints Annotations"></a>Value Constraints Annotations</h3><p><code>@IntRange</code>, <code>@FloatRange</code>和<code>@Size</code>注解是用来验证参数的值的. 比如<code>@IntRange</code>就验证参数是在一个给定的int范围之内.<br>比如下面的方法确保传入的参数是0到255:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAlpha</span><span class="params">(@IntRange(from=<span class="number">0</span>, to=<span class="number">255</span>)</span> <span class="keyword">int</span> alpha) </span>&#123;</span><br><span class="line">    <span class="comment">//set alpha</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>相应的<code>@FloatRange</code>检查参数是在一个指定范围内的浮点数.</p>
+<p><code>@Size</code>注解是用来检查集合的大小, 还有字符串的长度. 比如<code>@Size(min=1)</code>用来检查集合不为空, <code>@Size(2)</code>检查集合有两个元素.</p>
+<h3 id="CheckResult-Annotations"><a href="#CheckResult-Annotations" class="headerlink" title="CheckResult Annotations"></a>CheckResult Annotations</h3><p>这个注解是用来检查一个方法的返回值确实被使用了.<br>一个比较好的例子是<code>String.trim</code>方法, 当这个方法被<code>@CheckResult</code>标注, 如果它的返回值没有被使用, IDE就会报错.</p>
+<p>另外一些比较值得看的注解有<code>@CallSuper</code>, <code>@Keep</code>和<code>@RequiresPermission</code>.<br>可以直接查看support annotations的<a href="https://developer.android.com/reference/android/support/annotation/package-summary.html" target="_blank" rel="noopener">reference</a>.</p>
+<p>其他参考资料:</p>
+<p><a href="https://developer.android.com/studio/write/annotations.html#adding-nullness" target="_blank" rel="noopener">Improve code Inspection with Annotations</a></p>
+<p><a href="http://tools.android.com/tech-docs/support-annotations" target="_blank" rel="noopener">Support Annotation documentation</a></p>
+<p><a href="http://michaelevans.org/blog/2015/07/14/improving-your-code-with-android-support-annotations/" target="_blank" rel="noopener">Improving your code with android support annotations</a></p>
+<h2 id="ActivityTestRule-Espresso’s-Test-“Lifecycle”"><a href="#ActivityTestRule-Espresso’s-Test-“Lifecycle”" class="headerlink" title="ActivityTestRule: Espresso’s Test “Lifecycle”"></a><a href="https://jabknowsnothing.wordpress.com/2015/11/05/activitytestrule-espressos-test-lifecycle/" target="_blank" rel="noopener">ActivityTestRule: Espresso’s Test “Lifecycle”</a></h2><p>作者这篇文章的目的是讲讲用Espresso的<code>ActivityTestRule</code>写的测试中的操作顺序, 讨论像<code>beforeActivityLaunched()</code>, <code>afterActivityLaunched()</code>, 和 <code>afterActivityFinished()</code>这些方法相对于测试和Activity的生命周期都是什么时候被调用的. </p>
+<p>首先作者介绍了Espresso 2.0及之前的旧的<code>ActivityInstrumentationTestCase2</code>.</p>
+<h3 id="ActivityTestRule的”生命周期”"><a href="#ActivityTestRule的”生命周期”" class="headerlink" title="ActivityTestRule的”生命周期”."></a><code>ActivityTestRule</code>的”生命周期”.</h3><p>新的写法是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(AndroidJUnit4<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">MyNewTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Rule</span></span><br><span class="line">  <span class="keyword">public</span> MyCustomRule&lt;MyActivity&gt; testRule = <span class="keyword">new</span> MyCustomRule&lt;&gt;(MyActivity<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStuff</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Wow where's all the boilerplate code?</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Verify Oscar Grouch is no longer grouchy.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而其中的MyCustomRule:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyCustomRule</span>&lt;<span class="title">A</span> <span class="keyword">extends</span> <span class="title">MyActivity</span>&gt; <span class="keyword">extends</span> <span class="title">ActivityTestRule</span>&lt;<span class="title">A</span>&gt; </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyCustomRule</span><span class="params">(Class&lt;A&gt; activityClass)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(activityClass);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">beforeActivityLaunched</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.beforeActivityLaunched();</span><br><span class="line">    <span class="comment">// Maybe prepare some mock service calls</span></span><br><span class="line">    <span class="comment">// Maybe override some depency injection modules with mocks</span></span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> Intent <span class="title">getActivityIntent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Intent customIntent = <span class="keyword">new</span> Intent();</span><br><span class="line">    <span class="comment">// add some custom extras and stuff</span></span><br><span class="line">    <span class="keyword">return</span> customIntent;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterActivityLaunched</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.afterActivityLaunched();</span><br><span class="line">   <span class="comment">// maybe you want to do something here </span></span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterActivityFinished</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.afterActivityFinshed();</span><br><span class="line">    <span class="comment">// Clean up mocks</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ActivityTestRule-launchActivity-false"><a href="#ActivityTestRule-launchActivity-false" class="headerlink" title="ActivityTestRule: launchActivity=false;"></a><code>ActivityTestRule</code>: launchActivity=false;</h3><p><code>ActivityTestRule</code>的第三个参数允许开发者明确指定对每一个test case启动一个Activity.</p>
+<p><code>public ActivityTestRule(Class activityClass, boolean initialTouchMode, boolean launchActivity)</code>.</p>
+<p>把第三个参数设置为false, 就可以写出这样的测试:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(AndroidJUnit4<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">MultipleIntentsTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Rule</span></span><br><span class="line">  <span class="keyword">public</span> ActivityTestRule&lt;MyActivity&gt; testRule = <span class="keyword">new</span> ActivityTestRule&lt;&gt;(MyActivity<span class="class">.<span class="keyword">class</span>,</span></span><br><span class="line"><span class="class">          <span class="title">false</span>,    // <span class="title">initialTouchMode</span></span></span><br><span class="line"><span class="class">          <span class="title">false</span>)</span>;  <span class="comment">// launchActivity. False to set intent per test);</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOscarGrouchy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Intent grouchyIntent = <span class="keyword">new</span> Intent();</span><br><span class="line">    <span class="comment">// intent stuff</span></span><br><span class="line">    grouchyIntent.putExtra(<span class="string">"EXTRA_IS_GROUCHY"</span>, <span class="keyword">true</span>);</span><br><span class="line">    testRule.launchActivity(grouchyIntent);</span><br><span class="line">    <span class="comment">// verify Oscar is grouchy</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOscarNotGrouchy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Intent happyIntent = <span class="keyword">new</span> Intent();</span><br><span class="line">    <span class="comment">// intent stuff</span></span><br><span class="line">    happyIntent.putExtra(<span class="string">"EXTRA_IS_GROUCHY"</span>, <span class="keyword">false</span>);</span><br><span class="line">    testRule.launchActivity(happyIntent);</span><br><span class="line">    <span class="comment">// verify Oscar is not grouchy</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个lauchActivity的值默认是为true. 设置为false之后我们在每一个test case里面自己启动activity. 对生命周期产生的影响作者也做了图对比分析, 见原文.</p>
+<p>作者最后还讲了几个点, 关于测试迁移, 以及Activity的生命周期方法中启动Intent相关的需要注意的地方.</p>
+<h2 id="People-and-resources-to-learn-Android-programming-from"><a href="#People-and-resources-to-learn-Android-programming-from" class="headerlink" title="People and resources to learn Android programming from"></a><a href="https://m.signalvnoise.com/my-favorite-people-and-resources-to-learn-android-programming-from-293f249e2b4e#.6j6qqirem" target="_blank" rel="noopener">People and resources to learn Android programming from</a></h2><p>作者分享了关于Android编程学习中他积累的人和资源.</p>
+<h3 id="Twitter"><a href="#Twitter" class="headerlink" title="Twitter"></a>Twitter</h3><p><a href="https://twitter.com/chiuki" target="_blank" rel="noopener">Chiu-Ki Chan</a></p>
+<p><a href="https://twitter.com/donnfelker" target="_blank" rel="noopener">Donn Felker</a>, 他的博客: <a href="http://www.donnfelker.com/" target="_blank" rel="noopener">blog</a>. 他和<a href="https://twitter.com/kaushikgopal" target="_blank" rel="noopener">Kaushik Gopal</a>一起弄了<a href="http://fragmentedpodcast.com/" target="_blank" rel="noopener">Fragmented Podcast</a>. 这里还有一个视频教程的网站: <a href="https://caster.io/" target="_blank" rel="noopener">Caster.io</a>.</p>
+<p><a href="https://twitter.com/JakeWharton" target="_blank" rel="noopener">Jake Wharton</a>, 这个大家都知道啦, 这是他的博客: <a href="http://jakewharton.com/" target="_blank" rel="noopener">blog</a>.</p>
+<p><a href="https://twitter.com/kristinmars" target="_blank" rel="noopener">Kristin V Marsicano</a>, 这里有一个她的关于Activity生命周期的演讲<a href="https://realm.io/news/activities-in-the-wild-exploring-the-activity-lifecycle-android/" target="_blank" rel="noopener">Activities in the Wild</a>, 可能有一些你没有想过的东西.</p>
+<p><a href="https://twitter.com/rharter" target="_blank" rel="noopener">Ryan Harter</a></p>
+<p><a href="https://twitter.com/ThePracticalDev" target="_blank" rel="noopener">The Practical Dev</a></p>
+<p>最后这有一个列表: <a href="https://twitter.com/dankim/lists/androids" target="_blank" rel="noopener">Tweet Android List</a></p>
+<h3 id="Podcasts"><a href="#Podcasts" class="headerlink" title="Podcasts"></a>Podcasts</h3><p><a href="http://fragmentedpodcast.com/" target="_blank" rel="noopener">Fragmented</a> 两个独立开发者办的.</p>
+<p><a href="http://androidbackstage.blogspot.hk/" target="_blank" rel="noopener">Android Developers Backstage</a> 写Android的那些人办的.</p>
+<p><a href="https://www.relay.fm/material" target="_blank" rel="noopener">Material</a> 这不是一个技术广播, 讲一些Google新闻.</p>
+<h3 id="Videos"><a href="#Videos" class="headerlink" title="Videos"></a>Videos</h3><p><a href="https://caster.io/" target="_blank" rel="noopener">Caster.io</a></p>
+<p><a href="https://realm.io/news/" target="_blank" rel="noopener">Realm.io</a></p>
+<p><a href="https://www.youtube.com/channel/UCMEmNnHT69aZuaOrE-dF6ug" target="_blank" rel="noopener">Android Dialogs (YouTube)</a></p>
+<h3 id="Newsletters"><a href="#Newsletters" class="headerlink" title="Newsletters"></a>Newsletters</h3><p><a href="http://androidweekly.net/" target="_blank" rel="noopener">Android Weekly</a></p>
+<p><a href="http://us12.campaign-archive2.com/home/?u=f39692e245b94f7fb693b6d82&amp;id=93b2272cb6" target="_blank" rel="noopener">Kotline Weekly</a></p>
+<h3 id="General-Reading"><a href="#General-Reading" class="headerlink" title="General Reading"></a>General Reading</h3><p>Medium: 标签<a href="https://medium.com/tag/androiddev" target="_blank" rel="noopener">androiddev</a>和<a href="https://medium.com/tag/android-app-development" target="_blank" rel="noopener">android-app-development</a></p>
+<h3 id="Conferences"><a href="#Conferences" class="headerlink" title="Conferences"></a>Conferences</h3><p><a href="https://events.google.com/io2016/" target="_blank" rel="noopener">GoogleIO</a></p>
+<p><a href="https://360andev.com/" target="_blank" rel="noopener">360|AnDev</a></p>
+<p><a href="http://droidcon.nyc/" target="_blank" rel="noopener">Droid Con NYC</a></p>
+<h2 id="ThirtyInch-a-new-MVP-library-for-Android"><a href="#ThirtyInch-a-new-MVP-library-for-Android" class="headerlink" title="ThirtyInch - a new MVP library for Android"></a><a href="https://medium.com/@passsy/thirtyinch-a-new-mvp-library-for-android-bd1a27262fd6#.dvjdbuvfx" target="_blank" rel="noopener">ThirtyInch - a new MVP library for Android</a></h2><p>近年来MVP已经变成了Android社区中很流行的一种设计模式, MVC和MVVM也有人用. 这些模式的共同点就是把业务逻辑从Activity中抽取来.</p>
+<p>这样做的好处首先是我们可以尽量把需要测试的逻辑用JVM上的单元测试测, 而不是用模拟器上的androidTests.<br>当然有些需要UI测试的地方仍然会用Espresso.</p>
+<p>作者介绍了他们的MVP库: <a href="https://github.com/grandcentrix/ThirtyInch/" target="_blank" rel="noopener">ThirtyInch</a>.</p>
+<p>这个库开始的时候<a href="https://github.com/sockeqwe/mosby" target="_blank" rel="noopener">mosby</a>还没有release, 建议读一下mosby作者关于MVP的文章: <a href="http://hannesdorfmann.com/android/mosby" target="_blank" rel="noopener">mosby</a>, 其中关于passive View的概念也在ThirtyInch中用到.</p>
+<h3 id="ThirtyInch"><a href="#ThirtyInch" class="headerlink" title="ThirtyInch:"></a>ThirtyInch:</h3><p><a href="https://github.com/grandcentrix/ThirtyInch/" target="_blank" rel="noopener">ThirtyInch</a>.</p>
+<p>有<code>TiPresenter</code>, <code>TiView</code>.<br><code>TiView</code>是一个接口, 可以被attach和detach.</p>
+<p><code>TiPresenter</code>有四个生命周期事件:</p>
+<ul>
+<li><code>onCreate()</code>: 初始化的时候调用一次, 此时view还没有attach.</li>
+<li><code>onWakeUp()</code>: view attach了, 并且对用户变为可见.</li>
+<li><code>onSleep()</code>: 在这个调用之后, view将被detach, 并且变为对用户不可见.</li>
+<li><code>onDestroy()</code>: 在Activity/Fragment完全销毁的时候调用一次.</li>
+</ul>
+<p><code>onWakeUp()</code>和<code>onSleep()</code>对应了<code>onStart()</code>和<code>onStop()</code>, onResume/onPause没有对应的回调支持, 因为这些生命周期回调应该在View层处理, 见: <a href="http://hannesdorfmann.com/android/presenters-dont-need-lifecycle" target="_blank" rel="noopener">Presenters dont need lifecycle</a></p>
+<h3 id="ThirtyInch有什么不同"><a href="#ThirtyInch有什么不同" class="headerlink" title="ThirtyInch有什么不同"></a>ThirtyInch有什么不同</h3><ul>
+<li>可配置. 可以传<code>TiConfiguration</code>对象给TiPresenter, 去掉一些features.</li>
+<li>所有Presenter的生命周期都按照正确的顺序调用, <code>onCreate()</code>和<code>onDestroy()</code>只调用一次.</li>
+<li>不依赖RxJava. 它有一个独立的Rx module.</li>
+<li>View接口的方法注解. 比如<code>@CallOnMainThread</code>和<code>@DistinctUntilChanged</code>.</li>
+<li>Public API. 一些基层API可以被所有人利用起来.</li>
+<li>不用继承<code>TiActivity</code>. 你可以利用<a href="https://github.com/passsy/CompositeAndroid" target="_blank" rel="noopener">CompositeAndrodi</a>, 把plugin module作为你的依赖, 然后把<code>TiActivityPlugin</code>加到你的Activity.</li>
+</ul>
+<p>之后作者举了一个Hello World的例子, 附图讲解很好, 见原文.</p>
+<h3 id="不是严格的MVP-MVVM也可以"><a href="#不是严格的MVP-MVVM也可以" class="headerlink" title="不是严格的MVP, MVVM也可以"></a>不是严格的MVP, MVVM也可以</h3><p>作者又列出了一个ViewModel的图.<br>ViewModel存储了当前UI的状态数据.<br>当ViewModel中的数据变化时立即应用到View, 这里<code>@DistinctUtilChanged</code>的使用避免了数据不变时候的重复操作.</p>
+<h3 id="测试-Keep-Android-At-Arm’s-Length"><a href="#测试-Keep-Android-At-Arm’s-Length" class="headerlink" title="测试, Keep Android At Arm’s Length"></a>测试, Keep Android At Arm’s Length</h3><p>MVP的初衷之一是为了方便写测试, 因为Android SDK中的一些方法和类不好mock, 所以Presenter中应该是没有Android相关的东西的, 比如Context和Fragment等, Presenter只知道View接口和其中的方法, 是纯java的.</p>
+<p>这就是”Keep Android At Arm’s Length.”的意思, 不要把Android和逻辑代码绑在一起, 库的名字ThirtyInch也是来自于这个原则, 因为三十寸是人类手臂, 肩膀到手指的平均长度.</p>
+<h3 id="How-does-the-Presenter-survive-the-configuration-change"><a href="#How-does-the-Presenter-survive-the-configuration-change" class="headerlink" title="How does the Presenter survive the configuration change?"></a>How does the Presenter survive the configuration change?</h3><p>Activity在屏幕方向旋转时会被重建. 此时没有被序列化保存的信息就会丢失, 网络请求要么被取消, 要么被忽略, 重新请求.</p>
+<p>序列化数据会费时, 而且在这种情况下, 序列话的数据几秒之后就要被反序列化.</p>
+<p>Android Framework提供了两个方法来避免这种不必要的序列化:</p>
+<ul>
+<li>Fragment的<code>setRetainInstance(true)</code>, 之前的那个Fragment实例会被保存.</li>
+<li>使用<code>Activity#onRetainNonConfigurationInstance()</code>和<code>Activity#getLastNonConfigurationInstance()</code>来存储和恢复对象. 这也是Android保存上面retained Fragments的方法. 这个方法最近被废弃了.</li>
+</ul>
+<p>在Java中还有一个比较简单粗暴的方法是保存一个应用级别的单例.</p>
+<p>ThirtyInch使用了上述的三种方法来确保TiPresenter在configuration变化的时候不死. 单例的解决方法尽在一些边缘情况必须.</p>
+<p>当使用<code>TiPresenter</code>的时候不需要再实现<code>onSaveInstanceState(Bundle)</code>方法了, 因为数据都存在Presenter中.</p>
+<h2 id="Firebase-Analytics-VS-Google-Analytics"><a href="#Firebase-Analytics-VS-Google-Analytics" class="headerlink" title="Firebase Analytics VS Google Analytics"></a><a href="https://medium.com/google-developer-experts/firebase-analytics-vs-google-analytics-b2010f34d2bb#.cjqb9n505" target="_blank" rel="noopener">Firebase Analytics VS Google Analytics</a></h2><p>作者之前对比过 <a href="https://medium.com/google-developer-experts/firebase-crash-reporting-vs-crashlytics-a6c287c4b792#.m4ubzrcds" target="_blank" rel="noopener">Firebase Crash Reporting和Crashlytics</a>.</p>
+<p>在这篇文章里, 作者对比Firebase和Google的分析工具, 下面简称FA和GA.</p>
+<p>首先GA是2005年就推出了, 那时候根本没有Android和iOS, 所以GA最开始是网站用的, FA是今年推出的, 从一开始目标就是移动应用.</p>
+<p>然后作者总结了FA的优势和当前存在的几个不足.</p>
+<p>最后的结论就是:<br>如果你只有app, 用FA; 如果你只有网站, 用GA; 如果你两个都有, 则两个都用.</p>
+<h2 id="VectorDrawable-Fill-Windings"><a href="#VectorDrawable-Fill-Windings" class="headerlink" title="VectorDrawable Fill Windings"></a><a href="https://blog.stylingandroid.com/vectordrawable-fill-windings/" target="_blank" rel="noopener">VectorDrawable Fill Windings</a></h2><p>作者有一个Sketch做的资源, 是一个空洞图, 结果放在程序里看的时候中间的洞没有了, 变成实心的了.</p>
+<p>作者分析并详细解释了出现这种问题的原因, 并提供了两种解决方案.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Basic-Patterns-for-Mobile-Navigation"><a href="#Basic-Patterns-for-Mobile-Navigation" class="headerlink" title="Basic Patterns for Mobile Navigation"></a><a href="https://uxplanet.org/basic-patterns-for-mobile-navigation-d12a87686efe#.1jleu0y6v" target="_blank" rel="noopener">Basic Patterns for Mobile Navigation</a></h2><p>这篇文章作者分析了三种导航模式: hamburger menu, tab bar和gesture-base navigation.</p>
+<h3 id="Hamburger-Menu"><a href="#Hamburger-Menu" class="headerlink" title="Hamburger Menu"></a>Hamburger Menu</h3><p>Pros: 导航选项多, 设计干净, 给主要内容留出了更多空间.</p>
+<p>Cons: 不易被发现.<br>在iOS实现时, 和iOS的基本导航元素冲突.<br>hamburger的icon并没有给出上下文.<br>需要点两下才到目标页面.</p>
+<p>Tips: 给选项排列优先级. 如果你的高优先级选项不多, 可以考虑用tabs或者tab bar. 重审你的信息结构, 有没有必要划分成多个简单的app.</p>
+<h3 id="Tab-Bar"><a href="#Tab-Bar" class="headerlink" title="Tab Bar"></a>Tab Bar</h3><p>Pros: Tab bar可以反映出当前在哪. 它们是永久存在的, 用户可以单击访问.</p>
+<p>Cons: 有限的选项数. iOS和Android可能会有不同的设计规范.</p>
+<p>Tips: 让点击区域足够大. icon要经过可用性测试. icon和label一起用.</p>
+<h3 id="Gesture-Based-Navigation"><a href="#Gesture-Based-Navigation" class="headerlink" title="Gesture-Based Navigation"></a>Gesture-Based Navigation</h3><p>Pros: 移除了UI杂项, 节约了屏幕空间. 自然的人机交互接口.</p>
+<p>Cons: 导航不可见. 增加了用户教育成本.</p>
+<p>Tips: 确保不要必须教给用户一种全新的交互方式, 设计相似的体验. 使用过程动画的形式教用户如何使用. </p>
+<h2 id="Design-Reviews-Going-beyond-the-surface"><a href="#Design-Reviews-Going-beyond-the-surface" class="headerlink" title="Design Reviews: Going beyond the surface"></a><a href="https://design.google.com/articles/going-beyond-the-surface/" target="_blank" rel="noopener">Design Reviews: Going beyond the surface</a></h2><p>关于设计的review.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="green-coffee"><a href="#green-coffee" class="headerlink" title="green-coffee"></a><a href="https://github.com/mauriciotogneri/green-coffee" target="_blank" rel="noopener">green-coffee</a></h2><p>一个Android库, 让你可以在instrumentation测试中跑Cucumber.</p>
+<h2 id="ThirtyInch-1"><a href="#ThirtyInch-1" class="headerlink" title="ThirtyInch"></a><a href="https://github.com/grandcentrix/ThirtyInch/" target="_blank" rel="noopener">ThirtyInch</a></h2><p>一个Android MVP库.</p>
+<h1 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h1><h2 id="Exynap"><a href="#Exynap" class="headerlink" title="Exynap"></a><a href="http://exynap.com/" target="_blank" rel="noopener">Exynap</a></h2><p>一个Android Studio插件, 可以生成实现代码.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Espresso/" rel="tag"># Espresso</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/Resources/" rel="tag"># Resources</a>
+              <a href="/tags/Okio/" rel="tag"># Okio</a>
+              <a href="/tags/Tools/" rel="tag"># Tools</a>
+              <a href="/tags/Support-Annotations/" rel="tag"># Support Annotations</a>
+              <a href="/tags/Design/" rel="tag"># Design</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/" rel="prev" title="Android Weekly Notes Issue 221">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 221
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/09/22/android-weekly-notes-issue-223/" rel="next" title="Android Weekly Notes Issue 223">
+      Android Weekly Notes Issue 223 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-222"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #222</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Forcing-bytes-download-in-Okio"><span class="nav-number">2.1.</span> <span class="nav-text">Forcing bytes download in Okio</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flush-emit-and-emitCompleteSegments"><span class="nav-number">2.1.1.</span> <span class="nav-text">flush(), emit() and emitCompleteSegments()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-cases"><span class="nav-number">2.1.2.</span> <span class="nav-text">Use cases</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Android-Studio%E2%80%99s-Performance-Monitors"><span class="nav-number">2.2.</span> <span class="nav-text">Using Android Studio’s Performance Monitors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-hidden-cost-of-code-coverage"><span class="nav-number">2.3.</span> <span class="nav-text">The hidden cost of code coverage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Development-Useful-Tools"><span class="nav-number">2.4.</span> <span class="nav-text">Android Development Useful Tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-Automated-Android-Testing-Part-6"><span class="nav-number">2.5.</span> <span class="nav-text">Introduction to Automated Android Testing - Part 6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Espresso%E5%9F%BA%E7%A1%80"><span class="nav-number">2.5.1.</span> <span class="nav-text">Espresso基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Writing-Espresso-UI-Tests"><span class="nav-number">2.5.2.</span> <span class="nav-text">Writing Espresso UI Tests</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-2-years-of-Android-Development-Have-Taught-Me"><span class="nav-number">2.6.</span> <span class="nav-text">What 2 years of Android Development Have Taught Me</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Support-Annotations"><span class="nav-number">2.7.</span> <span class="nav-text">Android Support Annotations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nullness-Annotations"><span class="nav-number">2.7.1.</span> <span class="nav-text">Nullness Annotations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Resource-Annotations"><span class="nav-number">2.7.2.</span> <span class="nav-text">Resource Annotations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-Annotations"><span class="nav-number">2.7.3.</span> <span class="nav-text">Thread Annotations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Value-Constraints-Annotations"><span class="nav-number">2.7.4.</span> <span class="nav-text">Value Constraints Annotations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CheckResult-Annotations"><span class="nav-number">2.7.5.</span> <span class="nav-text">CheckResult Annotations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ActivityTestRule-Espresso%E2%80%99s-Test-%E2%80%9CLifecycle%E2%80%9D"><span class="nav-number">2.8.</span> <span class="nav-text">ActivityTestRule: Espresso’s Test “Lifecycle”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ActivityTestRule%E7%9A%84%E2%80%9D%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E2%80%9D"><span class="nav-number">2.8.1.</span> <span class="nav-text">ActivityTestRule的”生命周期”.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ActivityTestRule-launchActivity-false"><span class="nav-number">2.8.2.</span> <span class="nav-text">ActivityTestRule: launchActivity&#x3D;false;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#People-and-resources-to-learn-Android-programming-from"><span class="nav-number">2.9.</span> <span class="nav-text">People and resources to learn Android programming from</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Twitter"><span class="nav-number">2.9.1.</span> <span class="nav-text">Twitter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Podcasts"><span class="nav-number">2.9.2.</span> <span class="nav-text">Podcasts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Videos"><span class="nav-number">2.9.3.</span> <span class="nav-text">Videos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Newsletters"><span class="nav-number">2.9.4.</span> <span class="nav-text">Newsletters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#General-Reading"><span class="nav-number">2.9.5.</span> <span class="nav-text">General Reading</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conferences"><span class="nav-number">2.9.6.</span> <span class="nav-text">Conferences</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThirtyInch-a-new-MVP-library-for-Android"><span class="nav-number">2.10.</span> <span class="nav-text">ThirtyInch - a new MVP library for Android</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ThirtyInch"><span class="nav-number">2.10.1.</span> <span class="nav-text">ThirtyInch:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThirtyInch%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">2.10.2.</span> <span class="nav-text">ThirtyInch有什么不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E6%98%AF%E4%B8%A5%E6%A0%BC%E7%9A%84MVP-MVVM%E4%B9%9F%E5%8F%AF%E4%BB%A5"><span class="nav-number">2.10.3.</span> <span class="nav-text">不是严格的MVP, MVVM也可以</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-Keep-Android-At-Arm%E2%80%99s-Length"><span class="nav-number">2.10.4.</span> <span class="nav-text">测试, Keep Android At Arm’s Length</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-does-the-Presenter-survive-the-configuration-change"><span class="nav-number">2.10.5.</span> <span class="nav-text">How does the Presenter survive the configuration change?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Firebase-Analytics-VS-Google-Analytics"><span class="nav-number">2.11.</span> <span class="nav-text">Firebase Analytics VS Google Analytics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VectorDrawable-Fill-Windings"><span class="nav-number">2.12.</span> <span class="nav-text">VectorDrawable Fill Windings</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Patterns-for-Mobile-Navigation"><span class="nav-number">3.1.</span> <span class="nav-text">Basic Patterns for Mobile Navigation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hamburger-Menu"><span class="nav-number">3.1.1.</span> <span class="nav-text">Hamburger Menu</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tab-Bar"><span class="nav-number">3.1.2.</span> <span class="nav-text">Tab Bar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gesture-Based-Navigation"><span class="nav-number">3.1.3.</span> <span class="nav-text">Gesture-Based Navigation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Design-Reviews-Going-beyond-the-surface"><span class="nav-number">3.2.</span> <span class="nav-text">Design Reviews: Going beyond the surface</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#green-coffee"><span class="nav-number">4.1.</span> <span class="nav-text">green-coffee</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThirtyInch-1"><span class="nav-number">4.2.</span> <span class="nav-text">ThirtyInch</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tools"><span class="nav-number">5.</span> <span class="nav-text">Tools</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Exynap"><span class="nav-number">5.1.</span> <span class="nav-text">Exynap</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/";
+    this.page.identifier = "Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/";
+    this.page.title = "Android Weekly Notes Issue 222";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

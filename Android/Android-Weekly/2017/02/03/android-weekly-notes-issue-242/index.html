@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #242January 29th, 2017Android Weekly Issue #242本期内容包括: Android中常用的设计模式; 基于NoSQL的移动对象数据库–ObjectBox; MVC, MVP和MVVM模式的讨论; 一个Google Actions的Java SDK; 一个带黏性动画的FAB的实现; Kotlin 1.1的新功能; F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 242">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #242January 29th, 2017Android Weekly Issue #242本期内容包括: Android中常用的设计模式; 基于NoSQL的移动对象数据库–ObjectBox; MVC, MVP和MVVM模式的讨论; 一个Google Actions的Java SDK; 一个带黏性动画的FAB的实现; Kotlin 1.1的新功能; F">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-02-03T09:27:49.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.996Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="MVC">
+<meta property="article:tag" content="MVVM">
+<meta property="article:tag" content="Color">
+<meta property="article:tag" content="Design Patterns">
+<meta property="article:tag" content="ObjectBox">
+<meta property="article:tag" content="Google Actions">
+<meta property="article:tag" content="FAB">
+<meta property="article:tag" content="Model-View-Intent">
+<meta property="article:tag" content="Gradient">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 242 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 242
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-03 17:27:49" itemprop="dateCreated datePublished" datetime="2017-02-03T17:27:49+08:00">2017-02-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 242" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-242"><a href="#Android-Weekly-Issue-242" class="headerlink" title="Android Weekly Issue #242"></a>Android Weekly Issue #242</h1><p>January 29th, 2017<br><a href="http://androidweekly.net/issues/issue-242" target="_blank" rel="noopener">Android Weekly Issue #242</a><br>本期内容包括: Android中常用的设计模式; 基于NoSQL的移动对象数据库–ObjectBox; MVC, MVP和MVVM模式的讨论; 一个Google Actions的Java SDK; 一个带黏性动画的FAB的实现; Kotlin 1.1的新功能; Firebase的实时数据库讨论; Model-View-Intent模式应用的实现; 关于实现gradient时透明颜色的使用.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Common-Design-Patterns-for-Android"><a href="#Common-Design-Patterns-for-Android" class="headerlink" title="Common Design Patterns for Android"></a><a href="https://www.raywenderlich.com/109843/common-design-patterns-for-android" target="_blank" rel="noopener">Common Design Patterns for Android</a></h2><h3 id="Creational-Patterns"><a href="#Creational-Patterns" class="headerlink" title="Creational Patterns"></a>Creational Patterns</h3><ul>
+<li>Builder</li>
+<li>依赖注入: 举例: Dagger </li>
+<li>Singleton</li>
+</ul>
+<h3 id="Structural-Patterns"><a href="#Structural-Patterns" class="headerlink" title="Structural Patterns"></a>Structural Patterns</h3><ul>
+<li>Adapter</li>
+<li>Facade: 举例: Retrofit</li>
+</ul>
+<h3 id="Behavioral-Patterns"><a href="#Behavioral-Patterns" class="headerlink" title="Behavioral Patterns"></a>Behavioral Patterns</h3><ul>
+<li>Command: 举例: EventBus</li>
+<li>Observer: 举例: RxAndroid</li>
+<li>Model View Controller</li>
+<li>Model View ViewModel</li>
+</ul>
+<h2 id="ObjectBox-The-new-Mobile-Database"><a href="#ObjectBox-The-new-Mobile-Database" class="headerlink" title="ObjectBox - The new Mobile Database"></a><a href="http://greenrobot.org/announcement/introducing-objectbox-beta/" target="_blank" rel="noopener">ObjectBox - The new Mobile Database</a></h2><p><a href="http://greenrobot.org/objectbox/" target="_blank" rel="noopener">ObjectBox</a>是greenrobot发布的一个新的mobile对象数据库, 主要关注于性能, 据说superfast.</p>
+<p>在ObjectBox中, 主要是把NoSQL技术迁移到mobile端使用. 之前他们创建的greenDAO, 据说是最快的Object/Relational Mapper (ORM) for Android and SQLite.</p>
+<p>ObjectBox的5大特性:</p>
+<ul>
+<li>Superfast.</li>
+<li>Object API.</li>
+<li>Instant unit testing.</li>
+<li>Simple threading.</li>
+<li>No manual schema migrations.</li>
+</ul>
+<p><a href="http://greenrobot.org/objectbox/documentation/" target="_blank" rel="noopener">文档</a><br><a href="https://github.com/greenrobot/ObjectBoxExamples" target="_blank" rel="noopener">Demo</a></p>
+<h2 id="MVC-vs-MVP-vs-MVVM-on-Android"><a href="#MVC-vs-MVP-vs-MVVM-on-Android" class="headerlink" title="MVC vs. MVP vs. MVVM on Android"></a><a href="https://realm.io/news/eric-maxwell-mvc-mvp-and-mvvm-on-android/" target="_blank" rel="noopener">MVC vs. MVP vs. MVVM on Android</a></h2><p>MVC, MVP, MVVM模式的介绍.</p>
+<h2 id="Building-Google-Actions-with-Java"><a href="#Building-Google-Actions-with-Java" class="headerlink" title="Building Google Actions with Java"></a><a href="https://medium.com/@froger_mcs/building-google-actions-with-java-696cffedbd01#.d6uuck1ho" target="_blank" rel="noopener">Building Google Actions with Java</a></h2><p>非官方的<a href="https://github.com/frogermcs/Google-Actions-Java-SDK" target="_blank" rel="noopener">Google Actions Java SDK</a>, 本文为开发者介绍其如何使用.</p>
+<h2 id="Android-Gooey-FAB-is-EASY"><a href="#Android-Gooey-FAB-is-EASY" class="headerlink" title="Android Gooey FAB is EASY"></a><a href="http://myhexaville.com/2017/01/18/android-gooey-fab-easy/" target="_blank" rel="noopener">Android Gooey FAB is EASY</a></h2><p>实现一个胶黏的FAB.<br>首先作者展示了效果, 点击FAB, 从中逐渐分离中一个新的小按钮. 作者讨论了这种效果可能的实现方法:</p>
+<ul>
+<li>用bitmap的mesh transformation, 这是能高度自定义的.</li>
+<li>创建自定义View, 自己绘制Path.</li>
+<li>最简单的办法: 用Animated Vector Drawable, 即本文所介绍的方法.</li>
+</ul>
+<p>源码在这里: <a href="https://github.com/IhorKlimov/Android-Animations" target="_blank" rel="noopener">Android-Animations</a></p>
+<h2 id="What-Comes-in-Kotlin-1-1-for-Android-Developers"><a href="#What-Comes-in-Kotlin-1-1-for-Android-Developers" class="headerlink" title="What Comes in Kotlin 1.1 for Android Developers?"></a><a href="https://blog.elpassion.com/what-comes-in-kotlin-1-1-for-android-developers-831d559f780f#.wlmujxwi3" target="_blank" rel="noopener">What Comes in Kotlin 1.1 for Android Developers?</a></h2><p>Kotlin 1.1的新features.</p>
+<ul>
+<li>Coroutines. 改善Kotlin中的异步编程.</li>
+<li>Type Aliases. 可以为类型起别名.</li>
+<li>Inlining Property Accessors.</li>
+<li>Less Restrictive Inheritance. sealed类的子类不用再放在同一个类中; 非final的类现在也可以继承data类了.</li>
+<li>Destructuring and Underscores.</li>
+<li>Methods Count. 作者对比了一个sample程序, 用kotlin的不同版本, 发现用最新版kotlin确实会增加一些方法数, 但它仍然算是一个很轻量的库.</li>
+</ul>
+<h2 id="Understanding-the-Power-of-Firebase-Security-Rules"><a href="#Understanding-the-Power-of-Firebase-Security-Rules" class="headerlink" title="Understanding the Power of Firebase Security Rules"></a><a href="https://medium.com/@dftaiwo/understanding-the-power-of-firebase-security-rules-part-1-f46aae773a24#.cw34j1v2z" target="_blank" rel="noopener">Understanding the Power of Firebase Security Rules</a></h2><p>作者要写关于Firebase的一系列文章: 第一和第二篇主要介绍实时数据库的规则, 第三篇介绍Storage的规则.</p>
+<p>关于实时数据库规则的主要内容包括:</p>
+<ul>
+<li>识别你的用户.</li>
+<li>控制数据访问权限.</li>
+<li>验证创建, 更新和删除操作.</li>
+</ul>
+<h2 id="Reactive-apps-with-Model-View-Intent-Part-3"><a href="#Reactive-apps-with-Model-View-Intent-Part-3" class="headerlink" title="Reactive apps with Model-View-Intent - Part 3"></a><a href="http://hannesdorfmann.com/android/mosby3-mvi-3" target="_blank" rel="noopener">Reactive apps with Model-View-Intent - Part 3</a></h2><p>上一篇中介绍了用Model-View-Intent模式来构建一个单相数据流的简单屏. 这篇文章接着讲如何用MVI和state reducer来构建一个复杂屏.</p>
+<p>(感觉太复杂了我没仔细看).</p>
+<h2 id="Android-Dev-Tip-3-A-gotcha-with-color-transparent"><a href="#Android-Dev-Tip-3-A-gotcha-with-color-transparent" class="headerlink" title="Android Dev Tip #3: A gotcha with color/transparent"></a><a href="https://android.jlelse.eu/android-dev-tip-3-99da754151ad#.rarx8jafm" target="_blank" rel="noopener">Android Dev Tip #3: A gotcha with color/transparent</a></h2><p>如果你要在xml中用gradient写一个渐变色, 对于透明色<code>@android:color/transparent.</code>的使用一定要注意.</p>
+<p>透明色<code>@android:color/transparent.</code>的色值是<code>#00000000</code>, 所以它实际上代表的是一个透明的黑色.</p>
+<p>在gradient进行插值的时候, 会对ARGB每一个通道的色值都分别进行插值然后叠加.</p>
+<p>所以如果你想要保持颜色不变, 只改变透明度, 也即Alpha通道的值, 你就应该把透明色中RGB颜色设置为和原来的颜色一样. </p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="PreviewSeekBar"><a href="#PreviewSeekBar" class="headerlink" title="PreviewSeekBar"></a><a href="https://github.com/rubensousa/PreviewSeekBar" target="_blank" rel="noopener">PreviewSeekBar</a></h2><p>一个带Preview的SeekBar.</p>
+<h2 id="AndroidTestingBox"><a href="#AndroidTestingBox" class="headerlink" title="AndroidTestingBox"></a><a href="https://roroche.github.io/AndroidTestingBox/" target="_blank" rel="noopener">AndroidTestingBox</a></h2><p>一个Android项目, 用于实验各种测试工具.</p>
+<h2 id="FunctionalRx2"><a href="#FunctionalRx2" class="headerlink" title="FunctionalRx2"></a><a href="https://github.com/pakoito/FunctionalRx2" target="_blank" rel="noopener">FunctionalRx2</a></h2><p>a collection of constructs to simplify a functional programming approach to Java and Android.</p>
+<h2 id="gradle-completion"><a href="#gradle-completion" class="headerlink" title="gradle-completion"></a><a href="https://github.com/eriwen/gradle-completion" target="_blank" rel="noopener">gradle-completion</a></h2><p>gradle的tab补全, for bash and zsh.</p>
+<h2 id="ObjectBox"><a href="#ObjectBox" class="headerlink" title="ObjectBox"></a><a href="https://github.com/greenrobot/ObjectBox" target="_blank" rel="noopener">ObjectBox</a></h2><p>超快的移动平台对象数据库.</p>
+<h2 id="superlightstack"><a href="#superlightstack" class="headerlink" title="superlightstack"></a><a href="https://github.com/nextdimension/superlightstack" target="_blank" rel="noopener">superlightstack</a></h2><p>一个轻量级的库, 用于创建View的stack, 并处理转换和状态维持.</p>
+<h2 id="PicassoFaceDetectionTransformation"><a href="#PicassoFaceDetectionTransformation" class="headerlink" title="PicassoFaceDetectionTransformation"></a><a href="https://github.com/aryarohit07/PicassoFaceDetectionTransformation" target="_blank" rel="noopener">PicassoFaceDetectionTransformation</a></h2><p>一个配合picasso使用的图像转换库, 可以根据人脸检测自动确定范围而切图.</p>
+<p>(Readme中附有配合Glide和Fresco使用的版本.)</p>
+<h2 id="cwac-netsecurity"><a href="#cwac-netsecurity" class="headerlink" title="cwac-netsecurity"></a><a href="https://github.com/commonsguy/cwac-netsecurity" target="_blank" rel="noopener">cwac-netsecurity</a></h2><p>This library contains a backport of the Android 7.0 network security configuration subsystem.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/MVC/" rel="tag"># MVC</a>
+              <a href="/tags/MVVM/" rel="tag"># MVVM</a>
+              <a href="/tags/Color/" rel="tag"># Color</a>
+              <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+              <a href="/tags/ObjectBox/" rel="tag"># ObjectBox</a>
+              <a href="/tags/Google-Actions/" rel="tag"># Google Actions</a>
+              <a href="/tags/FAB/" rel="tag"># FAB</a>
+              <a href="/tags/Model-View-Intent/" rel="tag"># Model-View-Intent</a>
+              <a href="/tags/Gradient/" rel="tag"># Gradient</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/01/25/android-weekly-notes-issue-241/" rel="prev" title="Android Weekly Notes Issue 241">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 241
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2017/02/06/hello-constraint-layout/" rel="next" title="Say Hello to ConstraintLayout">
+      Say Hello to ConstraintLayout <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-242"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #242</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-Design-Patterns-for-Android"><span class="nav-number">2.1.</span> <span class="nav-text">Common Design Patterns for Android</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Creational-Patterns"><span class="nav-number">2.1.1.</span> <span class="nav-text">Creational Patterns</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Structural-Patterns"><span class="nav-number">2.1.2.</span> <span class="nav-text">Structural Patterns</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Behavioral-Patterns"><span class="nav-number">2.1.3.</span> <span class="nav-text">Behavioral Patterns</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ObjectBox-The-new-Mobile-Database"><span class="nav-number">2.2.</span> <span class="nav-text">ObjectBox - The new Mobile Database</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC-vs-MVP-vs-MVVM-on-Android"><span class="nav-number">2.3.</span> <span class="nav-text">MVC vs. MVP vs. MVVM on Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-Google-Actions-with-Java"><span class="nav-number">2.4.</span> <span class="nav-text">Building Google Actions with Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Gooey-FAB-is-EASY"><span class="nav-number">2.5.</span> <span class="nav-text">Android Gooey FAB is EASY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Comes-in-Kotlin-1-1-for-Android-Developers"><span class="nav-number">2.6.</span> <span class="nav-text">What Comes in Kotlin 1.1 for Android Developers?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Understanding-the-Power-of-Firebase-Security-Rules"><span class="nav-number">2.7.</span> <span class="nav-text">Understanding the Power of Firebase Security Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-apps-with-Model-View-Intent-Part-3"><span class="nav-number">2.8.</span> <span class="nav-text">Reactive apps with Model-View-Intent - Part 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Dev-Tip-3-A-gotcha-with-color-transparent"><span class="nav-number">2.9.</span> <span class="nav-text">Android Dev Tip #3: A gotcha with color&#x2F;transparent</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PreviewSeekBar"><span class="nav-number">3.1.</span> <span class="nav-text">PreviewSeekBar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AndroidTestingBox"><span class="nav-number">3.2.</span> <span class="nav-text">AndroidTestingBox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FunctionalRx2"><span class="nav-number">3.3.</span> <span class="nav-text">FunctionalRx2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradle-completion"><span class="nav-number">3.4.</span> <span class="nav-text">gradle-completion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ObjectBox"><span class="nav-number">3.5.</span> <span class="nav-text">ObjectBox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#superlightstack"><span class="nav-number">3.6.</span> <span class="nav-text">superlightstack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PicassoFaceDetectionTransformation"><span class="nav-number">3.7.</span> <span class="nav-text">PicassoFaceDetectionTransformation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cwac-netsecurity"><span class="nav-number">3.8.</span> <span class="nav-text">cwac-netsecurity</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/";
+    this.page.identifier = "Android/Android-Weekly/2017/02/03/android-weekly-notes-issue-242/";
+    this.page.title = "Android Weekly Notes Issue 242";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #250March 26th, 2017Android Weekly Issue #250.本期内容: 好几篇关于Android O预览版的文章; JUnit 5的动态测试; 作为团队里唯一的Android开发如何学习和工作; Support库新推出的基于物理的动画API: SpringAnimation; Uber Rider项目重构中关于依赖注入的sc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 250">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #250March 26th, 2017Android Weekly Issue #250.本期内容: 好几篇关于Android O预览版的文章; JUnit 5的动态测试; 作为团队里唯一的Android开发如何学习和工作; Support库新推出的基于物理的动画API: SpringAnimation; Uber Rider项目重构中关于依赖注入的sc">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-03-31T08:50:01.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.998Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Dagger">
+<meta property="article:tag" content="JUnit 5">
+<meta property="article:tag" content="Android O">
+<meta property="article:tag" content="Physics-based Animation">
+<meta property="article:tag" content="SpringAnimation">
+<meta property="article:tag" content="Injection">
+<meta property="article:tag" content="BroadcastReceiver">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 250 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 250
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-03-31 16:50:01" itemprop="dateCreated datePublished" datetime="2017-03-31T16:50:01+08:00">2017-03-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 250" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-250"><a href="#Android-Weekly-Issue-250" class="headerlink" title="Android Weekly Issue #250"></a>Android Weekly Issue #250</h1><p>March 26th, 2017<br><a href="http://androidweekly.net/issues/issue-250" target="_blank" rel="noopener">Android Weekly Issue #250</a>.<br>本期内容: 好几篇关于Android O预览版的文章; JUnit 5的动态测试; 作为团队里唯一的Android开发如何学习和工作; Support库新推出的基于物理的动画API: SpringAnimation; Uber Rider项目重构中关于依赖注入的scope层级的改动; Kotlin和RxJava的简洁性.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="O-h-yeah-What-we-look-forward-to-in-Android-O"><a href="#O-h-yeah-What-we-look-forward-to-in-Android-O" class="headerlink" title="O-h yeah! What we look forward to in Android O"></a><a href="https://www.novoda.com/blog/o-h-yeah-what-we-look-forward-to-in-android-o/" target="_blank" rel="noopener">O-h yeah! What we look forward to in Android O</a></h2><p>Google宣布了最新Android O的预览程序. Novoda team查看了最新文档来看看什么新特性最让大家欣喜.</p>
+<ul>
+<li>更宽广的色域和多种颜色空间支持:<br>我们不再被限制在sRGB的颜色空间里, 文档见<a href="https://developer.android.com/reference/android/graphics/ColorSpace.html" target="_blank" rel="noopener">ColorSpace</a>.</li>
+<li>字体支持.</li>
+<li>Adaptive icons: Android N中提供了圆形的启动图标; 从Android O开始, 手机开发商和launcher开发者们可以指定一个mask到应用提供的背景图上.</li>
+<li>ACCESSIBILITY按钮: Accessibility services(比如TalkBack)可以在有软导航键的设备上添加一个按钮.</li>
+<li>指纹手势.</li>
+<li>自动大小的TextView.</li>
+<li>Autofill APIs. 自动填表.</li>
+</ul>
+<h2 id="JUnit-5-Dynamic-Tests"><a href="#JUnit-5-Dynamic-Tests" class="headerlink" title="JUnit 5: Dynamic Tests"></a><a href="https://blog.stylingandroid.com/junit-5-dynamic-tests/" target="_blank" rel="noopener">JUnit 5: Dynamic Tests</a></h2><p>本篇讲如何简化一个测试cases都很类似的test suite.</p>
+<p>首先, 找出不同的部分, 抽取一个方法, 把不相同的部分作为参数传进去.</p>
+<p>然后用JUnit 5的动态测试(Dynamic Tests)特性.<br>两个关键组件: <code>TextFactory</code>和<code>DynamicTest</code>.<br>文中代码详细说明了它们的用法.</p>
+<h2 id="Flying-Solo-with-Android-Development"><a href="#Flying-Solo-with-Android-Development" class="headerlink" title="Flying Solo with Android Development"></a><a href="https://hackernoon.com/flying-solo-with-android-development-c52d911b62bf?gi=c13f45395440#.bdab0pxgy" target="_blank" rel="noopener">Flying Solo with Android Development</a></h2><p>作者几经周转, 从4人Android团队到2人团队, 现在又到了一个新团队, 作为团队里唯一Android开发. 在这篇文章中, 她分享了一些觉得不错的学习资源和她平时的工作习惯以及建议.</p>
+<h2 id="Introduction-to-SpringAnimation-with-examples"><a href="#Introduction-to-SpringAnimation-with-examples" class="headerlink" title="Introduction to SpringAnimation with examples"></a><a href="https://www.thedroidsonroids.com/blog/android/springanimation-examples/" target="_blank" rel="noopener">Introduction to SpringAnimation with examples</a></h2><p>本文讲弹簧效果动画的实现.</p>
+<p><a href="https://developer.android.com/reference/android/support/animation/package-summary.html" target="_blank" rel="noopener">Dynamic-animation</a>是Android Support Library 25.3.0最新引进的, 用于实现基于物理的动画.</p>
+<p>作者这篇文章介绍了<a href="https://developer.android.com/reference/android/support/animation/SpringAnimation.html" target="_blank" rel="noopener">SpringAnimation</a>和<a href="https://developer.android.com/reference/android/support/animation/SpringForce.html" target="_blank" rel="noopener">SpringForce</a>的用法, 提供了几个例子, 动态改变View的位置, 旋转和大小属性: <a href="https://github.com/AlexKrupa/android-springanimation-examples" target="_blank" rel="noopener">android-springanimation-examples
+</a>.</p>
+<h2 id="Rewriting-Uber-Engineering’s-Rider-App-with-Deep-Scope-Hierarchies"><a href="#Rewriting-Uber-Engineering’s-Rider-App-with-Deep-Scope-Hierarchies" class="headerlink" title="Rewriting Uber Engineering’s Rider App with Deep Scope Hierarchies"></a><a href="https://eng.uber.com/deep-scope-hierarchies/" target="_blank" rel="noopener">Rewriting Uber Engineering’s Rider App with Deep Scope Hierarchies</a></h2><p>Android Uber rider app的重构.<br>主要讨论了由于存在很多共用组件, 所以依赖注入的设计需要改进.</p>
+<p>首先介绍了旧的设计: 两级Scope层次.<br>后来他们的新设计采用了深层次的scope层级, 减少了耦合.</p>
+<p>最后又介绍了几种他们曾经考虑过的架构模式.</p>
+<h2 id="It’s-time-to-kiss-goodbye-to-your-implicit-BroadcastReceivers"><a href="#It’s-time-to-kiss-goodbye-to-your-implicit-BroadcastReceivers" class="headerlink" title="It’s time to kiss goodbye to your implicit BroadcastReceivers"></a><a href="https://medium.com/@iiro.krankka/its-time-to-kiss-goodbye-to-your-implicit-broadcastreceivers-eefafd9f4f8a#.67j4153n6" target="_blank" rel="noopener">It’s time to kiss goodbye to your implicit BroadcastReceivers</a></h2><p>Android O的preview已经出来了: <a href="https://developer.android.com/preview/index.html" target="_blank" rel="noopener">Android O Preview</a>. 这是它列出来的<a href="https://developer.android.com/preview/behavior-changes.html" target="_blank" rel="noopener">Behavior changes</a>.</p>
+<p>如果你想要把app target到Android O, 而且你的manifest中注册了一些隐式的BroadcastReceiver. 那么这篇文章就是为你准备的.</p>
+<p>Android做这一切的出发点都是为了节约电量.</p>
+<p>Android 7.0的时候就<a href="https://developer.android.com/about/versions/nougat/android-7.0-changes.html#bg-opt" target="_blank" rel="noopener">移除了三种隐式广播的支持</a>. 它们是<code>CONNECTIVITY_ACTION</code>,  <code>ACTION_NEW_PICTURE</code>和<code>ACTION_NEW_VIDEO</code>.</p>
+<p>现在Android O中, 除了<a href="https://developer.android.com/preview/features/background-broadcasts.html" target="_blank" rel="noopener">background-broadcasts</a>中提到的, 其他所有在manifest中注册的隐式广播都不再工作了. (注意这里的关键字: manifest中注册, 隐式广播.)</p>
+<p>那么你的manifest中如果有receiver, 现在应该怎么办呢?</p>
+<p>首先看看你的广播是否是隐式的. 根据<a href="https://developer.android.com/preview/features/background.html#broadcasts" target="_blank" rel="noopener">文档</a>, 所有跟你的应用没有直接关系的广播都是隐式的; 而直接相关的都是显式的.</p>
+<p>然后检查你的应用是否真的受到了影响, 因为有一些隐式的广播是例外情况.</p>
+<p>真的受到影响了怎么办呢? 使用<code>JobScheduler</code>来拯救. 但是它只在API 21以上有, 如果你的最低API小于21, 可以用官方推荐的<a href="https://github.com/firebase/firebase-jobdispatcher-android" target="_blank" rel="noopener">firebase-jobdispatcher-android</a>. 作者他们团队用的是Evernote的<a href="https://github.com/evernote/android-job" target="_blank" rel="noopener">android-job</a>.</p>
+<p>如果上面的库仍然不能帮到你, 你可以考虑把广播换成动态注册的.<br>不管你的广播是隐式的还是显式的, <code>Context.registerReceiver()</code>是永远有效的. 但缺陷就是注销以后就不能再收到事件了.</p>
+<h2 id="Random-Musings-on-the-O-Developer-Preview-1"><a href="#Random-Musings-on-the-O-Developer-Preview-1" class="headerlink" title="Random Musings on the O Developer Preview 1"></a><a href="https://commonsware.com/blog/2017/03/22/random-musings-o-developer-preview-1.html" target="_blank" rel="noopener">Random Musings on the O Developer Preview 1</a></h2><p>作者对Android O预览的一些看法.</p>
+<h3 id="比较令人担心的几点"><a href="#比较令人担心的几点" class="headerlink" title="比较令人担心的几点"></a>比较令人担心的几点</h3><ul>
+<li>后台工作的处理: 许多隐式的广播可能不再起作用, 可能会改变某些应用的行为.</li>
+<li>多显示支持. 允许用户把一个activity投射到外部显示器上. 这个行为还需要进一步测试, 如果我们投射到一个不可触摸的显示器上会怎样?</li>
+<li>关于磁盘空间, 缓存目录.</li>
+<li>Support Libraries支持的最小API为14.</li>
+</ul>
+<h3 id="有启发性的几点"><a href="#有启发性的几点" class="headerlink" title="有启发性的几点"></a>有启发性的几点</h3><ul>
+<li>可以给Notification设置timeout.</li>
+<li>Picture-in-Picture (PIP)模式. 一种特殊的多窗口模式, 多数被用来播放视频, TV已经有了.</li>
+<li>新字体.</li>
+<li>Storage Access Framework (SAF) -&gt; Seekable streams.</li>
+<li>WebView将支持allow-cleartext设置.</li>
+<li>应用安装其他应用需要用户授权.</li>
+<li>Content provider分页查询.</li>
+<li><code>FragmentLifecycleCallbacks</code>.</li>
+<li><code>SmsManager</code>可以创建tokens.</li>
+<li><code>SharedPreferences</code>提供了接口, 可以更换底层存储实现.</li>
+<li><code>findViewById()</code>不再需要强转.</li>
+</ul>
+<h3 id="其他你可能感兴趣的"><a href="#其他你可能感兴趣的" class="headerlink" title="其他你可能感兴趣的"></a>其他你可能感兴趣的</h3><ul>
+<li><code>View.setTooltipText()</code>.</li>
+<li><code>TextView.setJustify()</code>.</li>
+<li>提供了padding和margin的Vertical和Horizontal属性, 这样一下就可以设置同一方向上的两个值.</li>
+<li><code>ProgressBar.setMin()</code>.</li>
+<li><code>ANDROID_ID</code>现在是对每个应用来说, 而不是用户或设备. 见<a href="https://developer.android.com/preview/behavior-changes.html#privacy-all" target="_blank" rel="noopener">Privacy</a>.</li>
+</ul>
+<h2 id="Writing-Concise-Code-with-Kotlin-and-RxJava"><a href="#Writing-Concise-Code-with-Kotlin-and-RxJava" class="headerlink" title="Writing Concise Code with Kotlin and RxJava"></a><a href="https://pspdfkit.com/blog/2017/writing-concise-code-with-kotlin-and-rxjava/" target="_blank" rel="noopener">Writing Concise Code with Kotlin and RxJava</a></h2><p>用Github API举例子, 用RxJava和Kotlin实现一个功能, 说明了它们的简洁性.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Fakeit"><a href="#Fakeit" class="headerlink" title="Fakeit"></a><a href="https://github.com/moove-it/fakeit" target="_blank" rel="noopener">Fakeit</a></h2><p>Kotlin版的假数据生成器.</p>
+<h2 id="Cicerone"><a href="#Cicerone" class="headerlink" title="Cicerone"></a><a href="https://github.com/terrakok/Cicerone" target="_blank" rel="noopener">Cicerone</a></h2><p>一个轻量级的Android导航库.</p>
+<h2 id="data-binding-validator"><a href="#data-binding-validator" class="headerlink" title="data-binding-validator"></a><a href="https://github.com/Ilhasoft/data-binding-validator" target="_blank" rel="noopener">data-binding-validator</a></h2><p>表单数据验证器, 使用data binding framework实现.</p>
+<h2 id="LabCoat"><a href="#LabCoat" class="headerlink" title="LabCoat"></a><a href="https://github.com/Commit451/LabCoat" target="_blank" rel="noopener">LabCoat</a></h2><p>GitLab client for Android.</p>
+<h1 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h1><h2 id="O-MG-the-Developer-Preview-of-Android-O-is-here"><a href="#O-MG-the-Developer-Preview-of-Android-O-is-here" class="headerlink" title="O-MG, the Developer Preview of Android O is here!"></a><a href="https://android-developers.googleblog.com/2017/03/first-preview-of-android-o.html" target="_blank" rel="noopener">O-MG, the Developer Preview of Android O is here!</a></h2><p>Google发布了下一个系统版本Android O的开发者预览版.</p>
+<h1 id="TOOLS"><a href="#TOOLS" class="headerlink" title="TOOLS"></a>TOOLS</h1><h2 id="Android-Studio-meets-Slack"><a href="#Android-Studio-meets-Slack" class="headerlink" title="Android Studio meets Slack"></a><a href="https://instapk.com/" target="_blank" rel="noopener">Android Studio meets Slack</a></h2><p>一个小工具, 可以直接把Android Studio打的包发到Slack去.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+              <a href="/tags/JUnit-5/" rel="tag"># JUnit 5</a>
+              <a href="/tags/Android-O/" rel="tag"># Android O</a>
+              <a href="/tags/Physics-based-Animation/" rel="tag"># Physics-based Animation</a>
+              <a href="/tags/SpringAnimation/" rel="tag"># SpringAnimation</a>
+              <a href="/tags/Injection/" rel="tag"># Injection</a>
+              <a href="/tags/BroadcastReceiver/" rel="tag"># BroadcastReceiver</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" rel="prev" title="Android Weekly Notes Issue 249">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 249
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/" rel="next" title="Android Weekly Notes Issue 251">
+      Android Weekly Notes Issue 251 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-250"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #250</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#O-h-yeah-What-we-look-forward-to-in-Android-O"><span class="nav-number">2.1.</span> <span class="nav-text">O-h yeah! What we look forward to in Android O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-5-Dynamic-Tests"><span class="nav-number">2.2.</span> <span class="nav-text">JUnit 5: Dynamic Tests</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flying-Solo-with-Android-Development"><span class="nav-number">2.3.</span> <span class="nav-text">Flying Solo with Android Development</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-SpringAnimation-with-examples"><span class="nav-number">2.4.</span> <span class="nav-text">Introduction to SpringAnimation with examples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rewriting-Uber-Engineering%E2%80%99s-Rider-App-with-Deep-Scope-Hierarchies"><span class="nav-number">2.5.</span> <span class="nav-text">Rewriting Uber Engineering’s Rider App with Deep Scope Hierarchies</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#It%E2%80%99s-time-to-kiss-goodbye-to-your-implicit-BroadcastReceivers"><span class="nav-number">2.6.</span> <span class="nav-text">It’s time to kiss goodbye to your implicit BroadcastReceivers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Random-Musings-on-the-O-Developer-Preview-1"><span class="nav-number">2.7.</span> <span class="nav-text">Random Musings on the O Developer Preview 1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E4%BB%A4%E4%BA%BA%E6%8B%85%E5%BF%83%E7%9A%84%E5%87%A0%E7%82%B9"><span class="nav-number">2.7.1.</span> <span class="nav-text">比较令人担心的几点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%90%AF%E5%8F%91%E6%80%A7%E7%9A%84%E5%87%A0%E7%82%B9"><span class="nav-number">2.7.2.</span> <span class="nav-text">有启发性的几点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%BD%A0%E5%8F%AF%E8%83%BD%E6%84%9F%E5%85%B4%E8%B6%A3%E7%9A%84"><span class="nav-number">2.7.3.</span> <span class="nav-text">其他你可能感兴趣的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Writing-Concise-Code-with-Kotlin-and-RxJava"><span class="nav-number">2.8.</span> <span class="nav-text">Writing Concise Code with Kotlin and RxJava</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fakeit"><span class="nav-number">3.1.</span> <span class="nav-text">Fakeit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cicerone"><span class="nav-number">3.2.</span> <span class="nav-text">Cicerone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-binding-validator"><span class="nav-number">3.3.</span> <span class="nav-text">data-binding-validator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LabCoat"><span class="nav-number">3.4.</span> <span class="nav-text">LabCoat</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NEWS"><span class="nav-number">4.</span> <span class="nav-text">NEWS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#O-MG-the-Developer-Preview-of-Android-O-is-here"><span class="nav-number">4.1.</span> <span class="nav-text">O-MG, the Developer Preview of Android O is here!</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TOOLS"><span class="nav-number">5.</span> <span class="nav-text">TOOLS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Studio-meets-Slack"><span class="nav-number">5.1.</span> <span class="nav-text">Android Studio meets Slack</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/";
+    this.page.identifier = "Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/";
+    this.page.title = "Android Weekly Notes Issue 250";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

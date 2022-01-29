@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #218August 14th, 2016http:&#x2F;&#x2F;androidweekly.net&#x2F;issues&#x2F;issue-218">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 218">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #218August 14th, 2016http:&#x2F;&#x2F;androidweekly.net&#x2F;issues&#x2F;issue-218">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-08-18T05:20:56.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.989Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="AnimatedVectorDrawable">
+<meta property="article:tag" content="Espresso">
+<meta property="article:tag" content="TV">
+<meta property="article:tag" content="Wear">
+<meta property="article:tag" content="Router">
+<meta property="article:tag" content="Performance">
+<meta property="article:tag" content="Maven">
+<meta property="article:tag" content="Bottom Navigation">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 218 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 218
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-08-18 13:20:56" itemprop="dateCreated datePublished" datetime="2016-08-18T13:20:56+08:00">2016-08-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 218" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-218"><a href="#Android-Weekly-Issue-218" class="headerlink" title="Android Weekly Issue #218"></a>Android Weekly Issue #218</h1><p>August 14th, 2016<br><a href="http://androidweekly.net/issues/issue-218" target="_blank" rel="noopener">http://androidweekly.net/issues/issue-218</a></p>
+<a id="more"></a>
+<h2 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h2><h3 id="PathMorphing-with-AnimatedVectorDrawables"><a href="#PathMorphing-with-AnimatedVectorDrawables" class="headerlink" title="PathMorphing with AnimatedVectorDrawables"></a><a href="https://lewismcgeary.github.io/posts/animated-vector-drawable-pathMorphing/" target="_blank" rel="noopener">PathMorphing with AnimatedVectorDrawables</a></h3><p>Android 5.0 推出了<a href="https://developer.android.com/reference/android/graphics/drawable/VectorDrawable.html" target="_blank" rel="noopener">VectorDrawable</a>, 矢量图为处理多种屏幕尺寸的带来了很多好处. 这篇文章先介绍了VectorDrawable的使用, 然后主要讲如何实时操纵图像的改变, 用<a href="https://developer.android.com/reference/android/graphics/drawable/AnimatedVectorDrawable.html" target="_blank" rel="noopener">AnimatedVectorDrawable</a>实现一个图像变形的效果.<br>文中的例子是Android和Apple的log在互相变化.<br><a href="https://github.com/lewismcgeary/AndroidtoAppleVectorLogo" target="_blank" rel="noopener">source code available</a></p>
+<h3 id="Android-UI-Instrumentation-test-with-Espresso"><a href="#Android-UI-Instrumentation-test-with-Espresso" class="headerlink" title="Android UI Instrumentation test with Espresso"></a><a href="http://mayojava.github.io/android/android-ui-instrumentation-test-with-espresso/" target="_blank" rel="noopener">Android UI Instrumentation test with Espresso</a></h3><p>用Espresso写UI功能测试, 通常是: 定位UI元素, 然后与其交互, 检查UI元素的状态.<br>三种主要的组件是: ViewMatchers, ViewActions 和ViewAssertions.<br>一个简短的例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onView(withId(R.id.my_view))            <span class="comment">// withId(R.id.my_view) - ViewMatcher</span></span><br><span class="line">    .perform(click())                  <span class="comment">// click() - ViewAction</span></span><br><span class="line">    .check(matches(isDisplayed()));   <span class="comment">//matches(isDisplayed()) - ViewAssertion</span></span><br></pre></td></tr></table></figure></p>
+<p>为了测试不受animation的影响, 有时候可能需要把设备上的Developer Options里的下面几个animation全关掉:<br>Window animation scale<br>Transition animation scale<br>Animator duration scale<br>然后这个文章里有具体的例子介绍如何写并且运行测试, 还附有相关源码.</p>
+<h3 id="How-to-Build-an-Android-App-for-Fire-TV-Part-1"><a href="#How-to-Build-an-Android-App-for-Fire-TV-Part-1" class="headerlink" title="How to Build an Android App for Fire TV - Part 1"></a><a href="https://medium.com/amazon-appstore/developing-for-the-living-room-how-to-build-an-android-app-for-fire-tv-part-1-6ae108106fd2#.n39tl15pa" target="_blank" rel="noopener">How to Build an Android App for Fire TV - Part 1</a></h3><p>创建在亚马逊的Fire TV上跑的Android应用.<br>文后可以点进part 2.</p>
+<h3 id="Android-Wear-Development-for-beginners"><a href="#Android-Wear-Development-for-beginners" class="headerlink" title="Android Wear Development for beginners"></a><a href="https://medium.com/android-news/android-wear-development-for-beginners-82c2b06ff13a#.15v0ar2g3" target="_blank" rel="noopener">Android Wear Development for beginners</a></h3><p>Complication是指手表上显示的除了小时和分钟之外的东西, 比如, 一个电池指示标志.<br>使用了Complication API之后, 用户就可以自己选一个地方, 然后从应用的列表中选一个东东来显示.<br>Wear应用是嵌入到一个主应用里面的, 当google play上主应用的apk被安装到手机上的时候, Wearable应用会自动安装在配对的设备上.<br>这篇文章详细介绍了如何创建一个Wear应用, 代码在<a href="https://github.com/moyheen/radar-watch-face" target="_blank" rel="noopener">github</a></p>
+<p>官方文档: <a href="https://developer.android.com/wear/preview/features/complications.html" target="_blank" rel="noopener">Watch Face Complications</a><br>官方sample: <a href="https://github.com/googlesamples/android-WatchFace" target="_blank" rel="noopener">android-WatchFace</a></p>
+<h3 id="Router-—-Everything-in-its-Right-Place"><a href="#Router-—-Everything-in-its-Right-Place" class="headerlink" title="Router — Everything in its Right Place"></a><a href="https://medium.com/stories-from-eyeem/router-everything-in-its-right-place-4ca437871052#.cvou4493z" target="_blank" rel="noopener">Router — Everything in its Right Place</a></h3><p>之前有一篇文章介绍了用装饰者模式来构建高度模块化的Android应用: <a href="https://medium.com/stories-from-eyeem/creating-highly-modular-android-apps-933271fbdb7d#.4gtrccg9n" target="_blank" rel="noopener">Creating Highly Modular Android Apps</a><br>那篇文章里也有一个例子<a href="https://github.com/eyeem/decorator" target="_blank" rel="noopener">Decorator</a>.<br>这篇文章讲同样采用装饰者思想的一个库: <a href="https://github.com/eyeem/router" target="_blank" rel="noopener">Router</a>.</p>
+<p>Router首先基于一个将URL映射到程序界面的库: <a href="https://github.com/clayallsopp/routable-android" target="_blank" rel="noopener">routable-android</a><br>Router在此基础上做出了一些扩展和改进, 可以用一个map文件(YAML/JSON/XML)来定义基本的构架.<br>输入是URL(可以带参数), 根据map进行解析, 然后传到plugins, 然后每个plugin创造一部分的输出, 当左右plugins的工作结束后, 输出就可用了(输出是由多个plugins组装而成的).<br>文末附有<a href="https://github.com/eyeem/router/tree/master/app" target="_blank" rel="noopener">sample</a>.</p>
+<h3 id="Boosting-app-performance-with-reflectionless-de-serialization"><a href="#Boosting-app-performance-with-reflectionless-de-serialization" class="headerlink" title="Boosting app performance with reflectionless (de)serialization"></a><a href="http://makingvimeo.com/post/148808044404/boosting-app-performance-with-reflectionless" target="_blank" rel="noopener">Boosting app performance with reflectionless (de)serialization</a></h3><p>这篇文章研究了在解析JSON响应的时候如何提高效率.<br>作者他们的应用Vimeo Android用了Retrofit来做网络请求, 用Gson来反序列化, 不好的一点就是有点慢, 因为Gson用反射来解析JSON. 为了改进,他们想要去除反射.<br>他们创建了自己的Gson TypeAdapters, 并且利用程序中各个不同大小的model来测量对比了了反序列化的时间.<br>他们的实验测试了不同的机器对于不同大小model的处理, 在多数情况下, 不用反射会提高性能, 但是也有例外, 在解析很大的model时, 在高性能的机器上, 反而是使用反射的情况比较快.<br>他们的库: <a href="https://github.com/vimeo/stag-java" target="_blank" rel="noopener">stag-java</a><br>STAG: Speedy Type Adapter Generation.</p>
+<h3 id="Introduction-to-Automated-Android-Testing-Part-4"><a href="#Introduction-to-Automated-Android-Testing-Part-4" class="headerlink" title="Introduction to Automated Android Testing - Part 4"></a><a href="https://riggaroo.co.za/introduction-android-testing-part-4/" target="_blank" rel="noopener">Introduction to Automated Android Testing - Part 4</a></h3><p>讲如何写测试的系列文章, 有一个案例sample: <a href="https://github.com/riggaroo/GithubUsersSearchApp" target="_blank" rel="noopener">GithubUsersSearchApp</a>.<br>举例了一个MVP的真实例子, 然后给P写单元测试.<br>Presenter里有一个CompositeSubscription, 用来管理RxJava的subscriptions, detach的时候会注销所有的订阅, 防止了内存泄露和可能存在危险的view操作.<br>还创建了一个Contract接口, 把View和Presenter的接口定义写在里面.<br>这里面还有很机智的一点是把RxJava要用到的Scheduler也从presenter的构造函数传入, 这样在测试的时候就可以使用<code>Schedulers.immediate()</code>, 而在View里面我们就按实际情况使用其他.</p>
+<h3 id="Introduction-to-Android-Testing-Part-3"><a href="#Introduction-to-Android-Testing-Part-3" class="headerlink" title="Introduction to Android Testing - Part 3"></a><a href="https://riggaroo.co.za/introduction-android-testing-part3/" target="_blank" rel="noopener">Introduction to Android Testing - Part 3</a></h3><p>这应该是跟上面那条一个系列文章的第三篇.<br>介绍了如何用Retrofit和RxJava请求Github API然后解析到models.<br>后面是写单元测试, 步骤很清楚, given, when, then.<br>可以从中学习一下怎么给这种Retrofit + RxJava的程序写单元测试.</p>
+<h3 id="Git-as-a-secure-private-Maven-repository"><a href="#Git-as-a-secure-private-Maven-repository" class="headerlink" title="Git as a secure private Maven repository"></a><a href="http://jeroenmols.com/blog/2016/02/05/wagongit/" target="_blank" rel="noopener">Git as a secure private Maven repository</a></h3><p><a href="https://bitbucket.org/" target="_blank" rel="noopener">Bitbucket</a> is a web-based hosting service for projects using Git.<br>讲了如何使用BitBucket或者Github作为一个private的Maven repository.<br>例子: <a href="https://github.com/JeroenMols/WagonGitExample" target="_blank" rel="noopener">WagonGitExample</a><br>Gradle 脚本: <a href="https://github.com/JeroenMols/GitAsMaven" target="_blank" rel="noopener">GitAsMaven</a></p>
+<h3 id="Crash-reporting-in-Firebase"><a href="#Crash-reporting-in-Firebase" class="headerlink" title="Crash reporting in Firebase"></a><a href="http://segunfamisa.com/posts/firebase-crash-reporting" target="_blank" rel="noopener">Crash reporting in Firebase</a></h3><p>比较简单的一个文章, 如何set up Firebase的crash reporting.<br>其实Firebase Crash Reporting一旦构建好之后, 不需要加java代码, 所有uncaught的异常都是自动报告的.<br><a href="https://firebase.google.com/docs/crash/android" target="_blank" rel="noopener">Firebase Report Crashes</a>.</p>
+<h3 id="Isometric-AnimatedVectorDrawable-–-Part-1"><a href="#Isometric-AnimatedVectorDrawable-–-Part-1" class="headerlink" title="Isometric AnimatedVectorDrawable – Part 1"></a><a href="https://blog.stylingandroid.com/isometric-animatedvectordrawable-part-1/" target="_blank" rel="noopener">Isometric AnimatedVectorDrawable – Part 1</a></h3><p>神奇的<a href="https://developer.android.com/reference/android/graphics/drawable/AnimatedVectorDrawable.html" target="_blank" rel="noopener">AnimatedVectorDrawable</a>, 这篇文章讲了用它来实现栅格地形图, 游戏里可以升降的草地的类似的东东. (看文章里的图吧, 我也形容不好.)<br>遗憾的是pathData animation当前在VectorDrawableCompat library暂不支持, 所以文中所讲的技术只能在api 21及其之上使用.<br>文中的例子有9个方块, 4个三角形, 把SVG作为矢量图VectorDrawable导入Android Studio, 然后给每一个path起名字.<br>本文只是part 1, 预告了下一篇文章将讲如何动画.<br>Source code available here: <a href="https://github.com/StylingAndroid/IsometricAnimatedVector/tree/Part1" target="_blank" rel="noopener">IsometricAnimatedVector</a></p>
+<h2 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h2><h3 id="Don’t-just-port-an-iOS-navigation-model-to-Android"><a href="#Don’t-just-port-an-iOS-navigation-model-to-Android" class="headerlink" title="Don’t just port an iOS navigation model to Android"></a><a href="http://www.androidpolice.com/2016/08/13/opinion-bottom-navigation-material-guidelines-platform-awareness/" target="_blank" rel="noopener">Don’t just port an iOS navigation model to Android</a></h3><p>关于bottom nav bars的讨论.<br>Hamburger menu有时候感觉不是很理想, 是因为抽屉里的items总是隐藏状态, 用户不易发现和使用.<br>Bottom bar则把每一个item都时刻展现给用户, 在iOS上使用得很成功.<br>Google在2016年3月提供了Guides: <a href="https://material.google.com/components/bottom-navigation.html" target="_blank" rel="noopener">Bottom navigation</a>.</p>
+<ul>
+<li>什么时候该用bottom navigation呢?<br>应用有3到5个top级别的目的地, 且它们需要直接被访问, 从各个目的地之间转换, 并且它们应该是具有同等重要性的.</li>
+<li>什么时候bottom navigation不适用呢?<br>不能因为怕用户看不见一个东东, 就把它放在bottom nav bar, 作为推广手段.<br>bottom nav bar也不是用来放menu的, 比如放不下了加个more tab, 展开以后是更多的二级页面入口; 也不要用来放一些弹出窗口, 它们同样也不是top level的目的地.<br>bottom nav bar不能放低级别的目的地.<br>最后文章强调了每个平台应该遵从自己的特性, 对Android来说, 如果完全拷贝iOS的设计可能不是一个好主意.</li>
+</ul>
+<h2 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h2><h3 id="stag-java"><a href="#stag-java" class="headerlink" title="stag-java"></a><a href="https://github.com/vimeo/stag-java" target="_blank" rel="noopener">stag-java</a></h3><p>Stag通过减少反射改善了Gson的性能, 为你的model对象自动生成TypeAdapters.</p>
+<h3 id="Router"><a href="#Router" class="headerlink" title="Router"></a><a href="https://github.com/eyeem/router" target="_blank" rel="noopener">Router</a></h3><p>一个基于routable-android的新的Android URL router, 摒弃了Activity/Intent依赖, 并加入了新的特性.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/AnimatedVectorDrawable/" rel="tag"># AnimatedVectorDrawable</a>
+              <a href="/tags/Espresso/" rel="tag"># Espresso</a>
+              <a href="/tags/TV/" rel="tag"># TV</a>
+              <a href="/tags/Wear/" rel="tag"># Wear</a>
+              <a href="/tags/Router/" rel="tag"># Router</a>
+              <a href="/tags/Performance/" rel="tag"># Performance</a>
+              <a href="/tags/Maven/" rel="tag"># Maven</a>
+              <a href="/tags/Bottom-Navigation/" rel="tag"># Bottom Navigation</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Design-Support-Library/2016/07/04/design-support-library-AppBarLayout/" rel="prev" title="CoordinatorLayout, AppBarLayout, CollapsingToolbarLayout使用">
+      <i class="fa fa-chevron-left"></i> CoordinatorLayout, AppBarLayout, CollapsingToolbarLayout使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/08/24/android-weekly-notes-issue-219/" rel="next" title="Android Weekly Notes Issue 219">
+      Android Weekly Notes Issue 219 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-218"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #218</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">1.1.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PathMorphing-with-AnimatedVectorDrawables"><span class="nav-number">1.1.1.</span> <span class="nav-text">PathMorphing with AnimatedVectorDrawables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-UI-Instrumentation-test-with-Espresso"><span class="nav-number">1.1.2.</span> <span class="nav-text">Android UI Instrumentation test with Espresso</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-Build-an-Android-App-for-Fire-TV-Part-1"><span class="nav-number">1.1.3.</span> <span class="nav-text">How to Build an Android App for Fire TV - Part 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Wear-Development-for-beginners"><span class="nav-number">1.1.4.</span> <span class="nav-text">Android Wear Development for beginners</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Router-%E2%80%94-Everything-in-its-Right-Place"><span class="nav-number">1.1.5.</span> <span class="nav-text">Router — Everything in its Right Place</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boosting-app-performance-with-reflectionless-de-serialization"><span class="nav-number">1.1.6.</span> <span class="nav-text">Boosting app performance with reflectionless (de)serialization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Automated-Android-Testing-Part-4"><span class="nav-number">1.1.7.</span> <span class="nav-text">Introduction to Automated Android Testing - Part 4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Android-Testing-Part-3"><span class="nav-number">1.1.8.</span> <span class="nav-text">Introduction to Android Testing - Part 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git-as-a-secure-private-Maven-repository"><span class="nav-number">1.1.9.</span> <span class="nav-text">Git as a secure private Maven repository</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash-reporting-in-Firebase"><span class="nav-number">1.1.10.</span> <span class="nav-text">Crash reporting in Firebase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Isometric-AnimatedVectorDrawable-%E2%80%93-Part-1"><span class="nav-number">1.1.11.</span> <span class="nav-text">Isometric AnimatedVectorDrawable – Part 1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Design"><span class="nav-number">1.2.</span> <span class="nav-text">Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Don%E2%80%99t-just-port-an-iOS-navigation-model-to-Android"><span class="nav-number">1.2.1.</span> <span class="nav-text">Don’t just port an iOS navigation model to Android</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">1.3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stag-java"><span class="nav-number">1.3.1.</span> <span class="nav-text">stag-java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Router"><span class="nav-number">1.3.2.</span> <span class="nav-text">Router</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/";
+    this.page.identifier = "Android/Android-Weekly/2016/08/18/android-weekly-notes-issue-218/";
+    this.page.title = "Android Weekly Notes Issue 218";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

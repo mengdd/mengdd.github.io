@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #245February 19th, 2017Android Weekly Issue #245本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);用Keys">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 245">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #245February 19th, 2017Android Weekly Issue #245本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);用Keys">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-02-22T07:35:47.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.997Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Memory Leak">
+<meta property="article:tag" content="Mockito">
+<meta property="article:tag" content="Testing">
+<meta property="article:tag" content="Unit Test">
+<meta property="article:tag" content="Android Things">
+<meta property="article:tag" content="God Objects">
+<meta property="article:tag" content="Call">
+<meta property="article:tag" content="SMS">
+<meta property="article:tag" content="Keystore">
+<meta property="article:tag" content="Wear 2.0">
+<meta property="article:tag" content="ViewPager">
+<meta property="article:tag" content="Alert">
+<meta property="article:tag" content="Gesture">
+<meta property="article:tag" content="Loading">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 245 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 245
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-22 15:35:47" itemprop="dateCreated datePublished" datetime="2017-02-22T15:35:47+08:00">2017-02-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 245" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-245"><a href="#Android-Weekly-Issue-245" class="headerlink" title="Android Weekly Issue #245"></a>Android Weekly Issue #245</h1><p>February 19th, 2017<br><a href="http://androidweekly.net/issues/issue-245" target="_blank" rel="noopener">Android Weekly Issue #245</a><br>本期内容: 写好单元测试的几条原则; 如何mock Kotlin的对象; 如何消除God Object -&gt; Context; 如何用Android来打电话和发短信, 以及相应事件的监听; 一个监控用电情况的应用(Android Things);<br>用Keystore保存敏感信息; 依赖注入和Dagger 2的使用; Wear应用向Wear 2.0的迁移; 用ViewPager构建无Fragment的应用结构; Android应用的压力测试讨论; RxJava中<code>Subscription</code>注销处理不当引起的内存泄露; 单元测试并不是完全可靠; Trello向离线模式迁移的架构变化.</p>
+<p>本周推荐的代码里有一个顶部提示控件, 一个手势检测库, 还有一个loading view的库.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Write-awesome-unit-tests"><a href="#Write-awesome-unit-tests" class="headerlink" title="Write awesome unit tests"></a><a href="http://jeroenmols.com/blog/2017/02/16/unittests/" target="_blank" rel="noopener">Write awesome unit tests</a></h2><p>作者关于写好单元测试提供了三条简单的规则以及每条规则对应的一些建议.</p>
+<h3 id="1-尽快尽早地跑测试"><a href="#1-尽快尽早地跑测试" class="headerlink" title="1. 尽快尽早地跑测试."></a>1. 尽快尽早地跑测试.</h3><p>尽量在每次改动之后都跑跑测试, 及早发现问题. 你的测试跑得越快你就越有可能经常跑它们.</p>
+<p>为了让测试跑得很快:</p>
+<ul>
+<li>让测试跑在JVM上而不是设备上.</li>
+<li>仅测试独立的逻辑模块.</li>
+<li>不要包含UI, 数据库, 或者网络测试在你的主测试套件中.</li>
+<li>测试中不要使用wait/sleep.</li>
+</ul>
+<h3 id="2-小并且关注点集中的测试"><a href="#2-小并且关注点集中的测试" class="headerlink" title="2. 小并且关注点集中的测试"></a>2. 小并且关注点集中的测试</h3><p>对每一个bug来说, 应该有且只有一个测试挂掉, 并且测试失败的原因应该能从测试方法名上看出来.</p>
+<p>这样就迫使你每一个测试只检查一件事情, 导致你的测试小并且简单易懂, 也好维护. </p>
+<p>实现tips:</p>
+<ul>
+<li>测试中只有一条assert/verify语句.</li>
+<li>有更多的小测试, 而不是几个大测试.</li>
+<li>测试的名字能清楚地描述失败的原因.</li>
+</ul>
+<h3 id="3-100-的可靠性"><a href="#3-100-的可靠性" class="headerlink" title="3. 100%的可靠性"></a>3. 100%的可靠性</h3><p>你的测试应该是完全值得信赖的, 不应该随机失败, 否则你将会对测试失去信任, 也不再会认真对待测试的失败.</p>
+<p>所以你的测试应该是100%可靠的, 只在真的有问题的时候才失败.</p>
+<p>建议是:</p>
+<ul>
+<li>在JVM上跑测试, 因为到设备的连接可能会中断.</li>
+<li>在测试的时候mock网络通信.</li>
+<li>把UI/集成测试移出你的单元测试套件.</li>
+</ul>
+<h2 id="Helping-to-Mock-Tests-in-Kotlin"><a href="#Helping-to-Mock-Tests-in-Kotlin" class="headerlink" title="Helping to Mock Tests in Kotlin"></a><a href="https://medium.com/@orogersilva/helping-androiddev-to-mock-tests-in-kotlin-ab3be5204559#.wetcvdvbt" target="_blank" rel="noopener">Helping to Mock Tests in Kotlin</a></h2><p>因为Kotlin中的类默认是<code>final</code>的, 要继承的话需要显示地声明<code>open</code>.</p>
+<p>如果只是为了在单元测试中mock就要加个open吗? 不.</p>
+<p>本篇文章就介绍如何如何mock Kotlin的对象, 而不用该它的声明.</p>
+<p>首先, <a href="https://kotlinlang.org/docs/tutorials/kotlin-android.html" target="_blank" rel="noopener">Set up</a>; 然后, 使用这个库<a href="https://github.com/nhaarman/mockito-kotlin" target="_blank" rel="noopener">mockito-kotlin</a>.</p>
+<p>文中详细介绍了使用细节, 以及对<code>any()</code>方法的讨论.</p>
+<h2 id="How-and-Why-I-Kill-God-Objects"><a href="#How-and-Why-I-Kill-God-Objects" class="headerlink" title="How and Why I Kill God Objects"></a><a href="https://www.philosophicalhacker.com/post/towards-godless-android-development-how-and-why-i-kill-god-objects/" target="_blank" rel="noopener">How and Why I Kill God Objects</a></h2><p>在面向对象编程中, God Objects是应该被避免的.</p>
+<p>在Android开发中, 最常见的一种God对象是Context. 本文介绍如何清除这个God对象, 同样的方法也可以用来处理其他对象.</p>
+<p>首先说为什么要干掉Context?<br>在做TDD的过程中, 我们希望是面向接口的, 而且我们不应该mock非我们拥有的类型.<br>所以我们不应该直接mock外部的API, 而是应该创建一个自己的接口层.</p>
+<p>作者发现很多类其实并不真正需要一个Context, 它们只是需要得到string或者存储的键值对.</p>
+<p>之后文中举例介绍了如何通过定义接口摆脱Context.</p>
+<h2 id="How-to-Make-Calls-and-Use-SMS-in-Android-Apps"><a href="#How-to-Make-Calls-and-Use-SMS-in-Android-Apps" class="headerlink" title="How to Make Calls and Use SMS in Android Apps"></a><a href="https://code.tutsplus.com/tutorials/how-to-make-calls-and-use-sms-in-android-apps--cms-28168" target="_blank" rel="noopener">How to Make Calls and Use SMS in Android Apps</a></h2><p><strong>如何拨打电话</strong>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String dial = <span class="string">"tel:"</span> + phoneNo;</span><br><span class="line">startActivity(<span class="keyword">new</span> Intent(Intent.ACTION_DIAL, Uri.parse(dial)));</span><br></pre></td></tr></table></figure></p>
+<p>(不需要权限).</p>
+<p>如果想在app里直接拨出去电话, 需要权限<code>android.permission.CALL_PHON</code>, 并且改用<code>ACTION_CALL</code>.</p>
+<p><strong>监控电话事件</strong>:</p>
+<p>需要权限<code>android.permission.READ_PHONE_STATE</code>.来监控来电, 打出去的电话需要这个权限: <code>android.permission.PROCESS_OUTGOING_CALLS</code>.</p>
+<p>具体实现就是在<code>TelephonyManager</code>注册监听器<code>PhoneStateListener</code>. 如果是在Activity中需要在对应的生命周期注销监听器.</p>
+<p>如果需要后台监控, 则需要用到<code>BroadcastReceiver</code>, 过滤actions为<code>android.intent.action.PHONE_STATE</code>和<code>android.intent.action.NEW_OUTGOING_CALL</code>.<br>除了获取相应的电话号码, 还可以进一步阻止电话的拨出.</p>
+<p><strong>发送短信</strong>:</p>
+<p>发短信也是两种方法, 启动一个短信客户端程序, 或者直接从程序里发.</p>
+<p>启动其他程序:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent smsIntent = <span class="keyword">new</span> Intent(Intent.ACTION_SENDTO, Uri.parse(<span class="string">"smsto:"</span> + phoneNo));</span><br><span class="line">smsIntent.putExtra(<span class="string">"sms_body"</span>, message);</span><br><span class="line">startActivity(smsIntent);</span><br></pre></td></tr></table></figure></p>
+<p>自己发: 需要权限<code>android.permission.SEND_SMS</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SmsManager smsManager = SmsManager.getDefault();</span><br><span class="line">smsManager.sendTextMessage(phoneNo, <span class="keyword">null</span>, message, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>注意Android 6.0以上的设备, 本文提到的这些危险权限都是需要动态请求的.</p>
+<p><strong>收短信</strong>:<br>通过<code>BroadcastReceiver</code>, 需要权限<code>android.permission.RECEIVE_SMS</code>.</p>
+<h2 id="Android-Things-Electricity-Monitoring-App"><a href="#Android-Things-Electricity-Monitoring-App" class="headerlink" title="Android Things - Electricity Monitoring App"></a><a href="https://riggaroo.co.za/android-things-electricity-monitoring-app/" target="_blank" rel="noopener">Android Things - Electricity Monitoring App</a></h2><p>作者分享了一个她的Android Things的应用(和Github repo), 可以监控她家的用电情况.</p>
+<h2 id="Using-Keystore-system-to-store-and-retrieve-sensitive-information"><a href="#Using-Keystore-system-to-store-and-retrieve-sensitive-information" class="headerlink" title="Using Keystore system to store and retrieve sensitive information"></a><a href="https://medium.com/@josiassena/using-the-android-keystore-system-to-store-sensitive-information-3a56175a454b#.nu3gw39qp" target="_blank" rel="noopener">Using Keystore system to store and retrieve sensitive information</a></h2><p>利用Android的Keystore来存储一些敏感信息.</p>
+<h2 id="The-lost-droid-and-the-magic-Dagger"><a href="#The-lost-droid-and-the-magic-Dagger" class="headerlink" title="The lost droid and the magic Dagger"></a><a href="https://medium.com/rocknnull/the-lost-droid-and-the-magic-dagger-an-intro-to-dependency-injection-for-android-c686f4399117#.k5vgmxsjh" target="_blank" rel="noopener">The lost droid and the magic Dagger</a></h2><p>一篇依赖注入的介绍文章.<br>先介绍依赖注入是什么, 有什么优点, 接着介绍Dagger 2的使用.</p>
+<h2 id="Wear-2-0-Match-Timer-–-Part-1"><a href="#Wear-2-0-Match-Timer-–-Part-1" class="headerlink" title="Wear 2.0: Match Timer – Part 1"></a><a href="https://blog.stylingandroid.com/wear-2-0-match-timer-part-1/" target="_blank" rel="noopener">Wear 2.0: Match Timer – Part 1</a></h2><p>作者把他的Wear应用升级到了Wear 2.0.</p>
+<h2 id="ViewPager-without-Fragments"><a href="#ViewPager-without-Fragments" class="headerlink" title="ViewPager without Fragments"></a><a href="http://www.ottodroid.net/?p=523" target="_blank" rel="noopener">ViewPager without Fragments</a></h2><p>一些开发者可能不想选择Fragment, 这篇文章里有相关讨论: <a href="https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97#.e4k145h1b" target="_blank" rel="noopener">Advocating Against Android Fragments</a>.</p>
+<p>作者推荐了一些在不用Fragment的情况下构建App的库: <a href="https://github.com/bluelinelabs/Conductor" target="_blank" rel="noopener">Conductor</a>, <a href="https://github.com/sockeqwe/mosby" target="_blank" rel="noopener">mosby</a>, <a href="https://github.com/square/flow" target="_blank" rel="noopener">flow</a>, <a href="https://github.com/square/mortar" target="_blank" rel="noopener">mortar</a>.</p>
+<p>而本篇文章想要展示另一种方法, 既不用Fragment, 也不用上述的第三方库来构建一个App -&gt; 用ViewPager.</p>
+<p>在PagerAdapter里管理了一个Presenter的List, 每一个Presenter管理一个View. 具体实现见原文.</p>
+<h2 id="Stress-testing-Android-apps"><a href="#Stress-testing-Android-apps" class="headerlink" title="Stress-testing Android apps"></a><a href="https://android.jlelse.eu/stress-testing-android-apps-601311ebf590#.8kqor9m39" target="_blank" rel="noopener">Stress-testing Android apps</a></h2><p>之前大神JakeWharton有一个Sample App: <a href="https://github.com/JakeWharton/u2020" target="_blank" rel="noopener">JakeWharton/u2020</a>, 里面有一个debug drawer, 可以用来模拟不同的测试情形, 比如网络连接不好, 延迟, 或者网络错误等等.</p>
+<p>作者他们的App也有一个类似的debug drawer, 他们讨论出了一个需要测试的情形的checklist:</p>
+<ul>
+<li>网络延迟</li>
+<li>错误率</li>
+<li>离线模式</li>
+<li>屏幕旋转</li>
+<li>应用在后台被杀死</li>
+<li>应用升级</li>
+<li>Key Bashing</li>
+<li>多窗口模式 (Android N)</li>
+<li>TransactionTooLargeException (Android N)</li>
+</ul>
+<p>作者甚至发现其中的一些项目组合起来测试非常有趣.</p>
+<ul>
+<li>网络延迟: 可结合方向改变/app后台被杀死测试.</li>
+<li>错误率: 可以检查错误是否被正确处理并被报告.</li>
+<li>离线模式: 关掉网络或者打开飞行模式, 检测正在执行的网络请求是否会引起崩溃; 是否正确通知了用户连接丢失了; 所有应该被cach的内容是否被正确cach了.</li>
+<li>方向改变: 检查:  正在进行的请求会怎么办? app的状态是否被正确恢复了? 是否加载了当前方向对应的正确资源?</li>
+<li>App在后台被杀死: 可以通过命令: <code>adb shell am kill YOUR_PACKAGNE_NAME</code>或者”Do not keep activities”来模拟这种情形. 相关阅读: <a href="https://developer.android.com/training/monitoring-device-state/doze-standby.html" target="_blank" rel="noopener">Optimizing for Doze and App Standby</a>.</li>
+<li>App更新: 升级后之前的数据是否被保存了?</li>
+<li>Key Bashing: 剧烈的滑动和敲击可能产生一些奇怪的错误. 可以跑Monkey来测试一下你的应用: <code>adb shell monkey -p YOUR_PACKAGNE_NAME</code>.</li>
+<li>多窗口模式(Android N): 列出了一些多窗口的测试项目, 详情见原文.</li>
+<li>TransactionTooLargeException (Android N): Bundle中的数据不能太大, 超过限制, 在Android N以上会直接抛异常.</li>
+</ul>
+<h2 id="How-to-leak-memory-with-Subscriptions-in-RxJava"><a href="#How-to-leak-memory-with-Subscriptions-in-RxJava" class="headerlink" title="How to leak memory with Subscriptions in RxJava"></a><a href="https://medium.com/@scanarch/how-to-leak-memory-with-subscriptions-in-rxjava-ae0ef01ad361#.20w4lbkxq" target="_blank" rel="noopener">How to leak memory with Subscriptions in RxJava</a></h2><p>文中举了一个例子, 用RxJava结合MVP, 做网络请求, 更新UI, 很常见的使用情形. </p>
+<p>在生命周期结束的时候调用RxJava的<code>Subscription.unsubscribe()</code>来注销, 以结束还在进行的网络请求.</p>
+<p>看上去没有什么问题, 但是程序实际运行, 反复旋转屏幕进行测试, <code>StrictMode</code>报告出了Activity的<code>InstanceCountViolation</code>, dump memory的确看到了多个Activity的实例. 这是为什么呢? </p>
+<p>作者深究原因, 发现<code>Subscriber</code>的子类存储的都是final的字段, 比如这个类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ActionSubscriber</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Subscriber</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> Action1&lt;? <span class="keyword">super</span> T&gt; onNext;</span><br><span class="line">    <span class="keyword">final</span> Action1&lt;Throwable&gt; onError;</span><br><span class="line">    <span class="keyword">final</span> Action0 onCompleted;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ActionSubscriber</span><span class="params">(Action1&lt;? <span class="keyword">super</span> T&gt; onNext, Action1&lt;Throwable&gt; onError, Action0 onCompleted)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.onNext = onNext;</span><br><span class="line">        <span class="keyword">this</span>.onError = onError;</span><br><span class="line">        <span class="keyword">this</span>.onCompleted = onCompleted;</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为它们都是final的, 所以最后即便执行了注销操作, 也是没有办法把它们置为null的.</p>
+<p>在生命周期结束的时候注销的操作是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    subscription.unsubscribe();</span><br><span class="line">    view = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个<code>subscription</code>是<code>subscribe()</code>方法的返回值, 被保存在Presenter的一个字段里, 它实际就是<code>Subscriber</code>对象.</p>
+<p>这里的问题就是, 在<code>destroy()</code>之后, 该引用并没有被置为null, 导致了下面的引用链:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Presenter -&gt; subscription字段, 也即匿名的`Subscriber`对象 -&gt; final字段 -&gt; 对view的引用 -&gt; 对Activity的引用.</span><br></pre></td></tr></table></figure>
+<p>从而造成了内存泄露.</p>
+<p>解决的办法有两个:</p>
+<ul>
+<li>在<code>subscription.unsubscribe();</code>之后把<code>subscription</code>字段置为null.</li>
+<li>使用<code>CompositeSubscription</code>, 它可以管理多个<code>Subscription</code>对象, 用它的<code>clear()</code>方法, 它会unsubscribe所有项目并且清除所有的引用.</li>
+</ul>
+<p>文后还列了相关的资料, 作者发现问题并寻找原因的思路很值得学习.</p>
+<h2 id="Your-Unit-tests-might-not-be-as-reliable-as-you-thought"><a href="#Your-Unit-tests-might-not-be-as-reliable-as-you-thought" class="headerlink" title="Your Unit tests might not be as reliable as you thought"></a><a href="https://afterecho.uk/blog/your-unit-tests-might-not-be-as-reliable-as-you-thought.html" target="_blank" rel="noopener">Your Unit tests might not be as reliable as you thought</a></h2><p>作者举了个例子, 说明即便你的单元测试过了, 也不保证你的产品代码一定没问题.</p>
+<p>他的例子是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SimpleDateFormat fmt = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>失败的原因是因为<code>XXX</code>格式是在Android 4.3以上才支持的, 它是在<code>java.text</code>包下的. 所以实际在高版本的设备还运行正常, 换个低版本的设备就崩溃了.</p>
+<p>所以单元测试并不一定可靠, 因为跑单元测试的JVM和Android设备上的JVM有可能不一样.</p>
+<h2 id="Airplane-Mode-Enabling-Trello-Mobile-Offline"><a href="#Airplane-Mode-Enabling-Trello-Mobile-Offline" class="headerlink" title="Airplane Mode: Enabling Trello Mobile Offline"></a><a href="http://tech.trello.com/sync-architecture/" target="_blank" rel="noopener">Airplane Mode: Enabling Trello Mobile Offline</a></h2><p>Trello移动移动现在有离线模式了. 作者介绍了他们的心路历程和架构变化. (比较简单和笼统的介绍).</p>
+<h2 id="Self-guided-resources-to-Android-development"><a href="#Self-guided-resources-to-Android-development" class="headerlink" title="Self-guided resources to Android development"></a><a href="https://twitter.com/corey_latislaw/status/831624360175603713?s=03" target="_blank" rel="noopener">Self-guided resources to Android development</a></h2><p>这是一条Twitter, 作者分享了Android的学习资源. (可惜我打不开里面说的链接, 不知为何.)</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Alerter"><a href="#Alerter" class="headerlink" title="Alerter"></a><a href="https://github.com/Tapadoo/Alerter" target="_blank" rel="noopener">Alerter</a></h2><p>一个加在Window的Decor View上面的顶部提示栏, 类似于Snackbar和Toast一类的东东. 可定制外观, icon, 加多行字, 可添加click事件.</p>
+<h2 id="sensey"><a href="#sensey" class="headerlink" title="sensey"></a><a href="https://github.com/nisrulz/sensey" target="_blank" rel="noopener">sensey</a></h2><p>一个好用的手势检测库.</p>
+<h2 id="mkloader"><a href="#mkloader" class="headerlink" title="mkloader"></a><a href="https://github.com/nntuyen/mkloader" target="_blank" rel="noopener">mkloader</a></h2><p>好看并且平滑的自定义loading view. 目前支持好几种图案.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Memory-Leak/" rel="tag"># Memory Leak</a>
+              <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/Unit-Test/" rel="tag"># Unit Test</a>
+              <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
+              <a href="/tags/God-Objects/" rel="tag"># God Objects</a>
+              <a href="/tags/Call/" rel="tag"># Call</a>
+              <a href="/tags/SMS/" rel="tag"># SMS</a>
+              <a href="/tags/Keystore/" rel="tag"># Keystore</a>
+              <a href="/tags/Wear-2-0/" rel="tag"># Wear 2.0</a>
+              <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+              <a href="/tags/Alert/" rel="tag"># Alert</a>
+              <a href="/tags/Gesture/" rel="tag"># Gesture</a>
+              <a href="/tags/Loading/" rel="tag"># Loading</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/02/13/android-weekly-notes-issue-244/" rel="prev" title="Android Weekly Notes Issue 244">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 244
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Database/Realm/2017/02/27/android-realm-guide/" rel="next" title="Android Realm数据库使用指南">
+      Android Realm数据库使用指南 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-245"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #245</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Write-awesome-unit-tests"><span class="nav-number">2.1.</span> <span class="nav-text">Write awesome unit tests</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%B0%BD%E5%BF%AB%E5%B0%BD%E6%97%A9%E5%9C%B0%E8%B7%91%E6%B5%8B%E8%AF%95"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 尽快尽早地跑测试.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B0%8F%E5%B9%B6%E4%B8%94%E5%85%B3%E6%B3%A8%E7%82%B9%E9%9B%86%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. 小并且关注点集中的测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-100-%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">2.1.3.</span> <span class="nav-text">3. 100%的可靠性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Helping-to-Mock-Tests-in-Kotlin"><span class="nav-number">2.2.</span> <span class="nav-text">Helping to Mock Tests in Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-and-Why-I-Kill-God-Objects"><span class="nav-number">2.3.</span> <span class="nav-text">How and Why I Kill God Objects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-Make-Calls-and-Use-SMS-in-Android-Apps"><span class="nav-number">2.4.</span> <span class="nav-text">How to Make Calls and Use SMS in Android Apps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Things-Electricity-Monitoring-App"><span class="nav-number">2.5.</span> <span class="nav-text">Android Things - Electricity Monitoring App</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Keystore-system-to-store-and-retrieve-sensitive-information"><span class="nav-number">2.6.</span> <span class="nav-text">Using Keystore system to store and retrieve sensitive information</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-lost-droid-and-the-magic-Dagger"><span class="nav-number">2.7.</span> <span class="nav-text">The lost droid and the magic Dagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wear-2-0-Match-Timer-%E2%80%93-Part-1"><span class="nav-number">2.8.</span> <span class="nav-text">Wear 2.0: Match Timer – Part 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewPager-without-Fragments"><span class="nav-number">2.9.</span> <span class="nav-text">ViewPager without Fragments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stress-testing-Android-apps"><span class="nav-number">2.10.</span> <span class="nav-text">Stress-testing Android apps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-leak-memory-with-Subscriptions-in-RxJava"><span class="nav-number">2.11.</span> <span class="nav-text">How to leak memory with Subscriptions in RxJava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Your-Unit-tests-might-not-be-as-reliable-as-you-thought"><span class="nav-number">2.12.</span> <span class="nav-text">Your Unit tests might not be as reliable as you thought</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Airplane-Mode-Enabling-Trello-Mobile-Offline"><span class="nav-number">2.13.</span> <span class="nav-text">Airplane Mode: Enabling Trello Mobile Offline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-guided-resources-to-Android-development"><span class="nav-number">2.14.</span> <span class="nav-text">Self-guided resources to Android development</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Alerter"><span class="nav-number">3.1.</span> <span class="nav-text">Alerter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sensey"><span class="nav-number">3.2.</span> <span class="nav-text">sensey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mkloader"><span class="nav-number">3.3.</span> <span class="nav-text">mkloader</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/";
+    this.page.identifier = "Android/Android-Weekly/2017/02/22/android-weekly-notes-issue-245/";
+    this.page.title = "Android Weekly Notes Issue 245";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

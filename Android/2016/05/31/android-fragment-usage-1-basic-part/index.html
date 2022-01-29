@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Fragment使用的基本知识点总结, 包括Fragment的添加, 参数传递和通信, 生命周期和各种操作.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Fragment使用(一) 基础篇 温故知新">
+<meta property="og:url" content="http://mengdd.github.io/Android/2016/05/31/android-fragment-usage-1-basic-part/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Fragment使用的基本知识点总结, 包括Fragment的添加, 参数传递和通信, 生命周期和各种操作.">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-lifecycle.png">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-lifecycle-2.png">
+<meta property="og:image" content="http://mengdd.github.io/images/activity-fragment-lifecycle.png">
+<meta property="og:image" content="http://mengdd.github.io/images/fragment-lifecycle-with-callbacks.png">
+<meta property="article:published_time" content="2016-05-31T04:51:19.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.987Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Fragment">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/fragment-lifecycle.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2016/05/31/android-fragment-usage-1-basic-part/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Fragment使用(一) 基础篇 温故知新 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2016/05/31/android-fragment-usage-1-basic-part/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Fragment使用(一) 基础篇 温故知新
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-05-31 12:51:19" itemprop="dateCreated datePublished" datetime="2016-05-31T12:51:19+08:00">2016-05-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2016/05/31/android-fragment-usage-1-basic-part/" class="post-meta-item leancloud_visitors" data-flag-title="Android Fragment使用(一) 基础篇 温故知新" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2016/05/31/android-fragment-usage-1-basic-part/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2016/05/31/android-fragment-usage-1-basic-part/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Fragment使用的基本知识点总结, 包括Fragment的添加, 参数传递和通信, 生命周期和各种操作.</p>
+<a id="more"></a>
+<h1 id="Fragment使用基础"><a href="#Fragment使用基础" class="headerlink" title="Fragment使用基础"></a>Fragment使用基础</h1><h2 id="Fragment添加"><a href="#Fragment添加" class="headerlink" title="Fragment添加"></a>Fragment添加</h2><p>方法一: 布局里的标签<fragment><br>标识符: tag, id, 如果都没有, container的id将会被使用.</fragment></p>
+<p>方法二: 动态添加<br>动态添加利用了一个transaction:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FragmentManager fragmentManager = getFragmentManager();</span><br><span class="line">Fragment fragment = fragmentManager.findFragmentByTag(FragmentB.TAG);</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">null</span> == fragment) &#123;</span><br><span class="line">    FragmentB fragmentB = <span class="keyword">new</span> FragmentB();</span><br><span class="line">    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();</span><br><span class="line">    fragmentTransaction.add(R.id.fragment_container, fragmentB, FragmentB.TAG)</span><br><span class="line">                       .commit();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>commit()</code>方法并不立即执行transaction中包含的动作,而是把它加入到UI线程队列中.<br>如果想要立即执行,可以在commit之后立即调用FragmentManager的<a href="https://developer.android.com/reference/android/app/FragmentManager.html#executePendingTransactions(" target="_blank" rel="noopener"><code>executePendingTransactions()</code></a>)方法.</p>
+<p><code>commit()</code>方法必须在状态存储之前调用,否则会抛出异常,如果觉得状态丢失没关系,可以调用<code>commitAllowingStateLoss()</code>. 但是除非万不得已, 一般不推荐用这个方法, 会掩盖很多错误.</p>
+<h2 id="Back-Stack"><a href="#Back-Stack" class="headerlink" title="Back Stack"></a>Back Stack</h2><p>Activity的back stack: 系统维护, 每个task一个back stack.<br>Fragment的back stack: 宿主activity掌管, 每个activity一个.</p>
+<p>通过调用<code>addToBackStack()</code>,commit()的一系列转换作为一个transaction被存储在back stack中,<br>用户按Back键, 从栈中pop出一个transaction, 逆转操作, 可以返回上一个转换前的状态.</p>
+<p>一个transaction可以包含多种操作, 并且不局限于对同一个Fragment, 所以每一个transaction实际上可以是一系列对多个fragment的操作的组合.<br>加入到back stack中去的时候, 是把这一系列的组合作为一个原子, 加入到back stack中.</p>
+<h2 id="构造和参数传递"><a href="#构造和参数传递" class="headerlink" title="构造和参数传递"></a>构造和参数传递</h2><p>所有的Fragment都必须有一个<code>public的无参构造函数</code>, 因为framework经常会在需要的时候重新创建实例(状态恢复时), 它需要的就是这个构造.<br>如果无参构造没有提供,会有异常.</p>
+<p>所以<code>不要给Fragment写有参数的构造函数, 也不要企图搞个什么单例的Fragment</code>. 这些都是反设计的.</p>
+<p>参数传递的正确姿势:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> FragmentWithParameters <span class="title">newInstance</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">    FragmentWithParameters fragmentWithParameter = <span class="keyword">new</span> FragmentWithParameters();</span><br><span class="line">    Bundle args = <span class="keyword">new</span> Bundle();</span><br><span class="line">    args.putInt(NUM, num);</span><br><span class="line">    fragmentWithParameter.setArguments(args);</span><br><span class="line">    <span class="keyword">return</span> fragmentWithParameter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    num = getArguments() != <span class="keyword">null</span> ? getArguments().getInt(NUM) : <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里是提供了一个静态方法, 也可以new出对象后自己set Bundle参数.</p>
+<h2 id="Fragment的通信"><a href="#Fragment的通信" class="headerlink" title="Fragment的通信"></a>Fragment的通信</h2><p>除了DialogFragment和嵌套Fragment需要与自己的parent fragment通信以外, 一般的fragment是不与其他fragment有任何通信的. 因为要求应尽量独立, 模块化, 可复用.<br>fragment与自己的parent activity (除了嵌套和dialog的情况外, 这个parent通常是activity) 有直接通信, 一般以这三种方式:</p>
+<ol>
+<li>在构造fragment的时候, 通过Bundle传递参数.</li>
+<li>parent可以直接调用fragment的public方法, 这里也可以传递一些参数.</li>
+<li>Listener, 也即parent实现的callback接口, fragment可以在自己内部调用, 这里fragment也可以传递参数出去.</li>
+</ol>
+<p>对于DialogFragment来说, 可以通过一个public的set方法将外面的target设置进去.<br>比如用Fragment的这个方法: <a href="https://developer.android.com/reference/android/app/Fragment.html#setTargetFragment(android.app.Fragment,%20int" target="_blank" rel="noopener">setTargetFragment()</a>)</p>
+<p><a href="https://guides.codepath.com/android/Using-DialogFragment#passing-data-to-parent-fragment" target="_blank" rel="noopener">例子</a><br>对于嵌套(nested)Fragment, 通信方式与上面普通的fragment类似, 只不过parent此时不是activity而是一个fragment.<br>后面会单独有一个文章说嵌套Fragment的使用, 敬请期待.</p>
+<h1 id="Fragment的生命周期"><a href="#Fragment的生命周期" class="headerlink" title="Fragment的生命周期"></a>Fragment的生命周期</h1><p>Fragment的生命周期首先和Activity的生命周期密切相关,<br>如果activity stopped,其中所有的fragment都不能start;<br>如果activity destroyed, 其中所有的fragment都会被destroyed.<br>只有activity在resumed状态下,fragment的生命周期可以独立改变,否则它被activity控制.</p>
+<p><img src="/images/fragment-lifecycle.png" alt><br><img src="/images/fragment-lifecycle-2.png" alt><br><img src="/images/activity-fragment-lifecycle.png" alt><br><img src="/images/fragment-lifecycle-with-callbacks.png" alt></p>
+<p>上面这个图来自于: <a href="https://corner.squareup.com/2014/10/advocating-against-android-fragments.html" target="_blank" rel="noopener">https://corner.squareup.com/2014/10/advocating-against-android-fragments.html</a><br>这里还有一个更吊的图: <a href="https://github.com/xxv/android-lifecycle" target="_blank" rel="noopener">https://github.com/xxv/android-lifecycle</a></p>
+<h1 id="FragmentTransaction基础操作"><a href="#FragmentTransaction基础操作" class="headerlink" title="FragmentTransaction基础操作"></a>FragmentTransaction基础操作</h1><h2 id="操作类型"><a href="#操作类型" class="headerlink" title="操作类型"></a>操作类型</h2><p><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html" target="_blank" rel="noopener">FragmentTransaction</a> 中对Fragment有如下几种操作:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">attach(), detach()</span><br><span class="line">add(), remove(),</span><br><span class="line">show(), hide(),</span><br><span class="line">replace()</span><br></pre></td></tr></table></figure>
+<p>除了<code>replace()</code>以外其他都是成对的.</p>
+<p>其中<code>attach()</code>和<code>detach()</code>不是很常用.<br>调用<code>detach()</code>之后, fragment实际的生命周期会走到onDestroyView(), 但不会走onDestroy()和onDetach(), 也即fragment本身并没有被销毁, 只是view被销毁了. 这和addToBackStack()的情况一样, 尽管调用detach()的时候没有addToBackStack(), 仍然只是走到view被销毁的阶段.</p>
+<p><code>add()</code>和<code>remove()</code>是将fragment添加和移除.<br>remove()比detach()要彻底一些, 如果不加入到back stack, remove()的时候, fragment的生命周期会一直走到onDetach().</p>
+<p><code>show()</code>和<code>hide()</code>是用来设置fragment的显示和隐藏状态, 这两个方法并不对应fragment的状态变化,只是将view设置为visible和gone,然后调用onHiddenChanged()的回调.</p>
+<p>实际上<code>replace() == remove() + add()</code>, 所以它的反操作也是replace(), 只不过把add和remove的东西交换一下.</p>
+<p>关于replace()和show(), hide()的选择, 要根据实际使用情形来定.<br><code>replace()</code>的好处是会减少内存占用, 但是返回时需要重新走完初始化的过程.<br><code>show()</code>和<code>hide()</code>只是控制了fragment的显示和隐藏, 不会改变生命周期状态, 也即fragment始终是处于running状态的, 被保持在内存中, 适用于频繁切换的情形.</p>
+<h2 id="remove-replace-是否加到back-stack对生命周期的影响"><a href="#remove-replace-是否加到back-stack对生命周期的影响" class="headerlink" title="remove(), replace()是否加到back stack对生命周期的影响"></a>remove(), replace()是否加到back stack对生命周期的影响</h2><p>前面说过, <code>replace() == remove() + add()</code><br>新的fragment将取代在容器布局中的fragment, 如果没有,将直接添加新的fragment.</p>
+<p>是否添加到back stack对fragment的生命周期是有影响的.<br><code>remove()</code>或者<code>replace()</code>的时候,如果<code>commit()</code>之前没有调用<code>addToBackStack()</code>,那个旧fragment将会被destroyed和detach; 即完全销毁和移除.</p>
+<p>如果调用了<code>addToBackStack()</code>,旧的fragment会处在stopped状态,调用到<code>onDestroyView()</code>, 可以通过返回键来resume.<br>这个时候对于旧的Fragment来说, 成员变量依然在,但是View被销毁了. 所以返回时它的生命周期从<code>onCreateView()</code>开始重建View.</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://developer.android.com/reference/android/app/Fragment.html" target="_blank" rel="noopener">Android Reference Fragment</a><br><a href="https://developer.android.com/reference/android/app/FragmentTransaction.html" target="_blank" rel="noopener">Android Reference FragmentTransaction</a><br><a href="https://guides.codepath.com/android/Creating-and-Using-Fragments" target="_blank" rel="noopener">CodePath Guides: Creating and Using Fragments</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Fragment/" rel="tag"># Fragment</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/uncategorized/2016/05/23/set-up-github-pages-with-hexo/" rel="prev" title="Set up github pages with Hexo">
+      <i class="fa fa-chevron-left"></i> Set up github pages with Hexo
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2016/06/02/android-fragment-usage-2-nested-fragments/" rel="next" title="Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误">
+      Android Fragment使用(二) 嵌套Fragments (Nested Fragments) 的使用及常见错误 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fragment%E4%BD%BF%E7%94%A8%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">Fragment使用基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.1.</span> <span class="nav-text">Fragment添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Back-Stack"><span class="nav-number">1.2.</span> <span class="nav-text">Back Stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%92%8C%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">1.3.</span> <span class="nav-text">构造和参数传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="nav-number">1.4.</span> <span class="nav-text">Fragment的通信</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fragment%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">Fragment的生命周期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FragmentTransaction%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">FragmentTransaction基础操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">操作类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#remove-replace-%E6%98%AF%E5%90%A6%E5%8A%A0%E5%88%B0back-stack%E5%AF%B9%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">3.2.</span> <span class="nav-text">remove(), replace()是否加到back stack对生命周期的影响</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2016/05/31/android-fragment-usage-1-basic-part/";
+    this.page.identifier = "Android/2016/05/31/android-fragment-usage-1-basic-part/";
+    this.page.title = "Android Fragment使用(一) 基础篇 温故知新";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

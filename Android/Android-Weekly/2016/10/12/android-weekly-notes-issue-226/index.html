@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #226October 9th, 2016Android Weekly Issue #226 本期内容包括: 用Firebase做A&#x2F;B Test; 用RxJava做动画; MVP; proguardFiles; RxJava和Android Data Binding的结合; Mockito的更新; Gradle configurations等.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 226">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #226October 9th, 2016Android Weekly Issue #226 本期内容包括: 用Firebase做A&#x2F;B Test; 用RxJava做动画; MVP; proguardFiles; RxJava和Android Data Binding的结合; Mockito的更新; Gradle configurations等.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-10-12T09:46:27.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.991Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Firebase">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Proguard">
+<meta property="article:tag" content="Data Binding">
+<meta property="article:tag" content="Mockito">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 226 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 226
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-10-12 17:46:27" itemprop="dateCreated datePublished" datetime="2016-10-12T17:46:27+08:00">2016-10-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 226" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-226"><a href="#Android-Weekly-Issue-226" class="headerlink" title="Android Weekly Issue #226"></a>Android Weekly Issue #226</h1><p>October 9th, 2016<br><a href="http://androidweekly.net/issues/issue-226" target="_blank" rel="noopener">Android Weekly Issue #226</a></p>
+<p>本期内容包括: 用Firebase做A/B Test; 用RxJava做动画; MVP; proguardFiles; RxJava和Android Data Binding的结合; Mockito的更新; Gradle configurations等.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="用Firebase做A-B-Test-A-B-Test-your-App-using-Firebase-Remote-Config"><a href="#用Firebase做A-B-Test-A-B-Test-your-App-using-Firebase-Remote-Config" class="headerlink" title="用Firebase做A/B Test A/B Test your App using Firebase Remote Config"></a>用Firebase做A/B Test <a href="https://riggaroo.co.za/ab-test-app-firebase-remote-config/" target="_blank" rel="noopener">A/B Test your App using Firebase Remote Config</a></h2><p>作者讲了如何用Firebase的Remote Config做A/B Test.</p>
+<h2 id="用RxJava做动画-Android-animations-powered-by-RxJava"><a href="#用RxJava做动画-Android-animations-powered-by-RxJava" class="headerlink" title="用RxJava做动画 Android animations powered by RxJava"></a>用RxJava做动画 <a href="https://pspdfkit.com/blog/2016/android-animations-powered-by-rx-java/" target="_blank" rel="noopener">Android animations powered by RxJava</a></h2><p><strong>动画基础</strong></p>
+<p>用<br><a href="https://developer.android.com/reference/android/view/ViewPropertyAnimator.html" target="_blank" rel="noopener">ViewPropertyAnimator</a> 操作View的属性动画很容易也很方便.</p>
+<p>本文讲的内容主要用<a href="https://developer.android.com/reference/android/support/v4/view/ViewPropertyAnimatorCompat.html" target="_blank" rel="noopener">ViewPropertyAnimatorCompat</a>, 它是通过这个方法获得的: <a href="https://developer.android.com/reference/android/support/v4/view/ViewCompat.html#animate(android.view.View" target="_blank" rel="noopener">ViewCompat.animate(targetView)</a>).</p>
+<p>它是这样用的:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ViewCompat.animate(someButton)</span><br><span class="line">    .scaleX(<span class="number">0f</span>)                         <span class="comment">// Scale to 0 horizontally</span></span><br><span class="line">    .scaleY(<span class="number">0f</span>)                         <span class="comment">// Scale to 0 vertically</span></span><br><span class="line">    .setDuration(<span class="number">300</span>)                   <span class="comment">// Duration of the animation in milliseconds.</span></span><br><span class="line">    .withEndAction &#123; removeView(view) &#125; <span class="comment">// Called when the animation ends successfully.</span></span><br></pre></td></tr></table></figure></p>
+<p><a href="http://reactivex.io/RxJava/javadoc/rx/Completable.html" target="_blank" rel="noopener">Completable</a> 是RxJava1.1.1加入的.</p>
+<p>作者通过RxJava来做他们的动画效果.<br>这在链式连接多个动画和其他操作的时候很有用.</p>
+<h2 id="Android-Architecture-Patterns-Part-2-MVP"><a href="#Android-Architecture-Patterns-Part-2-MVP" class="headerlink" title="Android Architecture Patterns Part 2: MVP"></a><a href="https://upday.github.io/blog/model-view-presenter/" target="_blank" rel="noopener">Android Architecture Patterns Part 2: MVP</a></h2><p>关于Android程序的架构, google提供了<a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="noopener">Android Architecture Blueprints</a>, 其中作者他们合作于<a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp-rxjava/" target="_blank" rel="noopener">MVP &amp; RxJava</a>的sample.</p>
+<p><strong>MVP(Model-View-Presenter)模式</strong>:</p>
+<ul>
+<li>Model: 数据层. 负责与网络层和数据库层的逻辑交互.</li>
+<li>View: UI层. 显示数据, 并向Presenter报告用户行为.</li>
+<li>Presenter: 从Model拿数据, 应用到UI层, 管理UI的状态, 决定要显示什么以及响应用户的行为.</li>
+</ul>
+<p>V和P联系紧密, 所以它们通常会持有对方的引用. 为了给P做单元测试, V是一个抽象的接口. P和对应的V的关系定义在一个<code>Contract</code>接口里, 这样可以让代码可读性更好, 更容易发现二者的联系.</p>
+<p><strong>MVP模式 &amp; RxJava在Android Architecture Blueprints里的应用</strong></p>
+<p>Google blueprint的Sample是一个<a href="https://github.com/googlesamples/android-architecture/wiki/To-do-app-specification" target="_blank" rel="noopener">To Do应用</a>. 它让用户可以创建, 阅读, 更新和删除to do task, 也可以过滤显示. RxJava主要是用来进行一些非主线程的异步操作.</p>
+<p>然后作者详细说明了代码实现.</p>
+<p><strong>Model</strong>中用RxJava在本地和网络取数据.<br>(他们的单元测试里是下划线和驼峰结合的方法命名方式.)</p>
+<p><strong>View</strong>有一个base接口:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BaseView</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPresenter</span><span class="params">(T presenter)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>View在<code>onResume()</code>的时候调用Presenter的<code>subscribe()</code>, <code>onPause()</code>的时候调用Presenter的<code>unsubscribe()</code>. 如果View接口的实现不是Fragment或Activity, 而是Android的自定义View, 那么在<code>onAttachedToWindow()</code>和<code>onDetachedFromWindow()</code>方法里分别调用这两个方法.</p>
+<p>View的测试是用Espresso写的.</p>
+<p><strong>Presenter</strong>也有一个base接口:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BasePresenter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">subscribe</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unsubscribe</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>View和Model都通过构造函数传入Presenter, 在Presenter构造里还要调用View的<code>setPresetner()</code>方法.</p>
+<p>每一个Presenter还要暴露一些其他的方法, 对应View中用户的行为.</p>
+<p><strong>MVP模式的缺点</strong>:<br>MVP模式很好地分离了概念, 当然这是好的. 但是当开发很小的app或者只是做一个原型时, 确实感觉过度设计了. 为了减少所用的接口, 有一些开发者省去了<code>Contract</code>接口类, 也删掉了Presenter的接口.</p>
+<p>当把UI的逻辑移到Presenter中时, 它就变成了一个全能的类, 代码很长. 为了解决这个问题, 可以进一步拆分代码, 并且记得创建单一职能, 并且可以被单元测试的类.</p>
+<p><strong>结论</strong>:<br><a href="https://upday.github.io/blog/model-view-controller/" target="_blank" rel="noopener">Model-View-Controller MVC模式</a> 有两个主要的缺点: 首先, View持有Controller和Model的引用; 第二, 它没有把对UI逻辑的操作限制在单一的类里, 这个职能被Controller和View或者Model共享.</p>
+<p>MVP模式解决了这两个问题: 砍断了View和Model之间的联系, 用Presenter来管理所有和View显示相关的逻辑(handles everything related to the presentation of the View), 并且这个类是很容易被单元测试的.</p>
+<h2 id="proguardFiles-A-Cautionary-Tale"><a href="#proguardFiles-A-Cautionary-Tale" class="headerlink" title="proguardFiles: A Cautionary Tale"></a><a href="https://stkent.github.io/2016/10/07/proguardfiles-a-cautionary-tale.html" target="_blank" rel="noopener">proguardFiles: A Cautionary Tale</a></h2><p>作者有三个buildTypes: debug, beta, release.</p>
+<p>其中beta用了initWith(buildTypes.debug).<br>他想给不同的type加上不同的proguard files. 让debug不混淆(<code>-dontobfuscate</code>), beta和release混淆.<br>结果却发现beta没有混淆.</p>
+<p>查看代码发现<code>proguardFiles</code>其实是将proguard files叠加.<br>作者找到的解决方式是用<code>setProguardFiles()</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">  debug &#123;</span><br><span class="line">    // ...</span><br><span class="line">    proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;, &apos;proguard-debug.pro&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  beta &#123;</span><br><span class="line">    initWith(buildTypes.debug)</span><br><span class="line">    // ...</span><br><span class="line">    // New!</span><br><span class="line">    setProguardFiles([getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;])</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  release &#123;</span><br><span class="line">    // ...</span><br><span class="line">    proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>评论区有人指出还可以这样:<br>在<code>defaultConfig</code>中:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br></pre></td></tr></table></figure></p>
+<p>然后在<code>debug</code>中: 加<code>proguardFile &#39;proguard-debug.pro</code>, 这样更简洁一些.</p>
+<p>相关文档: <a href="https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.BuildType.html" target="_blank" rel="noopener">BuildType</a>.</p>
+<h2 id="RxJava-meets-Android-Data-Binding"><a href="#RxJava-meets-Android-Data-Binding" class="headerlink" title="RxJava meets Android Data Binding"></a><a href="https://medium.com/tangoagency/rxjava-meets-android-data-binding-4ca5e1144107#.p13x1zwkc" target="_blank" rel="noopener">RxJava meets Android Data Binding</a></h2><p>作者使用例子介绍了如何将RxJava和Android的Data Binding结合起来使用.</p>
+<h2 id="Mocking-Kotlin-with-Mockito"><a href="#Mocking-Kotlin-with-Mockito" class="headerlink" title="Mocking Kotlin with Mockito"></a><a href="http://hadihariri.com/2016/10/04/Mocking-Kotlin-With-Mockito/" target="_blank" rel="noopener">Mocking Kotlin with Mockito</a></h2><p>因为Kotlin默认类和方法都是final的, 如果你想要继承, 必须显式声明<code>open</code>.</p>
+<p>当你想要在测试中Mock一些行为时, Mockito可能会报错, 因为它无法mock一个final的class/method.</p>
+<p>于是你可能要修改源代码, 加<code>open</code>或者是接口, 仅仅是为了测试.</p>
+<p>Mockito 2解决了这个问题: <a href="https://github.com/mockito/mockito/wiki/What&#39;s-new-in-Mockito-2" target="_blank" rel="noopener">What’s new in Mockito 2</a>.</p>
+<p>你只需要在<code>resources/mockito-extensions</code>目录下创建一个文件: <code>org.mockito.plugins.MockMaker</code>.<br>里面只包含一行内容:<br><code>mock-maker-inline</code>.</p>
+<h2 id="Droidcon-NYC-2016-Victor-Nascimento"><a href="#Droidcon-NYC-2016-Victor-Nascimento" class="headerlink" title="Droidcon NYC 2016 - Victor Nascimento"></a><a href="https://medium.com/@victor.nascimento/droidcon-ny-2016-e037cb81559#.4ncx0xcgg" target="_blank" rel="noopener">Droidcon NYC 2016 - Victor Nascimento</a></h2><h2 id="Droidcon-NYC-2016-Florina-Muntenescu"><a href="#Droidcon-NYC-2016-Florina-Muntenescu" class="headerlink" title="Droidcon NYC 2016 - Florina Muntenescu"></a><a href="https://upday.github.io/blog/droidcon_nyc/" target="_blank" rel="noopener">Droidcon NYC 2016 - Florina Muntenescu</a></h2><p>这两篇是关于Droidcon NYC 2016的感想.</p>
+<h2 id="Android-Gradle-configurations"><a href="#Android-Gradle-configurations" class="headerlink" title="Android Gradle configurations"></a><a href="http://www.thedroidsonroids.com/blog/android/android-gradle-configurations/" target="_blank" rel="noopener">Android Gradle configurations</a></h2><p>Gradle中的configuration是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">	annotationProcessor &apos;com.jakewharton:butterknife-compiler:8.4.0&apos;</span><br><span class="line">	compile &apos;com.jakewharton:butterknife:8.4.0&apos;</span><br><span class="line">	compile project(&apos;:api&apos;)</span><br><span class="line">	debugCompile &apos;com.squareup.leakcanary:leakcanary-android:1.4&apos;</span><br><span class="line">	releaseCompile &apos;com.squareup.leakcanary:leakcanary-android-no-op:1.4&apos;</span><br><span class="line">	androidTestCompile &apos;com.android.support.test:runner:0.5&apos;</span><br><span class="line">	testCompile &apos;org.robolectric:robolectric:3.1.2&apos;</span><br><span class="line">	testAnnotationProcessor &apos;org.robolectric:robolectric-processor:3.1.2&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>模式是<code>configuationName dependencyNotation</code>.</p>
+<p>Configuration names由两部分组成:</p>
+<ul>
+<li>可选的前缀, 指定build variant, product flavor或者build type.</li>
+<li>必需的后缀, 指定scope.</li>
+</ul>
+<p>比如在<code>debugCompile</code>中, debug就是一个build type.</p>
+<p><code>compile</code>没有前缀, 就表示它应用到所有的build类型里.</p>
+<p>每一个正常的configuration都有一个相应的unit test版, 比如<code>testCompile</code>, <code>testDebugCompile</code>.</p>
+<p>对于功能测试来说是<code>androidTest</code>, 只有这一种.</p>
+<p><strong>Scope</strong></p>
+<p>Scope是和configuration应用的阶段有关:</p>
+<ul>
+<li>annotationProcessor/kapt: 注解处理;</li>
+<li>provided/compileOnly: 编译期;</li>
+<li>compile: 编译 + 执行;</li>
+<li>apk: 执行期.</li>
+</ul>
+<p><strong>继承</strong><br>Configuration可以继承, 意味着子类包含父类所有包含的项目.<br>比如<code>testCompile</code>就继承了<code>compile</code>.<br>但是注意继承必须显式声明, 并不是由名字看出来的, 比如<code>testAnnotationProcessor</code>没有继承<code>annotationProcessor</code>.</p>
+<p>利用继承可以定义单元测试和公共测试的基类, 这样它们的共享依赖就可以只声明一次.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configurations &#123;</span><br><span class="line"> [androidTestCompile, testCompile].each &#123; it.extendsFrom commonTestCompile &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="android-data-binding-rxjava"><a href="#android-data-binding-rxjava" class="headerlink" title="android-data-binding-rxjava"></a><a href="https://github.com/TangoAgency/android-data-binding-rxjava" target="_blank" rel="noopener">android-data-binding-rxjava</a></h2><p>例子代码, 展示如何结合RxJava和Android data binding.</p>
+<h2 id="AnimatorDurationTile"><a href="#AnimatorDurationTile" class="headerlink" title="AnimatorDurationTile"></a><a href="https://github.com/nickbutcher/AnimatorDurationTile" target="_blank" rel="noopener">AnimatorDurationTile</a></h2><p>一个Quick Settings tile, 用于控制动画的duration scale.</p>
+<h2 id="DateTimeSeer"><a href="#DateTimeSeer" class="headerlink" title="DateTimeSeer"></a><a href="https://github.com/p-v/DateTimeSeer/" target="_blank" rel="noopener">DateTimeSeer</a></h2><p>一个关于日期和时间的自动提示输入框.</p>
+<h2 id="A-list-of-all-Android-permissions"><a href="#A-list-of-all-Android-permissions" class="headerlink" title="A list of all Android permissions"></a><a href="https://gist.github.com/Arinerron/1bcaadc7b1cbeae77de0263f4e15156f" target="_blank" rel="noopener">A list of all Android permissions</a></h2><p>一个Android所有权限的列表.</p>
+<h1 id="NEWS"><a href="#NEWS" class="headerlink" title="NEWS"></a>NEWS</h1><h2 id="What’s-new-in-Mockito-2"><a href="#What’s-new-in-Mockito-2" class="headerlink" title="What’s new in Mockito 2"></a><a href="https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2" target="_blank" rel="noopener">What’s new in Mockito 2</a></h2><p>Mockito 2发布了, 有什么新东西呢?</p>
+<h2 id="Kotlin-1-0-5-EAP"><a href="#Kotlin-1-0-5-EAP" class="headerlink" title="Kotlin 1.0.5 EAP"></a><a href="https://discuss.kotlinlang.org/t/kotlin-1-0-5-eap/2023" target="_blank" rel="noopener">Kotlin 1.0.5 EAP</a></h2><p>Kotlin 1.0.5 EAP (Early Access Program).</p>
+<h2 id="What’s-next-for-android-apt"><a href="#What’s-next-for-android-apt" class="headerlink" title="What’s next for android-apt?"></a><a href="http://www.littlerobots.nl/blog/Whats-next-for-android-apt/" target="_blank" rel="noopener">What’s next for android-apt?</a></h2><p>android-apt将不会再开发了, 因为它的功能已经被包含进了Android Gradle plugin.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Firebase/" rel="tag"># Firebase</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Proguard/" rel="tag"># Proguard</a>
+              <a href="/tags/Data-Binding/" rel="tag"># Data Binding</a>
+              <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/10/09/android-weekly-notes-issue-225/" rel="prev" title="Android Weekly Notes Issue 225">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 225
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/10/21/android-weekly-notes-issue-227/" rel="next" title="Android Weekly Notes Issue 227">
+      Android Weekly Notes Issue 227 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-226"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #226</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8Firebase%E5%81%9AA-B-Test-A-B-Test-your-App-using-Firebase-Remote-Config"><span class="nav-number">2.1.</span> <span class="nav-text">用Firebase做A&#x2F;B Test A&#x2F;B Test your App using Firebase Remote Config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8RxJava%E5%81%9A%E5%8A%A8%E7%94%BB-Android-animations-powered-by-RxJava"><span class="nav-number">2.2.</span> <span class="nav-text">用RxJava做动画 Android animations powered by RxJava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Architecture-Patterns-Part-2-MVP"><span class="nav-number">2.3.</span> <span class="nav-text">Android Architecture Patterns Part 2: MVP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proguardFiles-A-Cautionary-Tale"><span class="nav-number">2.4.</span> <span class="nav-text">proguardFiles: A Cautionary Tale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RxJava-meets-Android-Data-Binding"><span class="nav-number">2.5.</span> <span class="nav-text">RxJava meets Android Data Binding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mocking-Kotlin-with-Mockito"><span class="nav-number">2.6.</span> <span class="nav-text">Mocking Kotlin with Mockito</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Droidcon-NYC-2016-Victor-Nascimento"><span class="nav-number">2.7.</span> <span class="nav-text">Droidcon NYC 2016 - Victor Nascimento</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Droidcon-NYC-2016-Florina-Muntenescu"><span class="nav-number">2.8.</span> <span class="nav-text">Droidcon NYC 2016 - Florina Muntenescu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Gradle-configurations"><span class="nav-number">2.9.</span> <span class="nav-text">Android Gradle configurations</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#android-data-binding-rxjava"><span class="nav-number">3.1.</span> <span class="nav-text">android-data-binding-rxjava</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AnimatorDurationTile"><span class="nav-number">3.2.</span> <span class="nav-text">AnimatorDurationTile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DateTimeSeer"><span class="nav-number">3.3.</span> <span class="nav-text">DateTimeSeer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-list-of-all-Android-permissions"><span class="nav-number">3.4.</span> <span class="nav-text">A list of all Android permissions</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NEWS"><span class="nav-number">4.</span> <span class="nav-text">NEWS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-new-in-Mockito-2"><span class="nav-number">4.1.</span> <span class="nav-text">What’s new in Mockito 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-1-0-5-EAP"><span class="nav-number">4.2.</span> <span class="nav-text">Kotlin 1.0.5 EAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-next-for-android-apt"><span class="nav-number">4.3.</span> <span class="nav-text">What’s next for android-apt?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/";
+    this.page.identifier = "Android/Android-Weekly/2016/10/12/android-weekly-notes-issue-226/";
+    this.page.title = "Android Weekly Notes Issue 226";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

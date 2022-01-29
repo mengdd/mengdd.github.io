@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="EventBus源码阅读记录EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要的原理是利用了反射注册以及调用.本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了,然后留下了链接.有点流水账,讲得也不是很深入,如果有错请帮忙指正.repo地址:greenrobot&#x2F;EventBus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EventBus源码阅读记录">
+<meta property="og:url" content="http://mengdd.github.io/Android/2016/03/10/eventbus-codes-analysis/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="EventBus源码阅读记录EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要的原理是利用了反射注册以及调用.本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了,然后留下了链接.有点流水账,讲得也不是很深入,如果有错请帮忙指正.repo地址:greenrobot&#x2F;EventBus">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.987Z">
+<meta property="article:author" content="Dandan Meng">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2016/03/10/eventbus-codes-analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>EventBus源码阅读记录 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2016/03/10/eventbus-codes-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EventBus源码阅读记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-03-10 00:00:00" itemprop="dateCreated datePublished" datetime="2016-03-10T00:00:00+08:00">2016-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2016/03/10/eventbus-codes-analysis/" class="post-meta-item leancloud_visitors" data-flag-title="EventBus源码阅读记录" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2016/03/10/eventbus-codes-analysis/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2016/03/10/eventbus-codes-analysis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="EventBus源码阅读记录"><a href="#EventBus源码阅读记录" class="headerlink" title="EventBus源码阅读记录"></a>EventBus源码阅读记录</h1><p>EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要的原理是利用了反射注册以及调用.<br>本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了,然后留下了链接.<br>有点流水账,讲得也不是很深入,如果有错请帮忙指正.<br>repo地址:<br><a href="https://github.com/greenrobot/EventBus" target="_blank" rel="noopener">greenrobot/EventBus</a></p>
+<a id="more"></a>
+<h2 id="EventBus的构造"><a href="#EventBus的构造" class="headerlink" title="EventBus的构造"></a>EventBus的构造</h2><p>双重加锁的单例.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">volatile</span> EventBus defaultInstance;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EventBus <span class="title">getDefault</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (EventBus<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                defaultInstance = <span class="keyword">new</span> EventBus();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> defaultInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是仍然开放了构造函数,用于构造其他别的对象.</p>
+<p><strong>Builder模式</strong>: <code>EventBusBuilder</code>.<br>有一个<code>DEFAULT_BUILDER</code>.</p>
+<h2 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h2><p>注册即添加订阅者,调用<code>register()</code>方法:<br>方法参数最全时共有三个参数:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber, <span class="keyword">boolean</span> sticky, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());</span><br><span class="line">    <span class="keyword">for</span> (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">        subscribe(subscriber, subscriberMethod, sticky, priority);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>subscriber</code>(订阅者)传入的是一个对象,用到了它的class.<br><code>SubscriberMethodFinder</code>会去找这个类中的方法.<br>被找到的方法最后会被缓存到一个map里,key是<code>class</code>, value是<code>ArrayList&lt;SubscriberMethod&gt;()</code>.</p>
+<h3 id="寻找方法"><a href="#寻找方法" class="headerlink" title="寻找方法"></a>寻找方法</h3><p>在一个类(class)中寻找方法的过程, 首先是拿出方法:<br>在循环中skip了一些系统的类, 因为我们不可能在这些类里加入方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">    String name = clazz.getName();</span><br><span class="line">    <span class="keyword">if</span> (name.startsWith(<span class="string">"java."</span>) || name.startsWith(<span class="string">"javax."</span>) || name.startsWith(<span class="string">"android."</span>)) &#123;</span><br><span class="line">        <span class="comment">// Skip system classes, this just degrades performance</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Starting with EventBus 2.2 we enforced methods to be public (might change with annotations again)</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// This is faster than getMethods, especially when subscribers a fat classes like Activities</span></span><br><span class="line">        Method[] methods = clazz.getDeclaredMethods();</span><br><span class="line">        filterSubscriberMethods(subscriberMethods, eventTypesFound, methodKeyBuilder, methods);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable th) &#123;</span><br><span class="line">        <span class="comment">// Workaround for java.lang.NoClassDefFoundError, see https://github.com/greenrobot/EventBus/issues/149</span></span><br><span class="line">        Method[] methods = subscriberClass.getMethods();</span><br><span class="line">        subscriberMethods.clear();</span><br><span class="line">        eventTypesFound.clear();</span><br><span class="line">        filterSubscriberMethods(subscriberMethods, eventTypesFound, methodKeyBuilder, methods);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    clazz = clazz.getSuperclass();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h4><p>关于反射的性能讨论, 代码中有说:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is faster than getMethods, especially when subscribers a fat classes like Activities</span></span><br><span class="line">Method[] methods = clazz.getDeclaredMethods();</span><br></pre></td></tr></table></figure>
+<p>为什么呢?<br><code>getMethods()</code>返回了所有的public方法,包含从所有基类继承的,也即包含了从Object类中继承的public方法.<br><code>getDeclaredMethods()</code>返回了该类中声明的所有方法,包括各种访问级别的,但是只包含本类中的,不包括基类中的方法.</p>
+<p>相关DOC:</p>
+<p><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/reflect/package-summary.html" target="_blank" rel="noopener">反射package-summary</a><br><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#getDeclaredMethods(" target="_blank" rel="noopener">getDeclaredMethods()</a>)<br><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#getMethods(" target="_blank" rel="noopener">getMethods()</a>)</p>
+<h4 id="Issue-of-NoClassDefFoundError"><a href="#Issue-of-NoClassDefFoundError" class="headerlink" title="Issue of NoClassDefFoundError"></a>Issue of NoClassDefFoundError</h4><p>这里有一个try catch主要是为了解决这个issue: <a href="https://github.com/greenrobot/EventBus/issues/149" target="_blank" rel="noopener">https://github.com/greenrobot/EventBus/issues/149</a><br>本来的流程是: </p>
+<ol>
+<li>从自己的class开始,每次都<code>getDeclaredMethods()</code>, 即提取自己类中的方法,不取基类.</li>
+<li>取完之后, <code>getSuperclass()</code>,获取基类的class,重新进入while循环.直到进入java包或者android包才退出.</li>
+</ol>
+<p>但是<code>getDeclaredMethods()</code>会检查一些参数和返回值, 如果找不到类型则抛出NoClassDefFoundError.<br><code>getMethods()</code>却不检查.</p>
+<p>什么样的情况会抛出这个Error呢?</p>
+<p>Android代码里可能会有一些方法标明了<code>@TargetApi</code>,表明是更高级的sdk上才会有的.<br>这样在低版本的机器上遇到了这些代码,就无法解析出它们的类了.</p>
+<p><strong>只要你的作为subscriber的class里含有这种东西,就会出现问题.</strong></p>
+<p>为了解决这个崩溃, 所以代码里catch了一把,然后采用第二种方案<code>getMethods()</code>,一次性get所有基类中的方法,这种效率虽然低,但是不会抛异常.<br>需要把之前的map都清理一把.</p>
+<h3 id="筛选方法"><a href="#筛选方法" class="headerlink" title="筛选方法"></a>筛选方法</h3><p>得到了所有的方法之后,开始筛选方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">filterSubscriberMethods</span><span class="params">(List&lt;SubscriberMethod&gt; subscriberMethods, HashMap&lt;String, Class&gt; eventTypesFound, </span></span></span><br><span class="line"><span class="function"><span class="params">StringBuilder methodKeyBuilder, Method[] methods)</span></span></span><br></pre></td></tr></table></figure>
+<p>这里第一个参数会作为最后的返回值,即我们方法选择的结果.</p>
+<p>筛选的过程, 遍历所有找到的方法:</p>
+<ol>
+<li>看它是以”onEvent”开头,即为我们要找的目标方法.</li>
+<li><p>然后<code>getModifiers()</code>看它是一个<strong>public</strong>的方法,并且不是我们要忽略的方法.<br>注意这里用到了位操作<strong>&amp;</strong>来比较. 结果不为零表示满足,为零表示不满足.<br>默认的忽略方法是<strong><em>static, bridge, synthetic</em></strong>方法.<br>后两个词指的其实是同一种东东,但是这是什么东东呢?<br>是编译器生成的方法, 见参考链接:<br><a href="https://javax0.wordpress.com/2014/02/26/syntethic-and-bridge-methods/" target="_blank" rel="noopener">https://javax0.wordpress.com/2014/02/26/syntethic-and-bridge-methods/</a><br><a href="https://docs.oracle.com/javase/tutorial/java/generics/bridgeMethods.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/tutorial/java/generics/bridgeMethods.html</a><br>从上面的例子中可以看出,编译器生成<strong><em>bridge</em></strong>方法主要是为了保证多态的顺利进行.它和基类的签名一样,但是实现去调用了子类的方法.自己偷偷完成了其中的类型转换.</p>
+</li>
+<li><p>获取参数类型:必须是一个参数.</p>
+</li>
+<li><p>获取<code>ThreadMode</code>: 即看方法名中onEvent之后还是什么,一共有四种Mode,对应四种方法名:<br><strong><em>onEvent(), onEventMainThread(), onEventBackgroundThread(), onEventAsync()</em></strong><br>如果获取不到<code>ThreadMode</code>,则continue;即这个方法不是我们要找的方法.</p>
+</li>
+<li><p>用<code>StringBuilder</code>组成一个key: <strong><em>method name&gt;parameterType class name</em></strong>.<br>注意这里StringBuilder的清理方式是<code>setLength(0)</code>.<br>然后放进了一个<code>eventTypesFound</code>的HashMap, String是key, Class是value,这里放的是<code>method.getDeclaringClass()</code>;即方法声明的那个类的类型.</p>
+</li>
+</ol>
+<p>注意这里还利用了<code>put()</code>方法的返回值,如果map里之前有这个key对应的值,那么老的value会作为返回值返回.<br>文档:<br><a href="https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html#put(K,%20V" target="_blank" rel="noopener">HashMap.put()</a>)</p>
+<p>这里还用了这个一个方法: <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#isAssignableFrom(java.lang.Class" target="_blank" rel="noopener">isAssignableFrom</a>)<br>判断是否自己的class是参数的基类或接口.如果传入的参数是当前对象的子类或自身,则返回true.</p>
+<p>如果有old class存在,并且old class和新的class不能互相转换, 后者old是new的子类, 那么<code>eventTypesFound</code>这个map里还是保存老的值.</p>
+<p>如果存在old class,但是old class是新加class的父类,会把新的class加进<code>eventTypesFound</code>的map,取代前者,即这个map中尽量放继承体系下层中更具体的类.<br>这里虽然父类没有被放进<code>eventTypesFound</code>,但是父类的方法仍然会被加进最后返回的methods的map.</p>
+<p>筛选结束后,我们就获取到了所有的目标方法.<br>把它们都存在了一个cache map里面,以免同一个类下次我们又要重新筛选一遍:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, List&lt;SubscriberMethod&gt;&gt; methodCache = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, List&lt;SubscriberMethod&gt;&gt;();</span><br></pre></td></tr></table></figure></p>
+<h3 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h3><p>得到了方法的list(<code>List&lt;SubscriberMethod&gt;</code>)之后,我们要对每一个成员调用<br><code>private void subscribe(Object subscriber, SubscriberMethod subscriberMethod, boolean sticky, int priority)</code> 方法.</p>
+<p>里面有一个新的数据类型<code>CopyOnWriteArrayList</code>:<br><a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/CopyOnWriteArrayList.html" target="_blank" rel="noopener">CopyOnWriteArrayList Java doc</a><br><a href="http://developer.android.com/reference/java/util/concurrent/CopyOnWriteArrayList.html" target="_blank" rel="noopener">CopyOnWriteArrayList android doc</a></p>
+<p>类说明: <em>A thread-safe variant of ArrayList in which all mutative operations (add, set, and so on) are implemented by making a fresh copy of the underlying array.</em></p>
+<p>这个数据类型是一个ArrayList,但是它在每次进行变异操作之前都拷贝一份新的.它底层的数组是<strong><em>volatile</em></strong>的.<br>这种数据类型的写操作代价很高.</p>
+<p><code>subscribe()</code>方法中主要是给这两个字段放数据:</p>
+<ol>
+<li><p><code>private final Map&lt;Class&lt;?&gt;, CopyOnWriteArrayList&lt;Subscription&gt;&gt; subscriptionsByEventType;</code><br>key是eventType的Class, value是Subscription这种数据类型的数组:<br><code>Subscription newSubscription = new Subscription(subscriber, subscriberMethod, priority);</code></p>
+</li>
+<li><p><code>private final Map&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt; typesBySubscriber;</code><br>key是subscriber,即订阅者的类的对象,value是eventType的class,即事件类.</p>
+</li>
+</ol>
+<h2 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h2><p><code>unregister()</code>的时候, 传入subscriber:<br>首先从typesBySubscriber获取到事件的List,然后遍历这个List, 从subscriptionsByEventType中移除该eventType,并且subscriber是当前subscriber的Subscription.<br>遍历完成之后,从typesBySubscriber移除该subscriber.</p>
+<h2 id="事件触发"><a href="#事件触发" class="headerlink" title="事件触发"></a>事件触发</h2><p>好了,注册和反注册到这里就结束了,看起来也就是找到一些方法和类型,放在一些map里面,注销的时候再从map里面拿出来而已.<br>真正做事情的代码呢?</p>
+<p>首先看事件的触发: <code>post()</code>方法, 这里传入的参数是事件类对象.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">    PostingThreadState postingState = currentPostingThreadState.get();</span><br><span class="line">    List&lt;Object&gt; eventQueue = postingState.eventQueue;</span><br><span class="line">    eventQueue.add(event);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!postingState.isPosting) &#123;</span><br><span class="line">        postingState.isMainThread = Looper.getMainLooper() == Looper.myLooper();</span><br><span class="line">        postingState.isPosting = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (postingState.canceled) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Internal error. Abort state was not reset"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (!eventQueue.isEmpty()) &#123;</span><br><span class="line">                postSingleEvent(eventQueue.remove(<span class="number">0</span>), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            postingState.isPosting = <span class="keyword">false</span>;</span><br><span class="line">            postingState.isMainThread = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大致地看上去好像就是加入了一个队列,然后发送出去直到队列为空.</p>
+<p>对每一个事件来说,是调用了<code>postSingleEvent()</code>这个方法.</p>
+<p><code>postSingleEvent()</code>这个方法里<code>eventInheritance</code>为true时(默认行为)会把event的class拿出来,然后取出它的所有基类和接口,和它自己一起放在一个map里.<br>这是可以理解的,因为可能我们本来的需求是监听了一个灾难事件,后来的需求发展,又写了个它的子类事件叫地震.<br>那么当我post地震事件的时候,除了地震事件后来新加的处理,当然也要采取原先灾难事件的相关措施.</p>
+<p>取出所有基类和接口的方法:<code>lookupAllEventTypes()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Looks up all Class objects including super classes and interfaces. Should also work for interfaces. */</span></span><br><span class="line"><span class="keyword">private</span> List&lt;Class&lt;?&gt;&gt; lookupAllEventTypes(Class&lt;?&gt; eventClass) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (eventTypesCache) &#123;</span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; eventTypes = eventTypesCache.get(eventClass);</span><br><span class="line">        <span class="keyword">if</span> (eventTypes == <span class="keyword">null</span>) &#123;</span><br><span class="line">            eventTypes = <span class="keyword">new</span> ArrayList&lt;Class&lt;?&gt;&gt;();</span><br><span class="line">            Class&lt;?&gt; clazz = eventClass;</span><br><span class="line">            <span class="keyword">while</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                eventTypes.add(clazz);</span><br><span class="line">                addInterfaces(eventTypes, clazz.getInterfaces());</span><br><span class="line">                clazz = clazz.getSuperclass();</span><br><span class="line">            &#125;</span><br><span class="line">            eventTypesCache.put(eventClass, eventTypes);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> eventTypes;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所有这些费时的遍历查找操作都是有一个map作为cache的.<br>注意这里添加接口的时候,因为<strong>接口是多继承的</strong>,所以除了去重以外,还需要深入遍历:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Recurses through super interfaces. */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addInterfaces</span><span class="params">(List&lt;Class&lt;?&gt;&gt; eventTypes, Class&lt;?&gt;[] interfaces)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Class&lt;?&gt; interfaceClass : interfaces) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!eventTypes.contains(interfaceClass)) &#123;</span><br><span class="line">            eventTypes.add(interfaceClass);</span><br><span class="line">            addInterfaces(eventTypes, interfaceClass.getInterfaces());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获取到所有类型之后,进行遍历, 对每一个eventClass进行处理, 真正的对每一个类型post的方法是这个:<br><code>private boolean postSingleEventForEventType(Object event, PostingThreadState postingState, Class&lt;?&gt; eventClass)</code></p>
+<p>这里,从之前那个<code>subscriptionsByEventType</code>里面,根据eventClass把<code>CopyOnWriteArrayList&lt;Subscription&gt;</code>拿出来.<br>这里拿出来的就是一个List,里面是一个一个的<em>onEventXXX</em>方法的个体,<br>对每一个<code>Subscription</code>,执行了:<br><code>private void postToSubscription(Subscription subscription, Object event, boolean isMainThread)</code></p>
+<h3 id="线程模式"><a href="#线程模式" class="headerlink" title="线程模式"></a>线程模式</h3><p>这里根据线程模式不同,有一个switch case.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postToSubscription</span><span class="params">(Subscription subscription, Object event, <span class="keyword">boolean</span> isMainThread)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (subscription.subscriberMethod.threadMode) &#123;</span><br><span class="line">        <span class="keyword">case</span> PostThread:</span><br><span class="line">            invokeSubscriber(subscription, event);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MainThread:</span><br><span class="line">            <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> BackgroundThread:</span><br><span class="line">            <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                backgroundPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> Async:</span><br><span class="line">            asyncPoster.enqueue(subscription, event);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unknown thread mode: "</span> + subscription.subscriberMethod.threadMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>invokeSubscriber(Subscription subscription, Object event)</code>方法就是直接通过<code>Method</code>, 反射调用, invoke了那个方法.</p>
+<pre><code>`case PostThread`: 直接在当前线程调用这个方法.
+`case MainThread`: 如果当前线程是主线程,则直接调用,否则加入mainThreadPoster的队列.
+`case BackgroundThread`: 如果当前是主线程,加入backgroundPoster队列, 否则直接调用.
+`case Async`: 加入asyncPoster队列.
+</code></pre><p>加入的三个队列类型如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> HandlerPoster mainThreadPoster; </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> BackgroundPoster backgroundPoster;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AsyncPoster asyncPoster;</span><br></pre></td></tr></table></figure></p>
+<p><code>HandlerPoster</code>继承自Handler, 内部有一个<code>PendingPostQueue</code>.<br>这三个poster里面都是这个<code>PendingPostQueue</code>, 数据结构是<code>PendingPost</code></p>
+<h4 id="关于Queue的相关知识"><a href="#关于Queue的相关知识" class="headerlink" title="关于Queue的相关知识"></a>关于Queue的相关知识</h4><p>队列Queue: Java中Queue是一个接口, 类文档:<br><a href="https://docs.oracle.com/javase/7/docs/api/java/util/Queue.html" target="_blank" rel="noopener">Queue Java doc</a><br>它是继承自Collection这个接口:<br><a href="https://docs.oracle.com/javase/7/docs/api/java/util/Collection.html" target="_blank" rel="noopener">Collection</a></p>
+<p>Queue这个数据结构可以自己定义顺序, 可以用来做FIFO也可以用来做LIFO.<br>每一种Queue的实现都必须指定要用什么顺序.<br>不管是什么顺序,head上的那个元素都是<code>remove()</code>或<code>poll()</code>即将移除的元素.</p>
+<p><code>offer()</code>方法将会试图插入一个元素,如果失败了就会返回false.<br><code>remove()</code>和<code>poll()</code>方法都会删除并返回head元素.<br><code>peek()</code>只查询,不remove.</p>
+<h4 id="主线程处理-HandlerPoster"><a href="#主线程处理-HandlerPoster" class="headerlink" title="主线程处理 HandlerPoster"></a>主线程处理 HandlerPoster</h4><p>所以这里看看<code>HandlerPoster</code>是怎么做的:</p>
+<ol>
+<li>它继承自<code>Handler</code>, 初始化的时候用的是mainLooper,所以确保了消息处理操作都是在主线程:<br><code>mainThreadPoster = new HandlerPoster(this, Looper.getMainLooper(), 10);</code></li>
+<li>这个里面写了一个自己的queue: PendingPostQueue里面包含的数据是:<code>PendingPost</code>.<br><code>PendingPost</code>这个类里用了一个pool来实现一个对象池,最大限制是10000.<br>obtain的时候, 如果池子里有对象,则从池子里拿出来一个, 如果池中没有对象,则new一个新的PendingPost; release的时候放回池子去.</li>
+</ol>
+<p><code>HandlerPoster</code>主要做两件事:</p>
+<ol>
+<li>enqueue一个PendingPost, sendMessage, </li>
+<li>在handleMessage()方法里面处理message.<br>handleMessage()里面是一个while循环,从队列里面拿出PendingPost然后调用EventBus的invokeSubscriber()方法.<br>这里调用方法之前就会release该PendingPost.</li>
+</ol>
+<h4 id="异步和后台处理-AsyncPoster和BackgroundPoster"><a href="#异步和后台处理-AsyncPoster和BackgroundPoster" class="headerlink" title="异步和后台处理 AsyncPoster和BackgroundPoster"></a>异步和后台处理 AsyncPoster和BackgroundPoster</h4><p><code>AsyncPoster</code>和<code>BackgroundPoster</code>都是一个<code>Runnable</code>.</p>
+<p>enqueue的时候把PendingPost加入队列, 然后调用<code>eventBus.getExecutorService().execute(this);</code></p>
+<p><code>run()</code>方法里面就是从队列中拿出PendingPost,然后invoke,和上面很像.</p>
+<p>默认的对象是:<br><code>private final static ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();</code><br>提供了一个线程池,可以异步地执行操作.</p>
+<p>那么它们两者有什么不同呢?</p>
+<p>AsyncPoster很简单, run里面直接invoke, 没有过多的判断. 即对每一个任务都是直接启动线程执行.<br>BackgroundPoster比较复杂,有一个boolean来判断是否正在run, run()方法里面是一个while true的循环,当queue全部被执行完之后才return.<br>如果队列中有任务正在执行,这时候enqueue()操作会加入元素到队列中,等待执行.<br>即BackgroundPoster只用了一个线程,所有的事件都是按顺序执行的,等到前面的任务执行完了才会进行下一个.</p>
+<p>对各个模式的说明可以参见<code>ThreadMode.java</code>类.<br>Async模式下,不管你的post thread是什么,都是会新启线程来执行任务的,所以适用于那些比较耗时的操作.<br>为了避免并发线程过多, EventBus里面使用了一个线程池来复用线程.</p>
+<h2 id="事件取消"><a href="#事件取消" class="headerlink" title="事件取消"></a>事件取消</h2><p>有一个public的cancel方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancelEventDelivery</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">    PostingThreadState postingState = currentPostingThreadState.get();</span><br><span class="line">    <span class="keyword">if</span> (!postingState.isPosting) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(</span><br><span class="line">                <span class="string">"This method may only be called from inside event handling methods on the posting thread"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Event may not be null"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (postingState.event != event) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Only the currently handled event may be aborted"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (postingState.subscription.subscriberMethod.threadMode != ThreadMode.PostThread) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">" event handlers may only abort the incoming event"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    postingState.canceled = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法的使用可以从测试代码里面看出来:<br>1.首先它只能在handler里面调用, 即第一个异常.这里判断的isPosting这个值在post的时候变为true,处理完就变为false.<br>这里用到的currentPostingState:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ThreadLocal&lt;PostingThreadState&gt; currentPostingThreadState = <span class="keyword">new</span> ThreadLocal&lt;PostingThreadState&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> PostingThreadState <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> PostingThreadState();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>ThreadLocal类是什么?<br><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html" target="_blank" rel="noopener">ThreadLocal类</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).</span><br></pre></td></tr></table></figure>
+<p>主要是用来给每一个线程保存一个不同的状态值.<br>这个currentPostingThreadState在第一次被调用<code>get()</code>方法的时候初始化,也即在<code>public void post(Object event)</code> 方法里.<br>然后修改了它的状态, 之后再在同一个线程里,即可访问到它的状态.</p>
+<p>这里cancel的测试也写得很有意思,可以看一下.</p>
+<h2 id="黏性事件"><a href="#黏性事件" class="headerlink" title="黏性事件"></a>黏性事件</h2><p>什么叫Sticky?<br>字面上看是黏性的.</p>
+<p>之前的事件都是非黏性的,即有一个<code>register()</code>和<code>unregister()</code>方法.<br><code>register()</code>了subscriber之后, EventBus会扫描该类中的onEventXXX()方法,建立一些map来记录.<br><code>unregister()</code>即合理地清除了这些数据.</p>
+<p>而对于sticky的事件,注册时调用<code>registerSticky()</code>, 并没有相应的注销方法.只有一个单独的<code>removeAllStickyEvents()</code>方法.</p>
+<p>sticky的事件注册的时候, <code>subscribe()</code>方法中, 除了重复上面正常的过程之外, 还有一个额外的map:<br><code>private final Map&lt;Class&lt;?&gt;, Object&gt; stickyEvents;</code><br>这个数据类型是: <code>stickyEvents = new ConcurrentHashMap&lt;Class&lt;?&gt;, Object&gt;();</code><br>存的是event的Class和event对象.</p>
+<p>注册时如果发现这个map中相同的event type要处理,<strong><em>会立即触发</em></strong>, 通知到它的订阅者.</p>
+<p>注意这个sticky event存的是最近的一个事件: <strong>most recent event</strong>.</p>
+<p>sticky事件触发的时候调用:<br><code>public void postSticky(Object event)</code></p>
+<p>sticky的代码里有一个<code>cast()</code>方法:<br>看文档:<br><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Class.html" target="_blank" rel="noopener">Class</a></p>
+<p>这个<code>cast()</code>方法就是用来把对象强转成当前的这个Class类型.</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>EventBus是一个Android上用的消息分发的类库,非常灵活好用,主要的原理是利用了反射注册以及调用. </p>
+<p>本文是在阅读EventBus的源码过程中所记录的东西, 遇到不懂的去查了, 然后留下了链接.<br>有点流水账,讲得也不是很深入,如果有错请帮忙指正.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/others/2016/01/28/my-first-post/" rel="prev" title="My First Post">
+      <i class="fa fa-chevron-left"></i> My First Post
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/uncategorized/2016/05/20/hello-world-from-hexo/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EventBus%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E8%AE%B0%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">EventBus源码阅读记录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus%E7%9A%84%E6%9E%84%E9%80%A0"><span class="nav-number">1.1.</span> <span class="nav-text">EventBus的构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C"><span class="nav-number">1.2.</span> <span class="nav-text">注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">寻找方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Issue-of-NoClassDefFoundError"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Issue of NoClassDefFoundError</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%9B%E9%80%89%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">筛选方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A2%E9%98%85"><span class="nav-number">1.2.3.</span> <span class="nav-text">订阅</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E9%94%80"><span class="nav-number">1.3.</span> <span class="nav-text">注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E8%A7%A6%E5%8F%91"><span class="nav-number">1.4.</span> <span class="nav-text">事件触发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.1.</span> <span class="nav-text">线程模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EQueue%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">关于Queue的相关知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B%E5%A4%84%E7%90%86-HandlerPoster"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">主线程处理 HandlerPoster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E5%92%8C%E5%90%8E%E5%8F%B0%E5%A4%84%E7%90%86-AsyncPoster%E5%92%8CBackgroundPoster"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">异步和后台处理 AsyncPoster和BackgroundPoster</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%8F%96%E6%B6%88"><span class="nav-number">1.5.</span> <span class="nav-text">事件取消</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%8F%E6%80%A7%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.6.</span> <span class="nav-text">黏性事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.7.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2016/03/10/eventbus-codes-analysis/";
+    this.page.identifier = "Android/2016/03/10/eventbus-codes-analysis/";
+    this.page.title = "EventBus源码阅读记录";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

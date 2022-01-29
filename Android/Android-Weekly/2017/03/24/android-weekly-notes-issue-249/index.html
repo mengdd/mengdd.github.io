@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #249March 19th, 2017Android Weekly Issue #249 本期内容包括: 一个设计的实现Demo讨论; Kotlin的Coroutines可能还是没有RxJava好用; 在构建SDK&#x2F;Libraries时需要注意的事项; 如何用OpenGL和JBox2D实现一个好看的多气泡选择器效果;网络请求中Etag, If-Modif">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 249">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #249March 19th, 2017Android Weekly Issue #249 本期内容包括: 一个设计的实现Demo讨论; Kotlin的Coroutines可能还是没有RxJava好用; 在构建SDK&#x2F;Libraries时需要注意的事项; 如何用OpenGL和JBox2D实现一个好看的多气泡选择器效果;网络请求中Etag, If-Modif">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/if-modified-since-and-last-modified.png">
+<meta property="og:image" content="http://mengdd.github.io/images/Etag-and-If-None-Match.png">
+<meta property="article:published_time" content="2017-03-24T09:13:37.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.998Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Retrofit">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Fingerprint">
+<meta property="article:tag" content="ConstraintLayout">
+<meta property="article:tag" content="TensorFlow">
+<meta property="article:tag" content="OkHttp">
+<meta property="article:tag" content="MVI">
+<meta property="article:tag" content="ClassyShark">
+<meta property="article:tag" content="Transition">
+<meta property="article:tag" content="ViewSwitcher">
+<meta property="article:tag" content="Coroutines">
+<meta property="article:tag" content="SDK">
+<meta property="article:tag" content="Libraries">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="JBox2D">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="Etag">
+<meta property="article:tag" content="If-Modified-Since">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/if-modified-since-and-last-modified.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 249 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 249
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-03-24 17:13:37" itemprop="dateCreated datePublished" datetime="2017-03-24T17:13:37+08:00">2017-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 249" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-249"><a href="#Android-Weekly-Issue-249" class="headerlink" title="Android Weekly Issue #249"></a>Android Weekly Issue #249</h1><p>March 19th, 2017<br><a href="http://androidweekly.net/issues/issue-249" target="_blank" rel="noopener">Android Weekly Issue #249</a></p>
+<p>本期内容包括: 一个设计的实现Demo讨论; Kotlin的Coroutines可能还是没有RxJava好用; 在构建SDK/Libraries时需要注意的事项; 如何用OpenGL和JBox2D实现一个好看的多气泡选择器效果;<br>网络请求中Etag, If-Modified-Since的工作原理和用OkHttp的客户端实现; 用ClassyShark导出类型分析; 指纹认证实现代码; MVI模式对调试带来的好处; 用TensorFlow做一个图像识别处理器.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="From-design-to-Android"><a href="#From-design-to-Android" class="headerlink" title="From design to Android"></a><a href="http://saulmm.github.io/from-design-to-android-part1" target="_blank" rel="noopener">From design to Android</a></h2><p>作者想建立一个项目, 把从<a href="https://dribbble.com/" target="_blank" rel="noopener">Dribbble</a>和<a href="https://material.uplabs.com/" target="_blank" rel="noopener">MaterialUp</a>上看到的一些设计实现出来, 再讲解一些实现细节和UI/UX的tips等.</p>
+<p>本文是此系列文章的第一篇, 选择的设计是<a href="https://material.uplabs.com/posts/preferred-date-and-time" target="_blank" rel="noopener">preferred-date-and-time</a>, 实现的demo在这里:<a href="https://github.com/saulmm/from_design_to_android_part1" target="_blank" rel="noopener">from_design_to_android_part1</a>.</p>
+<p>实现中涉及到的点: Bottom Sheets; <code>ConstraintLayout</code>和其中的链式约束<a href="https://developer.android.com/reference/android/support/constraint/ConstraintLayout.html#Chains" target="_blank" rel="noopener">Chains</a>; <a href="https://developer.android.com/reference/android/widget/ViewSwitcher.html" target="_blank" rel="noopener">ViewSwitcher</a>; Databinding; Scene和Transition.</p>
+<h2 id="Why-Im-Skeptical-about-Kotlin-Coroutines"><a href="#Why-Im-Skeptical-about-Kotlin-Coroutines" class="headerlink" title="Why Im Skeptical about Kotlin Coroutines"></a><a href="https://www.philosophicalhacker.com/post/why-im-skeptical-about-kotlin-coroutines-for-android-development/" target="_blank" rel="noopener">Why Im Skeptical about Kotlin Coroutines</a></h2><p>Kotlin为了处理异步发布了Coroutines特性, 本文作者对Coroutines持怀疑态度, 认为RxJava的方式更好.</p>
+<p>首先, Observables为我们要处理的问题建立了很好的模型, 但coroutines并没有起到这样的作用. (coroutines只是把异步的操作写成了看起来顺序的样子, 同时不阻塞主线程.)</p>
+<p>其次, Observables让我们在同步和异步数据上都可以进行同等的抽象, 而coroutines的同步处理和异步处理明显不同.</p>
+<p>最后, Observables让我们在更高的抽象层中工作, 比如对元素进行遍历处理的<code>.map()</code>.</p>
+<p>当然, 本文并不是说Coroutines一无是处, 它肯定是有自己的用处的, 但是作者只是持怀疑态度, 觉得它的地位远不及RxJava.</p>
+<h2 id="Things-I-wish-I-knew-when-I-started-building-Android-SDK-Libraries"><a href="#Things-I-wish-I-knew-when-I-started-building-Android-SDK-Libraries" class="headerlink" title="Things I wish I knew when I started building Android SDK/Libraries"></a><a href="https://android.jlelse.eu/things-i-wish-i-knew-when-i-started-building-android-sdk-libraries-dba1a524d619#.tc5qkaglp" target="_blank" rel="noopener">Things I wish I knew when I started building Android SDK/Libraries</a></h2><p>当你遇到一个问题并且解决了, 有时候你会把解决方案作为一个库发布出去.</p>
+<p>作者发布了一些库<a href="https://github.com/nisrulz/android-tips-tricks#extra--android-libraries-built-by-me" target="_blank" rel="noopener">Android Libraries</a>, 他提出了一些基本的问题和几个应该注意的点.</p>
+<h3 id="为什么要创建这个库呢"><a href="#为什么要创建这个库呢" class="headerlink" title="为什么要创建这个库呢?"></a>为什么要创建这个库呢?</h3><p>如果已经有现成的解决方案, 尝试使用已有的方案, 或者给已有的库提Pull Request. 如果没有解决方案, 好吧, 那创建自己的库吧.</p>
+<h3 id="你的artifacts可选的类型是什么"><a href="#你的artifacts可选的类型是什么" class="headerlink" title="你的artifacts可选的类型是什么?"></a>你的artifacts可选的类型是什么?</h3><ul>
+<li>Library Project: 直接项目引用.</li>
+<li>JAR: 包含了Java class文件和metadata.</li>
+<li>AAR: 除了Java class文件, 还包含了Android的资源和manifest.</li>
+</ul>
+<h3 id="你的库放在哪里"><a href="#你的库放在哪里" class="headerlink" title="你的库放在哪里?"></a>你的库放在哪里?</h3><ul>
+<li>本地.</li>
+<li>私有的代码库.</li>
+<li>公有的代码库: Maven Central, Jcenter or JitPack.</li>
+</ul>
+<p>(每一种方式都有教程链接).</p>
+<p>上面三个基本问题说完了, 在建立这个库的时候还有一些注意事项:</p>
+<h3 id="避免多个参数"><a href="#避免多个参数" class="headerlink" title="避免多个参数"></a>避免多个参数</h3><p>参数最好不要多于三个, 可以用setter或者Builder模式来解决.</p>
+<h3 id="容易使用"><a href="#容易使用" class="headerlink" title="容易使用"></a>容易使用</h3><ul>
+<li>直观: 任何发生在库里的行为, 最好有一些反馈, 比如打印出logs或者显示在UI上.</li>
+<li>一致性: 遵从<a href="http://semver.org/" target="_blank" rel="noopener">semantic versioning</a>.</li>
+<li>容易使用, 不容易滥用. 最好一眼能看出它的用途. public的方法应该有足够的验证, 确保用户不会滥用. 当不存在依赖关系时, 提供默认值并处理场景.</li>
+</ul>
+<h3 id="最小化权限"><a href="#最小化权限" class="headerlink" title="最小化权限"></a>最小化权限</h3><p>尽量少地要求权限, 可以发送Intent让更专业的应用帮你做一些处理然后返回结果. 根据权限的获取情况来使能你的feature, 不要仅因为没有权限就crash.</p>
+<p>你也可以提供一些不需要权限的fallback的实现, 让库的使用者去获取权限.</p>
+<h3 id="最小化要求"><a href="#最小化要求" class="headerlink" title="最小化要求"></a>最小化要求</h3><p>有时候我们需要设备具有某项功能, 比如蓝牙.<br>这时候就需要在manifest中写<code>uses-feature</code>.</p>
+<p>如果我们在库中这样写, 它会被merge进应用的manifest, 在Play Store上, 整个应用对无蓝牙的设备都变为不显示. 这样只是引入了一个库, 却失去了一部分用户, 这肯定不是我们所希望看到的.</p>
+<p>解决方案就是: 不要写在manifest里, 换为在代码中动态检查. 对于不支持的情况, 库可以关掉这个功能, 提供fallback的实现.</p>
+<h3 id="支持不同的版本"><a href="#支持不同的版本" class="headerlink" title="支持不同的版本"></a>支持不同的版本</h3><p>如果你有一个特定版本才支持的功能, 应该做版本检查, 然后对于更低的版本关掉它.</p>
+<h3 id="Production版本不要打log"><a href="#Production版本不要打log" class="headerlink" title="Production版本不要打log"></a>Production版本不要打log</h3><h3 id="不要悄悄crash-另外fail-fast"><a href="#不要悄悄crash-另外fail-fast" class="headerlink" title="不要悄悄crash, 另外fail fast"></a>不要悄悄crash, 另外fail fast</h3><p>遇到崩溃时应该总是输出错误信息.<br>如果你不想在production输出任何log, 你至少应该提供flag, 让初始化的时候可以使能它.</p>
+<p>如果你的库遇到异常, 应该立即失败, 想开发者输出Exception, 而不是卡在那里. 要避免写出会阻塞主线程的代码.</p>
+<h3 id="优雅地处理错误"><a href="#优雅地处理错误" class="headerlink" title="优雅地处理错误"></a>优雅地处理错误</h3><p>当你的库出错的时候, 尽量做检查, 使得代码不会让整个应用崩溃, 而是只有你的库提供的功能被关闭了.</p>
+<h3 id="捕获特定的exceptions"><a href="#捕获特定的exceptions" class="headerlink" title="捕获特定的exceptions"></a>捕获特定的exceptions</h3><h3 id="处理不良的网络连接"><a href="#处理不良的网络连接" class="headerlink" title="处理不良的网络连接"></a>处理不良的网络连接</h3><p>如果你的库中有网络请求, 请处理网络连接不良的情况.</p>
+<p>如果有可能, 批处理你的网络请求, 这会节约很多电量. 看<a href="https://developer.android.com/training/efficient-downloads/efficient-network-access.html" target="_blank" rel="noopener">这里</a>.</p>
+<p>使用<a href="https://google.github.io/flatbuffers/" target="_blank" rel="noopener">FlatBuffers</a>而不是json或xml, 来减小网络请求的数据量.</p>
+<p>更多的网络优化看这里: <a href="https://developer.android.com/topic/performance/power/network/index.html" target="_blank" rel="noopener">Reducing Network Battery Drain</a>.</p>
+<h3 id="尽量不要依赖很大的库"><a href="#尽量不要依赖很大的库" class="headerlink" title="尽量不要依赖很大的库"></a>尽量不要依赖很大的库</h3><p>主要是因为方法数的限制.</p>
+<h3 id="不要依赖你不需要的库"><a href="#不要依赖你不需要的库" class="headerlink" title="不要依赖你不需要的库"></a>不要依赖你不需要的库</h3><p>除了不依赖没有用到的库, 还可以把添加依赖的选择权留给你的用户.</p>
+<p>让用户来选择性地添加你依赖的库, 如果他选择不添加, 你的相关feature可以关闭.</p>
+<p>可以这样实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">hasOKHttpOnClasspath</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       Class.forName(<span class="string">"com.squareup.okhttp3.OkHttpClient"</span>);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">       ex.printStackTrace();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而你添加的时候可以这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">   // for gradle version 2.12 and below</span><br><span class="line">   provided &apos;com.squareup.okhttp3:okhttp:3.6.0&apos;</span><br><span class="line">   // or for gradle version 2.12+</span><br><span class="line">   compileOnly &apos;com.squareup.okhttp3:okhttp:3.6.0&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是这种只能用于纯Java的依赖, 如果是aar就不行.</p>
+<h3 id="不要拖慢启动时间"><a href="#不要拖慢启动时间" class="headerlink" title="不要拖慢启动时间"></a>不要拖慢启动时间</h3><p>在应用启动初始化你的库时, 不要花太多时间.</p>
+<p>两种解决方案: 一种是新启一个线程来做初始化; 另一种是到使用之前才进行初始化.</p>
+<h3 id="删除功能的时候要优雅"><a href="#删除功能的时候要优雅" class="headerlink" title="删除功能的时候要优雅"></a>删除功能的时候要优雅</h3><p>升级版本的时候, 不要删除public的方法.<br>可以把方法标记为<code>@Deprecated</code>, 然后在未来的版本中慢慢删除它.</p>
+<h3 id="让你的代码可测试"><a href="#让你的代码可测试" class="headerlink" title="让你的代码可测试"></a>让你的代码可测试</h3><p>使用mock来测试你的代码, 在代码中国避免final的类和static的方法.</p>
+<p>写代码的时候public的API用接口, 这样更容易更换实现, 更好测试.</p>
+<h3 id="文档记录所有的事"><a href="#文档记录所有的事" class="headerlink" title="文档记录所有的事"></a>文档记录所有的事</h3><p>包括如何使用你的库, 库中每一个feature都是什么.</p>
+<ul>
+<li>Repo根目录有一个Readme.</li>
+<li>所有的public方法应该有javadoc注释. 说明目的, 参数, 返回值.</li>
+<li>有一个sample app, 展示如何使用你的库.</li>
+<li>在你的release界面, 确保有一个详尽的change log.</li>
+</ul>
+<h3 id="提供一个最简单的sample"><a href="#提供一个最简单的sample" class="headerlink" title="提供一个最简单的sample"></a>提供一个最简单的sample</h3><p>越简单越容易让人明白.</p>
+<h3 id="考虑加一个Licence"><a href="#考虑加一个Licence" class="headerlink" title="考虑加一个Licence"></a>考虑加一个Licence</h3><h3 id="收集反馈"><a href="#收集反馈" class="headerlink" title="收集反馈"></a>收集反馈</h3><h2 id="How-to-Create-a-Bubble-Selection-Animation-on-Android"><a href="#How-to-Create-a-Bubble-Selection-Animation-on-Android" class="headerlink" title="How to Create a Bubble Selection Animation on Android"></a><a href="https://medium.com/@igalata13/how-to-create-a-bubble-selection-animation-on-android-627044da4854#.1ncs9qy84" target="_blank" rel="noopener">How to Create a Bubble Selection Animation on Android</a></h2><p>作者他们想要在Android上实现Apple music中的选择气泡效果.</p>
+<p>这种动画效果用于让用户在一系列的选择项中做出选择, 气泡自由浮动, 一旦被选中就会变大一点.</p>
+<p>作者选择的是用Kotlin, OpenGL和JBox2D(物理引擎).</p>
+<p>详细介绍的内容包括: 如何用GLSL写vertex shader和fragment shader; 如何贴图; 用JBox2D来实现气泡的动画(需要自己实现重力); 检测用户手势移动气泡; 发现用户点击的气泡.</p>
+<p>项目在Github: <a href="https://github.com/igalata/Bubble-Picker" target="_blank" rel="noopener">Bubble-Picker</a>.</p>
+<h2 id="Reducing-networking-footprint-with-OkHttp-Etags-and-If-Modified-Since"><a href="#Reducing-networking-footprint-with-OkHttp-Etags-and-If-Modified-Since" class="headerlink" title="Reducing networking footprint with OkHttp, Etags and If-Modified-Since"></a><a href="https://android.jlelse.eu/reducing-your-networking-footprint-with-okhttp-etags-and-if-modified-since-b598b8dd81a1#.260pws449" target="_blank" rel="noopener">Reducing networking footprint with OkHttp, Etags and If-Modified-Since</a></h2><h3 id="If-Modified-Since和Last-Modified"><a href="#If-Modified-Since和Last-Modified" class="headerlink" title="If-Modified-Since和Last-Modified"></a>If-Modified-Since和Last-Modified</h3><p>Header中使用了If-Modified-Since和Last-Modified, 如果两次请求之间内容并未改变, 第二次, server就会返回<code>304 NOT MODIFIED</code>, 并且响应不含body.</p>
+<p><img src="/images/if-modified-since-and-last-modified.png" alt="if-modified-since and last-modified"></p>
+<h3 id="Etag和If-None-Match"><a href="#Etag和If-None-Match" class="headerlink" title="Etag和If-None-Match"></a>Etag和If-None-Match</h3><p>Etag工作的原理类似, 它实现起来不容易出错, 但是需要server跑一个完整的查询, 并且每次都创建一个hash.</p>
+<p><img src="/images/Etag-and-If-None-Match.png" alt="Etag and if-none-match"></p>
+<p>server将会在返回response之前根据响应内容创建一个hash, 然后把它作为Etag header; 客户端在做下一次请求时, 把这个Etag作为If-None-Match header发给server. 客户端在准备下一个响应的时候, 比较新的hash和请求中发来的是否相同, 如果相同, 则返回无内容的<code>304 NOT MODIFIED</code>.</p>
+<h3 id="客户端实现"><a href="#客户端实现" class="headerlink" title="客户端实现"></a>客户端实现</h3><p>如果你使用了Retrofit2, 或OkHttp3, 在客户端使能Last-Modified或Etags是很容易的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> CACHE_SIZE_BYTES = <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">2</span>;</span><br><span class="line">...</span><br><span class="line">OkHttpClient.Builder builder = <span class="keyword">new</span> OkHttpClient().newBuilder();</span><br><span class="line">builder.cache(<span class="keyword">new</span> Cache(context.getCacheDir(), CACHE_SIZE_BYTES));</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>根据server的响应, Last-Modified或Etags将会自动启用.</p>
+<p>如果你还想减少处理的时间:</p>
+<p><strong>减少处理</strong>:<br>在304状态下, Retrofit2和OkHttp3将会假装这个响应和上一次的相同, 所以被缓存的响应会被返回, 你可以检测响应返回值, 如果是304就不做处理.<br>但是有时候你可能需要每次都重新parse, 这就不用检查<code>HTTP_NOT_MODIFIED</code>了, 看你的需要.</p>
+<p>注意在Retrofit2中要用raw()中的response来检查, 因为<code>response.networkResponse().code()</code>返回的是被缓存了的状态值:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (response.isSuccessful() &amp;&amp;</span><br><span class="line">    response.raw().networkResponse() != <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">    response.raw().networkResponse().code() ==</span><br><span class="line">           HttpURLConnection.HTTP_NOT_MODIFIED) &#123;</span><br><span class="line">    <span class="comment">// not modified, no need to do anything.</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// parse response here</span></span><br></pre></td></tr></table></figure>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>如果你的Etag或Last-Modified不工作.</p>
+<p><strong>检查你的Headers.</strong></p>
+<p>可以用<a href="http://facebook.github.io/stetho/" target="_blank" rel="noopener">Stetho</a>或<a href="https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor" target="_blank" rel="noopener">OkHttp logging interceptor</a>来检查你的headers.</p>
+<p>正确的输出是这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: private, must-revalidate</span><br></pre></td></tr></table></figure></p>
+<p>所有请求和响应的Last-Modified和Etag headers都会被显示出来.</p>
+<p><strong>同时使用Etags和Last-Modified.</strong></p>
+<p>OkHttp3会按照严格的顺序检查cache headers:</p>
+<ul>
+<li>1.如果上一个响应包含Etag, 那么同样的Etag值将会被加在下一个请求的If-Not-Match中.</li>
+<li>2.如果第一点不满足, 但上一个响应包含Last-Modified, 那么这个值将会被记载下一个请求的If-Modified-Since中.</li>
+</ul>
+<p>所以如果同时使用了两种, Etag会屏蔽Last-Modified.</p>
+<h2 id="Exporting-types-from-Android-app-using-ClassyShark"><a href="#Exporting-types-from-Android-app-using-ClassyShark" class="headerlink" title="Exporting types from Android app using ClassyShark"></a><a href="https://medium.com/@BorisFarber/exporting-types-from-android-app-using-classyshark-7cd2be18cdf7#.5q7p9qoya" target="_blank" rel="noopener">Exporting types from Android app using ClassyShark</a></h2><p>如何导出<code>ClassyShark</code>的类型分析.</p>
+<h2 id="Fingerprint-authentication"><a href="#Fingerprint-authentication" class="headerlink" title="Fingerprint authentication"></a><a href="http://josiassena.com/android-fingerprint-authentication/" target="_blank" rel="noopener">Fingerprint authentication</a></h2><p>一个指纹认证的代码例子.</p>
+<h2 id="Reactive-Apps-with-MVI-Part-5"><a href="#Reactive-Apps-with-MVI-Part-5" class="headerlink" title="Reactive Apps with MVI - Part 5"></a><a href="http://hannesdorfmann.com/android/mosby3-mvi-5" target="_blank" rel="noopener">Reactive Apps with MVI - Part 5</a></h2><p>MVI模式系列文章第五篇.</p>
+<p>之前在第一篇讲过单向数据流的重要性, 应用状态应该由业务逻辑驱动. 本篇我们将看到这样做带来的好处: 调试程序变得简单了.</p>
+<p>我们经常会遇到无法复现的bug, 这往往是因为你只知道崩溃栈, 却不知道用户在出现这个bug之前的实际状态.</p>
+<p>当我们用MVI的时候, 我们可以把每次用户激发的intent和model(也即状态)都打出log(用Crashlytics或者其他工具).<br>这样做以后, 我们从收集到的log中不仅能看到崩溃前最近的状态, 还能看到用户的整个操作历史.</p>
+<p>而且用户的应用状态截图都被当做json发送过来, 我们可以拿到任何状态当做我们的初始状态.</p>
+<p>这样做以后, 不仅复现崩溃更加容易, 我们还可以利用这些序列化的状态来写一些回归测试.</p>
+<p>这样做也是有缺点的: 状态的序列化需要额外花费一些毫秒; 崩溃时传递的数据量增大了; 对用户的敏感信息, 要么忽略, 会导致信息不完整; 要么加密, 那就会需要更多的处理时间.</p>
+<h2 id="Add-some-machine-learning-to-your-apps-with-TensorFlow"><a href="#Add-some-machine-learning-to-your-apps-with-TensorFlow" class="headerlink" title="Add some machine learning to your apps, with TensorFlow"></a><a href="http://nilhcem.com/android/custom-tensorflow-classifier" target="_blank" rel="noopener">Add some machine learning to your apps, with TensorFlow</a></h2><p><a href="https://github.com/tensorflow/tensorflow" target="_blank" rel="noopener">TensorFlow</a>是一个开源的机器学习的库, 由Google开发.</p>
+<p>一个简单快速的开始方法就是用TensorFlow来建立一个图像分类器. 相对于使用<a href="https://cloud.google.com/vision/" target="_blank" rel="noopener">Google’s Cloud Vision API</a>来说, 我们可以做一个离线和简化版本, 在Android设备上检测和识别图像中物体.</p>
+<p>本篇文章中, 我们会创建一个app, 来识别游戏中的角色.</p>
+<p>官方有一个<a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android" target="_blank" rel="noopener">Demo</a>, 如果你要跑它, 你需要安装NDK和Bazel.</p>
+<p>作者创建了这个<a href="https://github.com/Nilhcem/tensorflow-classifier-android" target="_blank" rel="noopener">Repo</a>, 可以直接clone下来build, 更快.</p>
+<p>不管你选择哪种方式, 能够运行之后, 这个sample使用了Inception, 一个提前训练好的可以检测1000个物体的model.</p>
+<p>之后作者重新下载了一些图片, 对Inception进行了重新训练, 优化, 最后导入新的model并运行, 文中详细记录了过程.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="AutoplayVideos"><a href="#AutoplayVideos" class="headerlink" title="AutoplayVideos"></a><a href="https://github.com/Krupen/AutoplayVideos" target="_blank" rel="noopener">AutoplayVideos</a></h2><p>在RecyclerView中显示url对应的Video, 当view出现时自动播放, view不见或部分可见时自动暂停.</p>
+<h2 id="PreferenceHolder"><a href="#PreferenceHolder" class="headerlink" title="PreferenceHolder"></a><a href="https://github.com/MarcinMoskala/PreferenceHolder" target="_blank" rel="noopener">PreferenceHolder</a></h2><p>一个Kotlin的SharedPreferences的包装库.</p>
+<h2 id="ActivityStarter"><a href="#ActivityStarter" class="headerlink" title="ActivityStarter"></a><a href="https://github.com/MarcinMoskala/ActivityStarter" target="_blank" rel="noopener">ActivityStarter</a></h2><p>提供了一种简化的方式来启动多参数的Activity.<br>用注解简化了从Bundle拿参数的过程, 也有相应的存取状态的方法. 可以用于Activity, Fragment, Service和BroadcastReceiver.</p>
+<h2 id="BlockCanaryEx"><a href="#BlockCanaryEx" class="headerlink" title="BlockCanaryEx"></a><a href="https://github.com/lqcandqq13/BlockCanaryEx" target="_blank" rel="noopener">BlockCanaryEx</a></h2><p>基于<a href="https://github.com/markzhai/AndroidPerformanceMonitor" target="_blank" rel="noopener">BlockCanary</a>的扩展, 用于检测UI阻塞, 打印出了更多的方法信息, 并显示出最耗时的方法.</p>
+<h2 id="EasySP"><a href="#EasySP" class="headerlink" title="EasySP"></a><a href="https://github.com/WhiteDG/EasySP" target="_blank" rel="noopener">EasySP</a></h2><p>一个简单的SharedPreferences辅助类, 支持流式操作.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Fingerprint/" rel="tag"># Fingerprint</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+              <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+              <a href="/tags/OkHttp/" rel="tag"># OkHttp</a>
+              <a href="/tags/MVI/" rel="tag"># MVI</a>
+              <a href="/tags/ClassyShark/" rel="tag"># ClassyShark</a>
+              <a href="/tags/Transition/" rel="tag"># Transition</a>
+              <a href="/tags/ViewSwitcher/" rel="tag"># ViewSwitcher</a>
+              <a href="/tags/Coroutines/" rel="tag"># Coroutines</a>
+              <a href="/tags/SDK/" rel="tag"># SDK</a>
+              <a href="/tags/Libraries/" rel="tag"># Libraries</a>
+              <a href="/tags/OpenGL/" rel="tag"># OpenGL</a>
+              <a href="/tags/JBox2D/" rel="tag"># JBox2D</a>
+              <a href="/tags/Network/" rel="tag"># Network</a>
+              <a href="/tags/Etag/" rel="tag"># Etag</a>
+              <a href="/tags/If-Modified-Since/" rel="tag"># If-Modified-Since</a>
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/17/android-weekly-notes-issue-248/" rel="prev" title="Android Weekly Notes Issue 248">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 248
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/" rel="next" title="Android Weekly Notes Issue 250">
+      Android Weekly Notes Issue 250 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-249"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #249</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#From-design-to-Android"><span class="nav-number">2.1.</span> <span class="nav-text">From design to Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Im-Skeptical-about-Kotlin-Coroutines"><span class="nav-number">2.2.</span> <span class="nav-text">Why Im Skeptical about Kotlin Coroutines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-I-wish-I-knew-when-I-started-building-Android-SDK-Libraries"><span class="nav-number">2.3.</span> <span class="nav-text">Things I wish I knew when I started building Android SDK&#x2F;Libraries</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%9B%E5%BB%BA%E8%BF%99%E4%B8%AA%E5%BA%93%E5%91%A2"><span class="nav-number">2.3.1.</span> <span class="nav-text">为什么要创建这个库呢?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%A0%E7%9A%84artifacts%E5%8F%AF%E9%80%89%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.3.2.</span> <span class="nav-text">你的artifacts可选的类型是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%A0%E7%9A%84%E5%BA%93%E6%94%BE%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">2.3.3.</span> <span class="nav-text">你的库放在哪里?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.4.</span> <span class="nav-text">避免多个参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E6%98%93%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.5.</span> <span class="nav-text">容易使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E5%8C%96%E6%9D%83%E9%99%90"><span class="nav-number">2.3.6.</span> <span class="nav-text">最小化权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E5%8C%96%E8%A6%81%E6%B1%82"><span class="nav-number">2.3.7.</span> <span class="nav-text">最小化要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E4%B8%8D%E5%90%8C%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">2.3.8.</span> <span class="nav-text">支持不同的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Production%E7%89%88%E6%9C%AC%E4%B8%8D%E8%A6%81%E6%89%93log"><span class="nav-number">2.3.9.</span> <span class="nav-text">Production版本不要打log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E6%82%84%E6%82%84crash-%E5%8F%A6%E5%A4%96fail-fast"><span class="nav-number">2.3.10.</span> <span class="nav-text">不要悄悄crash, 另外fail fast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E9%9B%85%E5%9C%B0%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF"><span class="nav-number">2.3.11.</span> <span class="nav-text">优雅地处理错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E7%89%B9%E5%AE%9A%E7%9A%84exceptions"><span class="nav-number">2.3.12.</span> <span class="nav-text">捕获特定的exceptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E4%B8%8D%E8%89%AF%E7%9A%84%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5"><span class="nav-number">2.3.13.</span> <span class="nav-text">处理不良的网络连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BD%E9%87%8F%E4%B8%8D%E8%A6%81%E4%BE%9D%E8%B5%96%E5%BE%88%E5%A4%A7%E7%9A%84%E5%BA%93"><span class="nav-number">2.3.14.</span> <span class="nav-text">尽量不要依赖很大的库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E4%BE%9D%E8%B5%96%E4%BD%A0%E4%B8%8D%E9%9C%80%E8%A6%81%E7%9A%84%E5%BA%93"><span class="nav-number">2.3.15.</span> <span class="nav-text">不要依赖你不需要的库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E6%8B%96%E6%85%A2%E5%90%AF%E5%8A%A8%E6%97%B6%E9%97%B4"><span class="nav-number">2.3.16.</span> <span class="nav-text">不要拖慢启动时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%8A%9F%E8%83%BD%E7%9A%84%E6%97%B6%E5%80%99%E8%A6%81%E4%BC%98%E9%9B%85"><span class="nav-number">2.3.17.</span> <span class="nav-text">删除功能的时候要优雅</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A9%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8F%AF%E6%B5%8B%E8%AF%95"><span class="nav-number">2.3.18.</span> <span class="nav-text">让你的代码可测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E8%AE%B0%E5%BD%95%E6%89%80%E6%9C%89%E7%9A%84%E4%BA%8B"><span class="nav-number">2.3.19.</span> <span class="nav-text">文档记录所有的事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BE%9B%E4%B8%80%E4%B8%AA%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84sample"><span class="nav-number">2.3.20.</span> <span class="nav-text">提供一个最简单的sample</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%83%E8%99%91%E5%8A%A0%E4%B8%80%E4%B8%AALicence"><span class="nav-number">2.3.21.</span> <span class="nav-text">考虑加一个Licence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B6%E9%9B%86%E5%8F%8D%E9%A6%88"><span class="nav-number">2.3.22.</span> <span class="nav-text">收集反馈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-Create-a-Bubble-Selection-Animation-on-Android"><span class="nav-number">2.4.</span> <span class="nav-text">How to Create a Bubble Selection Animation on Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducing-networking-footprint-with-OkHttp-Etags-and-If-Modified-Since"><span class="nav-number">2.5.</span> <span class="nav-text">Reducing networking footprint with OkHttp, Etags and If-Modified-Since</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#If-Modified-Since%E5%92%8CLast-Modified"><span class="nav-number">2.5.1.</span> <span class="nav-text">If-Modified-Since和Last-Modified</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Etag%E5%92%8CIf-None-Match"><span class="nav-number">2.5.2.</span> <span class="nav-text">Etag和If-None-Match</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.5.3.</span> <span class="nav-text">客户端实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-number">2.5.4.</span> <span class="nav-text">问题解决</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exporting-types-from-Android-app-using-ClassyShark"><span class="nav-number">2.6.</span> <span class="nav-text">Exporting types from Android app using ClassyShark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fingerprint-authentication"><span class="nav-number">2.7.</span> <span class="nav-text">Fingerprint authentication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-Apps-with-MVI-Part-5"><span class="nav-number">2.8.</span> <span class="nav-text">Reactive Apps with MVI - Part 5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-some-machine-learning-to-your-apps-with-TensorFlow"><span class="nav-number">2.9.</span> <span class="nav-text">Add some machine learning to your apps, with TensorFlow</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoplayVideos"><span class="nav-number">3.1.</span> <span class="nav-text">AutoplayVideos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PreferenceHolder"><span class="nav-number">3.2.</span> <span class="nav-text">PreferenceHolder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ActivityStarter"><span class="nav-number">3.3.</span> <span class="nav-text">ActivityStarter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BlockCanaryEx"><span class="nav-number">3.4.</span> <span class="nav-text">BlockCanaryEx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EasySP"><span class="nav-number">3.5.</span> <span class="nav-text">EasySP</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/";
+    this.page.identifier = "Android/Android-Weekly/2017/03/24/android-weekly-notes-issue-249/";
+    this.page.title = "Android Weekly Notes Issue 249";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

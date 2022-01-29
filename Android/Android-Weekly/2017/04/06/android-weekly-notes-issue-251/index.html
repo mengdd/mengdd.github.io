@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #251April 2nd, 2017Android Weekly Issue #251.本期内容: Android O新增的API: View的tooltips; Android中的字体设置; 该不该将Kotlin用于产品代码; 实现一个带自定义动画的搜索Toolbar; JUnit 5中用Lambda表达式; 用Mockito和Espresso写测试;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 251">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #251April 2nd, 2017Android Weekly Issue #251.本期内容: Android O新增的API: View的tooltips; Android中的字体设置; 该不该将Kotlin用于产品代码; 实现一个带自定义动画的搜索Toolbar; JUnit 5中用Lambda表达式; 用Mockito和Espresso写测试;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-04-06T09:04:00.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.998Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Toolbar">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Espresso">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Lambda">
+<meta property="article:tag" content="Mockito">
+<meta property="article:tag" content="Testing">
+<meta property="article:tag" content="JUnit 5">
+<meta property="article:tag" content="Android O">
+<meta property="article:tag" content="Topography">
+<meta property="article:tag" content="Dependency Injection">
+<meta property="article:tag" content="Plugin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 251 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 251
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-04-06 17:04:00" itemprop="dateCreated datePublished" datetime="2017-04-06T17:04:00+08:00">2017-04-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 251" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-251"><a href="#Android-Weekly-Issue-251" class="headerlink" title="Android Weekly Issue #251"></a>Android Weekly Issue #251</h1><p>April 2nd, 2017<br><a href="http://androidweekly.net/issues/issue-251" target="_blank" rel="noopener">Android Weekly Issue #251</a>.<br>本期内容: Android O新增的API: View的tooltips; Android中的字体设置; 该不该将Kotlin用于产品代码; 实现一个带自定义动画的搜索Toolbar; JUnit 5中用Lambda表达式; 用Mockito和Espresso写测试;<br>native的mobile开发应该扩展一下自己的知识; Kotlin中的依赖注入实现; Kotlin中lambda表达式的简化; 一个Intellij IDEA的插件, 帮助你改善Java代码的可读性.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Preliminary-look-at-View-tooltips"><a href="#Preliminary-look-at-View-tooltips" class="headerlink" title="Preliminary look at View tooltips"></a><a href="https://medium.com/@bherbst/preliminary-look-at-view-tooltips-b127583c5691" target="_blank" rel="noopener">Preliminary look at View tooltips</a></h2><p>Android O新推出了一个API, 是给View加tooltips.</p>
+<p>如何使用:<br>可以在xml里面用属性<a href="https://developer.android.com/reference/android/view/View.html#attr_android:tooltipText" target="_blank" rel="noopener">android:tooltipText</a>, 或者使用Java方法<a href="https://developer.android.com/reference/android/view/View.html#setTooltipText%28java.lang.CharSequence%29" target="_blank" rel="noopener">View.setTooltipText()</a>来指定提示文字.</p>
+<p>它们的外观看起来就像一个toast(半透明的灰色方框, 有圆角). 它支持多行, 有最大宽度, 超过98个字符结尾会以…省略.<br>目前还不能被定制.</p>
+<p>它在什么时候出现呢? 长按和悬停.<br>当然你的长按如果已经被处理过了(<code>OnLongClickListener</code>返回了true), 它就不会出现了.</p>
+<h2 id="Perfecting-Custom-Typography-in-Android"><a href="#Perfecting-Custom-Typography-in-Android" class="headerlink" title="Perfecting Custom Typography in Android"></a><a href="https://www.bignerdranch.com/blog/perfecting-custom-typography-in-android/" target="_blank" rel="noopener">Perfecting Custom Typography in Android</a></h2><p>关于字体设置的微调, 作者他们弄了一个小工具: <a href="https://github.com/bignerdranch/Typesetter" target="_blank" rel="noopener">Typesetter</a>来提高设计师和开发者沟通字体时候的效率.</p>
+<h3 id="字体尺寸"><a href="#字体尺寸" class="headerlink" title="字体尺寸"></a>字体尺寸</h3><p>对于字体, 通常我们建议用<code>sp</code>(scaleable pixel), 1pt=1sp. (pt是point).</p>
+<p><code>sp</code>考虑到了用户设备上的字体设置, 所以通常是建议用sp来设置字体大小.</p>
+<p>但是作者他们最近在应用中一些字很大的地方, 选择使用了<code>dp</code> (density-independent pixel), 这是因为这些字本来已经很大了, 所以他们不想让它们被调节以后变得更大.</p>
+<h3 id="Leading"><a href="#Leading" class="headerlink" title="Leading"></a>Leading</h3><p>在字体排版中, Leading是指字体行之间的竖直间距. 和<code>line spacing</code>和<code>line height</code>是同义词, 同样也由<code>pt/sp</code>作为单位.</p>
+<p>字体文件中会有一个基本的leading值, 根据字体不同可能会不同.</p>
+<p>在Android中TextView的leading可以通过<code>lineSpacingExtra</code>和<code>lineSpacingMultiplier</code>属性来定义. 在代码中可以通过方法<a href="https://developer.android.com/reference/android/widget/TextView.html#setLineSpacing(float,%20float" target="_blank" rel="noopener">setLineSpacing()</a>)来定义. 注意用这个方法时, 单位是像素.</p>
+<h3 id="Tracking"><a href="#Tracking" class="headerlink" title="Tracking"></a>Tracking</h3><p>Tracking指字间距(letterspacing).<br>在Android中可以通过属性<code>letterSpacing</code>来设置(API 21及以上), 以em为单位的分数测量.</p>
+<h2 id="Kotlin-in-Production-Should-you-stay-or-should-you-go"><a href="#Kotlin-in-Production-Should-you-stay-or-should-you-go" class="headerlink" title="Kotlin in Production: Should you stay or should you go?"></a><a href="https://medium.com/@dpreussler/kotlin-in-production-should-you-stay-or-should-you-go-a3428b44b236" target="_blank" rel="noopener">Kotlin in Production: Should you stay or should you go?</a></h2><p>关于是否应该使用Kotlin, 作者发表了一些他的想法. 总体来说作者是支持Kotlin的, 对于各个可能存疑的点, 他都做出了解释.</p>
+<h2 id="How-We-Made-the-ToolBar-on-Android-Move-Like-Jelly-in-Kotlin"><a href="#How-We-Made-the-ToolBar-on-Android-Move-Like-Jelly-in-Kotlin" class="headerlink" title="How We Made the ToolBar on Android Move Like Jelly (in Kotlin)"></a><a href="https://yalantis.com/blog/toolbar-jelly-animation-kotlin-android/" target="_blank" rel="noopener">How We Made the ToolBar on Android Move Like Jelly (in Kotlin)</a></h2><p>在Toolbar上点击搜索按钮, 展开关键词输入框的时候, 加一个动画, 让它有弹性地震动一下, 如何实现呢?<br>本文给出了详细代码.</p>
+<h2 id="JUnit-5-Lambdas"><a href="#JUnit-5-Lambdas" class="headerlink" title="JUnit 5: Lambdas"></a><a href="https://blog.stylingandroid.com/junit-5-lambdas/" target="_blank" rel="noopener">JUnit 5: Lambdas</a></h2><p>如何在测试中使用lambda表达式, 这篇文章里作者讨论了如何在项目中使用lambda表达式的一些方法.</p>
+<p>有两个比较好的方法:</p>
+<ul>
+<li>用<a href="https://github.com/orfjackal/retrolambda" target="_blank" rel="noopener">retrolambda</a>.</li>
+<li>用Kotlin.</li>
+</ul>
+<h2 id="Testing-MVP-using-Espresso-and-Mockito"><a href="#Testing-MVP-using-Espresso-and-Mockito" class="headerlink" title="Testing MVP using Espresso and Mockito"></a><a href="https://josiassena.com/testing-mvp-using-espresso-and-mockito/" target="_blank" rel="noopener">Testing MVP using Espresso and Mockito</a></h2><p>如何用Mockito和Espresso给一个MVP架构的程序写单元测试和UI测试.</p>
+<h2 id="The-rise-of-the-full-stack-native-mobile-app-developer"><a href="#The-rise-of-the-full-stack-native-mobile-app-developer" class="headerlink" title="The rise of the full-stack native mobile app developer"></a><a href="https://medium.com/@erikhellman/the-rise-of-the-full-stack-native-mobile-app-developer-a0757388bc1b" target="_blank" rel="noopener">The rise of the full-stack native mobile app developer</a></h2><p>这篇文章就说native的客户端开发应该扩展自己, 学一点后端知识, 来应对行业发展和以后的趋势.</p>
+<h2 id="Kotlin-Dependency-Injection-with-the-Reader-Monad"><a href="#Kotlin-Dependency-Injection-with-the-Reader-Monad" class="headerlink" title="Kotlin Dependency Injection with the Reader Monad"></a><a href="https://medium.com/@JorgeCastilloPr/kotlin-dependency-injection-with-the-reader-monad-7d52f94a482e" target="_blank" rel="noopener">Kotlin Dependency Injection with the Reader Monad</a></h2><p>Dependency Injection (DI)依赖注入是一种概念, 和具体使用的工具无关, 所以有各种不同的方法可以实现它.<br>本文只是提供一种思路, 用Kotlin中函数式的一些特性来做依赖注入.</p>
+<p>首先介绍了什么是<code>Functors</code>, <code>Applicatives</code>和<code>Monads</code>, 作者推荐看这系列文章: <a href="https://medium.com/@aballano/kotlin-functors-applicatives-and-monads-in-pictures-part-1-3-c47a1b1ce251" target="_blank" rel="noopener">Kotlin Functors, Applicatives, And Monads in Pictures. Part 1/3</a>.</p>
+<p>后来作者举了实际的例子, 详情见原文.</p>
+<h2 id="How-lambdas-work-in-Kotlin-amp-setOnClickListener-transformation"><a href="#How-lambdas-work-in-Kotlin-amp-setOnClickListener-transformation" class="headerlink" title="How lambdas work in Kotlin &amp; setOnClickListener transformation"></a><a href="https://antonioleiva.com/lambdas-kotlin-android/" target="_blank" rel="noopener">How lambdas work in Kotlin &amp; setOnClickListener transformation</a></h2><p>关于Kotlin中的lambda是如何简化的, 以<code>setOnClickListener()</code>为例:<br>它在Java中是这样定义的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnClickListener</span><span class="params">(OnClickListener l)</span> </span>&#123;</span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Kotlin中是这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fun setOnClickListener(l: (View) -&gt; Unit)</span><br></pre></td></tr></table></figure></p>
+<p>最原始的写法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener(object : View.OnClickListener &#123;</span><br><span class="line">    override fun onClick(v: View?) &#123;</span><br><span class="line">        toast(&quot;Hello&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>然后IDE会提示你改为用lambda表达式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener(&#123; v -&gt; toast(&quot;Hello&quot;) &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>然而这个还可以进一步被简化:</p>
+<p>如果一个方法的<strong>最后一个参数</strong>是一个函数, 那么它可以写在括号外面:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener() &#123; v -&gt; toast(&quot;Hello&quot;) &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果一个方法只有一个参数, 并且是一个函数, 括号可以被删掉:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener &#123; v -&gt; toast(&quot;Hello&quot;) &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果你并没有用到lambda表达式的参数, 你可以省略左边的部分:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener &#123; toast(&quot;Hello&quot;) &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果你的表达式只有一个参数, 而你要用它, 你仍然可以不写左边的部分, 用<code>it</code>来代替它:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.setOnClickListener &#123; doSomething(it) &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Making-Java-Code-Easier-to-Read-Without-Changing-it"><a href="#Making-Java-Code-Easier-to-Read-Without-Changing-it" class="headerlink" title="Making Java Code Easier to Read (Without Changing it)"></a><a href="https://medium.com/@andrey_cheptsov/making-java-code-easier-to-read-without-changing-it-adeebd5c36de" target="_blank" rel="noopener">Making Java Code Easier to Read (Without Changing it)</a></h2><p>如何在不改变代码的情况下, 增加Java代码的可读性?</p>
+<p>IntelliJ IDEA为Java 8以下的用户提供了代码折叠功能, 来模拟lambda的语法.</p>
+<p>作者自己又开发了一个新的插件<a href="https://plugins.jetbrains.com/plugin/9320-advanced-java-folding" target="_blank" rel="noopener">Advanced Java Folding</a>, 进一步扩展了这个代码折叠的功能. 本文介绍其中一些features. 这些特性在插件中都是可选的, 可以根据需要和喜好配置.</p>
+<p>(经过折叠以后的Java代码确实看起来很像Kotlin).</p>
+<p>本期还有两篇Android Things的文章就不介绍啦.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="JellyToolbar"><a href="#JellyToolbar" class="headerlink" title="JellyToolbar"></a><a href="https://github.com/Yalantis/JellyToolbar" target="_blank" rel="noopener">JellyToolbar</a></h2><p>一个带弹性抖动动画的搜索Toolbar实现, 本期有一篇文章介绍.</p>
+<h2 id="Android-Router"><a href="#Android-Router" class="headerlink" title="Android Router"></a><a href="https://github.com/TangXiaoLv/Android-Router" target="_blank" rel="noopener">Android Router</a></h2><p>一个轻量级的组件化协议框架, 用来解耦复杂项目.</p>
+<h2 id="Typesetter"><a href="#Typesetter" class="headerlink" title="Typesetter"></a><a href="https://github.com/bignerdranch/Typesetter" target="_blank" rel="noopener">Typesetter</a></h2><p>一个小工具, 用来调整和显示字体, 本期有相关文章.</p>
+<h2 id="Telegram"><a href="#Telegram" class="headerlink" title="Telegram"></a><a href="https://github.com/DrKLO/Telegram" target="_blank" rel="noopener">Telegram</a></h2><p>Telegram是一个通信应用, 关注速度和安全. 这是该应用的官方开源代码.</p>
+<h2 id="Badger"><a href="#Badger" class="headerlink" title="Badger"></a><a href="https://github.com/volders/Badger" target="_blank" rel="noopener">Badger</a></h2><p>一个给图片加数字小标(badges)的库.</p>
+<h2 id="classyshark-calculate-size"><a href="#classyshark-calculate-size" class="headerlink" title="classyshark-calculate-size"></a><a href="https://github.com/borisf/classyshark-calculate-size" target="_blank" rel="noopener">classyshark-calculate-size</a></h2><p>这个工具可以计算出你依赖的库在apk的classes.dex中到底占多少大小.</p>
+<h2 id="SlidingRootNav"><a href="#SlidingRootNav" class="headerlink" title="SlidingRootNav"></a><a href="https://github.com/yarolegovich/SlidingRootNav" target="_blank" rel="noopener">SlidingRootNav</a></h2><p>一个类似于<code>DrawerLayout</code>的ViewGroup, 抽屉部分隐藏在内容的下面. 内容可以向右滑动缩小以露出抽屉.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Toolbar/" rel="tag"># Toolbar</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Espresso/" rel="tag"># Espresso</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Lambda/" rel="tag"># Lambda</a>
+              <a href="/tags/Mockito/" rel="tag"># Mockito</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/JUnit-5/" rel="tag"># JUnit 5</a>
+              <a href="/tags/Android-O/" rel="tag"># Android O</a>
+              <a href="/tags/Topography/" rel="tag"># Topography</a>
+              <a href="/tags/Dependency-Injection/" rel="tag"># Dependency Injection</a>
+              <a href="/tags/Plugin/" rel="tag"># Plugin</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/31/android-weekly-notes-issue-250/" rel="prev" title="Android Weekly Notes Issue 250">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 250
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2017/04/11/network-usage-and-battery-consumption/" rel="next" title="网络使用和电池消耗 原因和改进">
+      网络使用和电池消耗 原因和改进 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-251"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #251</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Preliminary-look-at-View-tooltips"><span class="nav-number">2.1.</span> <span class="nav-text">Preliminary look at View tooltips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perfecting-Custom-Typography-in-Android"><span class="nav-number">2.2.</span> <span class="nav-text">Perfecting Custom Typography in Android</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E4%BD%93%E5%B0%BA%E5%AF%B8"><span class="nav-number">2.2.1.</span> <span class="nav-text">字体尺寸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Leading"><span class="nav-number">2.2.2.</span> <span class="nav-text">Leading</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tracking"><span class="nav-number">2.2.3.</span> <span class="nav-text">Tracking</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-in-Production-Should-you-stay-or-should-you-go"><span class="nav-number">2.3.</span> <span class="nav-text">Kotlin in Production: Should you stay or should you go?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-We-Made-the-ToolBar-on-Android-Move-Like-Jelly-in-Kotlin"><span class="nav-number">2.4.</span> <span class="nav-text">How We Made the ToolBar on Android Move Like Jelly (in Kotlin)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JUnit-5-Lambdas"><span class="nav-number">2.5.</span> <span class="nav-text">JUnit 5: Lambdas</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Testing-MVP-using-Espresso-and-Mockito"><span class="nav-number">2.6.</span> <span class="nav-text">Testing MVP using Espresso and Mockito</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-rise-of-the-full-stack-native-mobile-app-developer"><span class="nav-number">2.7.</span> <span class="nav-text">The rise of the full-stack native mobile app developer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-Dependency-Injection-with-the-Reader-Monad"><span class="nav-number">2.8.</span> <span class="nav-text">Kotlin Dependency Injection with the Reader Monad</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-lambdas-work-in-Kotlin-amp-setOnClickListener-transformation"><span class="nav-number">2.9.</span> <span class="nav-text">How lambdas work in Kotlin &amp; setOnClickListener transformation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Making-Java-Code-Easier-to-Read-Without-Changing-it"><span class="nav-number">2.10.</span> <span class="nav-text">Making Java Code Easier to Read (Without Changing it)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JellyToolbar"><span class="nav-number">3.1.</span> <span class="nav-text">JellyToolbar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Router"><span class="nav-number">3.2.</span> <span class="nav-text">Android Router</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typesetter"><span class="nav-number">3.3.</span> <span class="nav-text">Typesetter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Telegram"><span class="nav-number">3.4.</span> <span class="nav-text">Telegram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Badger"><span class="nav-number">3.5.</span> <span class="nav-text">Badger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#classyshark-calculate-size"><span class="nav-number">3.6.</span> <span class="nav-text">classyshark-calculate-size</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SlidingRootNav"><span class="nav-number">3.7.</span> <span class="nav-text">SlidingRootNav</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/";
+    this.page.identifier = "Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/";
+    this.page.title = "Android Weekly Notes Issue 251";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

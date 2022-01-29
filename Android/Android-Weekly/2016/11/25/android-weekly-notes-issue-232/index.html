@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #232November 20th, 2016Android Weekly Issue #232本期内容包括: Kotlin的优势讨论; MVVM模式结合RxJava和Retrofit的应用构架实现; Android中传感器使用; 如何给App写单元测试; Reductor的组合使用; Android应用进程被杀死的状态恢复和问题处理; Kotlin中的A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 232">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #232November 20th, 2016Android Weekly Issue #232本期内容包括: Kotlin的优势讨论; MVVM模式结合RxJava和Retrofit的应用构架实现; Android中传感器使用; 如何给App写单元测试; Reductor的组合使用; Android应用进程被杀死的状态恢复和问题处理; Kotlin中的A">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-11-25T08:32:57.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.994Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Retrofit">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="RxJava2">
+<meta property="article:tag" content="Redux">
+<meta property="article:tag" content="Reductor">
+<meta property="article:tag" content="MVVM">
+<meta property="article:tag" content="Sensor">
+<meta property="article:tag" content="Testing">
+<meta property="article:tag" content="Unit Test">
+<meta property="article:tag" content="Process">
+<meta property="article:tag" content="State">
+<meta property="article:tag" content="Anko">
+<meta property="article:tag" content="VectorDrawable">
+<meta property="article:tag" content="PNG">
+<meta property="article:tag" content="Switch">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 232 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 232
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-11-25 16:32:57" itemprop="dateCreated datePublished" datetime="2016-11-25T16:32:57+08:00">2016-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 232" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-232"><a href="#Android-Weekly-Issue-232" class="headerlink" title="Android Weekly Issue #232"></a>Android Weekly Issue #232</h1><p>November 20th, 2016<br><a href="http://androidweekly.net/issues/issue-232" target="_blank" rel="noopener">Android Weekly Issue #232</a><br>本期内容包括: Kotlin的优势讨论; MVVM模式结合RxJava和Retrofit的应用构架实现; Android中传感器使用; 如何给App写单元测试; Reductor的组合使用; Android应用进程被杀死的状态恢复和问题处理; Kotlin中的Anko; 后台任务处理库”Android Job”; VectorDrawable和PNG的使用问题等.</p>
+<p>本期开源库: 给ImageView和RelativeLayout的底部加曲线; 长按弹框; Switch Button控件; 给View加深度/厚度的库.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="How-Kotlin-became-our-primary-language-for-Android"><a href="#How-Kotlin-became-our-primary-language-for-Android" class="headerlink" title="How Kotlin became our primary language for Android"></a><a href="https://medium.com/uptech-team/how-kotlin-became-our-primary-language-for-android-3af7fd6a994c#.a50t4ple8" target="_blank" rel="noopener">How Kotlin became our primary language for Android</a></h2><p>作者他们team想要完全用kotlin开发一个应用.<br>本文是他们的心得体会.</p>
+<p>关于函数式编程的学习, 作者推荐: <a href="https://www.coursera.org/specializations/scala" target="_blank" rel="noopener">一个Scala的课程</a>.</p>
+<p>Kotlin的优势: 和Java可以互相调用; 函数式语言; function purity; 高阶函数(函数可以作为参数或返回值); 不可变性(val); Null-safety; Anko;  Kotlin Android extensions(移除了ButterKnife); 还有对初学者很友好, 可以摆脱很多第三方的依赖, 函数扩展等等优势.</p>
+<h2 id="RxJava-2-Android-MVVM-Lifecycle-App-Structure-with-Retrofit-2"><a href="#RxJava-2-Android-MVVM-Lifecycle-App-Structure-with-Retrofit-2" class="headerlink" title="RxJava 2: Android MVVM Lifecycle App Structure with Retrofit 2"></a><a href="https://medium.com/@manuelvicnt/rxjava2-android-mvvm-lifecycle-app-structure-with-retrofit-2-cf903849f49e#.jx3vg232m" target="_blank" rel="noopener">RxJava 2: Android MVVM Lifecycle App Structure with Retrofit 2</a></h2><p>作者一年多以前写过一个这个文章: <a href="https://medium.com/@manuelvicnt/rxjava-android-mvvm-app-structure-with-retrofit-a5605fa32c00#.44uq87s6w" target="_blank" rel="noopener">RxJava: Android MVVM App structure with Retrofit</a>, 介绍MVVM结合Retrofit和RxJava的App架构模式. 此篇文章是一年后作者对此的改进.</p>
+<p>主要内容有:</p>
+<ul>
+<li>1.通过View和ViewModel之间的协议接口, 让ViewModel知道View的生命周期变化.</li>
+<li>2.RxJava2的流式类型: Completable, Maybe, Flowable的使用.</li>
+<li>3.用RxJava操作符组合网络请求: 让不同的网络请求一起发送, 并且都返回以后才得到通知 -&gt; 用<code>.zip()</code>. 顺序连接不同的网络请求 -&gt; <code>.flatMap()</code>, <code>.andThen()</code>.</li>
+<li>4.后台网络请求和View更新的处理: 不取消网络请求, 等View再次resume的时候检查状态再更新. 这里提供了两种选择, 一种是用前面提到的协议接口中的生命周期方法, 另一种是用<code>AsyncProcessor</code>.</li>
+<li>5.Mock Retrofit的网络请求.</li>
+</ul>
+<h2 id="Tech-Talks-You-Do-Have-Something-To-Say"><a href="#Tech-Talks-You-Do-Have-Something-To-Say" class="headerlink" title="Tech Talks - You Do Have Something To Say!"></a><a href="https://medium.com/upday-devs/tech-talks-you-do-have-something-to-say-a1a0ae23fa0#.61m7x6rj8" target="_blank" rel="noopener">Tech Talks - You Do Have Something To Say!</a></h2><p>这篇文章鼓励你分享你的知识, 经验, 问题及解决方法,  无论是通过演讲还是写出来的方式.</p>
+<h2 id="Da-Real-Fragmentation-Sensors"><a href="#Da-Real-Fragmentation-Sensors" class="headerlink" title="Da Real Fragmentation - Sensors"></a><a href="http://pguardiola.com/blog/darealfragmentation-sensors/" target="_blank" rel="noopener">Da Real Fragmentation - Sensors</a></h2><p>介绍了Android中传感器的使用.</p>
+<h2 id="Simple-unit-tests-for-Android"><a href="#Simple-unit-tests-for-Android" class="headerlink" title="Simple unit tests for Android"></a><a href="https://stfalcon.com/en/blog/post/simple-unit-tests-for-android" target="_blank" rel="noopener">Simple unit tests for Android</a></h2><p>如何给你的App写简单的单元测试.</p>
+<h2 id="Reductor-Redux-for-Android-Part-2"><a href="#Reductor-Redux-for-Android-Part-2" class="headerlink" title="Reductor - Redux for Android. Part 2"></a><a href="https://yarikx.github.io/Reductor-composition/" target="_blank" rel="noopener">Reductor - Redux for Android. Part 2</a></h2><p>这是系列文章中的一篇, 继续讲<a href="https://github.com/Yarikx/reductor" target="_blank" rel="noopener">Reductor</a> library – Redux的Android版实现.</p>
+<p>这篇文章结合例子将如何组合使用以及用@CombinedState来生成代码.</p>
+<h2 id="Android-process-death-—-and-the-big-implications-for-your-app"><a href="#Android-process-death-—-and-the-big-implications-for-your-app" class="headerlink" title="Android process death — and the (big) implications for your app"></a><a href="https://medium.com/inloop/android-process-kill-and-the-big-implications-for-your-app-1ecbed4921cb#.iipoq2fne" target="_blank" rel="noopener">Android process death — and the (big) implications for your app</a></h2><p>本文探讨进程被杀死有可能导致的种种问题.</p>
+<p>你的Android应用如果在paused或者stopped状态, 那么它任何时候都有可能会被系统杀死. 这时候你的Activity, Fragment和View状态将被保存, 当你回到应用的时候, 系统会重新启动进程, 重新创建Activity, 存储的状态会在bundle中返回.</p>
+<p><strong>这个过程存在一个问题</strong>: 整个进程都被杀死了, 所有单例(或application scope的对象), 临时数据, 还有retained Fragment中的数据, 这些所有都会处于一种全新创建的状态, 但唯有一个不同, 一些在bundle中存储的状态被恢复出来了.</p>
+<p>这样有可能会导致一些异常, 比如你的界面想要恢复一种状态, 但是数据已经被清空了.</p>
+<p><strong>如何测试这种情况呢?</strong></p>
+<ul>
+<li>使用App, home键把它放进后台, 杀死app, 再恢复.</li>
+<li>打开选项”Don’t Keep Activities”. 这种测试并不会杀死进程, 只会测试Activity的状态恢复.</li>
+<li>设置Developer options中的Background Process Limit为”No background processes”. 这样把应用放在后台, 打开另一个应用, 再回来自己的应用, 将会重启进程.</li>
+</ul>
+<p><strong>相关问题信号</strong></p>
+<ul>
+<li>单例</li>
+<li>保存可变数据的共享的实例</li>
+<li>Application类中保存的数据和状态</li>
+<li>可变的静态字段</li>
+<li>Retained fragments(状态恢复了, 但是数据却丢失了)</li>
+<li>基本上任何没有在<code>onSaveInstanceState()</code>中保存但是你却依赖的状态</li>
+</ul>
+<p>这些问题没有唯一的解决方案, 取决于你的应用.</p>
+<h2 id="400-faster-layouts-with-Anko"><a href="#400-faster-layouts-with-Anko" class="headerlink" title="400% faster layouts with Anko"></a><a href="https://medium.com/@vergauwen.simon/400-faster-layouts-with-anko-da17f32c45dd#.bz6a3y8ql" target="_blank" rel="noopener">400% faster layouts with Anko</a></h2><p>作者把自己的一个布局改为用Kotlin的Anko, 然后测试性能.</p>
+<p>好处是:</p>
+<ul>
+<li>1.性能提升了, 避免了XML的运行时解析所花费的时间.</li>
+<li>2.可以动态地加入逻辑, 比如版本判断, 屏幕尺寸, 方向判断等.</li>
+</ul>
+<p>作者用的测试性能的工具是: <a href="https://github.com/frogermcs/AndroidDevMetrics" target="_blank" rel="noopener">AndroidDevMetrics</a></p>
+<h2 id="Background-Work-with-Android-Job-and-Dagger"><a href="#Background-Work-with-Android-Job-and-Dagger" class="headerlink" title="Background Work with Android Job and Dagger"></a><a href="http://www.adavis.info/2016/11/background-work-with-android-job-and.html" target="_blank" rel="noopener">Background Work with Android Job and Dagger</a></h2><p>在Android上的后台工作, 你可以选择<code>Alarm Manager</code>, <code>Job Scheduler</code>或<code>GCM Network Manager</code>.</p>
+<p>为了帮开发者从每种实现中抽象出来, Evernote开源了一个库: Android Job. 本文介绍了这个库如何使用.</p>
+<h2 id="VectorDrawable-PNG"><a href="#VectorDrawable-PNG" class="headerlink" title="VectorDrawable PNG"></a><a href="https://blog.stylingandroid.com/vectordrawable-png/" target="_blank" rel="noopener">VectorDrawable PNG</a></h2><p>作者他们的应用中有VectorDrawable的版本兼容问题, 用support library中的Compat版本也不好使, 于是他们在旧版本决定使用自动生成的png.</p>
+<p>然后发现了生成png的颜色设置问题, 在旧版本生成的图片用的是fillColor而不是tintColor. 把fillColor设置成想要的颜色即可.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Depth-Library-by-Daniel-Zeller"><a href="#Depth-Library-by-Daniel-Zeller" class="headerlink" title="Depth Library by Daniel Zeller"></a><a href="https://www.androidexperiments.com/experiment/depth-library" target="_blank" rel="noopener">Depth Library by Daniel Zeller</a></h2><p>一个应用, 展示了<a href="https://github.com/danielzeller/Depth-LIB-Android-" target="_blank" rel="noopener">Depth-LIB-Android-</a>的功能.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="Crescento"><a href="#Crescento" class="headerlink" title="Crescento"></a><a href="https://github.com/developer-shivam/crescento/" target="_blank" rel="noopener">Crescento</a></h2><p>在<code>ImageView</code>和<code>RelativeLayout</code>底部加上曲线的库.</p>
+<h2 id="LongPressPopup"><a href="#LongPressPopup" class="headerlink" title="LongPressPopup"></a><a href="https://github.com/RiccardoMoro/LongPressPopup" target="_blank" rel="noopener">LongPressPopup</a></h2><p>长按出现弹框的库.</p>
+<h2 id="RMSwitch"><a href="#RMSwitch" class="headerlink" title="RMSwitch"></a><a href="https://github.com/RiccardoMoro/RMSwitch" target="_blank" rel="noopener">RMSwitch</a></h2><p>一个Switch Button的库, 带有更多自定义扩展功能.</p>
+<h2 id="Depth-LIB-Android"><a href="#Depth-LIB-Android" class="headerlink" title="Depth-LIB-Android"></a><a href="https://github.com/danielzeller/Depth-LIB-Android-" target="_blank" rel="noopener">Depth-LIB-Android</a></h2><p>这个库给View加上深度/厚度.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+              <a href="/tags/Reductor/" rel="tag"># Reductor</a>
+              <a href="/tags/MVVM/" rel="tag"># MVVM</a>
+              <a href="/tags/Sensor/" rel="tag"># Sensor</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/Unit-Test/" rel="tag"># Unit Test</a>
+              <a href="/tags/Process/" rel="tag"># Process</a>
+              <a href="/tags/State/" rel="tag"># State</a>
+              <a href="/tags/Anko/" rel="tag"># Anko</a>
+              <a href="/tags/VectorDrawable/" rel="tag"># VectorDrawable</a>
+              <a href="/tags/PNG/" rel="tag"># PNG</a>
+              <a href="/tags/Switch/" rel="tag"># Switch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/11/17/android-weekly-notes-issue-231/" rel="prev" title="Android Weekly Notes Issue 231">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 231
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Java/2016/11/25/effective-java-notes-1/" rel="next" title="Effective Java笔记一 创建和销毁对象">
+      Effective Java笔记一 创建和销毁对象 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-232"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #232</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#How-Kotlin-became-our-primary-language-for-Android"><span class="nav-number">2.1.</span> <span class="nav-text">How Kotlin became our primary language for Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RxJava-2-Android-MVVM-Lifecycle-App-Structure-with-Retrofit-2"><span class="nav-number">2.2.</span> <span class="nav-text">RxJava 2: Android MVVM Lifecycle App Structure with Retrofit 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tech-Talks-You-Do-Have-Something-To-Say"><span class="nav-number">2.3.</span> <span class="nav-text">Tech Talks - You Do Have Something To Say!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Da-Real-Fragmentation-Sensors"><span class="nav-number">2.4.</span> <span class="nav-text">Da Real Fragmentation - Sensors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-unit-tests-for-Android"><span class="nav-number">2.5.</span> <span class="nav-text">Simple unit tests for Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reductor-Redux-for-Android-Part-2"><span class="nav-number">2.6.</span> <span class="nav-text">Reductor - Redux for Android. Part 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-process-death-%E2%80%94-and-the-big-implications-for-your-app"><span class="nav-number">2.7.</span> <span class="nav-text">Android process death — and the (big) implications for your app</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#400-faster-layouts-with-Anko"><span class="nav-number">2.8.</span> <span class="nav-text">400% faster layouts with Anko</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background-Work-with-Android-Job-and-Dagger"><span class="nav-number">2.9.</span> <span class="nav-text">Background Work with Android Job and Dagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VectorDrawable-PNG"><span class="nav-number">2.10.</span> <span class="nav-text">VectorDrawable PNG</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Depth-Library-by-Daniel-Zeller"><span class="nav-number">3.1.</span> <span class="nav-text">Depth Library by Daniel Zeller</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Crescento"><span class="nav-number">4.1.</span> <span class="nav-text">Crescento</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LongPressPopup"><span class="nav-number">4.2.</span> <span class="nav-text">LongPressPopup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RMSwitch"><span class="nav-number">4.3.</span> <span class="nav-text">RMSwitch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Depth-LIB-Android"><span class="nav-number">4.4.</span> <span class="nav-text">Depth-LIB-Android</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/";
+    this.page.identifier = "Android/Android-Weekly/2016/11/25/android-weekly-notes-issue-232/";
+    this.page.title = "Android Weekly Notes Issue 232";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

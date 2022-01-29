@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Google I&#x2F;O 2019, 这里有个playlist是所有Android开发相关的session视频合集:Android &amp; Play at Google I&#x2F;O 2019当然啦每个视频都看不太现实了, 就挑几个看看吧.这里是我个人的一点笔记, 可以作为一个太长不看版, 感兴趣的点再自己了解下.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google IO 2019 Android 太长不看版">
+<meta property="og:url" content="http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Google I&#x2F;O 2019, 这里有个playlist是所有Android开发相关的session视频合集:Android &amp; Play at Google I&#x2F;O 2019当然啦每个视频都看不太现实了, 就挑几个看看吧.这里是我个人的一点笔记, 可以作为一个太长不看版, 感兴趣的点再自己了解下.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-05-17T06:05:23.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.005Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Architecture Components">
+<meta property="article:tag" content="Google IO 2019">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Google IO 2019 Android 太长不看版 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Google IO 2019 Android 太长不看版
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-05-17 14:05:23" itemprop="dateCreated datePublished" datetime="2019-05-17T14:05:23+08:00">2019-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2019/05/17/google-io-2019-Android-TLDR/" class="post-meta-item leancloud_visitors" data-flag-title="Google IO 2019 Android 太长不看版" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2019/05/17/google-io-2019-Android-TLDR/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2019/05/17/google-io-2019-Android-TLDR/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Google I/O 2019, 这里有个playlist是所有Android开发相关的session视频合集:<br><a href="https://www.youtube.com/playlist?list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM" target="_blank" rel="noopener">Android &amp; Play at Google I/O 2019</a><br>当然啦每个视频都看不太现实了, 就挑几个看看吧.<br>这里是我个人的一点笔记, 可以作为一个太长不看版, 感兴趣的点再自己了解下.</p>
+<a id="more"></a>
+<h2 id="CameraX"><a href="#CameraX" class="headerlink" title="CameraX"></a><a href="https://www.youtube.com/watch?v=kuv8uK-5CLY&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=4&amp;t=0s" target="_blank" rel="noopener">CameraX</a></h2><ul>
+<li>更易用的API.</li>
+<li>隐藏底层细节.</li>
+<li>兼容各种设备.</li>
+<li>自动化测试套件.</li>
+</ul>
+<h2 id="Android-Studio-UI-design-tools-and-Debugging-Tools"><a href="#Android-Studio-UI-design-tools-and-Debugging-Tools" class="headerlink" title="Android Studio UI design tools and Debugging Tools"></a><a href="https://www.youtube.com/watch?v=oWTG5g5rT4s&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=6&amp;t=0s" target="_blank" rel="noopener">Android Studio UI design tools and Debugging Tools</a></h2><p>Design Toolchain:</p>
+<h3 id="Layout-Editor"><a href="#Layout-Editor" class="headerlink" title="Layout Editor"></a>Layout Editor</h3><ul>
+<li>Blueprint mode.</li>
+<li>context menu来提供一些更方便的工作. constraint popup. constraint menu.</li>
+<li>预览改进: RecyclerView的预览改进. 预览sample数据.</li>
+<li>attribute界面可以指定dimen中定义的自定义尺寸.</li>
+</ul>
+<p>相关文章:<br><a href="https://medium.com/androiddevelopers/android-studio-project-marble-layout-editor-608b6704957a" target="_blank" rel="noopener">https://medium.com/androiddevelopers/android-studio-project-marble-layout-editor-608b6704957a</a></p>
+<h3 id="Navigation-Editor"><a href="#Navigation-Editor" class="headerlink" title="Navigation Editor"></a>Navigation Editor</h3><ul>
+<li>navigation components的使用. </li>
+<li>navigation editor中的预览.</li>
+</ul>
+<h3 id="Resource-Manager"><a href="#Resource-Manager" class="headerlink" title="Resource Manager:"></a>Resource Manager:</h3><ul>
+<li>Batch Import, 可以直接把图片资源拖拽整理进去. * 可以把svg拽进去变成vector drawable. </li>
+<li>提供了layout, color等的小图预览. </li>
+<li>颜色的alpha终于可以用百分比设置了.</li>
+</ul>
+<h3 id="Layout-Inspector"><a href="#Layout-Inspector" class="headerlink" title="Layout Inspector:"></a>Layout Inspector:</h3><ul>
+<li>改进了属性显示.</li>
+<li>可以直接预览修改. </li>
+<li>3D显示, 可以查找某个背景颜色到底是哪一层设置的.</li>
+</ul>
+<p>(我的思考: 现在Android Studio越来越鼓励开发者直接利用图形界面来设置layout了, 总是喜欢直接编辑xml算不算是早期Android遗老遗少的一个陋习?)</p>
+<h2 id="What’s-New-in-Architecture-Components"><a href="#What’s-New-in-Architecture-Components" class="headerlink" title="What’s New in Architecture Components"></a><a href="https://www.youtube.com/watch?v=Qxj2eBmXLHg&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=6" target="_blank" rel="noopener">What’s New in Architecture Components</a></h2><p>Kotlin first.</p>
+<h3 id="Data-binding"><a href="#Data-binding" class="headerlink" title="Data binding:"></a>Data binding:</h3><ul>
+<li>Faster complilation:<br><code>android.databinding.incremental = true</code>.<br>增量注解处理.</li>
+<li>错误信息改善了. (耶!)</li>
+</ul>
+<h3 id="How-to-access-views"><a href="#How-to-access-views" class="headerlink" title="How to access views?"></a>How to access views?</h3><ul>
+<li>几种find view的方法比较.</li>
+<li>View Binding: coming soon in Android Studio 3.6.</li>
+</ul>
+<h3 id="Lifecycle"><a href="#Lifecycle" class="headerlink" title="Lifecycle"></a>Lifecycle</h3><ul>
+<li>ViewModel和Saved State.<br><code>SavedStateHandle</code>: 传入ViewModel, 用于保存一些在应用被杀死后重启仍然需要恢复的值.</li>
+<li>一些代码的写法被优化了.</li>
+</ul>
+<h3 id="WorkManager"><a href="#WorkManager" class="headerlink" title="WorkManager"></a>WorkManager</h3><p>优点: deferrable, persistent, constraint-based, backwards compatible.</p>
+<ul>
+<li>性能: on-demand initialization.</li>
+<li>Google Play Services integration.</li>
+<li>兼容性.</li>
+<li>测试.</li>
+<li>Future: foreground service.</li>
+</ul>
+<h3 id="Room"><a href="#Room" class="headerlink" title="Room"></a>Room</h3><ul>
+<li>Coroutines, 协程支持: suspend方法.</li>
+<li>Full text search: <code>@Fts4</code>, <code>MATCH</code>.</li>
+<li>Database Views. <code>@DatabaseView</code>. 重新组织一个可查询的数据结构, 类似于重新组装一个表, 用来查询.</li>
+<li>扩展了Rx支持: 数据库操作方法可以返回<code>Single</code>, <code>Completable</code>等Rx类型.</li>
+<li>Future: 注解处理; 关系改善; migration改善; 协程Channel&amp;Flow.</li>
+</ul>
+<h3 id="Paging"><a href="#Paging" class="headerlink" title="Paging"></a>Paging</h3><p>What’s next in Paging?</p>
+<ul>
+<li>Built in network support with error handling.</li>
+<li>Headers &amp; footers</li>
+<li>更好的Rx和协程集成.</li>
+</ul>
+<h3 id="Navigation"><a href="#Navigation" class="headerlink" title="Navigation"></a>Navigation</h3><ul>
+<li>ViewModels scoped to Navigation Graphs.</li>
+<li>Navigate by URI.</li>
+<li>Dialog as destinations.</li>
+<li>Safe Args.</li>
+<li>Future: Better support for dynamic features.</li>
+</ul>
+<p>最后广告了一下这个课程:<br><a href="https://www.udacity.com/course/developing-android-apps-with-kotlin--ud9012" target="_blank" rel="noopener">https://www.udacity.com/course/developing-android-apps-with-kotlin--ud9012</a></p>
+<h2 id="What’s-New-in-Android"><a href="#What’s-New-in-Android" class="headerlink" title="What’s New in Android"></a><a href="https://www.youtube.com/watch?v=td3Kd7fOROw&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=8&amp;t=0s" target="_blank" rel="noopener">What’s New in Android</a></h2><p>What’s new in Android Q:</p>
+<h3 id="System-UI"><a href="#System-UI" class="headerlink" title="System UI"></a>System UI</h3><ul>
+<li>SAW: System Alert Window. -&gt; 安全问题. -&gt; 引入Bubbles (API 29).</li>
+<li>Dark theme.</li>
+<li>Share sheet: 内容预览, 粘贴, 性能改善.</li>
+<li>通知分区域: Priority, Gentle.</li>
+<li>Notification actions: 自动生成回复.</li>
+<li>手势导航.</li>
+</ul>
+<h3 id="Platform"><a href="#Platform" class="headerlink" title="Platform"></a>Platform</h3><ul>
+<li>WebView: Trichrome: Separate WebView/Chrome, hung renderer检测.</li>
+<li>Accessibility.</li>
+</ul>
+<h3 id="Text"><a href="#Text" class="headerlink" title="Text"></a>Text</h3><ul>
+<li>API 23默认开启了连字符, 性能下降, 所以在Q默认关闭了.</li>
+<li>API for fonts.<br>还单独有个text的演讲专门讲这个.</li>
+</ul>
+<h3 id="Magnifier"><a href="#Magnifier" class="headerlink" title="Magnifier"></a>Magnifier</h3><h3 id="private-APIs"><a href="#private-APIs" class="headerlink" title="private APIs"></a>private APIs</h3><p>要么用public的, 要么private改成public的, 要么加新的.<br>gray list中加了更多的(以后的版本将不能用了).</p>
+<h3 id="Android-Runtime-ART"><a href="#Android-Runtime-ART" class="headerlink" title="Android Runtime (ART)"></a>Android Runtime (ART)</h3><p>Profile, 启动改善, GC改善.</p>
+<h3 id="Kotlin"><a href="#Kotlin" class="headerlink" title="Kotlin"></a>Kotlin</h3><p>Q的新API有nullability注解.</p>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><p>TLS 1.3 默认开启.<br>生物识别改进.</p>
+<h3 id="Jetpack-Compose"><a href="#Jetpack-Compose" class="headerlink" title="Jetpack Compose"></a>Jetpack Compose</h3><p>全新的UI组件: Kotlin, Reactive.<br>(很像Flutter.)</p>
+<h3 id="Privacy"><a href="#Privacy" class="headerlink" title="Privacy"></a>Privacy</h3><ul>
+<li>外部存储限制.</li>
+<li>Location: 权限设置更新. 新增只有前台时允许的选项.</li>
+<li>后台启动Activity限制.</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>CameraX</li>
+<li>Architecture Components</li>
+<li>ViewPager2</li>
+<li>ViewBindings</li>
+<li>Blend Modes</li>
+<li>RenderNode</li>
+<li>HardwareRenderer: 可以控制光源(阴影)</li>
+<li>Hardware Bitmaps</li>
+<li>Audio Playback Capture</li>
+<li>应用不能控制wifi开关</li>
+<li>Settings Panel</li>
+</ul>
+<h2 id="Build-a-Modular-Android-App-Architecture"><a href="#Build-a-Modular-Android-App-Architecture" class="headerlink" title="Build a Modular Android App Architecture"></a><a href="https://www.youtube.com/watch?v=PZBg5DIzNww&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=12" target="_blank" rel="noopener">Build a Modular Android App Architecture</a></h2><h3 id="为什么我们要模块化呢"><a href="#为什么我们要模块化呢" class="headerlink" title="为什么我们要模块化呢?"></a>为什么我们要模块化呢?</h3><ul>
+<li>scale: 更易分组开发人员; 更易查找资源.</li>
+<li>更快的编译速度.</li>
+<li>更快的CI. 只执行有修改的module相关的测试.</li>
+<li>Good for business. App Bundles: 更小的apk.</li>
+<li>分离的feature测试. 快速AB Test一个新功能.</li>
+</ul>
+<h3 id="两种Modules"><a href="#两种Modules" class="headerlink" title="两种Modules:"></a>两种Modules:</h3><ul>
+<li>Library Module</li>
+<li>Dynamic Feature Module</li>
+</ul>
+<h3 id="如何分离模块呢"><a href="#如何分离模块呢" class="headerlink" title="如何分离模块呢?"></a>如何分离模块呢?</h3><ul>
+<li>by feature</li>
+<li>by layer</li>
+<li>feature &amp; layer.</li>
+</ul>
+<h3 id="模块间的依赖"><a href="#模块间的依赖" class="headerlink" title="模块间的依赖"></a>模块间的依赖</h3><p>Module A依赖Module B:</p>
+<ul>
+<li><code>api</code>: Module B is part of my <strong>Public API</strong>. 依赖A的可以看到B.</li>
+<li><code>implementation</code>: Module B is my <strong>Implementation Detail</strong>. 依赖A的看不到B.</li>
+</ul>
+<p>这里讨论了一个分层模块化构架中的问题: repo模块对数据库模块的依赖, 用<code>api</code>, 上层可以直接使用数据库模块中的实例类, 但是同时暴露了DAO, 破坏了模块化分离的意义.<br>两个选择:</p>
+<ul>
+<li>规定在上层不要操作数据库.</li>
+<li>新建一个通用的数据模块, 存放实体类, 数据库模块<code>implementation</code>依赖它, repo模块<code>api</code>依赖它.</li>
+</ul>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试."></a>测试.</h3><h3 id="Dynamic-feature-modules"><a href="#Dynamic-feature-modules" class="headerlink" title="Dynamic feature modules"></a>Dynamic feature modules</h3><p>几个挑战:</p>
+<ul>
+<li>导航. 需要hardcode类名.</li>
+<li>找依赖. Dynamically loaded modules.</li>
+</ul>
+<p>代码例子: <a href="https://github.com/googlesamples/android-dynamic-code-loading" target="_blank" rel="noopener">android-dynamic-code-loading</a><br>结合dagger.</p>
+<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p>数据库的几种选择:</p>
+<ul>
+<li>一个数据库: 好维护, 好共享, 但是没有分离.</li>
+<li>一个核心数据库 + 每个feature自己的数据库: 有了分离, 但是共享成了问题. 如果hybrid: 让有交互的模块共享, 也是挺复杂的.</li>
+<li>一个Room的bright feature: Multi-module数据库. (Not Available now.)</li>
+</ul>
+<p>最后闲聊了几句关于构架的讨论.<br>Android team只是提供options, 最后的选择还是depends.</p>
+<ul>
+<li>考虑: short time costs, long time benefits.</li>
+<li>用户不会因为app的构架好而给你5星.</li>
+</ul>
+<h2 id="What’s-New-in-the-Android-OS-User-Interface"><a href="#What’s-New-in-the-Android-OS-User-Interface" class="headerlink" title="What’s New in the Android OS User Interface"></a><a href="https://www.youtube.com/watch?v=nWbW58RMteI&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=34" target="_blank" rel="noopener">What’s New in the Android OS User Interface</a></h2><p>三个方面:</p>
+<ul>
+<li>Sharing: 性能改进; UI改进; 更多自定义选项.</li>
+<li>Notifications: gentle; actions.</li>
+<li>Multitasking: Bubbles.</li>
+</ul>
+<h2 id="Improving-App-Performance-with-Benchmarking"><a href="#Improving-App-Performance-with-Benchmarking" class="headerlink" title="Improving App Performance with Benchmarking"></a><a href="https://www.youtube.com/watch?v=ZffMCJdA5Qc&amp;list=PLWz5rJ2EKKc9FfSQIRXEWyWpHD6TtwxMM&amp;index=57" target="_blank" rel="noopener">Improving App Performance with Benchmarking</a></h2><p>Jetpack Benchmark Library:<br><a href="https://developer.android.com/studio/profile/benchmark.md" target="_blank" rel="noopener">https://developer.android.com/studio/profile/benchmark.md</a></p>
+<ul>
+<li>可以测量工作方法的时间: 重复测量的Rule;<br>合理排除初始化时间.</li>
+<li>UI测试.</li>
+<li>新增module: Benchmark Module.</li>
+</ul>
+<p>工具实现细节介绍.</p>
+<p>Best Practices:</p>
+<ul>
+<li>Start with tracing.</li>
+<li>Synchronous blocks.</li>
+<li>Small blocks</li>
+<li>Hot code.</li>
+<li>Caches.</li>
+<li>@RunWith(Parameterized)</li>
+<li>不要比较设备.</li>
+</ul>
+<p>例子: <a href="https://github.com/googlesamples/android-performance" target="_blank" rel="noopener">googlesamples/android-performance</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Architecture-Components/" rel="tag"># Architecture Components</a>
+              <a href="/tags/Google-IO-2019/" rel="tag"># Google IO 2019</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Java/2019/05/05/effective-java-reading-notes/" rel="prev" title="Effective Java Reading Notes">
+      <i class="fa fa-chevron-left"></i> Effective Java Reading Notes
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/2019/07/19/reduce-app-size/" rel="next" title="Android App安装包瘦身计划">
+      Android App安装包瘦身计划 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CameraX"><span class="nav-number">1.</span> <span class="nav-text">CameraX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Studio-UI-design-tools-and-Debugging-Tools"><span class="nav-number">2.</span> <span class="nav-text">Android Studio UI design tools and Debugging Tools</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Layout-Editor"><span class="nav-number">2.1.</span> <span class="nav-text">Layout Editor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Navigation-Editor"><span class="nav-number">2.2.</span> <span class="nav-text">Navigation Editor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Resource-Manager"><span class="nav-number">2.3.</span> <span class="nav-text">Resource Manager:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Layout-Inspector"><span class="nav-number">2.4.</span> <span class="nav-text">Layout Inspector:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-New-in-Architecture-Components"><span class="nav-number">3.</span> <span class="nav-text">What’s New in Architecture Components</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-binding"><span class="nav-number">3.1.</span> <span class="nav-text">Data binding:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-access-views"><span class="nav-number">3.2.</span> <span class="nav-text">How to access views?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lifecycle"><span class="nav-number">3.3.</span> <span class="nav-text">Lifecycle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WorkManager"><span class="nav-number">3.4.</span> <span class="nav-text">WorkManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Room"><span class="nav-number">3.5.</span> <span class="nav-text">Room</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paging"><span class="nav-number">3.6.</span> <span class="nav-text">Paging</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Navigation"><span class="nav-number">3.7.</span> <span class="nav-text">Navigation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-New-in-Android"><span class="nav-number">4.</span> <span class="nav-text">What’s New in Android</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#System-UI"><span class="nav-number">4.1.</span> <span class="nav-text">System UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Platform"><span class="nav-number">4.2.</span> <span class="nav-text">Platform</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Text"><span class="nav-number">4.3.</span> <span class="nav-text">Text</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Magnifier"><span class="nav-number">4.4.</span> <span class="nav-text">Magnifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#private-APIs"><span class="nav-number">4.5.</span> <span class="nav-text">private APIs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Runtime-ART"><span class="nav-number">4.6.</span> <span class="nav-text">Android Runtime (ART)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kotlin"><span class="nav-number">4.7.</span> <span class="nav-text">Kotlin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security"><span class="nav-number">4.8.</span> <span class="nav-text">Security</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jetpack-Compose"><span class="nav-number">4.9.</span> <span class="nav-text">Jetpack Compose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Privacy"><span class="nav-number">4.10.</span> <span class="nav-text">Privacy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.11.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Build-a-Modular-Android-App-Architecture"><span class="nav-number">5.</span> <span class="nav-text">Build a Modular Android App Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%BB%AC%E8%A6%81%E6%A8%A1%E5%9D%97%E5%8C%96%E5%91%A2"><span class="nav-number">5.1.</span> <span class="nav-text">为什么我们要模块化呢?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8DModules"><span class="nav-number">5.2.</span> <span class="nav-text">两种Modules:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%86%E7%A6%BB%E6%A8%A1%E5%9D%97%E5%91%A2"><span class="nav-number">5.3.</span> <span class="nav-text">如何分离模块呢?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E9%97%B4%E7%9A%84%E4%BE%9D%E8%B5%96"><span class="nav-number">5.4.</span> <span class="nav-text">模块间的依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">5.5.</span> <span class="nav-text">测试.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dynamic-feature-modules"><span class="nav-number">5.6.</span> <span class="nav-text">Dynamic feature modules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">5.7.</span> <span class="nav-text">数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What%E2%80%99s-New-in-the-Android-OS-User-Interface"><span class="nav-number">6.</span> <span class="nav-text">What’s New in the Android OS User Interface</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Improving-App-Performance-with-Benchmarking"><span class="nav-number">7.</span> <span class="nav-text">Improving App Performance with Benchmarking</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2019/05/17/google-io-2019-Android-TLDR/";
+    this.page.identifier = "Android/2019/05/17/google-io-2019-Android-TLDR/";
+    this.page.title = "Google IO 2019 Android 太长不看版";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

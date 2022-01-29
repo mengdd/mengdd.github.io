@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #221September 4th, 2016Android Weekly Issue #221">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 221">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #221September 4th, 2016Android Weekly Issue #221">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/ImageView-ScaleTypes.png">
+<meta property="article:published_time" content="2016-09-09T03:42:07.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.990Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger2">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Security">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Accessibility">
+<meta property="article:tag" content="ScaleType">
+<meta property="article:tag" content="Devices">
+<meta property="article:tag" content="Scrolling">
+<meta property="article:tag" content="ExpandableRecyclerView">
+<meta property="article:tag" content="Annotation">
+<meta property="article:tag" content="ItemTouchHelper">
+<meta property="article:tag" content="Fresco">
+<meta property="article:tag" content="Resources">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/ImageView-ScaleTypes.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 221 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 221
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-09-09 11:42:07" itemprop="dateCreated datePublished" datetime="2016-09-09T11:42:07+08:00">2016-09-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 221" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-221"><a href="#Android-Weekly-Issue-221" class="headerlink" title="Android Weekly Issue #221"></a>Android Weekly Issue #221</h1><p>September 4th, 2016<br><a href="http://androidweekly.net/issues/issue-221" target="_blank" rel="noopener">Android Weekly Issue #221</a></p>
+<a id="more"></a>
+<h2 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h2><h2 id="Android-ImageView-ScaleType-A-Visual-Guide"><a href="#Android-ImageView-ScaleType-A-Visual-Guide" class="headerlink" title="Android ImageView ScaleType: A Visual Guide"></a><a href="https://robots.thoughtbot.com/android-imageview-scaletype-a-visual-guide" target="_blank" rel="noopener">Android ImageView ScaleType: A Visual Guide</a></h2><p>回想一下, 你是不是总是记不住ImageView的不同ScaleType的区别, 每次都要各种尝试来找到自己适合的.<br>这篇文章的作者也有这样的烦恼, 于是他把各种ScaleType都截了图:<br><img src="/images/ImageView-ScaleTypes.png" alt="ImageView-ScaleTypes"></p>
+<p>如果用了CENTER_INSIDE, FIT_CENTER, FIT_START,或者FIT_END, 而实际View的大小比图像的大, 可以使用<code>android:adjustViewBounds</code>属性为true, 就会调整View的大小.</p>
+<p>官方文档: <a href="https://developer.android.com/reference/android/widget/ImageView.ScaleType.html" target="_blank" rel="noopener">ImageView.ScaleType</a></p>
+<h2 id="5-steps-to-creating-frustration-free-Android-test-devices"><a href="#5-steps-to-creating-frustration-free-Android-test-devices" class="headerlink" title="5 steps to creating frustration-free Android test devices"></a><a href="https://m.signalvnoise.com/5-steps-to-creating-frustration-free-android-test-devices-9bb2750edd19#.56mnep7p1" target="_blank" rel="noopener">5 steps to creating frustration-free Android test devices</a></h2><p>作者讲了如何统一管理测试机.</p>
+<h3 id="1-根据你要支持的API-level来安装系统"><a href="#1-根据你要支持的API-level来安装系统" class="headerlink" title="1.根据你要支持的API level来安装系统."></a>1.根据你要支持的API level来安装系统.</h3><p>理想情况下你应该每一个API都有一个对应的机器, 更进一步可以统计一下你的用户用什么的最多来进行调整. </p>
+<p>作者列举了他当前的五个机器, 一般来讲, 你至少需要高中低API版本的, 也需要Samsung的机器来测试一些可能会被定制的地方, (当然作者是在国外了, 国内估计需要测试的定制机型就更多了), 另外还需要一个大屏幕的, 来查看UI的适配情况.</p>
+<p>幸运的是除了品牌定制机, 其他都可以用模拟器来补救, 在此推荐一下genymotion, 传说中最快的模拟器.</p>
+<h3 id="2-安装并配置测试所需的应用"><a href="#2-安装并配置测试所需的应用" class="headerlink" title="2. 安装并配置测试所需的应用"></a>2. 安装并配置测试所需的应用</h3><p>为了测试你的app, 你可能需要一系列的工具app, 所以第二步你需要安装它们, 登录及设置等等.<br>原作者常用的工具app有:</p>
+<ul>
+<li>1Password: 管理密码.</li>
+<li>AZ Screen Recorder: 截屏, 制作gif.</li>
+<li>Chrome Beta: 因为原作者做WebView相关的工作, 所以需要看这个.</li>
+<li>Dropbox: 自动上传截图, 从电脑可以方便拿, 也可以用来做一些文件相关的测试.</li>
+<li>Flesky / Swiftkey / Google Keyboard: 也是作者应用相关, 需要测试各种键盘.</li>
+<li>Keep: 很好用的笔记应用, 可以存一些小notes, url等, 跨设备同步.</li>
+<li>Solid Explorer: 文件管理器, 可以在系统中方便地移动文件.</li>
+</ul>
+<h3 id="3-在各处都登录"><a href="#3-在各处都登录" class="headerlink" title="3. 在各处都登录"></a>3. 在各处都登录</h3><p>需要登录的账号都登录.</p>
+<h3 id="4-为了统一体验装个Nova-Launcher"><a href="#4-为了统一体验装个Nova-Launcher" class="headerlink" title="4. 为了统一体验装个Nova Launcher"></a>4. 为了统一体验装个Nova Launcher</h3><p>为了让每个机器都看起来一样, 原作者装了个launcher应用: <a href="https://play.google.com/store/apps/details?id=com.teslacoilsw.launcher" target="_blank" rel="noopener">Nova Launcher</a>.</p>
+<p>确实, 因为每个机器的launcher和组织方式不一样, 所以有时候换个机器就会很难找到你想要的东西.</p>
+<p>用了这个Nova Launcher之后, 你可以设置好你的home, dock, drawer, 然后多个机器分享设置, 这样当你拿起另一个机器的时候, 所有的应用都在同样的位置.</p>
+<h3 id="5-设置每个机器的系统设置"><a href="#5-设置每个机器的系统设置" class="headerlink" title="5. 设置每个机器的系统设置"></a>5. 设置每个机器的系统设置</h3><p>最后一件事就是一些系统上的设置, 包括:</p>
+<ul>
+<li>所有地点的Wi-Fi;</li>
+<li>DND/total silence: 关声音;</li>
+<li>Developer options和USB debugging开关打开;</li>
+<li>当插线时仍然保持屏幕唤醒;</li>
+<li>亮度设置.</li>
+</ul>
+<p>最后作者建议开发者平时生活中可以多玩玩各种Android应用.</p>
+<h2 id="Security-issues-with-Android-Accessibility"><a href="#Security-issues-with-Android-Accessibility" class="headerlink" title="Security issues with Android Accessibility"></a><a href="https://medium.com/@vedprakashrout/android-accessibility-75fdc5810025#.f10tnu6oj" target="_blank" rel="noopener">Security issues with Android Accessibility</a></h2><p>看这篇文章之前, 让我们了解一下Accessibility是什么, 搜了一下Android相关文档:</p>
+<ul>
+<li><a href="https://developer.android.com/guide/topics/ui/accessibility/index.html" target="_blank" rel="noopener">Guides of Accessibility</a></li>
+<li><a href="https://developer.android.com/training/accessibility/index.html" target="_blank" rel="noopener">Training for Implementing Accessibility</a></li>
+<li><a href="https://developer.android.com/design/patterns/accessibility.html" target="_blank" rel="noopener">Design Guidelines for Accessibility</a></li>
+<li><a href="https://material.google.com/usability/accessibility.html#" target="_blank" rel="noopener">Material Design Accessibility</a></li>
+</ul>
+<p>Accessibility是为了扩展访问和利用应用的形式, 基本出发点是为了辅助老年人或者是有障碍的人, 增加一些听觉或触觉反馈, 也可以用来辅助一些特殊场合下的用户, 比如正在开车或照顾孩子, 或者处于非常嘈杂的环境下的情形.</p>
+<p>可以结合Google的<a href="https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback" target="_blank" rel="noopener">TalkBack</a>, 也可以自己开发相关的服务.</p>
+<p>好了, 话题收敛回来, 看看作者说的安全问题指的是什么.</p>
+<p>作者一开篇以一个印度很流行的应用Voodoo为例指出, 把屏幕上的文字读出来这个功能是有安全漏洞的.</p>
+<p>首先Voodoo向用户请求accessibility的权限, 这个权限使得应用可以从屏幕上读取文字, 但是用户会认为所有的敏感字段应该不在这个范围之内, 这就是开发者需要认真对待的了.</p>
+<p>最近有一个新的登录设计, 已经被应用开来, 就是用户可以选择显示或者隐藏密码字段.</p>
+<p>当我们把输入框的input type设置为密码, 那么它是不会被读取到的, 但是有一些应用为了支持显示密码的功能, 可能会把input type设置为其他类型, 这样就会导致密码暴露, 有accessibility权限的恶意应用就会借此盗用用户的敏感信息.</p>
+<p>这样当然是不好的啦, 用户开启权限的时候还认为敏感字段总会受到保护呢, 所以我们开发者应该小心地对待用户的敏感信息, 很简单:</p>
+<p><code>ViewCompat.setImportantForAccessibility(your_view, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);</code></p>
+<p>新的<code>TextInputLayout</code>的API可以实现密码显示的toggle功能, 希望这个问题在TextInputLayout中已经解决了, 但是在用这个View之前, 上面的hotfix也算一种解决办法.</p>
+<h2 id="How-to-fix-horizontal-scrolling-in-your-Android-app"><a href="#How-to-fix-horizontal-scrolling-in-your-Android-app" class="headerlink" title="How to fix horizontal scrolling in your Android app"></a><a href="http://nerds.headout.com/fix-horizontal-scrolling-in-your-android-app/" target="_blank" rel="noopener">How to fix horizontal scrolling in your Android app</a></h2><p>在Android中垂直的滚动很常见, 但是如果在垂直滚动的View里嵌套一个水平滚动的View, 那滑动的体验将会非常不好.</p>
+<p><strong>Problem</strong>: 垂直滚动和内嵌的水平滚动打架了, 滚动体验不佳.</p>
+<p><strong>What’s happening inside</strong>:</p>
+<p>例子里根view是一个<code>RecyclerView</code>加垂直 <code>LinearLayoutManager</code>, 里面的child是一个<code>RecyclerView</code>加水平<code>LinearLayoutManager</code>.</p>
+<p>但是当用户做水平滚动的时候, touch事件首先被外面的父View给拦截了.</p>
+<p>看<code>RecyclerView</code>的代码可知, 在<code>onInterceptTouchEvent()</code>方法里, 在垂直滚动使能的情况下, 只要垂直移动的距离(dy)大于一定程度(<code>Math.abs(dy) &gt; mTouchSlop</code>), 就会被认为是垂直滚动.</p>
+<p>所以作者他们的解决方案是继承了RecyclerView, 覆写了这个方法, 把条件改成:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(canScrollVertically &amp;&amp; Math.abs(dy) &gt; mTouchSlop &amp;&amp; (canScrollHorizontally || Math.abs(dy) &gt; Math.abs(dx))) &#123;...&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是他们的完整代码: <a href="https://gist.github.com/manidesto/ecccd38787fa8e287a3f18bcd9867189" target="_blank" rel="noopener">BetterRecyclerView</a></p>
+<p><strong>Bonus</strong><br>还有一个跟fling相关的问题: <code>RecyclerView</code>在fling之后需要挺长的一段时间来稳定(settle)下来, 当child还在这个稳定过程中时, 如果用户尝试竖直滚动, touch事件实际上是被child吃掉的.</p>
+<p>还是从<code>onInterceptTouchEvent()</code>的代码可以看出:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mScrollState == SCROLL_STATE_SETTLING) &#123;</span><br><span class="line">    getParent().requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line">    setScrollState(SCROLL_STATE_DRAGGING);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当child处于SETTLING状态时, child会要求它的parent不要拦截touch事件.</p>
+<p>这在通常情况下是好的.<br>但是在作者的使用场景里, 他们的root中没有其他竖直滚动和拖拽的child, 所以他们又继承了刚才那个BetterRecyclerView, 写了一个<code>requestDisallowInterceptTouchEvent()</code>为空实现的View作为root.</p>
+<p>他们的sample demo在这里: <a href="https://github.com/manidesto/scrolling-demo" target="_blank" rel="noopener">manidesto/scrolling-demo</a>.</p>
+<h2 id="Update-Dependencies-Code-Repeat"><a href="#Update-Dependencies-Code-Repeat" class="headerlink" title="Update Dependencies. Code. Repeat."></a><a href="http://crushingcode.co/update-dependencies-code-repeat/" target="_blank" rel="noopener">Update Dependencies. Code. Repeat.</a></h2><p>每一个Android开发可能都需要对他们的项目进行(更新依赖, 编码, 重复)这样的循环工作, 如果你想要你的所有项目都有同样的版本号, 这样是很浪费时间的.</p>
+<p>原文作者就经历了这样的情景, 他想要把他这个目录<a href="https://github.com/nisrulz/android-examples" target="_blank" rel="noopener">Android-Examples</a>下的所有项目都更新一下. 这个目录里全是那种很小的简单例子, 但都是可独立运行的工程.<br>每当gradle-plugin, support library或者google play services要更新版本号, 保持这些工程全部都updated是一项很难的工作.</p>
+<p>所以原作者想要放弃原先逐个更新的土办法, 更有效率地来更新依赖版本号.<br>首先想到的就是在gradle里定义一个变量, 然后双引号加$引用这个变量.<br>为了让所有的module都采用同一变量, 可以在根项目的build.gradle文件里定义变量, 即使用ext块.<br>但是到此, 只能统一管理在同一个project下的各个modules的依赖版本.</p>
+<p>如果跨projects呢?<br>首先, 作者在存放这些projects的根目录下建了一个gradle文件, 然后把变量都定义在那里.<br>然后如何应用到各个project呢?于是原作者找啊找, 找到了这块: <a href="https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:subproject_configuration" target="_blank" rel="noopener">gradle Subproject configuration</a><br>他给每个工程的根build文件加了个这个:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// This is added to apply the gradle file to each module under the project</span><br><span class="line">subprojects &#123;</span><br><span class="line">    apply from: &apos;../../dependencies.gradle&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样以后在每个工程的module里面都可以直接引用变量了.</p>
+<p>但是, 这对于android-gradle-plugin的版本是不管用的.</p>
+<p>这是因为上面应用的配置只对subproject起作用, 对每一个root project是没有应用到的.<br>所以作者在每一个项目的root build.gradle中, 在buildscript块又加了它的依赖配置文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    // This is added to apply the gradle file to facilitate providing variable values to root build.gradle of the project</span><br><span class="line">    apply from: &apos;../dependencies.gradle&apos;</span><br><span class="line">    ..</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &quot;com.android.tools.build:gradle:$androidPluginVer&quot;</span><br><span class="line">        ..</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好啦, 至此, 所有的依赖配置问题就解决了, 以后改版本号只需要改一个地方就可以应用到所有项目.</p>
+<h2 id="DI-101-Part-2"><a href="#DI-101-Part-2" class="headerlink" title="DI 101 - Part 2"></a><a href="https://medium.com/di-101/di-101-part-2-9f7f4e1dcc81#.bfcmljct9" target="_blank" rel="noopener">DI 101 - Part 2</a></h2><p>作者上一篇的文章里介绍了Dagger的基本使用.<br>这篇还是教程类文章, 讲:</p>
+<p><strong>多个Modules</strong>:</p>
+<p>写了一个Retrofit 2的ApiModule, 和一个Realm的DatabaseModule.</p>
+<p><strong>多个对象</strong>:</p>
+<p>有时候我们需要提供一个类的不同对象, 我们可以用<code>@Named</code>注解, 然后用不同的字符串来区分它们.</p>
+<p>文中的例子是这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Provides</span></span><br><span class="line"><span class="meta">@Named</span>(IMAGE_URL)</span><br><span class="line"><span class="function">String <span class="title">provideImageUrl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> ImageApiService.ENDPOINT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Provides</span></span><br><span class="line"><span class="meta">@Named</span>(URL)</span><br><span class="line"><span class="function">String <span class="title">provideBaseUrl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> RestApiService.ENDPOINT;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Provides</span> <span class="meta">@Singleton</span> <span class="meta">@Named</span>(REST_API_RETROFIT)</span><br><span class="line"><span class="function">Retrofit <span class="title">provideRetrofit</span><span class="params">(@Named(URL)</span> String baseUrl, OkHttpClient client) </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Provides</span> <span class="meta">@Singleton</span> <span class="meta">@Named</span>(IMAGE_API_RETROFIT)</span><br><span class="line"><span class="function">Retrofit <span class="title">provideImageRetrofit</span><span class="params">(@Named(IMAGE_URL)</span> String baseUrl, OkHttpClient client) </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Inject-interfaces-without-provide-methods-on-Dagger-2"><a href="#Inject-interfaces-without-provide-methods-on-Dagger-2" class="headerlink" title="Inject interfaces without provide methods on Dagger 2"></a><a href="https://android.jlelse.eu/inject-interfaces-without-providing-in-dagger-2-618cce9b1e29?swoff=true#.66p0l6oik" target="_blank" rel="noopener">Inject interfaces without provide methods on Dagger 2</a></h2><p>用dagger2注入接口, 返回实现类的对象, 比较常规的方法是在Module里面写一个<code>@Provides</code>标注的providesXXX()方法, 返回值类型是接口, 实际返回的是实现类的对象, 比如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Provides</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> HomePresenter <span class="title">providesHomePresenter</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> HomePresenterImp();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是如果我们想给实现类加一个依赖UserService呢?</p>
+<p>我们当然可以把UserService作为参数传给这个provide方法, 然后传到实现类的构造函数中, 在里面存一个字段.</p>
+<p>又或者, 我们可以使用<code>@Binds</code>注解, 像这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Binds</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> HomePresenter <span class="title">bindHomePresenter</span><span class="params">(HomePresenterImp   </span></span></span><br><span class="line"><span class="function"><span class="params">    homePresenterImp)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个抽象类中的抽象方法, 这个方法的签名意思是告诉dagger, 注入<code>HomePresenter</code>接口(返回值)时, 使用<code>HomePresenterImpl</code>(方法参数)实现.</p>
+<p>然后, 在<code>HomePresenterImpl</code>类的构造函数上加一个<code>@Inject</code>就可以了.</p>
+<p>这样我们就不需要在provide方法上加依赖参数了.</p>
+<h2 id="Introducing-ExpandableRecyclerView"><a href="#Introducing-ExpandableRecyclerView" class="headerlink" title="Introducing ExpandableRecyclerView"></a><a href="https://robots.thoughtbot.com/introducing-expandablerecyclerview" target="_blank" rel="noopener">Introducing ExpandableRecyclerView</a></h2><p>本文介绍<a href="https://github.com/thoughtbot/expandable-recycler-view" target="_blank" rel="noopener">expandable-recycler-view</a>, 一个开源的库, 可以展开和折叠RecyclerView中的组.</p>
+<p><code>RecyclerView</code>作为<code>ListView</code>的升级版, 却也减少了一些功能比如<code>OnItemClickListener</code>, <code>ChoiseModes</code>, 还有扩展版的<code>ExpandableListView</code>.<br>本文作者就介绍这个开源库, <code>ExpandableRecyclerView</code>, 用自定义的<code>RecyclerView.Adapter</code>来实现展开关闭分组的功能.</p>
+<p>首先明白一下Adapter的功能, 其实adapter就是一个中间人, 将一些数据按照index翻译给View, 然后显示.</p>
+<p>当显示的list是单维度的时候, 这样的翻译很简单, 数据的index就直接对应了屏幕上view的index.</p>
+<p>当时当你显示二维数据时, 翻译就变得有点复杂,数据和view的index可能对应, 也可能不对应.<br><code>RecyclerView.Adapter</code>就只能处理一维数据的情况, 这就是为什么要对其进行一些扩展, 才能实现ExpandableRecyclerView.</p>
+<p>后来作者简单讲了实现的原理, 用到了<code>ExpandableListPosition</code>, 是Android SDK中就有的类, 只不过有包限制, 所以拷贝到了这个库里.</p>
+<p>最后附上repo地址: <a href="https://github.com/thoughtbot/expandable-recycler-view" target="_blank" rel="noopener">expandable-recycler-view</a></p>
+<h2 id="Creating-Custom-Annotations-in-Android"><a href="#Creating-Custom-Annotations-in-Android" class="headerlink" title="Creating Custom Annotations in Android"></a><a href="https://medium.freecodecamp.com/creating-custom-annotations-in-android-a855c5b43ed9#.dq08cdjsm" target="_blank" rel="noopener">Creating Custom Annotations in Android</a></h2><p><strong>注解是什么</strong></p>
+<p><strong>Annotations are Metadata.</strong></p>
+<p>注解是元数据, 而元数据是一些关于其他数据的信息.<br>所以说, 注解是关于代码的信息.</p>
+<p>比如<code>@Override</code>注解, 即便你不在方法上标注它, 程序依然能够正常工作. 那么它是用来干什么的呢? </p>
+<p><code>@Override</code>是用来告诉编译器, 这个方法覆写了一个方法, 如果父类没有这个方法, 则会报一个编译错误.</p>
+<p>如果你不加这个注解, 有可能你方法名不小心拼错了却仍然编译通过了.</p>
+<p><strong>创建自定义注解</strong>:<br>比如, 创建一个:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> Status &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">enum</span> Priority &#123;LOW, MEDIUM, HIGH&#125;</span><br><span class="line">  <span class="function">Priority <span class="title">priority</span><span class="params">()</span> <span class="keyword">default</span> Priority.LOW</span>;</span><br><span class="line">  <span class="function">String <span class="title">author</span><span class="params">()</span> <span class="keyword">default</span> “Amit”</span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">completion</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>@Target</code>指定了这个注解可以放在哪里. 如果你不设置, 这个注解可以放在任何地方.<br>可能的值有:</p>
+<ul>
+<li><code>ElementType.TYPE</code> (class, interface, enum)</li>
+<li><code>ElementType.FIELD</code> (instance variable)</li>
+<li><code>ElementType.METHOD</code></li>
+<li><code>ElementType.PARAMETER</code></li>
+<li><code>ElementType.CONSTRUCTOR</code></li>
+<li><code>ElementType.LOCAL_VARIABLE</code></li>
+</ul>
+<p><code>@Retention</code>定义这个注解可以被保存多久.<br>可能的值有:</p>
+<ul>
+<li><code>RetentionPolicy.SOURCE</code> - 到编译结束, 不会被编进.class, 只会留在源文件中. <code>@Override</code>, <code>@SuppressWarnings</code>都是这种.</li>
+<li><code>RetentionPolicy.CLASS</code> - 到类加载丢弃, 注解将存储在.class文件中, 这是默认值.</li>
+<li><code>RetentionPolicy.RUNTIME</code> - 不被丢弃. .class文件中有, 并且可由VM读入, 在运行时可以通过反射的方式读取到.</li>
+</ul>
+<p>上面的注解使用时:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in Foo.java</span></span><br><span class="line"><span class="meta">@Status</span>(priority = STATUS.Priority.MEDIUM, author = “Amit Shekhar”, completion = <span class="number">0</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodOne</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="comment">//no code</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// get the annotation information</span></span><br><span class="line"> Class foo = Foo<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line"> <span class="keyword">for</span>(Method method : foo.getMethods()) &#123;</span><br><span class="line">    Status statusAnnotation = (Status)method.getAnnotation(Status<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">if</span>(statusAnnotation != <span class="keyword">null</span>) &#123;</span><br><span class="line">     System.out.println(<span class="string">" Method Name : "</span> + method.getName());</span><br><span class="line">     System.out.println(<span class="string">" Author : "</span> + statusAnnotation.author());</span><br><span class="line">     System.out.println(<span class="string">" Priority : "</span> + statusAnnotation.priority());</span><br><span class="line">     System.out.println(<span class="string">" Completion Status : "</span> + statusAnnotation.completion());</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果你的注解中仅有一个属性, 它应该叫value, 并且使用的时候不用指定属性名.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@interface</span> Status&#123;</span><br><span class="line"> <span class="function"><span class="keyword">int</span> <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"> <span class="meta">@Status</span>(<span class="number">50</span>)</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">someMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">//few codes</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后作者还附上了另一个他的文章, 推荐他的网络请求库: <a href="https://medium.freecodecamp.com/simple-and-fast-android-networking-19ed860d1455#.3hqqpr1ba" target="_blank" rel="noopener">Fast Android Networking</a></p>
+<h2 id="It’s-parfetti-time"><a href="#It’s-parfetti-time" class="headerlink" title="It’s parfetti time!"></a><a href="https://medium.com/@jinatonic/its-parfetti-time-f40634472608#.9vf9fxn99" target="_blank" rel="noopener">It’s parfetti time!</a></h2><p>作者介绍他的库: <a href="https://github.com/jinatonic/confetti" target="_blank" rel="noopener">confetti</a>.</p>
+<p>这个库实现了一个粒子系统, 来发射出随机的纸屑, 并且可以被定制化, 比如发射源的形状(点或者线), 初始的物理约束(速度, 加速度, 旋转等), 还可以定义消失或者拖拽行为, 感觉效果还挺好的.</p>
+<p>关于性能, 纸屑对象是循环利用的, 每一个bitmap也只被分配一次地址, 动画参数也做了一些预计算, 所以作者说不用担心丢帧, 除非你一次性出现的片儿实在是太多了.</p>
+<h2 id="Converting-callback-async-calls-to-RxJava"><a href="#Converting-callback-async-calls-to-RxJava" class="headerlink" title="Converting callback async calls to RxJava"></a><a href="https://medium.com/we-are-yammer/converting-callback-async-calls-to-rxjava-ebc68bde5831#.mmtpwqgkh" target="_blank" rel="noopener">Converting callback async calls to RxJava</a></h2><p>作者他们在自己Android应用里开始使用RxJava以后, 经常会遇到由于API没有follow reactive model, 导致他们必须做一些转换工作, 将它们和其他的RxJava Observable链连接起来.</p>
+<p>API对于很重的操作通常提供这两种方式之一</p>
+<ul>
+<li>1.同步阻塞方法调用, 通常需要后台线程调用.</li>
+<li>2.异步非阻塞方法调用, 结合callback, listener, 或者broadcast receiver等.</li>
+</ul>
+<p><strong>把同步方法变为Observable</strong>:</p>
+<p>用这个<a href="http://reactivex.io/RxJava/javadoc/rx/Observable.html#fromCallable%28java.util.concurrent.Callable%29" target="_blank" rel="noopener">Observable.fromCallable()</a></p>
+<p>比如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// wrapping synchronous operation in an RxJava Observable</span></span><br><span class="line"><span class="function">Observable&lt;Boolean&gt; <span class="title">wipeContents</span><span class="params">(<span class="keyword">final</span> SharedPreferences sharedPreferences)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">return</span> Observable.fromCallable(<span class="keyword">new</span> Callable&lt;Boolean&gt;() &#123; </span><br><span class="line">        <span class="meta">@Override</span> </span><br><span class="line">        <span class="function"><span class="keyword">public</span> Boolean <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123; </span><br><span class="line">            <span class="keyword">return</span> sharedPreferences.edit().clear().commit(); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>把异步方法变为Observable</strong>:</p>
+<p>变异步没那么简单了, 之前有一些模式是用工厂方法<code>Observable.create()</code>把它们包起来, 比如<a href="http://ryanharter.com/blog/2015/07/07/wrapping-existing-libraries-with-rxjava/" target="_blank" rel="noopener">here</a>, <a href="http://andriydruk.com/post/rxdnssd/" target="_blank" rel="noopener">here</a>, <a href="http://stackoverflow.com/questions/29679801/chaining-rxjava-observables-with-callbacks-listeners/29682801#29682801" target="_blank" rel="noopener">here</a>, 但是这种方法存在一些缺点.</p>
+<p>作者举了一个传感器监听的例子.<br>用create()转换之后, 需要处理一些问题, 比如注销listener, 错误处理, 检查subscriber等, 这几个都可能办到, 但是还有一个backpressure的问题, 不好办.<br>这个backpressure是什么捏: <a href="http://stackoverflow.com/documentation/rx-java/2341/backpressure#t=201609081434407670206" target="_blank" rel="noopener">backpressure</a><br>当生产者发射值的速率比消费者可以处理的速率快的时候, 有一个内置的buffer size, 当超出的时候就会抛出<code>MissingBackpressureException</code>.</p>
+<p>幸运的是, RxJava v1.1.7推出了<code>Observable.fromAsync()</code>, 在v1.2.0改名为<code>Observable.fromEmitter()</code>.<br>这个里面对于backpressure的处理定义了好几种策略, 你只需要选一种模式就行.</p>
+<p>然后作者给出了采用这个新方法的例子, 这里不再赘述, 可以看原文.<br>Sample代码在: <a href="https://github.com/murki/AndroidRxFromAsyncSample" target="_blank" rel="noopener">AndroidRxFromAsyncSample</a></p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="ItemTouchHelper-Extension"><a href="#ItemTouchHelper-Extension" class="headerlink" title="ItemTouchHelper Extension"></a><a href="https://github.com/loopeer/itemtouchhelper-extension" target="_blank" rel="noopener">ItemTouchHelper Extension</a></h2><p><code>ItemTouchHelper</code>的扩展, 加滑动settling和恢复. Sample的效果是给单个item加了滑动后出现删除和refresh两个按钮.</p>
+<h2 id="Fresco-Image-Viewer"><a href="#Fresco-Image-Viewer" class="headerlink" title="Fresco Image Viewer"></a><a href="https://github.com/stfalcon-studio/FrescoImageViewer" target="_blank" rel="noopener">Fresco Image Viewer</a></h2><p>为Fresco库加的全屏查看图像的工具, 支持双手指的zoom和滑动关闭手势.</p>
+<h2 id="ABTestGen"><a href="#ABTestGen" class="headerlink" title="ABTestGen"></a><a href="https://github.com/imperial-crystalline-recursion/abtestgen" target="_blank" rel="noopener">ABTestGen</a></h2><p>一个生成简单A/B test的库, 使用注解.</p>
+<h2 id="RecyclerViewHelper-v24-2-0"><a href="#RecyclerViewHelper-v24-2-0" class="headerlink" title="RecyclerViewHelper v24.2.0"></a><a href="https://github.com/nisrulz/recyclerviewhelper" target="_blank" rel="noopener">RecyclerViewHelper v24.2.0</a></h2><p>一个RecyclerView的辅助类, 提供滑动删除, 拖动, divider, 选中和非选中事件等的支持.</p>
+<h2 id="Paginize"><a href="#Paginize" class="headerlink" title="Paginize"></a><a href="https://github.com/neevek/Paginize" target="_blank" rel="noopener">Paginize</a></h2><p>一个轻量级的Android应用framework.</p>
+<h1 id="SPECIALS"><a href="#SPECIALS" class="headerlink" title="SPECIALS"></a>SPECIALS</h1><h2 id="Tips-and-tricks-for-Android-Development"><a href="#Tips-and-tricks-for-Android-Development" class="headerlink" title="Tips and tricks for Android Development"></a><a href="https://github.com/nisrulz/android-tips-tricks" target="_blank" rel="noopener">Tips and tricks for Android Development</a></h2><p>一个很长的README, 包含了各种快捷键, 编码建议, 工具, 插件, 还有有一些推荐的网站等, 其中有mock api和新闻网站及其他有用的工具等.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Security/" rel="tag"># Security</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Accessibility/" rel="tag"># Accessibility</a>
+              <a href="/tags/ScaleType/" rel="tag"># ScaleType</a>
+              <a href="/tags/Devices/" rel="tag"># Devices</a>
+              <a href="/tags/Scrolling/" rel="tag"># Scrolling</a>
+              <a href="/tags/ExpandableRecyclerView/" rel="tag"># ExpandableRecyclerView</a>
+              <a href="/tags/Annotation/" rel="tag"># Annotation</a>
+              <a href="/tags/ItemTouchHelper/" rel="tag"># ItemTouchHelper</a>
+              <a href="/tags/Fresco/" rel="tag"># Fresco</a>
+              <a href="/tags/Resources/" rel="tag"># Resources</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/2016/09/07/hello-preferences-provider/" rel="prev" title="取代SharedPreferences的多进程解决方案">
+      <i class="fa fa-chevron-left"></i> 取代SharedPreferences的多进程解决方案
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/09/15/android-weekly-notes-issue-222/" rel="next" title="Android Weekly Notes Issue 222">
+      Android Weekly Notes Issue 222 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-221"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #221</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">1.1.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-ImageView-ScaleType-A-Visual-Guide"><span class="nav-number">1.2.</span> <span class="nav-text">Android ImageView ScaleType: A Visual Guide</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-steps-to-creating-frustration-free-Android-test-devices"><span class="nav-number">1.3.</span> <span class="nav-text">5 steps to creating frustration-free Android test devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A0%B9%E6%8D%AE%E4%BD%A0%E8%A6%81%E6%94%AF%E6%8C%81%E7%9A%84API-level%E6%9D%A5%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.根据你要支持的API level来安装系统.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E6%B5%8B%E8%AF%95%E6%89%80%E9%9C%80%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 安装并配置测试所需的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9C%A8%E5%90%84%E5%A4%84%E9%83%BD%E7%99%BB%E5%BD%95"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 在各处都登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%BA%E4%BA%86%E7%BB%9F%E4%B8%80%E4%BD%93%E9%AA%8C%E8%A3%85%E4%B8%AANova-Launcher"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 为了统一体验装个Nova Launcher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%AE%BE%E7%BD%AE%E6%AF%8F%E4%B8%AA%E6%9C%BA%E5%99%A8%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. 设置每个机器的系统设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Security-issues-with-Android-Accessibility"><span class="nav-number">1.4.</span> <span class="nav-text">Security issues with Android Accessibility</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-fix-horizontal-scrolling-in-your-Android-app"><span class="nav-number">1.5.</span> <span class="nav-text">How to fix horizontal scrolling in your Android app</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Update-Dependencies-Code-Repeat"><span class="nav-number">1.6.</span> <span class="nav-text">Update Dependencies. Code. Repeat.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DI-101-Part-2"><span class="nav-number">1.7.</span> <span class="nav-text">DI 101 - Part 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inject-interfaces-without-provide-methods-on-Dagger-2"><span class="nav-number">1.8.</span> <span class="nav-text">Inject interfaces without provide methods on Dagger 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introducing-ExpandableRecyclerView"><span class="nav-number">1.9.</span> <span class="nav-text">Introducing ExpandableRecyclerView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Creating-Custom-Annotations-in-Android"><span class="nav-number">1.10.</span> <span class="nav-text">Creating Custom Annotations in Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#It%E2%80%99s-parfetti-time"><span class="nav-number">1.11.</span> <span class="nav-text">It’s parfetti time!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Converting-callback-async-calls-to-RxJava"><span class="nav-number">1.12.</span> <span class="nav-text">Converting callback async calls to RxJava</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">2.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ItemTouchHelper-Extension"><span class="nav-number">2.1.</span> <span class="nav-text">ItemTouchHelper Extension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fresco-Image-Viewer"><span class="nav-number">2.2.</span> <span class="nav-text">Fresco Image Viewer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ABTestGen"><span class="nav-number">2.3.</span> <span class="nav-text">ABTestGen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RecyclerViewHelper-v24-2-0"><span class="nav-number">2.4.</span> <span class="nav-text">RecyclerViewHelper v24.2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Paginize"><span class="nav-number">2.5.</span> <span class="nav-text">Paginize</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SPECIALS"><span class="nav-number">3.</span> <span class="nav-text">SPECIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips-and-tricks-for-Android-Development"><span class="nav-number">3.1.</span> <span class="nav-text">Tips and tricks for Android Development</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/";
+    this.page.identifier = "Android/Android-Weekly/2016/09/09/android-weekly-notes-issue-221/";
+    this.page.title = "Android Weekly Notes Issue 221";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

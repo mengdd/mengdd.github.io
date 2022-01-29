@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android官方新推的DI库 HiltHilt是Google Android官方新推荐的依赖注入工具.已加入到官方文档: Dependency injection with Hilt. 目前是alpha release阶段. Hilt是在Dagger之上, Hilt单词的意思是: 刀把, 柄.代码库还是这个google&#x2F;dagger.  Hilt的出现, 让我想起了曾经昙花一现的dagger.a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android官方新推的DI库 Hilt">
+<meta property="og:url" content="http://mengdd.github.io/Android/2020/06/12/DI-with-hilt/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android官方新推的DI库 HiltHilt是Google Android官方新推荐的依赖注入工具.已加入到官方文档: Dependency injection with Hilt. 目前是alpha release阶段. Hilt是在Dagger之上, Hilt单词的意思是: 刀把, 柄.代码库还是这个google&#x2F;dagger.  Hilt的出现, 让我想起了曾经昙花一现的dagger.a">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-06-12T02:58:56.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.006Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Dagger">
+<meta property="article:tag" content="DI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2020/06/12/DI-with-hilt/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android官方新推的DI库 Hilt | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2020/06/12/DI-with-hilt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android官方新推的DI库 Hilt
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-12 10:58:56" itemprop="dateCreated datePublished" datetime="2020-06-12T10:58:56+08:00">2020-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2020/06/12/DI-with-hilt/" class="post-meta-item leancloud_visitors" data-flag-title="Android官方新推的DI库 Hilt" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2020/06/12/DI-with-hilt/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2020/06/12/DI-with-hilt/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android官方新推的DI库-Hilt"><a href="#Android官方新推的DI库-Hilt" class="headerlink" title="Android官方新推的DI库 Hilt"></a>Android官方新推的DI库 Hilt</h1><p>Hilt是Google Android官方新推荐的依赖注入工具.<br>已加入到官方文档: <a href="https://developer.android.com/training/dependency-injection/hilt-android" target="_blank" rel="noopener">Dependency injection with Hilt</a>. 目前是alpha release阶段.</p>
+<p>Hilt是在Dagger之上, Hilt单词的意思是: 刀把, 柄.<br>代码库还是这个<a href="https://github.com/google/dagger" target="_blank" rel="noopener">google/dagger</a>. </p>
+<p>Hilt的出现, 让我想起了曾经昙花一现的dagger.android, 不知道hilt能不能经得住时间的考验. </p>
+<p>本文介绍Hilt的基本使用. 熟悉dagger的朋友可能会发现很容易.</p>
+<p>Hilt是花里胡哨的小打小闹? 还是下一个主流工具? 让我们拭目以待.</p>
+<a id="more"></a>
+<h2 id="Codelab练习例子"><a href="#Codelab练习例子" class="headerlink" title="Codelab练习例子"></a>Codelab练习例子</h2><ul>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-hilt/#1" target="_blank" rel="noopener">Codelab: Using Hilt in your Android app</a>.</li>
+</ul>
+<p>我的Fork: <a href="https://github.com/mengdd/android-hilt" target="_blank" rel="noopener">https://github.com/mengdd/android-hilt</a>.</p>
+<p>这个项目最开始是一个用<code>ServiceLocator</code>手动注入的例子, 功能是记录用户点击button操作, 显示log. 有两个Fragment和Activity.</p>
+<p>通过Codelab中一系列步骤的改造, 最终改成用Hilt做依赖注入.</p>
+<p>本文举例就用其中的代码片段了.</p>
+<p>原repo还贴心地附上了改造前后的对比diff: <a href="https://github.com/googlecodelabs/android-hilt/compare/master...solution" target="_blank" rel="noopener">Full codelab comparison</a>.</p>
+<h2 id="Hilt依赖添加"><a href="#Hilt依赖添加" class="headerlink" title="Hilt依赖添加"></a>Hilt依赖添加</h2><p>project root: <code>build.gradle</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    ext.hilt_version = &apos;2.28-alpha&apos;</span><br><span class="line">    ...</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        ...</span><br><span class="line">        classpath &quot;com.google.dagger:hilt-android-gradle-plugin:$hilt_version&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要Android 4.0以上.</p>
+<p><code>app/build.gradle</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;kotlin-kapt&apos;</span><br><span class="line">apply plugin: &apos;dagger.hilt.android.plugin&apos;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    // Hilt dependencies</span><br><span class="line">    implementation &quot;com.google.dagger:hilt-android:$hilt_version&quot;</span><br><span class="line">    kapt &quot;com.google.dagger:hilt-android-compiler:$hilt_version&quot;</span><br><span class="line"></span><br><span class="line">    // Hilt testing dependency</span><br><span class="line">    androidTestImplementation &quot;com.google.dagger:hilt-android-testing:$hilt_version&quot;</span><br><span class="line">    // Make Hilt generate code in the androidTest folder</span><br><span class="line">    kaptAndroidTest &quot;com.google.dagger:hilt-android-compiler:$hilt_version&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>后面两个是测试的依赖.</p>
+<h2 id="概念-用词解释"><a href="#概念-用词解释" class="headerlink" title="概念, 用词解释"></a>概念, 用词解释</h2><ul>
+<li>Container, 对应Component.</li>
+<li><p>Bindings, 对应依赖.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The information Hilt has about how to provide instances of different types are also called bindings.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="https://developer.android.com/training/dependency-injection/hilt-android#component-hierarchy" target="_blank" rel="noopener">Component hierarchy</a>是指依赖在当前component中可以用, 也可以在它包含的child component中用. 举例: application容器中的依赖activity可以用, 但是反过来不行.</p>
+</li>
+</ul>
+<h2 id="Hilt基本使用"><a href="#Hilt基本使用" class="headerlink" title="Hilt基本使用"></a>Hilt基本使用</h2><ul>
+<li><p><code>@HiltAndroidApp</code>: 标记在Application类上, 触发代码生成, application container是整个app的parent container.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@HiltAndroidApp</span><br><span class="line">class LogApplication : Application()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>@AndroidEntryPoint</code>: 标记在Activity和Fragment上. 创建了一个和当前Activity/fragment生命周期相关的container. 目前支持的类型是: <code>Activity</code>, <code>Fragment</code>, <code>View</code>, <code>Service</code>, <code>BroadcastReceiver</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@AndroidEntryPoint</span><br><span class="line">class ExampleActivity : AppCompatActivity() &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>每次Fragment(或Activity等)创建都会有它对应的container实例.</p>
+<ul>
+<li>字段注入: 用<code>@Inject</code>标记字段, 注意字段不能是<code>private</code>的.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@AndroidEntryPoint</span><br><span class="line">class LogsFragment : Fragment() &#123;</span><br><span class="line"></span><br><span class="line">    @Inject</span><br><span class="line">    lateinit var dateFormatter: DateFormatter</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>从<br><a href="https://developer.android.com/training/dependency-injection/hilt-android#component-lifetimes" target="_blank" rel="noopener">Component lifetimes</a>可以看到每种类型的component创建和注入的时间.</p>
+<p>Activity是<code>onCreate()</code>, Fragment是<code>onAttach()</code>.</p>
+<p>对Fragment来说, 在<code>onAttach()</code>的时候完成了对象的注入, 之后访问对象都没有问题.</p>
+<ul>
+<li>提供依赖: 用<code>@Inject</code>标记构造器.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class DateFormatter @Inject constructor() &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>它的依赖可以在构造参数中标明.</p>
+<h2 id="Hilt的Scope支持"><a href="#Hilt的Scope支持" class="headerlink" title="Hilt的Scope支持"></a>Hilt的Scope支持</h2><p>默认所有的依赖都是没有scope的, 每次注入依赖都创建新的实例.<br>Hilt自动在对应的生命周期创建/销毁对象: <a href="https://developer.android.com/training/dependency-injection/hilt-android#component-lifetimes" target="_blank" rel="noopener">Component lifetimes</a>.</p>
+<p>也可以把依赖scope到某个component, 这样在这个component内, 依赖就是单例.</p>
+<ul>
+<li>scope: <code>@Singleton</code>: application container的scope, 说明是application范围内的单例. <code>@ActivityScoped</code>对应activity component.</li>
+</ul>
+<p>所有可用的scope: <a href="https://developer.android.com/training/dependency-injection/hilt-android#component-scopes" target="_blank" rel="noopener">Component scopes</a>.</p>
+<h2 id="module"><a href="#module" class="headerlink" title="module"></a>module</h2><p>module的使用基本和dagger一样, 用来提供一些无法用构造<code>@Inject</code>的依赖, 比如接口, 第三方库类型, Builder模式构造的对象等.</p>
+<ul>
+<li><code>@Module</code>: 标记这是一个module. 在Kotlin代码中, module可以是一个<code>object</code>.</li>
+<li><code>@Provides</code>: 标记方法, 提供返回值类型的依赖.</li>
+<li><code>@Binds</code>: 标记抽象方法, 返回接口类型, 实现是方法的唯一参数.</li>
+</ul>
+<p>Hilt多了一个注解: </p>
+<ul>
+<li><code>@InstallIn</code>: 指明module对应哪个container, 也即Component.<br><a href="https://developer.android.com/training/dependency-injection/hilt-android#generated-components" target="_blank" rel="noopener">Generated components for Android classes</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">@Module</span><br><span class="line">object DatabaseModule &#123;</span><br><span class="line"></span><br><span class="line">    @Provides</span><br><span class="line">    @Singleton</span><br><span class="line">    fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase &#123;</span><br><span class="line">        return Room.databaseBuilder(</span><br><span class="line">            appContext,</span><br><span class="line">            AppDatabase::class.java,</span><br><span class="line">            &quot;logging.db&quot;</span><br><span class="line">        ).build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Provides</span><br><span class="line">    fun provideLogDao(database: AppDatabase): LogDao &#123;</span><br><span class="line">        return database.logDao()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="module的拆分"><a href="#module的拆分" class="headerlink" title="module的拆分"></a>module的拆分</h3><p>module的名字最好能传达它提供了什么类型的依赖, 所以多种依赖拆分多个modules写比较好.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@InstallIn(ActivityComponent::class)</span><br><span class="line">@Module</span><br><span class="line">abstract class NavigationModule &#123;</span><br><span class="line">    @Binds</span><br><span class="line">    abstract fun bindNavigator(impl: AppNavigatorImpl): AppNavigator</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>@Binds</code>和<code>@Provides</code>不能放在同一个module里.<br>因为<code>@Binds</code>需要module是一个abstract class, 而<code>@Provides</code>需要module是一个object.<br>放一起会报错: <code>error: A @Module may not contain both non-static and abstract binding methods</code>.</p>
+<h2 id="默认依赖"><a href="#默认依赖" class="headerlink" title="默认依赖"></a>默认依赖</h2><p>有一些默认依赖是已经有的, 比如:</p>
+<ul>
+<li><code>@ApplicationContext</code>.</li>
+<li><code>@ActivityContext</code>.</li>
+</ul>
+<p>可以直接作为<code>@Provides</code>方法或<code>@Inject</code>构造的参数.</p>
+<p>默认依赖是和component对应的.</p>
+<p><a href="https://developer.android.com/training/dependency-injection/hilt-android#component-default" target="_blank" rel="noopener">Component default bindings</a></p>
+<h2 id="Qualifier"><a href="#Qualifier" class="headerlink" title="Qualifier"></a>Qualifier</h2><p>要提供同一个接口的不同实现, 可以用不同的注解来标记. (dagger之前用的是<code>@Named</code>).</p>
+<p>A qualifier is an annotation used to identify a binding.</p>
+<p>举例: <code>LoggerDataSource</code>接口提供了内存和数据库两种实现. </p>
+<p>定义两个注解:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Qualifier</span><br><span class="line">annotation class InMemoryLogger</span><br><span class="line"></span><br><span class="line">@Qualifier</span><br><span class="line">annotation class DatabaseLogger</span><br></pre></td></tr></table></figure></p>
+<p>module中提供的时候用来标记相应的依赖:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">@Module</span><br><span class="line">abstract class LoggingDatabaseModule &#123;</span><br><span class="line"></span><br><span class="line">    @DatabaseLogger</span><br><span class="line">    @Singleton</span><br><span class="line">    @Binds</span><br><span class="line">    abstract fun bindDatabaseLogger(impl: LoggerLocalDataSource): LoggerDataSource</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@InstallIn(ActivityComponent::class)</span><br><span class="line">@Module</span><br><span class="line">abstract class LoggingInMemoryModule &#123;</span><br><span class="line"></span><br><span class="line">    @InMemoryLogger</span><br><span class="line">    @ActivityScoped</span><br><span class="line">    @Binds</span><br><span class="line">    abstract fun bindInMemoryLogger(impl: LoggerInMemoryDataSource): LoggerDataSource</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里用了两个module因为它们对应两个不同的component, 一个是application一个是activity, 依赖也是相应的scope.</p>
+<p>注入的时候也对应加上:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@InMemoryLogger</span><br><span class="line">@Inject</span><br><span class="line">lateinit var logger: LoggerDataSource</span><br></pre></td></tr></table></figure></p>
+<h2 id="EntryPoint"><a href="#EntryPoint" class="headerlink" title="@EntryPoint"></a><code>@EntryPoint</code></h2><p>Hilt支持最常用的Android组件, 对于默认不支持的类型, 如果还想做字段注入, 需要用<code>@EntryPoint</code>.</p>
+<p>注意这里只是限制了<strong>字段注入</strong>的情况, 自定义类型一般用构造注入比较方便(如果能用的话).</p>
+<p><code>@EntryPoint</code>的意思就是一个边界点, 这里可以通往Hilt的世界, 得到容器提供的依赖对象们.</p>
+<p><a href="https://codelabs.developers.google.com/codelabs/android-hilt/#10" target="_blank" rel="noopener">Codelab</a>中的例子是一个ContentProvider.</p>
+<p>关键的部分是这段代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@InstallIn(ApplicationComponent::class)</span><br><span class="line">@EntryPoint</span><br><span class="line">interface LogsContentProviderEntryPoint &#123;</span><br><span class="line">    fun logDao(): LogDao</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private fun getLogDao(appContext: Context): LogDao &#123;</span><br><span class="line">    val hiltEntryPoint = EntryPointAccessors.fromApplication(</span><br><span class="line">        appContext,</span><br><span class="line">        LogsContentProviderEntryPoint::class.java</span><br><span class="line">    )</span><br><span class="line">    return hiltEntryPoint.logDao()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Hilt-and-Dagger"><a href="#Hilt-and-Dagger" class="headerlink" title="Hilt and Dagger"></a>Hilt and Dagger</h2><p>当初的dagger.android已被放弃, 它是为了简化dagger在Android上的使用而单独推出的. (根据Activity和Fragment的生命周期, 开发者不用手动调用inject方法, 但是确实最开始的setup code比较多.)</p>
+<p>Hilt相对于Dagger来说, 简化了几个点:</p>
+<ul>
+<li>不用自己创建Component.</li>
+<li>不用手动调用inject()方法来完成字段注入.</li>
+<li>不用自己在Application中保存component.</li>
+<li>提供了一些Scope, 不用自己定义和写.</li>
+<li>提供了一些默认依赖, 比如Context.</li>
+</ul>
+<p>总体来说Hilt就是针对Android做的定制, 让依赖注入框架用起来更方便. 毕竟dagger是一个java注入库, 它的应用范围不限于Android.</p>
+<p>因为Hilt和Dagger可以共存, 可以逐步迁移. 既然官方推荐了, 可以在项目内小范围地先试试.</p>
+<p>最后推荐这个<a href="https://developer.android.com/images/training/dependency-injection/hilt-annotations.pdf" target="_blank" rel="noopener">cheat sheet</a></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://medium.com/androiddevelopers/dependency-injection-on-android-with-hilt-67b6031e62d" target="_blank" rel="noopener">Dependency Injection on Android with Hilt</a></li>
+<li><a href="https://developer.android.com/training/dependency-injection/hilt-android" target="_blank" rel="noopener">Dependency injection with Hilt</a></li>
+<li><a href="https://dagger.dev/hilt/" target="_blank" rel="noopener">Dagger Hilt</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+              <a href="/tags/DI/" rel="tag"># DI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Mini-Program/2020/04/20/mini-program-todo-using-taro/" rel="prev" title="用Taro做个微信小程序Todo, 小白工作记录">
+      <i class="fa fa-chevron-left"></i> 用Taro做个微信小程序Todo, 小白工作记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Flutter/2020/06/15/flutter-dart-memo/" rel="next" title="Dart Memo for Android Developers">
+      Dart Memo for Android Developers <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E5%AE%98%E6%96%B9%E6%96%B0%E6%8E%A8%E7%9A%84DI%E5%BA%93-Hilt"><span class="nav-number">1.</span> <span class="nav-text">Android官方新推的DI库 Hilt</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Codelab%E7%BB%83%E4%B9%A0%E4%BE%8B%E5%AD%90"><span class="nav-number">1.1.</span> <span class="nav-text">Codelab练习例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hilt%E4%BE%9D%E8%B5%96%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.2.</span> <span class="nav-text">Hilt依赖添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5-%E7%94%A8%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="nav-number">1.3.</span> <span class="nav-text">概念, 用词解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hilt%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">Hilt基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hilt%E7%9A%84Scope%E6%94%AF%E6%8C%81"><span class="nav-number">1.5.</span> <span class="nav-text">Hilt的Scope支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#module"><span class="nav-number">1.6.</span> <span class="nav-text">module</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#module%E7%9A%84%E6%8B%86%E5%88%86"><span class="nav-number">1.6.1.</span> <span class="nav-text">module的拆分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E4%BE%9D%E8%B5%96"><span class="nav-number">1.7.</span> <span class="nav-text">默认依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Qualifier"><span class="nav-number">1.8.</span> <span class="nav-text">Qualifier</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EntryPoint"><span class="nav-number">1.9.</span> <span class="nav-text">@EntryPoint</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hilt-and-Dagger"><span class="nav-number">1.10.</span> <span class="nav-text">Hilt and Dagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.11.</span> <span class="nav-text">Reference</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2020/06/12/DI-with-hilt/";
+    this.page.identifier = "Android/2020/06/12/DI-with-hilt/";
+    this.page.title = "Android官方新推的DI库 Hilt";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

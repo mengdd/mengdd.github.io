@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Retrofit结合RxJava使用指南Retrofit是一个当前很流行的网络请求库, 官网的介绍是: “Type-safe HTTP client for Android and Java”. 本文介绍Retrofit的使用.先介绍单独使用Retrofit进行网络请求, 后面主要介绍和RxJava结合的请求, 有实例代码.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Retrofit结合RxJava使用指南">
+<meta property="og:url" content="http://mengdd.github.io/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Retrofit结合RxJava使用指南Retrofit是一个当前很流行的网络请求库, 官网的介绍是: “Type-safe HTTP client for Android and Java”. 本文介绍Retrofit的使用.先介绍单独使用Retrofit进行网络请求, 后面主要介绍和RxJava结合的请求, 有实例代码.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-11-08T02:36:59.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.993Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Retrofit">
+<meta property="article:tag" content="RxJava">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Retrofit结合RxJava使用指南 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Retrofit结合RxJava使用指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-11-08 10:36:59" itemprop="dateCreated datePublished" datetime="2016-11-08T10:36:59+08:00">2016-11-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Retrofit/" itemprop="url" rel="index"><span itemprop="name">Retrofit</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Retrofit/RxJava/" itemprop="url" rel="index"><span itemprop="name">RxJava</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/" class="post-meta-item leancloud_visitors" data-flag-title="Retrofit结合RxJava使用指南" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Retrofit结合RxJava使用指南"><a href="#Retrofit结合RxJava使用指南" class="headerlink" title="Retrofit结合RxJava使用指南"></a>Retrofit结合RxJava使用指南</h1><p>Retrofit是一个当前很流行的网络请求库, 官网的介绍是: “Type-safe HTTP client for Android and Java”. 本文介绍Retrofit的使用.<br>先介绍单独使用Retrofit进行网络请求, 后面主要介绍和RxJava结合的请求, 有实例代码.</p>
+<a id="more"></a>
+<h2 id="Retrofit单独使用"><a href="#Retrofit单独使用" class="headerlink" title="Retrofit单独使用"></a>Retrofit单独使用</h2><h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><p>首先在manifest中加上网络权限:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后在<code>app/build.gradle</code>中加上依赖:<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:retrofit:2.1.0'</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">'com.google.code.gson:gson:2.8.0'</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:converter-gson:2.1.0'</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="准备API和model类"><a href="#准备API和model类" class="headerlink" title="准备API和model类"></a>准备API和model类</h3><p>本例子中使用<a href="https://developer.github.com/v3/" target="_blank" rel="noopener">Github API</a>做请求.</p>
+<p>以Github的Root Endpoint为例:<br><code>https://api.github.com</code>.<br>首先, 我们在命令行发送:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://api.github.com</span><br></pre></td></tr></table></figure></p>
+<p>或者在Postman发送这个请求, 两种方法都可以得到结果.</p>
+<p>这个请求返回的是一个json.</p>
+<p>利用这个网站: <a href="http://www.jsonschema2pojo.org/" target="_blank" rel="noopener">jsonschema2pojo</a>, 可以用json生成一个java类, 比如上面这个, 我们给它起名字叫<code>Endpoints.java</code>.</p>
+<p>之后例子中的API都是这种方式, 先发送请求得到json, 然后转成java的model类.</p>
+<h3 id="利用Retrofit发送请求并得到结果"><a href="#利用Retrofit发送请求并得到结果" class="headerlink" title="利用Retrofit发送请求并得到结果"></a>利用Retrofit发送请求并得到结果</h3><p>首先写一个<code>ServiceGenerator</code>类, 用于生成service:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceGenerator</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String API_BASE_URL = <span class="string">"https://api.github.com"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> OkHttpClient.Builder httpClient = <span class="keyword">new</span> OkHttpClient.Builder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Retrofit.Builder builder =</span><br><span class="line">            <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">                    .baseUrl(API_BASE_URL)</span><br><span class="line">                    .addConverterFactory(GsonConverterFactory.create());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">S <span class="title">createService</span><span class="params">(Class&lt;S&gt; serviceClass)</span> </span>&#123;</span><br><span class="line">        Retrofit retrofit = builder.client(httpClient.build()).build();</span><br><span class="line">        <span class="keyword">return</span> retrofit.create(serviceClass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里指定了我们的base url.<br><code>createService()</code>方法返回的是一个泛型.</p>
+<p>然后我们创建<code>GithubService</code>, 注意这是一个<strong>接口</strong>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.ddmeng.helloretrofit.data.models.Endpoints;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> retrofit2.Call;</span><br><span class="line"><span class="keyword">import</span> retrofit2.http.GET;</span><br><span class="line"><span class="keyword">import</span> retrofit2.http.Url;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GitHubService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="function">Call&lt;Endpoints&gt; <span class="title">getAllEndpoints</span><span class="params">(@Url String url)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里<code>@GET</code>指定了是一个GET请求, 因为我们请求的就是base url, 所以是这样写的.<br><code>Endpoints</code>类是这个请求所返回的json转化的java类.</p>
+<p>好了, 准备工作做完了, 现在就可以请求并得到结果:<br>请求github api的root url, 得到所有的endpoints:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GitHubService gitHubService = ServiceGenerator.createService(GitHubService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">Call&lt;Endpoints&gt; endpointsCall = gitHubService.getAllEndpoints(<span class="string">""</span>);</span><br><span class="line">endpointsCall.enqueue(<span class="keyword">new</span> Callback&lt;Endpoints&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call&lt;Endpoints&gt; call, Response&lt;Endpoints&gt; response)</span> </span>&#123;</span><br><span class="line">        Endpoints endpoints = response.body();</span><br><span class="line">        String repositoryUrl = endpoints.getRepositoryUrl();</span><br><span class="line">        LogUtils.i(repositoryUrl);</span><br><span class="line">        Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"repository url: "</span> + repositoryUrl, Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call&lt;Endpoints&gt; call, Throwable t)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>说明:<br>首先利用前面的ServiceGenerator来创建Service, 然后调用接口中定义的<code>getAllEndpoints()</code>方法, 此处传入了空字符串, 因为我请求的就是base url.</p>
+<h3 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h3><p>这里注意用Retrofit请求的返回值是<code>Call&lt;T&gt;</code> (后面我们还会介绍用RxJava的情形), 泛型T是model类型, 它有两个方法:</p>
+<ul>
+<li><code>execute()</code>是同步方法, 返回<code>Response&lt;T&gt;</code>;</li>
+<li><code>enqueue()</code>是异步方法, 在上面的例子中用的就是这个, 在回调<code>onResponse()</code>中返回了<code>Response&lt;T&gt;</code>.</li>
+</ul>
+<h3 id="Converter"><a href="#Converter" class="headerlink" title="Converter"></a>Converter</h3><p>Converter的作用: 如果不指定Converter, 默认情况下Retrofit只能返回<code>ResponseBody</code>类型, 加了Converter之后就可以返回我们定义的Model类型了.<br>所以Converter替我们做了json -&gt; model的工作.</p>
+<p>本例子中ConverterFactory指定的是<code>GsonConverterFactory</code>. 这里我们选的是Gson Converter, 所以依赖的是<code>com.squareup.retrofit2:converter-gson</code>.</p>
+<p>Retrofit支持多种converters:</p>
+<ul>
+<li>Gson: com.squareup.retrofit2:converter-gson</li>
+<li>Jackson: com.squareup.retrofit2:converter-jackson</li>
+<li>Moshi: com.squareup.retrofit2:converter-moshi</li>
+<li>Protobuf: com.squareup.retrofit2:converter-protobuf</li>
+<li>Wire: com.squareup.retrofit2:converter-wire</li>
+<li>Simple XML: com.squareup.retrofit2:converter-simplexml</li>
+<li>Scalars (primitives, boxed, and String): com.squareup.retrofit2:converter-scalars</li>
+</ul>
+<h3 id="Path和参数"><a href="#Path和参数" class="headerlink" title="Path和参数"></a>Path和参数</h3><p>从上面返回的endpoints可以看到, user_url是: <code>https://api.github.com/users/{user}</code><br>这是一个带path参数的url, 我们发请求的时候在{user}处写一个github用户名, 即可得到该用户的信息, 比如:<br><code>https://api.github.com/users/mengdd</code>.</p>
+<p>那么用Retrofit如何处理呢?<br>只需要在<code>GithubService</code>中增加一个方法, 这样写:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GitHubService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="function">Call&lt;Endpoints&gt; <span class="title">getAllEndpoints</span><span class="params">(@Url String url)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span>(<span class="string">"users/&#123;user&#125;"</span>)</span><br><span class="line">    <span class="function">Call&lt;User&gt; <span class="title">getUser</span><span class="params">(@Path(<span class="string">"user"</span>)</span> String user)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用时的方法完全一样, 不再赘述, 同理, 如果要在后面加参数, 可以用<code>@Query</code>.<br>更多注解的例子见官方网站: <a href="https://square.github.io/retrofit/" target="_blank" rel="noopener">Retrofit</a></p>
+<h2 id="Retrofit-RxJava"><a href="#Retrofit-RxJava" class="headerlink" title="Retrofit + RxJava"></a>Retrofit + RxJava</h2><p>RxJava近年来很流行, 主要优势是流式操作, 可以处理并行发送请求, 使用灵活, 线程切换容易.<br>当你要处理的逻辑比较复杂时, 就会发现使用RxJava的优势.</p>
+<p>以我们的例子来说, 当前我们利用一个请求可以得到一个用户的信息并显示出来.<br>如果我们想得到这个用户的所有repo的所有者或者其他信息, 所有他follow的人的信息, 以及他们的repo的信息呢?</p>
+<p>这就需要发很多个请求, 并且其中有些请求是并行发送的, 如果按照前面的方法, 不断地在callback里面嵌套, 那就太难看了.</p>
+<h3 id="Setup-with-RxJava"><a href="#Setup-with-RxJava" class="headerlink" title="Setup with RxJava"></a>Setup with RxJava</h3><h4 id="添加RxJava依赖"><a href="#添加RxJava依赖" class="headerlink" title="添加RxJava依赖"></a>添加RxJava依赖</h4><p>首先, 添加RxJava和RxAndroid的依赖:<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">compile</span> <span class="string">'io.reactivex:rxjava:1.2.2'</span></span><br><span class="line"><span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.2.1'</span></span><br></pre></td></tr></table></figure></p>
+<p>注: 虽然在我写这篇文章的时候(2016.11.4)RxJava2.0刚刚release, 但是我们还是先用RxJava1来写这个demo.</p>
+<p>然后添加retrofit的adapter-rxjava:<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:adapter-rxjava:2.1.0'</span></span><br></pre></td></tr></table></figure></p>
+<p>所以现在我们的依赖总的看起来是这样:<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'libs'</span>, <span class="keyword">include</span>: [<span class="string">'*.jar'</span>])</span><br><span class="line">    androidTestCompile(<span class="string">'com.android.support.test.espresso:espresso-core:2.2.2'</span>, &#123;</span><br><span class="line">        <span class="keyword">exclude</span> <span class="keyword">group</span>: <span class="string">'com.android.support'</span>, module: <span class="string">'support-annotations'</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">"com.android.support:appcompat-v7:$&#123;supportLibVersion&#125;"</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">"com.android.support:design:$&#123;supportLibVersion&#125;"</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">"com.jakewharton:butterknife:$&#123;butterKnifeVersion&#125;"</span></span><br><span class="line">    apt <span class="string">"com.jakewharton:butterknife-compiler:$&#123;butterKnifeVersion&#125;"</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:retrofit:2.1.0'</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.google.code.gson:gson:2.8.0'</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:converter-gson:2.1.0'</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:adapter-rxjava:2.1.0'</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'io.reactivex:rxjava:1.2.2'</span></span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.2.1'</span></span><br><span class="line">    testCompile <span class="string">'junit:junit:4.12'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Retrofit结合RxJava"><a href="#Retrofit结合RxJava" class="headerlink" title="Retrofit结合RxJava"></a>Retrofit结合RxJava</h4><p>Retrofit.Builder()中加入这一行:<br><code>.addCallAdapterFactory(RxJavaCallAdapterFactory.create());</code></p>
+<p>ServiceGenerator变成这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceGenerator</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String API_BASE_URL = <span class="string">"https://api.github.com"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> OkHttpClient.Builder httpClient = <span class="keyword">new</span> OkHttpClient.Builder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Retrofit.Builder builder =</span><br><span class="line">            <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">                    .baseUrl(API_BASE_URL)</span><br><span class="line">                    .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">S <span class="title">createService</span><span class="params">(Class&lt;S&gt; serviceClass)</span> </span>&#123;</span><br><span class="line">        Retrofit retrofit = builder.client(httpClient.build()).build();</span><br><span class="line">        <span class="keyword">return</span> retrofit.create(serviceClass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样我们在<code>GithubService</code>中定义的接口方法, 既可以像原来一样返回<code>Call</code>, 也可以返回<code>Observable</code>.</p>
+<h3 id="Retrofit-RxJava请求实例"><a href="#Retrofit-RxJava请求实例" class="headerlink" title="Retrofit + RxJava请求实例"></a>Retrofit + RxJava请求实例</h3><p>以单个请求为例,<br><strong>不用RxJava的时候</strong>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GET</span>(<span class="string">"users/&#123;user&#125;/following"</span>)</span><br><span class="line">Call&lt;List&lt;User&gt;&gt; getUserFollowing(<span class="meta">@Path</span>(<span class="string">"user"</span>) String user);</span><br></pre></td></tr></table></figure></p>
+<p>请求的时候是这样的:<br>请求指定用户follow的所有人:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GitHubService service = ServiceGenerator.createService(GitHubService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">Call&lt;List&lt;User&gt;&gt; userFollowing = service.getUserFollowing(inputUserNameView.getText().toString());</span><br><span class="line">userFollowing.enqueue(<span class="keyword">new</span> Callback&lt;List&lt;User&gt;&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call&lt;List&lt;User&gt;&gt; call, Response&lt;List&lt;User&gt;&gt; response)</span> </span>&#123;</span><br><span class="line">        List&lt;User&gt; followingUsers = response.body();</span><br><span class="line">        peopleListAdapter.setUsers(followingUsers);</span><br><span class="line">        peopleListAdapter.notifyDataSetChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call&lt;List&lt;User&gt;&gt; call, Throwable t)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>现在改用RxJava了, 返回的不是Call而是Observable:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GET</span>(<span class="string">"users/&#123;user&#125;/following"</span>)</span><br><span class="line">Observable&lt;List&lt;User&gt;&gt; getUserFollowingObservable(<span class="meta">@Path</span>(<span class="string">"user"</span>) String user);</span><br></pre></td></tr></table></figure></p>
+<p>结合RxJava请求的时候变为这样:<br>还是请求用户follow的所有人:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GitHubService service = ServiceGenerator.createService(GitHubService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">String username = inputUserNameView.getText().toString();</span><br><span class="line">service.getUserFollowingObservable(username)</span><br><span class="line">        .subscribeOn(Schedulers.io())</span><br><span class="line">        .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">        .subscribe(<span class="keyword">new</span> Subscriber&lt;List&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                LogUtils.i(<span class="string">"onNext: "</span> + users.size());</span><br><span class="line">                peopleListAdapter.setUsers(users);</span><br><span class="line">                peopleListAdapter.notifyDataSetChanged();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>用RxJava实现后, 请求返回的是一个Observable, 用<code>subscribe()</code>添加一个订阅者, 即它的观察者.<br>当请求返回后, 回到主线程, 更新UI.<br>这是单个请求的例子, 所以RxJava的优势不是很明显, 如果我们有多个请求, 用RxJava进行变换组合显然就是更好的选择.</p>
+<h4 id="用RxJava进行线程切换"><a href="#用RxJava进行线程切换" class="headerlink" title="用RxJava进行线程切换"></a>用RxJava进行线程切换</h4><p>上个例子中<code>.subscribeOn(Schedulers.io())</code>指定Observable的工作, 在我们的例子中Observable的工作即发送请求, 在io线程做, 指定了被观察者的处理线程;<br><code>.observeOn(AndroidSchedulers.mainThread())</code>指定最后onNext()回调在主线程, 即指定了通知后续观察者的线程.<br>关于这两个操作符的更多说明请看官方文档: <a href="http://reactivex.io/documentation/operators/subscribeon.html" target="_blank" rel="noopener">subscribeOn</a>和<a href="http://reactivex.io/documentation/operators/observeon.html" target="_blank" rel="noopener">observeOn</a>.</p>
+<h3 id="RxJava处理多个请求的例子"><a href="#RxJava处理多个请求的例子" class="headerlink" title="RxJava处理多个请求的例子"></a>RxJava处理多个请求的例子</h3><p>设计这样一个场景, 我们现在取到了一个用户follow的所有人, 但是取回的信息中并不包含每个人拥有的repo个数, 只有一个url可用户查看所有repo.</p>
+<p>接下来我们要取其中每一个人的详细信息, 就要查询另一个API, 重新查询这个人的完整信息.<br>查询用户follow的所有人, 然后查询每一个人的详细信息:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">subscription = service.getUserFollowingObservable(username)</span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;List&lt;User&gt;, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> Observable.from(users);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;User, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> service.getUserObservable(user.getLogin());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .toList()</span><br><span class="line">        .subscribeOn(Schedulers.io())</span><br><span class="line">        .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">        .subscribe(<span class="keyword">new</span> Subscriber&lt;List&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                peopleListAdapter.setUsers(users);</span><br><span class="line">                peopleListAdapter.notifyDataSetChanged();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>可以看到我们加了两个<code>flatMap()</code>和一个<code>toList()</code>来做这个事情.</p>
+<p>首先, 第一步我们用<code>getUserFollowingObservable()</code>得到的是一个<code>Observable&lt;List&lt;User&gt;&gt;</code>;<br>我们之后用<code>.flatMap()</code>, 它的输入是<code>List&lt;User&gt;</code>, 返回的是<code>Observable&lt;User&gt;</code>. 我们在其中用了一个<code>.from()</code>来生成一个发射一组User的<code>Observable</code>;</p>
+<p>之后第二个<code>.flatMap()</code>里, 输入是前一个<code>Observable</code>的输出, 即User, 调用了<code>getUserObservable()</code>, 返回的结果是<code>Observable&lt;User&gt;</code>, 之后加一个<code>.toList()</code>, 把输出的结果从单个的User变为List<user>, 即和我们最初的例子一样. </user></p>
+<p>只不过此时得到的用户信息是更详细的用户信息, 包含了他的repo数据和follow数据. 因为它们是通过单独查询每一个人得到的.</p>
+<p>运行, 虽然可以得到我们想要的结果, 但是这个例子仍然是有问题的.</p>
+<h4 id="线程问题处理"><a href="#线程问题处理" class="headerlink" title="线程问题处理"></a>线程问题处理</h4><p>上面多个请求的例子, 发现虽然实现了我们的需求, 但是结果回来得很慢.<br>我们加上一个<code>.map</code>操作符来加上log:<br>(这里省略了一些前后的代码, 只是在<code>.flatMap()</code>里加了一个<code>.map()</code>)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">subscription = service.getUserFollowingObservable(username)</span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;List&lt;User&gt;, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> Observable.from(users);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;User, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> service.getUserObservable(user.getLogin())</span><br><span class="line">                        .map(<span class="keyword">new</span> Func1&lt;User, User&gt;() &#123;</span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="function"><span class="keyword">public</span> User <span class="title">call</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">                                <span class="comment">// this .map is used to output log information to check the threads</span></span><br><span class="line">                                LogUtils.i(<span class="string">"getUserObservable: "</span> + user.getLogin());</span><br><span class="line">                                <span class="keyword">return</span> user;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .toList()</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure></p>
+<p>由Log可以发现(log中的线程号是一样的)单独取每一个用户详细信息的请求都发生在同一个线程, 是顺次进行的.</p>
+<p>查看代码:<br>Demo地址: <a href="https://github.com/mengdd/HelloRetrofit" target="_blank" rel="noopener">https://github.com/mengdd/HelloRetrofit</a>.<br><code>git checkout multiple-requests-in-single-thread</code></p>
+<p>回头梳理一下我们的需求, 请求一个所有follow的人, 返回一个follow的人的List, 然后对List中的每一个人, 单独请求详细信息.</p>
+<p>那么按理来说, 第二个批量的请求是可以同时发送, 并行进行的.<br>所以我们想要的行为其实是平行发送多个请求, 然后最后统一结果到UI线程. </p>
+<p>改动如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">subscription = service.getUserFollowingObservable(username)</span><br><span class="line">        .subscribeOn(Schedulers.io()) <span class="comment">// 从io线程开始, 取用户follow的所有人</span></span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;List&lt;User&gt;, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                LogUtils.i(<span class="string">"from"</span>);</span><br><span class="line">                <span class="keyword">return</span> Observable.from(users);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .flatMap(<span class="keyword">new</span> Func1&lt;User, Observable&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Observable&lt;User&gt; <span class="title">call</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> service.getUserObservable(user.getLogin()) <span class="comment">// 取每个人的详细信息</span></span><br><span class="line">                        .subscribeOn(Schedulers.io()) <span class="comment">// 指定取每个人详细信息的工作都在单独的io线程</span></span><br><span class="line">                        .map(<span class="keyword">new</span> Func1&lt;User, User&gt;() &#123;</span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="function"><span class="keyword">public</span> User <span class="title">call</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">                                <span class="comment">// this map operation is just used for showing log</span></span><br><span class="line">                                LogUtils.i(<span class="string">"getUserObservable: "</span> + user.getLogin());</span><br><span class="line">                                <span class="keyword">return</span> user;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .toList()</span><br><span class="line">        .observeOn(AndroidSchedulers.mainThread()) <span class="comment">// 最后返回到主线程</span></span><br><span class="line">        .subscribe(<span class="keyword">new</span> Subscriber&lt;List&lt;User&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;User&gt; users)</span> </span>&#123;</span><br><span class="line">                LogUtils.i(<span class="string">"onNext: "</span> + users.size());</span><br><span class="line">                peopleListAdapter.setUsers(users);</span><br><span class="line">                peopleListAdapter.notifyDataSetChanged();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>给改动的部分加上了注释, 这样更清楚一些.</p>
+<p>注意<code>subscribeOn()</code>指定的是当前的这个Observable的工作在什么线程进行.<br>所以在本例子中, <code>subscribeOn(Schedulers.io())</code>的位置放在<code>.flatMap()</code>里面才会产生多个请求并行的效果.</p>
+<p>这样一改, 我们的显示时间不再是所有请求时间之和, 而是只取决于最慢的那个请求时间.</p>
+<p>查看代码:<br>Demo地址: <a href="https://github.com/mengdd/HelloRetrofit" target="_blank" rel="noopener">https://github.com/mengdd/HelloRetrofit</a><br><code>git checkout multiple-requests-in-multiple-threads</code></p>
+<h3 id="取消订阅"><a href="#取消订阅" class="headerlink" title="取消订阅"></a>取消订阅</h3><p>正常情况下, 行为结束之后, 到达<code>onComplete()</code>或者<code>onError()</code>, RxJava的订阅会自动取消.<br>但是在处理网络请求的时候, 很可能会出现请求还没有返回, 界面就已经结束了的情况.</p>
+<p>上面的代码中已经出现了, 订阅方法<code>subscribe()</code>的返回值是一个<code>Subscription</code>对象, 我们保存了这个对象的引用, 然后在<code>onPause()</code>的时候取消了请求, 防止内存泄露.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onPause();</span><br><span class="line">    <span class="keyword">if</span> (subscription != <span class="keyword">null</span> &amp;&amp; subscription.isUnsubscribed()) &#123;</span><br><span class="line">        subscription.unsubscribe();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以选别的生命周期回调, 比如<code>onDestroyView()</code>或者<code>onDestroy()</code>.</p>
+<p>如果有多个请求, 可以用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> CompositeSubscription compositeSubscription = <span class="keyword">new</span> CompositeSubscription();</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 在发请求的地方, 返回subscription</span></span><br><span class="line">compositeSubscription.add(subscription);</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选一个生命周期注销所有请求</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onPause();</span><br><span class="line">    compositeSubscription.unsubscribe();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Demo说明"><a href="#Demo说明" class="headerlink" title="Demo说明"></a>Demo说明</h2><p>Demo地址: <a href="https://github.com/mengdd/HelloRetrofit" target="_blank" rel="noopener">https://github.com/mengdd/HelloRetrofit</a></p>
+<p>本Demo只用于展示Retrofit和RxJava结合的使用, 为了清晰起见所以没有采用MVP构架, 也没有用Dagger进行依赖注入, 有的请求也没有在生命周期结束时取消, 也没有UI的loading效果和没网情况的处理等, 大家使用时请根据实际需要做一些处理.</p>
+<p>这些没有的东西会在我最近在做一个应用repo中出现: <a href="https://github.com/mengdd/GithubClient" target="_blank" rel="noopener">https://github.com/mengdd/GithubClient</a>, 还在开发中, 可以关注一下. </p>
+<p>另, Demo使用有时候用着用着请求就返回了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;message&quot;:&quot;API rate limit exceeded for xxx ip...</span><br></pre></td></tr></table></figure></p>
+<p>这是因为没授权的用户每小时最多只能发60个请求:<a href="https://developer.github.com/v3/#rate-limiting" target="_blank" rel="noopener">https://developer.github.com/v3/#rate-limiting</a><br>解决办法就是..查following的人时, 不要查那种follow了很多人的账号. orz.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://github.com/square/retrofit" target="_blank" rel="noopener">Retrofit Github</a></li>
+<li><a href="https://square.github.io/retrofit/" target="_blank" rel="noopener">Retrofit Website</a></li>
+<li><a href="https://guides.codepath.com/android/Consuming-APIs-with-Retrofit" target="_blank" rel="noopener">CodePath- Consuming APIs with Retrofit</a></li>
+<li><a href="https://futurestud.io/tutorials/retrofit-getting-started-and-android-client" target="_blank" rel="noopener">Future Studio 系列教程</a></li>
+<li><a href="http://gank.io/post/56e80c2c677659311bed9841" target="_blank" rel="noopener">RxJava 与 Retrofit 结合的最佳实践</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/11/01/android-weekly-notes-issue-229/" rel="prev" title="Android Weekly Notes Issue 229">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 229
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/11/11/android-weekly-notes-issue-230/" rel="next" title="Android Weekly Notes Issue 230">
+      Android Weekly Notes Issue 230 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Retrofit%E7%BB%93%E5%90%88RxJava%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-number">1.</span> <span class="nav-text">Retrofit结合RxJava使用指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Retrofit%E5%8D%95%E7%8B%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">Retrofit单独使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup"><span class="nav-number">1.1.1.</span> <span class="nav-text">Setup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87API%E5%92%8Cmodel%E7%B1%BB"><span class="nav-number">1.1.2.</span> <span class="nav-text">准备API和model类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8Retrofit%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82%E5%B9%B6%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C"><span class="nav-number">1.1.3.</span> <span class="nav-text">利用Retrofit发送请求并得到结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E5%92%8C%E5%BC%82%E6%AD%A5"><span class="nav-number">1.1.4.</span> <span class="nav-text">同步和异步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Converter"><span class="nav-number">1.1.5.</span> <span class="nav-text">Converter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path%E5%92%8C%E5%8F%82%E6%95%B0"><span class="nav-number">1.1.6.</span> <span class="nav-text">Path和参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Retrofit-RxJava"><span class="nav-number">1.2.</span> <span class="nav-text">Retrofit + RxJava</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-with-RxJava"><span class="nav-number">1.2.1.</span> <span class="nav-text">Setup with RxJava</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0RxJava%E4%BE%9D%E8%B5%96"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">添加RxJava依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Retrofit%E7%BB%93%E5%90%88RxJava"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Retrofit结合RxJava</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Retrofit-RxJava%E8%AF%B7%E6%B1%82%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">Retrofit + RxJava请求实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8RxJava%E8%BF%9B%E8%A1%8C%E7%BA%BF%E7%A8%8B%E5%88%87%E6%8D%A2"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">用RxJava进行线程切换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RxJava%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AA%E8%AF%B7%E6%B1%82%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">RxJava处理多个请求的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">线程问题处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E8%AE%A2%E9%98%85"><span class="nav-number">1.2.4.</span> <span class="nav-text">取消订阅</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo%E8%AF%B4%E6%98%8E"><span class="nav-number">1.3.</span> <span class="nav-text">Demo说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">1.4.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/";
+    this.page.identifier = "Android/Retrofit/RxJava/2016/11/08/hello-retrofit-with-rxjava/";
+    this.page.title = "Retrofit结合RxJava使用指南";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

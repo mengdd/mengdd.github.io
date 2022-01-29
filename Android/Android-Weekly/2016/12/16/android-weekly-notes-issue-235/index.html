@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #235December 11th, 2016Android Weekly Issue #235本期内容包括: 开发一个自定义View并发布为开源库的完整流程介绍; 用AnimatedVectorDrawable实现的动画; 什么样的程序是可测试的; DownloadManager介绍; Okhttp的重试; Android 7取消了file:&#x2F;&#x2F;; An">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 235">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #235December 11th, 2016Android Weekly Issue #235本期内容包括: 开发一个自定义View并发布为开源库的完整流程介绍; 用AnimatedVectorDrawable实现的动画; 什么样的程序是可测试的; DownloadManager介绍; Okhttp的重试; Android 7取消了file:&#x2F;&#x2F;; An">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/view-lifecycle-diagram-lite-version.png">
+<meta property="article:published_time" content="2016-12-16T06:14:34.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.994Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="AnimatedVectorDrawable">
+<meta property="article:tag" content="Test">
+<meta property="article:tag" content="Nougat">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="RecyclerView">
+<meta property="article:tag" content="Android Studio">
+<meta property="article:tag" content="Android 7">
+<meta property="article:tag" content="Custom View">
+<meta property="article:tag" content="JCenter">
+<meta property="article:tag" content="DownloadManager">
+<meta property="article:tag" content="OkHttp">
+<meta property="article:tag" content="Offline Architecture">
+<meta property="article:tag" content="lint">
+<meta property="article:tag" content="FragmentPagerAdapter">
+<meta property="article:tag" content="FragmentStatePagerAdapter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/view-lifecycle-diagram-lite-version.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 235 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 235
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-12-16 14:14:34" itemprop="dateCreated datePublished" datetime="2016-12-16T14:14:34+08:00">2016-12-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 235" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-235"><a href="#Android-Weekly-Issue-235" class="headerlink" title="Android Weekly Issue #235"></a>Android Weekly Issue #235</h1><p>December 11th, 2016<br><a href="http://androidweekly.net/issues/issue-235" target="_blank" rel="noopener">Android Weekly Issue #235</a><br>本期内容包括: 开发一个自定义View并发布为开源库的完整流程介绍; 用<code>AnimatedVectorDrawable</code>实现的动画; 什么样的程序是可测试的; <code>DownloadManager</code>介绍; Okhttp的重试; Android 7取消了<code>file://</code>; Android Studio即将推出的build cache功能; 支持离线模式的app构架; 如何写自定义的lint规则; Epoxy, 一个处理复杂RecyclerView屏的库; <code>FragmentPagerAdapter</code>和<code>FragmentStatePagerAdapter</code>的比较等. </p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Make-an-android-custom-view-publish-and-open-source"><a href="#Make-an-android-custom-view-publish-and-open-source" class="headerlink" title="Make an android custom view, publish and open source "></a><a href="https://medium.com/dualcores-studio/make-an-android-custom-view-publish-and-open-source-99a3d86df228#.zc8s14lek" target="_blank" rel="noopener">Make an android custom view, publish and open source </a></h2><p>作者开发了一个环形的SeekBar, 并把它作为一个库发布到了JCenter.</p>
+<p><strong>作者首先讲了自定义View的实现</strong>:<br>首先是关于View生命周期的介绍, 在写自定义View的时候有几个关键的生命周期回调需要处理:<br><img src="/images/view-lifecycle-diagram-lite-version.png" alt="view-lifecycle-diagram-lite-version"></p>
+<p>作者实现的几个关键步骤讲解:</p>
+<ul>
+<li>自定义属性并获取.</li>
+<li>在<code>onMeasure()</code>中控制尺寸.</li>
+<li>在<code>onDraw()</code>中绘制: 避免在<code>onDraw()</code>中分配内存; 用<code>invalidate()</code>方法来激发重绘.</li>
+<li>在<code>onTouchEvent()</code>处理用户手势. 在他的环形SeekBar的实现里, 这里涉及到了点击坐标到角度的转换. </li>
+</ul>
+<p><strong>将自定义View库开源到Github</strong>:<br>开源到Github有个好的README很重要, 这里有几个tips:</p>
+<ul>
+<li>提供截图, Gif或者Video.</li>
+<li>提供安装/使用说明.<br>作者自己的库: <a href="https://github.com/enginebai/SwagPoints" target="_blank" rel="noopener">SwagPoints</a></li>
+</ul>
+<p><strong>发布库</strong>:</p>
+<ul>
+<li>去<a href="https://bintray.com/" target="_blank" rel="noopener">JFrog Bintray</a>注册.</li>
+<li>创建repository, package, 和版本号.</li>
+<li>生成并上传, 用了<a href="https://github.com/blundell/release-android-library" target="_blank" rel="noopener">这个library</a>.</li>
+<li>添加到Jcenter.</li>
+<li>被接受之后收到邮件, 就可以使用了.</li>
+</ul>
+<h2 id="Animation-Jump-through"><a href="#Animation-Jump-through" class="headerlink" title="Animation: Jump-through"></a><a href="https://medium.com/google-developers/animation-jump-through-861f4f5b3de4#.k238d5tw2" target="_blank" rel="noopener">Animation: Jump-through</a></h2><p>用<code>AnimatedVectorDrawable</code>实现的一个很fancy的位置标志动画.</p>
+<h2 id="What-makes-Android-Apps-Testable"><a href="#What-makes-Android-Apps-Testable" class="headerlink" title="What makes Android Apps Testable"></a><a href="http://www.philosophicalhacker.com/post/what-makes-android-apps-testable/" target="_blank" rel="noopener">What makes Android Apps Testable</a></h2><p>如果程序的架构不适合测试, 那么硬要写一些测试很可能就会面临这样的局面: 要么就是发现没法写测试, 要么就是为了写测试而破坏了代码, 做了一些奇怪的事情.</p>
+<p>那么到底是什么样的程序才是适合写测试, 或者是可测试的呢?</p>
+<p>有一个有趣的定义是seam(接缝), 在接缝处你可以改变程序的行为, 而不用编辑当前程序. 如果程序没有接缝, 你将无法设置测试的初始条件和验证测试结果.</p>
+<p>本文中举了一个实际的例子, 开始的时候程序没有seam, 所以导致无法测试, 后来把静态方法改为实例的方法之后, 我们就可以通过Mockito来模拟行为, 设置条件, 最后通过验证某一方法的调用与否来进行验证.</p>
+<h2 id="DownloadManager-–-Part-3"><a href="#DownloadManager-–-Part-3" class="headerlink" title="DownloadManager – Part 3"></a><a href="https://blog.stylingandroid.com/downloadmanager-part-3/" target="_blank" rel="noopener">DownloadManager – Part 3</a></h2><p>用<code>DownloadManager</code>来处理下载.<br>首先它在设备上有自己的UI, 还有notification, 还有Downloads app能让用户管理下载文件.</p>
+<p> 我们可以查询到文件的一些信息, 比如MIME type, 文件尺寸, 下载状态等.</p>
+<p> 我们还可以用<code>getUriForDownloadedFile()</code>方法来获取一个URI, 配合MIME type, 发送Intent, 来打开一个相关的查看程序.</p>
+<p> 关于储存文件的合适地点:</p>
+<ul>
+<li>文件小, 仅app自己使用 -&gt; 私有数据区域(默认行为).</li>
+<li>文件大, 仅app自己使用 -&gt; 外部存储的私有数据区域(不需要权限). <code>setDestinationInExternalFilesDir()</code>.</li>
+<li>文件需要被别的应用访问 -&gt; 外部存储的共有区域, 需要<code>WRITE_EXTERNAL_STORAGE</code>权限. <code>setDestinationInExternalPublicDir()</code>.</li>
+</ul>
+<h2 id="OkHttp-is-quietly-retrying-requests-Is-your-API-ready"><a href="#OkHttp-is-quietly-retrying-requests-Is-your-API-ready" class="headerlink" title="OkHttp is quietly retrying requests. Is your API ready?"></a><a href="https://medium.com/inloop/okhttp-is-quietly-retrying-requests-is-your-api-ready-19489ef35ace#.ldxyyly7t" target="_blank" rel="noopener">OkHttp is quietly retrying requests. Is your API ready?</a></h2><p>在网路较慢或不稳定的时候, OkHttp有可能会重复发送请求, 直到成功. </p>
+<p>这个重试的逻辑是通过<a href="https://github.com/square/okhttp/blob/07309c1c7d9e296014268ebd155ebf7ef8679f6c/okhttp/src/main/java/okhttp3/internal/http/RetryAndFollowUpInterceptor.java" target="_blank" rel="noopener">RetryAndFollowUpInterceptor.java</a>实现的.</p>
+<p>那么, 我们可以关掉这个重试行为吗? 有一些issues就在讨论这个问题: <a href="https://github.com/square/okhttp/issues/1043" target="_blank" rel="noopener">Issue # 1043</a>. 后来有两个pull requests:  <a href="https://github.com/square/okhttp/pull/1259" target="_blank" rel="noopener">PR #1259</a>和<a href="https://github.com/square/okhttp/pull/2479" target="_blank" rel="noopener">PR #2479</a>改进了这个问题, 减少(但并没有消除)了不必要的retry请求.</p>
+<p>全局关闭重试行为: <code>OkHttpClient.Builder .retryOnConnectionFailure()</code>设置为false. 但是注意这样是很粗暴并具有破坏性的, 消除了retry逻辑带来的好处:</p>
+<ul>
+<li>如果Url有多个IP, 失败了一个还可以试另一个.</li>
+<li>连接池中的连接偶尔会time out, 减少这种意外导致的后果.</li>
+<li>可以顺次查找多个代理, 如果都失败了再转向直接连接.</li>
+</ul>
+<p><strong>解决真正的问题</strong>: 关闭静默重试在某些情形下有帮助, 但是其实它隐藏了真正的问题, 就是你的API是否是幂等的<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="noopener">idempotent</a>. server端可以根据客户端的GUID来检测重复, 这样server就不会多次执行操作, 会通知发送者.</p>
+<h2 id="File-scheme-is-now-not-allowed-with-Intent-on-N"><a href="#File-scheme-is-now-not-allowed-with-Intent-on-N" class="headerlink" title="File scheme is now not allowed with Intent on N"></a><a href="https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en" target="_blank" rel="noopener">File scheme is now not allowed with Intent on N</a></h2><p>Android N (Nougat, API 24)开始, 不再允许发送<code>file://</code>的Intent, 将会直接抛出<code>FileUriExposedException</code>异常.</p>
+<p>所以当你把<code>targetSdkVersion</code>改为24之后, 你必须要确保你修复了这些问题再发布.</p>
+<p>解决方案是什么呢? 用<code>content://</code>, 结合<code>FileProvider</code>:<br>首先在manifest里面声明:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"android.support.v4.content.FileProvider"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:authorities</span>=<span class="string">"$&#123;applicationId&#125;.provider"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:exported</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:grantUriPermissions</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">"android.support.FILE_PROVIDER_PATHS"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:resource</span>=<span class="string">"@xml/provider_paths"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">provider</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后在<code>res\xml\provider_paths.xml</code>文件里指明路径:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">paths</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">external-path</span> <span class="attr">name</span>=<span class="string">"external_files"</span> <span class="attr">path</span>=<span class="string">"."</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">paths</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后, 把<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Uri photoURI = Uri.fromFile(createImageFile());</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Uri photoURI = FileProvider.getUriForFile(MainActivity.<span class="keyword">this</span>,</span><br><span class="line">        BuildConfig.APPLICATION_ID + <span class="string">".provider"</span>,</span><br><span class="line">        createImageFile());</span><br></pre></td></tr></table></figure></p>
+<p>然后放在Intent里发送就好了.</p>
+<p>注意, 如果你的<code>targetSdkVersion</code>还没有更新到24, 那么即便是在Nougat的手机上<code>file://</code>也仍然是能正常使用的.</p>
+<h2 id="Use-Android-Studio-Gradle-Build-Cache-for-faster-builds"><a href="#Use-Android-Studio-Gradle-Build-Cache-for-faster-builds" class="headerlink" title="Use Android Studio Gradle Build Cache for faster builds"></a><a href="http://zeroturnaround.com/rebellabs/using-build-cache-in-android-studio-makes-gradle-build-faster/" target="_blank" rel="noopener">Use Android Studio Gradle Build Cache for faster builds</a></h2><p>Android Studio当前的最新版是2.3 Canary 2. 有一些新的改进, 但是其中最吸引人的是这个<a href="http://tools.android.com/tech-docs/build-cache" target="_blank" rel="noopener">build cache</a>. 它会使你的clean build更快.</p>
+<p>本文后面解析了build cache的工作原理.</p>
+<h2 id="Offline-App-Architecture-build-for-the-Next-Billion"><a href="#Offline-App-Architecture-build-for-the-Next-Billion" class="headerlink" title="Offline App Architecture, build for the Next Billion"></a><a href="https://hackernoon.com/so-you-want-to-develop-for-the-next-billion-9eb072c26bc8#.1zklimr3o" target="_blank" rel="noopener">Offline App Architecture, build for the Next Billion</a></h2><p>一个好的应用应该在网络不好甚至离线的时候仍然可以使用, 我们应该做些什么呢?</p>
+<ul>
+<li>确定连接状况. 可以使用这个<a href="https://github.com/facebook/network-connection-class" target="_blank" rel="noopener">network-connection-class
+</a>. 如果你使用的是Okhttp, 可以加一个Intercepter来进行采样.</li>
+<li>有效地缓存. 从网络取数据很慢并且昂贵, 所以有效地利用之前取到的数据是很关键的优化. (Cache-Control, Etag).</li>
+<li>在本地操作, 在全局同步. 等网络请求的时候可以先显示本地数据, 而不是loading.</li>
+<li>有效地处理线程.</li>
+<li>优化图片. 网络不好的时候先用RGB_565, 等网络变好了再取高质量图片.</li>
+<li>使用大Cookie. 尽量一次传输更多的数据(big cookie), 而不是频繁发送一些小请求(small cookies).</li>
+</ul>
+<h2 id="Writing-custom-lint-rules-and-integrating-them"><a href="#Writing-custom-lint-rules-and-integrating-them" class="headerlink" title="Writing custom lint rules and integrating them"></a><a href="https://medium.com/@mosesJay/writing-custom-lint-rules-and-integrating-them-with-android-studio-inspections-or-carefulnow-c54d72f00d30#.5y0o98bor" target="_blank" rel="noopener">Writing custom lint rules and integrating them</a></h2><p>如何创建自定义的lint规则.<br>事情的由来是作者发现了一个死循环调用, 然后他想做一个什么标记以防以后其他人会犯同样的错误.</p>
+<p>然后他想到的是<a href="https://developer.android.com/studio/write/annotations.html#adding-nullness" target="_blank" rel="noopener">@Nullable注解</a>, 的检查, 实质是依靠<a href="https://developer.android.com/studio/write/lint.html" target="_blank" rel="noopener">lint</a>来实现的.</p>
+<p>于是他自己写了一个自定义的lint规则, 来提示使用用他的注解<code>@CarefulNow</code>标记的方法时应当注意.<br>详细的实现方式请看原文.</p>
+<h2 id="Epoxy-Airbnb’s-View-Architecture-on-Android"><a href="#Epoxy-Airbnb’s-View-Architecture-on-Android" class="headerlink" title="Epoxy: Airbnb’s View Architecture on Android"></a><a href="https://medium.com/airbnb-engineering/epoxy-airbnbs-view-architecture-on-android-c3e1af150394#.uyvuayspc" target="_blank" rel="noopener">Epoxy: Airbnb’s View Architecture on Android</a></h2><p><a href="https://github.com/airbnb/epoxy" target="_blank" rel="noopener">epoxy</a>是一个Android库, 用来处理复杂的RecyclerView屏. 本文介绍了它在项目中实际的使用.</p>
+<h2 id="Adventures-with-FragmentStatePagerAdapter"><a href="#Adventures-with-FragmentStatePagerAdapter" class="headerlink" title="Adventures with FragmentStatePagerAdapter"></a><a href="https://medium.com/inloop/adventures-with-fragmentstatepageradapter-4f56a643f8e0#.qk6aygake" target="_blank" rel="noopener">Adventures with FragmentStatePagerAdapter</a></h2><p>可能有很多Android开发者对于<br><a href="https://developer.android.com/reference/android/support/v4/app/FragmentPagerAdapter.html" target="_blank" rel="noopener">FragmentPagerAdapter</a>和<a href="https://developer.android.com/reference/android/support/v4/app/FragmentStatePagerAdapter.html" target="_blank" rel="noopener">FragmentStatePagerAdapter</a>的区别不是太清楚或根本不知道, 本文作者就具体介绍了二者的不同.</p>
+<p><strong>基本不同</strong></p>
+<p><code>FragmentPagerAdapter</code><br>适用于项目个数确定的情形.<br>为什么呢? 因为一旦fragment的实例被创建, 它永远也不会从<code>FragmentManager</code>中移除, 直到Activity被销毁.</p>
+<p>当Fragment不见的时候, 仅仅是<code>onDestroyView()</code>被调用, 当fragment再次回来时, 再调用<code>onCreateView()</code>.</p>
+<p><code>FragmentStatePagerAdapter</code><br>当fragment的实例不可达的时候, 实例就会立即从<code>FragmentManager</code>移除. 被移除的fragment实例的状态由<code>FragmentStatePagerAdapter</code>保存, 当你再次回到该项的时候, fragment会重建新实例, 并且状态被恢复. 所以这种adapter适用于项目个数不确定或的情况.</p>
+<p>所以使用<code>FragmentPagerAdapter</code>的时候需要注意内存问题.</p>
+<p><strong>notifyDatasetChanged()的问题</strong>.</p>
+<p><code>notifyDataSetChanged()</code>是用来处理数据集变化的情况, 比如一些项目增删的情况. 这个方法不是用来刷新当前显示的Fragment或其中的Views的.</p>
+<p>文章中还有一些关于数据改变实现以及现有issue的讨论. 为了解决issue作者还发布了一个库<a href="https://github.com/inloop/UpdatableFragmentStatePagerAdapter" target="_blank" rel="noopener">UpdatableFragmentStatePagerAdapter</a>.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="KeepActivitiesTile"><a href="#KeepActivitiesTile" class="headerlink" title="KeepActivitiesTile"></a><a href="https://github.com/Stocard/KeepActivitiesTile" target="_blank" rel="noopener">KeepActivitiesTile</a></h2><p>一个quick settings tile来开启”Don’t keep activities”.</p>
+<h2 id="WaveLoading"><a href="#WaveLoading" class="headerlink" title="WaveLoading"></a><a href="https://github.com/race604/WaveLoading" target="_blank" rel="noopener">WaveLoading</a></h2><p>一个波形的loading图, 水面上涨代表loading程度.</p>
+<h2 id="coordinators"><a href="#coordinators" class="headerlink" title="coordinators"></a><a href="https://github.com/square/coordinators" target="_blank" rel="noopener">coordinators</a></h2><p>Simple MVWhatever for Android.</p>
+<h2 id="epoxy"><a href="#epoxy" class="headerlink" title="epoxy"></a><a href="https://github.com/airbnb/epoxy" target="_blank" rel="noopener">epoxy</a></h2><p>一个处理复杂的RecyclerView屏的库.</p>
+<h2 id="Screen-Record-for-Android"><a href="#Screen-Record-for-Android" class="headerlink" title="Screen Record for Android"></a><a href="https://gist.github.com/tasomaniac/93cefd97af13e2ea2b2f248affb373bd" target="_blank" rel="noopener">Screen Record for Android</a></h2><p>录屏脚本.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/AnimatedVectorDrawable/" rel="tag"># AnimatedVectorDrawable</a>
+              <a href="/tags/Test/" rel="tag"># Test</a>
+              <a href="/tags/Nougat/" rel="tag"># Nougat</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
+              <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
+              <a href="/tags/Android-7/" rel="tag"># Android 7</a>
+              <a href="/tags/Custom-View/" rel="tag"># Custom View</a>
+              <a href="/tags/JCenter/" rel="tag"># JCenter</a>
+              <a href="/tags/DownloadManager/" rel="tag"># DownloadManager</a>
+              <a href="/tags/OkHttp/" rel="tag"># OkHttp</a>
+              <a href="/tags/Offline-Architecture/" rel="tag"># Offline Architecture</a>
+              <a href="/tags/lint/" rel="tag"># lint</a>
+              <a href="/tags/FragmentPagerAdapter/" rel="tag"># FragmentPagerAdapter</a>
+              <a href="/tags/FragmentStatePagerAdapter/" rel="tag"># FragmentStatePagerAdapter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/React-Native/Java/2016/12/13/android-weekly-notes-issue-234/" rel="prev" title="Android Weekly Notes Issue 234">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 234
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/Design/2016/12/21/android-weekly-notes-issue-236/" rel="next" title="Android Weekly Notes Issue 236">
+      Android Weekly Notes Issue 236 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-235"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #235</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Make-an-android-custom-view-publish-and-open-source"><span class="nav-number">2.1.</span> <span class="nav-text">Make an android custom view, publish and open source </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Animation-Jump-through"><span class="nav-number">2.2.</span> <span class="nav-text">Animation: Jump-through</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-makes-Android-Apps-Testable"><span class="nav-number">2.3.</span> <span class="nav-text">What makes Android Apps Testable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DownloadManager-%E2%80%93-Part-3"><span class="nav-number">2.4.</span> <span class="nav-text">DownloadManager – Part 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OkHttp-is-quietly-retrying-requests-Is-your-API-ready"><span class="nav-number">2.5.</span> <span class="nav-text">OkHttp is quietly retrying requests. Is your API ready?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File-scheme-is-now-not-allowed-with-Intent-on-N"><span class="nav-number">2.6.</span> <span class="nav-text">File scheme is now not allowed with Intent on N</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-Android-Studio-Gradle-Build-Cache-for-faster-builds"><span class="nav-number">2.7.</span> <span class="nav-text">Use Android Studio Gradle Build Cache for faster builds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Offline-App-Architecture-build-for-the-Next-Billion"><span class="nav-number">2.8.</span> <span class="nav-text">Offline App Architecture, build for the Next Billion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Writing-custom-lint-rules-and-integrating-them"><span class="nav-number">2.9.</span> <span class="nav-text">Writing custom lint rules and integrating them</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Epoxy-Airbnb%E2%80%99s-View-Architecture-on-Android"><span class="nav-number">2.10.</span> <span class="nav-text">Epoxy: Airbnb’s View Architecture on Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Adventures-with-FragmentStatePagerAdapter"><span class="nav-number">2.11.</span> <span class="nav-text">Adventures with FragmentStatePagerAdapter</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#KeepActivitiesTile"><span class="nav-number">3.1.</span> <span class="nav-text">KeepActivitiesTile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WaveLoading"><span class="nav-number">3.2.</span> <span class="nav-text">WaveLoading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coordinators"><span class="nav-number">3.3.</span> <span class="nav-text">coordinators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoxy"><span class="nav-number">3.4.</span> <span class="nav-text">epoxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Screen-Record-for-Android"><span class="nav-number">3.5.</span> <span class="nav-text">Screen Record for Android</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/";
+    this.page.identifier = "Android/Android-Weekly/2016/12/16/android-weekly-notes-issue-235/";
+    this.page.title = "Android Weekly Notes Issue 235";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

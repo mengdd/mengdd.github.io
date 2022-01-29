@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Google官方MVP Sample代码解读关于Android程序的构架, 当前(2016.10)最流行的模式即为MVP模式, Google官方提供了Sample代码来展示这种模式的用法.Repo地址: android-architecture.本文为阅读官方sample代码的阅读笔记和分析.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android MVP模式 谷歌官方代码解读">
+<meta property="og:url" content="http://mengdd.github.io/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Google官方MVP Sample代码解读关于Android程序的构架, 当前(2016.10)最流行的模式即为MVP模式, Google官方提供了Sample代码来展示这种模式的用法.Repo地址: android-architecture.本文为阅读官方sample代码的阅读笔记和分析.">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/mvp.png">
+<meta property="og:image" content="http://mengdd.github.io/images/mvp-loaders.png">
+<meta property="og:image" content="http://mengdd.github.io/images/mvp-databinding.png">
+<meta property="og:image" content="http://mengdd.github.io/images/mvp-clean.png">
+<meta property="og:image" content="http://mengdd.github.io/images/mvp-contentproviders.png">
+<meta property="article:published_time" content="2016-10-22T11:11:27.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.992Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="MVP">
+<meta property="article:tag" content="Content Provider">
+<meta property="article:tag" content="Data Binding">
+<meta property="article:tag" content="MVC">
+<meta property="article:tag" content="MVVM">
+<meta property="article:tag" content="Clean Architecture">
+<meta property="article:tag" content="Loader">
+<meta property="article:tag" content="Dagger">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/mvp.png">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android MVP模式 谷歌官方代码解读 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android MVP模式 谷歌官方代码解读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-10-22 19:11:27" itemprop="dateCreated datePublished" datetime="2016-10-22T19:11:27+08:00">2016-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Architecture/" itemprop="url" rel="index"><span itemprop="name">Architecture</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/" class="post-meta-item leancloud_visitors" data-flag-title="Android MVP模式 谷歌官方代码解读" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Google官方MVP-Sample代码解读"><a href="#Google官方MVP-Sample代码解读" class="headerlink" title="Google官方MVP Sample代码解读"></a>Google官方MVP Sample代码解读</h1><p>关于Android程序的构架, 当前(2016.10)最流行的模式即为MVP模式, Google官方提供了Sample代码来展示这种模式的用法.<br>Repo地址: <a href="https://github.com/googlesamples/android-architecture" target="_blank" rel="noopener">android-architecture</a>.<br>本文为阅读官方sample代码的阅读笔记和分析.</p>
+<a id="more"></a>
+<p>官方Android Architecture Blueprints [beta]:<br>Android在如何组织和构架一个app方面提供了很大的灵活性, 但是同时这种自由也可能会导致app在测试, 维护, 扩展方面变得困难.</p>
+<p>Android Architecture Blueprints展示了可能的解决方案. 在这个项目里, 我们用各种不同的构架概念和工具实现了同一个应用(<a href="https://github.com/googlesamples/android-architecture/wiki/To-do-app-specification" target="_blank" rel="noopener">To Do App</a>). 主要的关注点在于代码结构, 构架, 测试和维护性.<br>但是请记住, 用这些模式构架app的方式有很多种, 要根据你的需要, 不要把这些当做绝对的典范.</p>
+<h2 id="MVP模式-概念"><a href="#MVP模式-概念" class="headerlink" title="MVP模式 概念"></a>MVP模式 概念</h2><p>之前有一个MVC模式: Model-View-Controller.<br>MVC模式 有两个主要的缺点: 首先, View持有Controller和Model的引用; 第二, 它没有把对UI逻辑的操作限制在单一的类里, 这个职能被Controller和View或者Model共享.<br>所以后来提出了MVP模式来克服这些缺点.</p>
+<p>MVP(Model-View-Presenter)模式:</p>
+<ul>
+<li>Model: 数据层. 负责与网络层和数据库层的逻辑交互.</li>
+<li>View: UI层. 显示数据, 并向Presenter报告用户行为.</li>
+<li>Presenter: 从Model拿数据, 应用到UI层, 管理UI的状态, 决定要显示什么, 响应用户的行为.<br>MVP模式的最主要优势就是耦合降低, Presenter变为纯Java的代码逻辑, 不再与Android Framework中的类如Activity, Fragment等关联, 便于写单元测试.</li>
+</ul>
+<h2 id="todo-mvp-基本的Model-View-Presenter架构"><a href="#todo-mvp-基本的Model-View-Presenter架构" class="headerlink" title="todo-mvp 基本的Model-View-Presenter架构"></a>todo-mvp 基本的Model-View-Presenter架构</h2><p>app中有四个功能:</p>
+<ul>
+<li>Tasks</li>
+<li>TaskDetail</li>
+<li>AddEditTask</li>
+<li>Statistics</li>
+</ul>
+<p>每个功能都有:</p>
+<ul>
+<li>一个定义View和Presenter接口的<code>Contract</code>接口;</li>
+<li>一个Activity用来管理fragment和presenter的创建;</li>
+<li>一个实现了View接口的Fragment;</li>
+<li>一个实现了Presenter接口的presenter.</li>
+</ul>
+<p><img src="/images/mvp.png" alt="mvp"></p>
+<h3 id="基类"><a href="#基类" class="headerlink" title="基类"></a>基类</h3><p>Presenter基类:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BasePresenter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>例子中这个<code>start()</code>方法都在Fragment的<code>onResume()</code>中调用.</p>
+<p>View基类:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BaseView</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPresenter</span><span class="params">(T presenter)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="View实现"><a href="#View实现" class="headerlink" title="View实现"></a>View实现</h3><ul>
+<li>Fragment作为每一个View接口的实现, 主要负责数据显示和在用户交互时调用Presenter, 但是例子代码中也是有一些直接操作的部分, 比如点击开启另一个Activity, 点击弹出菜单(菜单项的点击仍然是调用presenter的方法).</li>
+<li><p>View接口中定义的方法多为<code>showXXX()</code>方法. </p>
+</li>
+<li><p>Fragment作为View实现, 接口中定义了方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isActive</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> isAdded();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在Presenter中数据回调的方法中, 先检查View.isActive()是否为true, 来保证对Fragment的操作安全.</p>
+<h3 id="Presenter实现"><a href="#Presenter实现" class="headerlink" title="Presenter实现"></a>Presenter实现</h3><ul>
+<li>Presenter的<code>start()</code>方法在<code>onResume()</code>的时候调用, 这时候取初始数据; 其他方法均对应于用户在UI上的交互操作. </li>
+<li>New Presenter的操作是在每一个Activity的<code>onCreate()</code>里做的: 先添加了Fragment(View), 然后把它作为参数传给了Presenter. 这里并没有存Presenter的引用.</li>
+<li>Presenter的构造函数有两个参数, 一个是Model(Model类一般叫XXXRepository), 一个是View. 构造中先用guava的<code>checkNotNull()</code><br>检查两个参数是否为null, 然后赋值到字段; 之后再调用View的<code>setPresenter()</code>方法把Presenter传回View中引用.</li>
+</ul>
+<h3 id="Model实现细节"><a href="#Model实现细节" class="headerlink" title="Model实现细节"></a>Model实现细节</h3><ul>
+<li>Model只有一个类, 即<code>TasksRepository</code>. 它还是一个单例. 因为在这个应用的例子中, 我们操作的数据就这一份.</li>
+</ul>
+<p>它由手动实现的注入类<code>Injection</code>类提供:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Injection</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TasksRepository <span class="title">provideTasksRepository</span><span class="params">(@NonNull Context context)</span> </span>&#123;</span><br><span class="line">        checkNotNull(context);</span><br><span class="line">        <span class="keyword">return</span> TasksRepository.getInstance(FakeTasksRemoteDataSource.getInstance(),</span><br><span class="line">                TasksLocalDataSource.getInstance(context));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>构造如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">TasksRepository</span><span class="params">(@NonNull TasksDataSource tasksRemoteDataSource,</span></span></span><br><span class="line"><span class="function"><span class="params">                        @NonNull TasksDataSource tasksLocalDataSource)</span> </span>&#123;</span><br><span class="line">    mTasksRemoteDataSource = checkNotNull(tasksRemoteDataSource);</span><br><span class="line">    mTasksLocalDataSource = checkNotNull(tasksLocalDataSource);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>数据分为local和remote两大部分. local部分负责数据库的操作, remote部分负责网络. Model类中还有一个内存缓存.</li>
+<li><code>TasksDataSource</code>是一个接口. 接口中定义了Presenter查询数据的回调接口, 还有一些增删改查的方法.</li>
+</ul>
+<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>MVP模式的主要优势就是便于为业务逻辑加上单元测试.<br>本例子中的单元测试是给<code>TasksRepository</code>和四个feature的Presenter加的.<br>Presenter的单元测试, Mock了View和Model, 测试调用逻辑, 如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AddEditTaskPresenterTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> TasksRepository mTasksRepository;</span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> AddEditTaskContract.View mAddEditTaskView;</span><br><span class="line">    <span class="keyword">private</span> AddEditTaskPresenter mAddEditTaskPresenter;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setupMocksAndView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MockitoAnnotations.initMocks(<span class="keyword">this</span>);</span><br><span class="line">        when(mAddEditTaskView.isActive()).thenReturn(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveNewTaskToRepository_showsSuccessMessageUi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mAddEditTaskPresenter = <span class="keyword">new</span> AddEditTaskPresenter(<span class="string">"1"</span>, mTasksRepository, mAddEditTaskView);</span><br><span class="line"></span><br><span class="line">        mAddEditTaskPresenter.saveTask(<span class="string">"New Task Title"</span>, <span class="string">"Some Task Description"</span>);</span><br><span class="line"></span><br><span class="line">        verify(mTasksRepository).saveTask(any(Task<span class="class">.<span class="keyword">class</span>))</span>; <span class="comment">// saved to the model</span></span><br><span class="line">        verify(mAddEditTaskView).showTasksList(); <span class="comment">// shown in the UI</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="todo-mvp-loaders-用Loader取数据的MVP"><a href="#todo-mvp-loaders-用Loader取数据的MVP" class="headerlink" title="todo-mvp-loaders 用Loader取数据的MVP"></a>todo-mvp-loaders 用Loader取数据的MVP</h2><p>基于上一个例子todo-mvp, 只不过这里改为用Loader来从Repository得到数据.<br><img src="/images/mvp-loaders.png" alt="todo-mvp-loaders"></p>
+<p>使用Loader的优势:</p>
+<ul>
+<li>去掉了回调, 自动实现数据的异步加载;</li>
+<li>当内容改变时回调出新数据;</li>
+<li>当应用因为configuration变化而重建loader时, 自动重连到上一个loader.</li>
+</ul>
+<h3 id="Diff-with-todo-mvp"><a href="#Diff-with-todo-mvp" class="headerlink" title="Diff with todo-mvp"></a>Diff with todo-mvp</h3><p>既然是基于todo-mvp, 那么之前说过的那些就不再重复, 我们来看一下都有什么改动:<br><code>git difftool -d todo-mvp</code></p>
+<p>添加了两个类:<br><code>TaskLoader</code>和<code>TasksLoader</code>.</p>
+<p>在Activity中new Loader类, 然后传入Presenter的构造方法.</p>
+<p><code>Contract</code>中View接口删掉了<code>isActive()</code>方法, Presenter删掉了<code>populateTask()</code>方法.</p>
+<h3 id="数据获取"><a href="#数据获取" class="headerlink" title="数据获取"></a>数据获取</h3><p>添加的两个新类是<code>TaskLoader</code>和<code>TasksLoader</code>, 都继承于<code>AsyncTaskLoader</code>, 只不过数据的类型一个是单数, 一个是复数.</p>
+<p><code>AsyncTaskLoader</code>是基于<code>ModernAsyncTask</code>, 类似于<code>AsyncTask</code>,<br>把load数据的操作放在<code>loadInBackground()</code>里即可, <code>deliverResult()</code>方法会将结果返回到主线程, 我们在listener的<code>onLoadFinished()</code>里面就可以接到返回的数据了, (在这个例子中是几个Presenter实现了这个接口).</p>
+<p><code>TasksDataSource</code>接口的这两个方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;Task&gt; <span class="title">getTasks</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Task <span class="title">getTask</span><span class="params">(@NonNull String taskId)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>都变成了同步方法, 因为它们是在<code>loadInBackground()</code>方法里被调用.</p>
+<p>Presenter中保存了<code>Loader</code>和<code>LoaderManager</code>, 在<code>start()</code>方法里<code>initLoader</code>, 然后<code>onCreateLoader</code>返回构造传入的那个loader.<br><code>onLoadFinished()</code>里面调用View的方法. 此时Presenter实现<code>LoaderManager.LoaderCallbacks</code>.</p>
+<h3 id="数据改变监听"><a href="#数据改变监听" class="headerlink" title="数据改变监听"></a>数据改变监听</h3><p><code>TasksRepository</code>类中定义了observer的接口, 保存了一个listener的list:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;TasksRepositoryObserver&gt; mObservers = <span class="keyword">new</span> ArrayList&lt;TasksRepositoryObserver&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TasksRepositoryObserver</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onTasksChanged</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>每次有数据改动需要刷新UI时就调用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">notifyContentObserver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (TasksRepositoryObserver observer : mObservers) &#123;</span><br><span class="line">        observer.onTasksChanged();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在两个Loader里注册和注销自己为<code>TasksRepository</code>的listener: 在<code>onStartLoading()</code>里add, <code>onReset()</code>里面remove方法.<br>这样每次<code>TasksRepository</code>有数据变化, 作为listener的两个Loader都会收到通知, 然后force load:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTasksChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isStarted()) &#123;</span><br><span class="line">        forceLoad();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样<code>onLoadFinished()</code>方法就会被调用.</p>
+<h2 id="todo-databinding"><a href="#todo-databinding" class="headerlink" title="todo-databinding"></a>todo-databinding</h2><p>基于todo-mvp, 使用<a href="http://developer.android.com/tools/data-binding/guide.html#data_objects" target="_blank" rel="noopener">Data Binding library</a>来显示数据, 把UI和动作绑定起来.</p>
+<p>说到ViewModel, 还有一种模式叫MVVM(Model-View-ViewModel)模式.<br>这个例子并没有严格地遵循<code>Model-View-ViewModel</code>模式或者<code>Model-View-Presenter</code>模式, 因为它既用了ViewModel又用了Presenter.</p>
+<p><img src="/images/mvp-databinding.png" alt="todo-databinding"></p>
+<p>Data Binding Library让UI元素和数据模型绑定:</p>
+<ul>
+<li>layout文件用来绑定数据和UI元素;</li>
+<li>事件和action handler绑定;</li>
+<li>数据变为可观察的, 需要的时候可以自动更新.</li>
+</ul>
+<h3 id="Diff-with-todo-mvp-1"><a href="#Diff-with-todo-mvp-1" class="headerlink" title="Diff with todo-mvp"></a>Diff with todo-mvp</h3><p>添加了几个类:</p>
+<ul>
+<li><code>StatisticsViewModel</code>;</li>
+<li><code>SwipeRefreshLayoutDataBinding</code>;</li>
+<li><code>TasksItemActionHandler</code>;</li>
+<li><code>TasksViewModel</code>;</li>
+</ul>
+<p>从几个View的接口可以看出方法数减少了, 原来需要多个showXXX()方法, 现在只需要一两个方法就可以了.</p>
+<h3 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h3><p>以<code>TasksDetailFragment</code>为例:<br>以前在todo-mvp里需要这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreateView</span><span class="params">(...)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    mDetailDescription = (TextView)</span><br><span class="line">root.findViewById(R.id.task_detail_description);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showDescription</span><span class="params">(String description)</span> </span>&#123;</span><br><span class="line">    mDetailDescription.setVisibility(View.VISIBLE);</span><br><span class="line">    mDetailDescription.setText(description);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在只需要这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    View view = inflater.inflate(R.layout.taskdetail_frag, container, <span class="keyword">false</span>);</span><br><span class="line">    mViewDataBinding = TaskdetailFragBinding.bind(view);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showTask</span><span class="params">(Task task)</span> </span>&#123;</span><br><span class="line">    mViewDataBinding.setTask(task);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为所有数据绑定的操作都写在了xml里:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/task_detail_description"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">...</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">"@&#123;task.description&#125;"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="事件绑定"><a href="#事件绑定" class="headerlink" title="事件绑定"></a>事件绑定</h3><p>数据绑定省去了<code>findViewById()</code>和<code>setText()</code>, 事件绑定则是省去了<code>setOnClickListener()</code>.</p>
+<p>比如<code>taskdetail_frag.xml</code>中的<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">CheckBox</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/task_detail_complete"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">...</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:checked</span>=<span class="string">"@&#123;task.completed&#125;"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:onCheckedChanged</span>=<span class="string">"@&#123;(cb, isChecked) -&gt;</span></span></span><br><span class="line"><span class="tag"><span class="string">    presenter.completeChanged(task, isChecked)&#125;"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>其中Presenter是这时候传入的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityCreated</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onActivityCreated(savedInstanceState);</span><br><span class="line">    mViewDataBinding.setPresenter(mPresenter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="数据监听"><a href="#数据监听" class="headerlink" title="数据监听"></a>数据监听</h3><p>在显示List数据的界面<code>TasksFragment</code>, 仅需要知道数据是否为空, 所以它使用了<code>TasksViewModel</code>来给layout提供信息, 当尺寸设定的时候, 只有一些相关的属性被通知, 和这些属性绑定的UI元素被更新.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTaskListSize</span><span class="params">(<span class="keyword">int</span> taskListSize)</span> </span>&#123;</span><br><span class="line">    mTaskListSize = taskListSize;</span><br><span class="line">    notifyPropertyChanged(BR.noTaskIconRes);</span><br><span class="line">    notifyPropertyChanged(BR.noTasksLabel);</span><br><span class="line">    notifyPropertyChanged(BR.currentFilteringLabel);</span><br><span class="line">    notifyPropertyChanged(BR.notEmpty);</span><br><span class="line">    notifyPropertyChanged(BR.tasksAddViewVisible);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="其他实现细节"><a href="#其他实现细节" class="headerlink" title="其他实现细节"></a>其他实现细节</h3><ul>
+<li><p>Adapter中的Data Binding, 见<code>TasksFragment</code>中的<code>TasksAdapter</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> i, View view, ViewGroup viewGroup)</span> </span>&#123;</span><br><span class="line">    Task task = getItem(i);</span><br><span class="line">    TaskItemBinding binding;</span><br><span class="line">    <span class="keyword">if</span> (view == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// Inflate</span></span><br><span class="line">        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create the binding</span></span><br><span class="line">        binding = TaskItemBinding.inflate(inflater, viewGroup, <span class="keyword">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        binding = DataBindingUtil.getBinding(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// We might be recycling the binding for another task, so update it.</span></span><br><span class="line">    <span class="comment">// Create the action handler for the view</span></span><br><span class="line">    TasksItemActionHandler itemActionHandler =</span><br><span class="line">            <span class="keyword">new</span> TasksItemActionHandler(mUserActionsListener);</span><br><span class="line">    binding.setActionHandler(itemActionHandler);</span><br><span class="line">    binding.setTask(task);</span><br><span class="line">    binding.executePendingBindings();</span><br><span class="line">    <span class="keyword">return</span> binding.getRoot();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Presenter可能会被包在ActionHandler中, 比如<code>TasksItemActionHandler</code>.</p>
+</li>
+<li>ViewModel也可以作为View接口的实现, 比如<code>StatisticsViewModel</code>.</li>
+<li><code>SwipeRefreshLayoutDataBinding</code>类定义的<code>onRefresh()</code>动作绑定.</li>
+</ul>
+<h2 id="todo-mvp-clean"><a href="#todo-mvp-clean" class="headerlink" title="todo-mvp-clean"></a>todo-mvp-clean</h2><p>这个例子是基于Clean Architecture的原则:<br><a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank" rel="noopener">The Clean Architecture</a>.<br>关于Clean Architecture, 还可以看这个Sample App: <a href="https://github.com/android10/Android-CleanArchitecture" target="_blank" rel="noopener">Android-CleanArchitecture</a>.</p>
+<p>这个例子在todo-mvp的基础上, 加了一层domain层, 把应用分为了三层:<br><img src="/images/mvp-clean.png" alt="mvp-clean"></p>
+<p>Domain: 盛放了业务逻辑, domain层包含use cases或者interactors, 被应用的presenters使用. 这些use cases代表了所有从presentation层可能进行的行为.</p>
+<p><strong>关键概念</strong><br>和基本的mvp sample最大的不同就是domain层和use cases. 从presenters中抽离出来的domain层有助于避免presenter中的代码重复.</p>
+<p>Use cases定义了app需要的操作, 这样增加了代码的可读性, 因为类名反映了目的.</p>
+<p>Use cases对于操作的复用来说也很好. 比如<code>CompleteTask</code>在两个Presenter中都用到了.</p>
+<p>Use cases的执行是在后台线程, 使用<a href="http://www.oodesign.com/command-pattern.html" target="_blank" rel="noopener">command pattern</a>. 这样domain层对于Android SDK和其他第三方库来说都是完全解耦的.</p>
+<h3 id="Diff-with-todo-mvp-2"><a href="#Diff-with-todo-mvp-2" class="headerlink" title="Diff with todo-mvp"></a>Diff with todo-mvp</h3><p>每一个feature的包下都新增了domain层, 里面包含了子目录model和usecase等.</p>
+<p><code>UseCase</code>是一个抽象类, 定义了domain层的基础接口点.<br><code>UseCaseHandler</code>用于执行use cases, 是一个单例, 实现了command pattern.<br><code>UseCaseThreadPoolScheduler</code>实现了<code>UseCaseScheduler</code>接口, 定义了use cases执行的线程池, 在后台线程异步执行, 最后把结果返回给主线程.<br><code>UseCaseScheduler</code>通过构造传给<code>UseCaseHandler</code>.<br>测试中用了<code>UseCaseScheduler</code>的另一个实现<code>TestUseCaseScheduler</code>, 所有的执行变为同步的.</p>
+<p><code>Injection</code>类中提供了多个Use cases的依赖注入, 还有<code>UseCaseHandler</code>用来执行use cases.</p>
+<p>Presenter的实现中, 多个use cases和<code>UsseCaseHandler</code>都由构造传入, 执行动作, 比如更新一个task:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateTask</span><span class="params">(String title, String description)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mTaskId == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"updateTask() was called but task is new."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Task newTask = <span class="keyword">new</span> Task(title, description, mTaskId);</span><br><span class="line">    mUseCaseHandler.execute(mSaveTask, <span class="keyword">new</span> SaveTask.RequestValues(newTask),</span><br><span class="line">            <span class="keyword">new</span> UseCase.UseCaseCallback&lt;SaveTask.ResponseValue&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(SaveTask.ResponseValue response)</span> </span>&#123;</span><br><span class="line">                    <span class="comment">// After an edit, go back to the list.</span></span><br><span class="line">                    mAddTaskView.showTasksList();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    showSaveError();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="todo-mvp-dagger"><a href="#todo-mvp-dagger" class="headerlink" title="todo-mvp-dagger"></a>todo-mvp-dagger</h2><p><strong>关键概念</strong>:<br><a href="http://google.github.io/dagger/" target="_blank" rel="noopener">dagger2</a> 是一个静态的编译期依赖注入框架.<br>这个例子中改用dagger2实现依赖注入. 这样做的主要好处就是在测试的时候我们可以用替代的modules. 这在编译期间通过flavors就可以完成, 或者在运行期间使用一些调试面板来设置.</p>
+<h3 id="Diff-with-todo-mvp-3"><a href="#Diff-with-todo-mvp-3" class="headerlink" title="Diff with todo-mvp"></a>Diff with todo-mvp</h3><p><code>Injection</code>类被删除了.<br>添加了5个Component, 四个feature各有一个, 另外数据对应一个: <code>TasksRepositoryComponent</code>, 这个Component被保存在Application里.</p>
+<p>数据的module: <code>TasksRepositoryModule</code>在<code>mock</code>和<code>prod</code>目录下各有一个.</p>
+<p>对于每一个feature的Presenter的注入是这样实现的:<br>首先, 把Presenter的构造函数标记为@Inject, 然后在Activity中构造component并注入到字段:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Inject</span> AddEditTaskPresenter mAddEditTasksPresenter;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.addtask_act);</span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Create the presenter</span></span><br><span class="line">    DaggerAddEditTaskComponent.builder()</span><br><span class="line">            .addEditTaskPresenterModule(</span><br><span class="line">                    <span class="keyword">new</span> AddEditTaskPresenterModule(addEditTaskFragment, taskId))</span><br><span class="line">            .tasksRepositoryComponent(</span><br><span class="line">                    ((ToDoApplication) getApplication()).getTasksRepositoryComponent()).build()</span><br><span class="line">            .inject(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个module里provide了view和taskId:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AddEditTaskPresenterModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AddEditTaskContract.View mView;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String mTaskId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AddEditTaskPresenterModule</span><span class="params">(AddEditTaskContract.View view, @Nullable String taskId)</span> </span>&#123;</span><br><span class="line">        mView = view;</span><br><span class="line">        mTaskId = taskId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    AddEditTaskContract.<span class="function">View <span class="title">provideAddEditTaskContractView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mView;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="function">String <span class="title">provideTaskId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mTaskId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意原来构造方法里调用的setPresenter方法改为用方法注入实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Method injection is used here to safely reference &#123;<span class="doctag">@code</span> this&#125; after the object is created.</span></span><br><span class="line"><span class="comment"> * For more information, see Java Concurrency in Practice.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Inject</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setupListeners</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mAddTaskView.setPresenter(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="todo-mvp-contentproviders"><a href="#todo-mvp-contentproviders" class="headerlink" title="todo-mvp-contentproviders"></a>todo-mvp-contentproviders</h2><p>这个例子是基于todo-mvp-loaders的, 用content provider来获取repository中的数据.<br><img src="/images/mvp-contentproviders.png" alt="mvp-contentproviders"><br>使用<a href="https://developer.android.com/guide/topics/providers/content-providers.html" target="_blank" rel="noopener">Content Provider</a>的优势是:</p>
+<ul>
+<li>管理了结构化数据的访问;</li>
+<li>Content Provider是跨进程访问数据的标准接口.</li>
+</ul>
+<h3 id="Diff-with-todo-mvp-loaders"><a href="#Diff-with-todo-mvp-loaders" class="headerlink" title="Diff with todo-mvp-loaders"></a>Diff with todo-mvp-loaders</h3><p>注意这个例子是唯一一个不基于最基本的todo-mvp, 而是基于todo-mvp-loaders. (但是我觉得也可以认为是直接从todo-mvp转化的.)<br>看diff: <code>git difftool -d todo-mvp-loaders</code>.</p>
+<p>去掉了<code>TaskLoader</code>和<code>TasksLoader</code>. (回归到了基本的todo-mvp).</p>
+<p><code>TasksRepository</code>中的方法不是同步方法, 而是异步加callback的形式. (回归到了基本的todo-mvp). </p>
+<p><code>TasksLocalDataSource</code>中的读方法都变成了空实现, 因为Presenter现在可以自动收到数据更新.</p>
+<p>新增<code>LoaderProvider</code>用来创建Cursor Loaders, 有两个方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回特定fiter下或全部的数据</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Loader&lt;Cursor&gt; <span class="title">createFilteredTasksLoader</span><span class="params">(TaskFilter taskFilter)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 返回特定id的数据</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Loader&lt;Cursor&gt; <span class="title">createTaskLoader</span><span class="params">(String taskId)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>其中第一个方法的参数<code>TaskFilter</code>, 用来指定过滤的selection条件, 也是新增类.</p>
+<p><code>LoaderManager</code>和<code>LoaderProvider</code>都是由构造传入Presenter, 在回调<code>onTaskLoaded()</code>和<code>onTasksLoaded()</code>中init loader. </p>
+<p>在<code>TasksPresenter</code>中还做了判断, 是init loader还是restart loader:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTasksLoaded</span><span class="params">(List&lt;Task&gt; tasks)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// we don't care about the result since the CursorLoader will load the data for us</span></span><br><span class="line">    <span class="keyword">if</span> (mLoaderManager.getLoader(TASKS_LOADER) == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mLoaderManager.initLoader(TASKS_LOADER, mCurrentFiltering.getFilterExtras(), <span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mLoaderManager.restartLoader(TASKS_LOADER, mCurrentFiltering.getFilterExtras(), <span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">其中initLoader()和restartLoader()时传入的第二个参数是一个bundle, 用来指明过滤类型, 即是带selection条件的数据库查询.</span><br><span class="line"></span><br><span class="line">同样是在onLoadFinshed()的时候做View处理, 以`TaskDetailPresenter`为例:</span><br><span class="line">```java</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLoadFinished</span><span class="params">(Loader&lt;Cursor&gt; loader, Cursor data)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (data.moveToLast()) &#123;</span><br><span class="line">            onDataLoaded(data);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            onDataEmpty();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        onDataNotAvailable();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据类Task中新增了静态方法从Cursor转为Task, 这个方法在Presenter的<code>onLoadFinished()</code>和测试中都用到了.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Task <span class="title">from</span><span class="params">(Cursor cursor)</span> </span>&#123;</span><br><span class="line">    String entryId = cursor.getString(cursor.getColumnIndexOrThrow(</span><br><span class="line">            TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID));</span><br><span class="line">    String title = cursor.getString(cursor.getColumnIndexOrThrow(</span><br><span class="line">            TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE));</span><br><span class="line">    String description = cursor.getString(cursor.getColumnIndexOrThrow(</span><br><span class="line">            TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION));</span><br><span class="line">    <span class="keyword">boolean</span> completed = cursor.getInt(cursor.getColumnIndexOrThrow(</span><br><span class="line">            TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED)) == <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Task(title, description, entryId, completed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外一些细节:<br>数据库中的内存cache被删了.<br>Adapter改为继承于<code>CursorAdapter</code>.</p>
+<h3 id="单元测试-1"><a href="#单元测试-1" class="headerlink" title="单元测试"></a>单元测试</h3><p>新增了<code>MockCursorProvider</code>类, 用于在单元测试中提供数据.<br>其内部类<code>TaskMockCursor</code> mock了Cursor数据.<br>Presenter的测试中仍然mock了所有构造传入的参数, 然后准备了mock数据, 测试的逻辑主要还是拿到数据后的view操作, 比如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadAllTasksFromRepositoryAndLoadIntoView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// When the loader finishes with tasks and filter is set to all</span></span><br><span class="line">    when(mBundle.getSerializable(TaskFilter.KEY_TASK_FILTER)).thenReturn(TasksFilterType.ALL_TASKS);</span><br><span class="line">    TaskFilter taskFilter = <span class="keyword">new</span> TaskFilter(mBundle);</span><br><span class="line"></span><br><span class="line">    mTasksPresenter.setFiltering(taskFilter);</span><br><span class="line"></span><br><span class="line">    mTasksPresenter.onLoadFinished(mock(Loader<span class="class">.<span class="keyword">class</span>), <span class="title">mAllTasksCursor</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Then progress indicator is hidden and all tasks are shown in UI</span></span><br><span class="line">    verify(mTasksView).setLoadingIndicator(<span class="keyword">false</span>);</span><br><span class="line">    verify(mTasksView).showTasks(mShowTasksArgumentCaptor.capture());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="todo-mvp-rxjava"><a href="#todo-mvp-rxjava" class="headerlink" title="todo-mvp-rxjava"></a>todo-mvp-rxjava</h2><p>关于这个例子, 之前看过作者的文章: <a href="https://upday.github.io/blog/model-view-presenter/" target="_blank" rel="noopener">Android Architecture Patterns Part 2:<br>Model-View-Presenter</a>,<br>这个文章上过Android Weekly Issue #226.</p>
+<p>这个例子也是基于todo-mvp, 使用RxJava处理了presenter和数据层之间的通信.</p>
+<h3 id="MVP基本接口改变"><a href="#MVP基本接口改变" class="headerlink" title="MVP基本接口改变"></a>MVP基本接口改变</h3><p>BasePresenter接口改为:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BasePresenter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">subscribe</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unsubscribe</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>View在<code>onResume()</code>的时候调用Presenter的<code>subscribe()</code>; 在onPause()的时候调用presenter的<code>unsubscribe()</code>.</p>
+<p>如果View接口的实现不是Fragment或Activity, 而是Android的自定义View, 那么在Android View的<code>onAttachedToWindow()</code>和<code>onDetachedFromWindow()</code>方法里分别调用这两个方法.</p>
+<p>Presenter中保存了:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> CompositeSubscription mSubscriptions;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>subscribe()</code>的时候, <code>mSubscriptions.add(subscription);</code>;<br>在<code>unsubscribe()</code>的时候, <code>mSubscriptions.clear();</code> .</p>
+<h3 id="Diff-with-todo-mvp-4"><a href="#Diff-with-todo-mvp-4" class="headerlink" title="Diff with todo-mvp"></a>Diff with todo-mvp</h3><p>数据层暴露了RxJava的<code>Observable</code>流作为获取数据的方式, <code>TasksDataSource</code>接口中的方法变成了这样:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable&lt;List&lt;Task&gt;&gt; getTasks();</span><br><span class="line"></span><br><span class="line"><span class="function">Observable&lt;Task&gt; <span class="title">getTask</span><span class="params">(@NonNull String taskId)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>callback接口被删了, 因为不需要了.</p>
+<p><code>TasksLocalDataSource</code>中的实现用了<a href="https://github.com/square/sqlbrite" target="_blank" rel="noopener">SqlBrite</a>, 从数据库中查询出来的结果很容易地变成了流:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Observable&lt;List&lt;Task&gt;&gt; getTasks() &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> mDatabaseHelper.createQuery(TaskEntry.TABLE_NAME, sql)</span><br><span class="line">            .mapToList(mTaskMapperFunction);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>TasksRepository</code>中整合了local和remote的data, 最后把<code>Observable</code>返回给消费者(Presenters和Unit Tests). 这里用了<code>.concat()</code>和<code>.first()</code>操作符.</p>
+<p>Presenter订阅TasksRepository的Observable, 然后决定View的操作, 而且Presenter也负责线程的调度.<br>简单的比如<code>AddEditTaskPresenter</code>中:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">populateTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mTaskId == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"populateTask() was called but task is new."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Subscription subscription = mTasksRepository</span><br><span class="line">            .getTask(mTaskId)</span><br><span class="line">            .subscribeOn(mSchedulerProvider.computation())</span><br><span class="line">            .observeOn(mSchedulerProvider.ui())</span><br><span class="line">            .subscribe(<span class="keyword">new</span> Observer&lt;Task&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (mAddTaskView.isActive()) &#123;</span><br><span class="line">                        mAddTaskView.showEmptyTaskError();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(Task task)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (mAddTaskView.isActive()) &#123;</span><br><span class="line">                        mAddTaskView.setTitle(task.getTitle());</span><br><span class="line">                        mAddTaskView.setDescription(task.getDescription());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">    mSubscriptions.add(subscription);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>StatisticsPresenter</code>负责统计数据的显示, <code>TasksPresenter</code>负责过滤显示所有数据, 里面的RxJava操作符运用比较多, 可以看到链式操作的特点.</p>
+<p>关于线程调度, 定义了<code>BaseSchedulerProvider</code>接口, 通过构造函数传给Presenter, 然后实现用<code>SchedulerProvider</code>, 测试用<code>ImmediateSchedulerProvider</code>. 这样方便测试.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/MVP/" rel="tag"># MVP</a>
+              <a href="/tags/Content-Provider/" rel="tag"># Content Provider</a>
+              <a href="/tags/Data-Binding/" rel="tag"># Data Binding</a>
+              <a href="/tags/MVC/" rel="tag"># MVC</a>
+              <a href="/tags/MVVM/" rel="tag"># MVVM</a>
+              <a href="/tags/Clean-Architecture/" rel="tag"># Clean Architecture</a>
+              <a href="/tags/Loader/" rel="tag"># Loader</a>
+              <a href="/tags/Dagger/" rel="tag"># Dagger</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2016/10/21/android-weekly-notes-issue-227/" rel="prev" title="Android Weekly Notes Issue 227">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 227
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Nougat/2016/10/25/nougat-app-shortcuts/" rel="next" title="Android 7.1 App Shortcuts使用">
+      Android 7.1 App Shortcuts使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Google%E5%AE%98%E6%96%B9MVP-Sample%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">Google官方MVP Sample代码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP%E6%A8%A1%E5%BC%8F-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">MVP模式 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-%E5%9F%BA%E6%9C%AC%E7%9A%84Model-View-Presenter%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">todo-mvp 基本的Model-View-Presenter架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%B1%BB"><span class="nav-number">1.2.1.</span> <span class="nav-text">基类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">View实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Presenter%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">Presenter实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.2.4.</span> <span class="nav-text">Model实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.5.</span> <span class="nav-text">单元测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-loaders-%E7%94%A8Loader%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84MVP"><span class="nav-number">1.3.</span> <span class="nav-text">todo-mvp-loaders 用Loader取数据的MVP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp"><span class="nav-number">1.3.1.</span> <span class="nav-text">Diff with todo-mvp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96"><span class="nav-number">1.3.2.</span> <span class="nav-text">数据获取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B9%E5%8F%98%E7%9B%91%E5%90%AC"><span class="nav-number">1.3.3.</span> <span class="nav-text">数据改变监听</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-databinding"><span class="nav-number">1.4.</span> <span class="nav-text">todo-databinding</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">Diff with todo-mvp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A"><span class="nav-number">1.4.2.</span> <span class="nav-text">数据绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A"><span class="nav-number">1.4.3.</span> <span class="nav-text">事件绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9B%91%E5%90%AC"><span class="nav-number">1.4.4.</span> <span class="nav-text">数据监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.4.5.</span> <span class="nav-text">其他实现细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-clean"><span class="nav-number">1.5.</span> <span class="nav-text">todo-mvp-clean</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">Diff with todo-mvp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-dagger"><span class="nav-number">1.6.</span> <span class="nav-text">todo-mvp-dagger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp-3"><span class="nav-number">1.6.1.</span> <span class="nav-text">Diff with todo-mvp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-contentproviders"><span class="nav-number">1.7.</span> <span class="nav-text">todo-mvp-contentproviders</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp-loaders"><span class="nav-number">1.7.1.</span> <span class="nav-text">Diff with todo-mvp-loaders</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-1"><span class="nav-number">1.7.2.</span> <span class="nav-text">单元测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#todo-mvp-rxjava"><span class="nav-number">1.8.</span> <span class="nav-text">todo-mvp-rxjava</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP%E5%9F%BA%E6%9C%AC%E6%8E%A5%E5%8F%A3%E6%94%B9%E5%8F%98"><span class="nav-number">1.8.1.</span> <span class="nav-text">MVP基本接口改变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Diff-with-todo-mvp-4"><span class="nav-number">1.8.2.</span> <span class="nav-text">Diff with todo-mvp</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/";
+    this.page.identifier = "Android/Architecture/2016/10/22/android-architecture-google-samples-analysis/";
+    this.page.title = "Android MVP模式 谷歌官方代码解读";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

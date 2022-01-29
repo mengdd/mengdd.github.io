@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="网络使用和电池消耗 原因和改进你的app发送的网络请求是电量消耗的主要原因, 本文先教你如何使用IDE工具来分类分析应用中的网络请求, 之后按照三种不同的网络请求分类, 分别给出优化建议, 减少电量消耗. 本文是对Android官网Reducing Network Battery Drain系列文章的翻译, 略有删减, 可以作为摘要看看. (翻译不当的地方还请见谅).">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络使用和电池消耗 原因和改进">
+<meta property="og:url" content="http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="网络使用和电池消耗 原因和改进你的app发送的网络请求是电量消耗的主要原因, 本文先教你如何使用IDE工具来分类分析应用中的网络请求, 之后按照三种不同的网络请求分类, 分别给出优化建议, 减少电量消耗. 本文是对Android官网Reducing Network Battery Drain系列文章的翻译, 略有删减, 可以作为摘要看看. (翻译不当的地方还请见谅).">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-04-11T09:39:56.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.998Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="Battery">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>网络使用和电池消耗 原因和改进 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络使用和电池消耗 原因和改进
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-04-11 17:39:56" itemprop="dateCreated datePublished" datetime="2017-04-11T17:39:56+08:00">2017-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/2017/04/11/network-usage-and-battery-consumption/" class="post-meta-item leancloud_visitors" data-flag-title="网络使用和电池消耗 原因和改进" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/2017/04/11/network-usage-and-battery-consumption/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/2017/04/11/network-usage-and-battery-consumption/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="网络使用和电池消耗-原因和改进"><a href="#网络使用和电池消耗-原因和改进" class="headerlink" title="网络使用和电池消耗 原因和改进"></a>网络使用和电池消耗 原因和改进</h1><p>你的app发送的网络请求是电量消耗的主要原因, 本文先教你如何使用IDE工具来分类分析应用中的网络请求, 之后按照三种不同的网络请求分类, 分别给出优化建议, 减少电量消耗.</p>
+<p>本文是对Android官网<a href="https://developer.android.com/topic/performance/power/network/index.html" target="_blank" rel="noopener">Reducing Network Battery Drain</a>系列文章的翻译, 略有删减, 可以作为摘要看看. (翻译不当的地方还请见谅).</p>
+<a id="more"></a>
+<h2 id="收集网络数据-Collecting-Network-Traffic-Data"><a href="#收集网络数据-Collecting-Network-Traffic-Data" class="headerlink" title="收集网络数据 Collecting Network Traffic Data"></a>收集网络数据 <a href="https://developer.android.com/topic/performance/power/network/gather-data.html" target="_blank" rel="noopener">Collecting Network Traffic Data</a></h2><p>使用<a href="https://developer.android.com/studio/profile/ddms.html#network" target="_blank" rel="noopener">Network Traffic tool</a>可以看到你的app如何以及何时通过网络发送数据.<br>本节教你如何通过在代码中加tag来测量和分类网络请求, 然后教你如何部署, 测试和可视化你的网络请求.</p>
+<p>可以把网络请求分三类:</p>
+<ul>
+<li>用户发起的.</li>
+<li>App发起的.</li>
+<li>Server发起的. 比如notification.</li>
+</ul>
+<p>对这三个分类定义三个常量:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> USER_INITIATED = <span class="number">0x1000</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> APP_INITIATED = <span class="number">0x2000</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SERVER_INITIATED =<span class="number">0x3000</span>;</span><br></pre></td></tr></table></figure></p>
+<p>全文搜索:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extends GcmTaskService|extends JobService|extends AbstractThreadedSyncAdapter|HttpUrlConnection|Volley|Glide|HttpClient</span><br></pre></td></tr></table></figure></p>
+<p>勾选Regular expression, File mask(s) 写 *.java.</p>
+<p>找出所有的网络请求后, 加上下面的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (BuildConfig.NETWORK-TEST &amp;&amp; Build.VERSION.SDK_INT &gt;= <span class="number">14</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        TrafficStats.setThreadStatsTag(USER_INITIATED);</span><br><span class="line">        <span class="comment">// make network request using HttpClient.execute()</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        TrafficStats.clearThreadStatsTag();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中build type的配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        debug &#123;</span><br><span class="line">            // debuggable true is default for the debug buildType</span><br><span class="line">        &#125;</span><br><span class="line">        network-test &#123;</span><br><span class="line">            debuggable true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行测试:<br>Tools &gt; Android &gt; Android Device Monitor.<br>选择tab: Network Statistics.<br>选择你的应用, 然后按开始按钮.<br>你可以用下面的命令来清除应用的数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm clear package.name.of.app</span><br></pre></td></tr></table></figure></p>
+<p>然后在你的应用中跑你想测试的应用场景即可.</p>
+<p>使用了不同tag的网络请求会用不同的颜色显示出来.</p>
+<h2 id="分析网络数据-Analyzing-Network-Traffic-Data"><a href="#分析网络数据-Analyzing-Network-Traffic-Data" class="headerlink" title="分析网络数据 Analyzing Network Traffic Data"></a>分析网络数据 <a href="https://developer.android.com/topic/performance/power/network/analyze-data.html" target="_blank" rel="noopener">Analyzing Network Traffic Data</a></h2><p>有效应用网络资源的特点: 应该有大段的时间网络硬件没有在使用中. 因为在移动设备上, 发送和接收数据, 长时间保持数据连接都会有巨大的花销. 如果你的应用访问网络很有效率, 那么网络通信看起来就应该是紧耦合的, 被无请求的休息时段合理地隔开.</p>
+<h3 id="分析网络数据类型"><a href="#分析网络数据类型" class="headerlink" title="分析网络数据类型"></a>分析网络数据类型</h3><p>如果你的网络请求图看起来存在这方面的问题, 我们就需要根据上一节中加tag而分三种类型形成的网络图来进行分析, 提供一些优化意见.</p>
+<h4 id="分析用户发起的网络请求"><a href="#分析用户发起的网络请求" class="headerlink" title="分析用户发起的网络请求"></a>分析用户发起的网络请求</h4><p>用户发起的网络请求: 当用户在执行一项特定的活动时, 可能可以有效地耦合在一起; 或者当用户不断请求附加信息时, 非均匀地展开. 当在分析用户发起的请求是, 你的目标是: 寻找频繁的网络使用模式, 还有试图创建或增加不使用网络的时段.</p>
+<p>这种网络请求优化的挑战是用户请求的不确定性. 另外, 用户在使用app的时候总是期待快速的响应, 所以推迟请求会降低用户体验. 一般来说, 当用户和app直接交互时, 快速响应的优先级是高于有效的网络请求使用的.</p>
+<p>这里是一些对于用户网络请求的优化手段:</p>
+<ul>
+<li>预取. <a href="https://developer.android.com/topic/performance/power/network/action-user-traffic.html#pre-fetch-data" target="_blank" rel="noopener">Pre-fetch Network Data</a>. 当用户执行一项操作的时候, 应用预计一下它下一步可能需要的数据, 在单个连接中批量获取它们, 然后持有它们直到用户请求它们.</li>
+<li>检测连接或监听变化. <a href="https://developer.android.com/topic/performance/power/network/action-user-traffic.html#check-or-listen" target="_blank" rel="noopener">Check for Connectivity or Listen for Changes</a>. 在执行更新前, 检测网络连接, 或者监听网络连接变化.</li>
+<li>减少连接数. <a href="https://developer.android.com/topic/performance/power/network/action-user-traffic.html#reduce-connections" target="_blank" rel="noopener">Reduce the Number of Connections</a>. 使用允许数据按集合下载的server APIs</li>
+</ul>
+<h4 id="分析app发起的网络请求"><a href="#分析app发起的网络请求" class="headerlink" title="分析app发起的网络请求"></a>分析app发起的网络请求</h4><p>由你的应用发起的网络请求通常是一个对有效网络带宽有很大影响的方面. 在分析应用的网络活动的时候, 寻找空闲时段, 决定它们是否能被扩展. 如果你看到一致的网络请求的模式, 你应该寻找一些方法来改进, 以允许切换到低功耗模式.</p>
+<p>一些优化app发起请求的手段:</p>
+<ul>
+<li>批处理和定时. <a href="https://developer.android.com/topic/performance/power/network/action-app-traffic.html#batch-schedule" target="_blank" rel="noopener">Batch and Schedule Network Requests</a> 推迟你的网络请求以便它们可以一起处理, 并且在一个对电池来说有优势的时间.</li>
+<li>允许系统检查连接. <a href="https://developer.android.com/topic/performance/power/network/action-app-traffic.html#check-connect" target="_blank" rel="noopener">Allow System to Check for Connectivity</a>. 应该避免仅仅为了检查网络连接而引起的电池耗损, 在应用休眠的时候, 你可以让系统来帮你做检查.</li>
+</ul>
+<h4 id="分析server发起的网络请求"><a href="#分析server发起的网络请求" class="headerlink" title="分析server发起的网络请求"></a>分析server发起的网络请求</h4><p>由server对应用发起的网络请求通常也是一个对有效网络带宽有很大影响的方面. 在分析来自server的网络活动的时候, 寻找非活跃的时期, 看它们是否能被增加. </p>
+<p>优化手段:</p>
+<ul>
+<li>使用GCM. <a href="https://developer.android.com/topic/performance/power/network/action-server-traffic.html#gcm" target="_blank" rel="noopener">Use GCM for Server Updates</a>. 考虑使用Google Cloud Messaging service来做server端的更新, 而不是轮询.</li>
+</ul>
+<h2 id="优化用户网络请求-Optimizing-User-Initiated-Network-Use"><a href="#优化用户网络请求-Optimizing-User-Initiated-Network-Use" class="headerlink" title="优化用户网络请求 Optimizing User-Initiated Network Use"></a>优化用户网络请求 <a href="https://developer.android.com/topic/performance/power/network/action-user-traffic.html" target="_blank" rel="noopener">Optimizing User-Initiated Network Use</a></h2><p>快速处理用户的请求保证了良好的用户体验, 所以与此相比, 节约能量的优先级比较低.</p>
+<h3 id="预取-Pre-fetch-Network-Data"><a href="#预取-Pre-fetch-Network-Data" class="headerlink" title="预取 Pre-fetch Network Data"></a>预取 Pre-fetch Network Data</h3><p>预取数据是一个减少数据传输的session数量很有效的方法. 使用预取, 在用户执行一个行为的时候, app预测下一步行为最有可能会用到的数据, 然后批量取出相关数据. 电池能量消耗因为两个原因被降低了:</p>
+<ul>
+<li>因为预取数据发生在mobile radio已经唤醒的状态, 所以不用再次唤醒. </li>
+<li>应用预取了数据, 不然可能需要重新发另外的请求或者唤醒radio.</li>
+</ul>
+<p>Tip: 为了查看是否你的应用可以从预取中获利, 你可以检查你的网络traffic, 寻找永远导致多个网络请求的特定系列的用户行为. 比如那些当用户浏览时增量下载文章内容的应用, 可以在用户当前查看的分类下预取一个或多个文章.</p>
+<p>更多可以查看: <a href="https://developer.android.com/training/efficient-downloads/efficient-network-access.html#PrefetchData" target="_blank" rel="noopener">Optimizing Downloads for Efficient Network Access</a>.</p>
+<h3 id="检查连接-Check-for-Connectivity-or-Listen-for-Changes"><a href="#检查连接-Check-for-Connectivity-or-Listen-for-Changes" class="headerlink" title="检查连接 Check for Connectivity or Listen for Changes"></a>检查连接 Check for Connectivity or Listen for Changes</h3><p>在移动设备上来说, 搜寻信号是最费能量的操作之一. 你的应用应该总是在发出用户请求之前检查连接状态. <a href="https://developer.android.com/topic/performance/power/network/action-app-traffic.html#choosing-scheduler" target="_blank" rel="noopener">Schedulers</a>可以帮你自动做这个.</p>
+<ul>
+<li>如果你的一些按钮依赖于网络连接, 用<a href="https://developer.android.com/reference/android/net/ConnectivityManager.html" target="_blank" rel="noopener">ConnectivityManager</a>来检查连接. 如果没有网络连接, app就可以节省下强制连接的电量. 具体做法见<a href="https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html#MonitorChanges" target="_blank" rel="noopener">Monitor for Changes in Connectivity</a>.</li>
+<li>如果没有网络的情况下, 你的应用整个界面都处于不可用状态, 那么你可以根据需要使用Broadcast Receivers. 在你的Activity处于前台时监听网络连接变化, 当没有连接的时候, 就不再发请求. 如果你的app检测到网络连接丢失, 除了检测网路连接的那个receiver, 它关闭掉其他所有的receivers.</li>
+</ul>
+<p>对于用户发起的请求, 一个最佳实践就是在请求之前检查连接, 如果网络连接不存在, 可以调度请求在连接上以后再进行. 调度器可以用一些方式来节省电量, 比如每次检查的时候连接失败, 那么就加倍延迟时间下次再检查.</p>
+<h3 id="减少连接数-Reduce-the-Number-of-Connections"><a href="#减少连接数-Reduce-the-Number-of-Connections" class="headerlink" title="减少连接数 Reduce the Number of Connections"></a>减少连接数 Reduce the Number of Connections</h3><p>一般来讲, 复用已存在的网络连接比启动新的更高效. 复用连接还允许网络更智能地对待拥堵和相关网络数据问题.<br>更多信息请看<a href="https://developer.android.com/training/efficient-downloads/efficient-network-access.html#ReduceConnections" target="_blank" rel="noopener">Optimizing Downloads for Efficient Network Access</a>.</p>
+<h2 id="优化App发起的网络请求-Optimizing-App-Initiated-Network-Use"><a href="#优化App发起的网络请求-Optimizing-App-Initiated-Network-Use" class="headerlink" title="优化App发起的网络请求 Optimizing App-Initiated Network Use"></a>优化App发起的网络请求 <a href="https://developer.android.com/topic/performance/power/network/action-app-traffic.html" target="_blank" rel="noopener">Optimizing App-Initiated Network Use</a></h2><p>你的应用发起的网络请求通常可以大幅度改善, 因为你可以对需要的资源做出计划并且设置访问它们的时间. 通过合理地调度时间, 可以创建出大段的设备radio空闲时间, 从而节约电量. 有一些Android的API可以用来调度网络访问, 并且其中的一些功能可以用来调节对其他应用的网络访问, 从而进一步优化电池性能.</p>
+<h3 id="批处理和定时-Batch-and-Schedule-Network-Requests"><a href="#批处理和定时-Batch-and-Schedule-Network-Requests" class="headerlink" title="批处理和定时 Batch and Schedule Network Requests"></a>批处理和定时 Batch and Schedule Network Requests</h3><p>随机处理单个的请求会花掉很多的能量, 一个更高效的方法是把一系列的请求放入一个队列一起处理.</p>
+<p>使用一个网络请求scheduler API用来管理和处理你的请求队列可以提高app的能量效率. Schedulers保存能量是通过把请求组合在一起, 让系统来处理. 它们还可以通过延迟一些请求, 等其他请求唤醒radio的时候, 或者等设备在充电的时候再做请求, 来进一步优化. Schedulers延迟和批处理请求是在系统范围的, 可以跨多个应用, 相比单个应用中的优化, 这给了它们更多优势.</p>
+<h4 id="选择一个batch-and-scheduling-API"><a href="#选择一个batch-and-scheduling-API" class="headerlink" title="选择一个batch-and-scheduling API"></a>选择一个batch-and-scheduling API</h4><p>Android提供了三种API, 对于大多数操作功能相似, 按推荐性从高到低排列:</p>
+<ul>
+<li><a href="https://developers.google.com/cloud-messaging/network-manager" target="_blank" rel="noopener">GCM Network Manager</a>. 要求使用Google Play services.</li>
+<li><a href="https://developer.android.com/reference/android/app/job/JobScheduler.html" target="_blank" rel="noopener">Job Scheduler</a>. Android 5.0 (API 21)及以上.</li>
+<li><a href="https://developer.android.com/training/sync-adapters/index.html" target="_blank" rel="noopener">Sync Adapter for scheduled syncs</a>. 相比于前两种来说, 这种实现起来比较复杂.</li>
+</ul>
+<h3 id="允许系统检验连接-Allow-System-to-Check-for-Connectivity"><a href="#允许系统检验连接-Allow-System-to-Check-for-Connectivity" class="headerlink" title="允许系统检验连接 Allow System to Check for Connectivity"></a>允许系统检验连接 Allow System to Check for Connectivity</h3><p>一个最严重且意外的电池消耗原因是当用户超出信号塔或接入点范围时. 在这种情况下, 用户可能并没有使用手机, 但是他们注意到设备变热, 电池电量变少.</p>
+<p>在这种情形下, 可能是app正在跑一个后台进程, 其中以固定时间间隔搜寻信号. 搜寻信号是一个很耗电的操作.</p>
+<p>避免这个问题的方法是用一种更高效的方式来查询信号连接情况. 对于app发起的请求, 可以用一个scheduler, 在其中用<a href="https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html" target="_blank" rel="noopener">Connectivity Manager</a>来检查连接. 如果没有网络连接, Connectivity Manager节约了能量, 因为它是自己检查了连接, 而不是启动了app来做检查. 可以进一步使用<a href="https://en.wikipedia.org/wiki/Exponential_backoff" target="_blank" rel="noopener">exponential backoff</a>来做优化, 如果没有连接, 那么扩大检查的时间间隔.</p>
+<h2 id="优化来自server的网络请求-Optimizing-Server-Initiated-Network-Use"><a href="#优化来自server的网络请求-Optimizing-Server-Initiated-Network-Use" class="headerlink" title="优化来自server的网络请求 Optimizing Server-Initiated Network Use"></a>优化来自server的网络请求 <a href="https://developer.android.com/topic/performance/power/network/action-server-traffic.html" target="_blank" rel="noopener">Optimizing Server-Initiated Network Use</a></h2><p>由server发往app的请求优化起来比较有难度. 一种解决方案是客户端轮询, 检查server是否有更新, 这种方式很浪费. 一种更有效率的方式是当有新数据的时候通知你的app.</p>
+<p><a href="https://developers.google.com/cloud-messaging/gcm" target="_blank" rel="noopener">Google Cloud Messaging</a> GCM就是为了解决这个问题. 让你的server可以向app发送通知, 提高了网络效率, 降低了能量消耗.</p>
+<h3 id="用GCM发送服务器更新-Send-Server-Updates-with-GCM"><a href="#用GCM发送服务器更新-Send-Server-Updates-with-GCM" class="headerlink" title="用GCM发送服务器更新 Send Server Updates with GCM"></a>用GCM发送服务器更新 Send Server Updates with GCM</h3><p>Google Cloud Messaging (GCM)是一个轻量级的机制, 用于server向app传输一些简短的信息. 使用了GCM之后, server就可以在有数据更新的时候通知app, 这个方法减少了app查询更新却没有数据的能量消耗, 也避免了周期性的轮询请求.</p>
+<p>注意: 通常情况使用<a href="https://developers.google.com/cloud-messaging/concept-options#setting-the-priority-of-a-message" target="_blank" rel="noopener">Normal priority</a>即可, 这样不会在设备非活跃或者低电量的时候唤醒设备.</p>
+<h2 id="优化一般的网络使用-Optimizing-General-Network-Use"><a href="#优化一般的网络使用-Optimizing-General-Network-Use" class="headerlink" title="优化一般的网络使用 Optimizing General Network Use"></a>优化一般的网络使用 <a href="https://developer.android.com/topic/performance/power/network/action-any-traffic.html" target="_blank" rel="noopener">Optimizing General Network Use</a></h2><p>一般情况下, 减少网络请求会对节约电量有帮助. 除了之前提到的改进方法, 你还应该知道一些一般性的方法. </p>
+<h3 id="压缩数据-Compress-Data"><a href="#压缩数据-Compress-Data" class="headerlink" title="压缩数据 Compress Data"></a>压缩数据 Compress Data</h3><p>减少发送或接受的数据量会帮助减少连接时间, 从而节约电量.<br>你可以:</p>
+<ul>
+<li>压缩数据, 用一些压缩方法, 比如GZIP压缩.</li>
+<li>使用简洁的数据协议. JSON和XML提供了可读性和语言灵活性, 但是它们都是很占带宽的模式, 并且在Android上有一些序列化花销.<br>二进制序列化格式, 比如<a href="https://developers.google.com/protocol-buffers/" target="_blank" rel="noopener">Protocol Buffers</a>或<a href="https://google.github.io/flatbuffers/" target="_blank" rel="noopener">FlatBuffers</a>, 提供了更小的数据包大小, 以及更快的编解码时间. 如果你的应用经常需要传输序列化数据, 这些格式会帮你获得解码时间和传输大小方面的优势.</li>
+</ul>
+<h3 id="本地缓存文件-Cache-Files-Locally"><a href="#本地缓存文件-Cache-Files-Locally" class="headerlink" title="本地缓存文件 Cache Files Locally"></a>本地缓存文件 Cache Files Locally</h3><p>应用可以通过缓存来避免下载重复的数据. 始终缓存静态资源, 包括要求下载的全尺寸图像, 并尽可能长时间缓存它们.</p>
+<p>缓存实现见: <a href="https://developer.android.com/training/efficient-downloads/redundant_redundant.html#LocalCache" target="_blank" rel="noopener">Cache Files Locally</a>.</p>
+<h3 id="优化预取缓存大小-Optimize-Pre-Fetch-Cache-Size"><a href="#优化预取缓存大小-Optimize-Pre-Fetch-Cache-Size" class="headerlink" title="优化预取缓存大小 Optimize Pre-Fetch Cache Size"></a>优化预取缓存大小 Optimize Pre-Fetch Cache Size</h3><p>根据本地文件系统的尺寸和当前的网络连接来优化预取缓存大小. 你可以使用connectivity manager来确定处于活动状态的网络类型(Wi-FI, LTE, HSPAP, EDGE, GPRS), 并修改你的预取程序来最小化电池负载.</p>
+<p>更多信息请看<a href="https://developer.android.com/training/efficient-downloads/connectivity_patterns.html#Bandwidth" target="_blank" rel="noopener">Use Modifying your Download Patterns Based on the Connectivity Type</a>.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Network/" rel="tag"># Network</a>
+              <a href="/tags/Battery/" rel="tag"># Battery</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/04/06/android-weekly-notes-issue-251/" rel="prev" title="Android Weekly Notes Issue 251">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 251
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/04/13/android-weekly-notes-issue-252/" rel="next" title="Android Weekly Notes Issue 252">
+      Android Weekly Notes Issue 252 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E5%92%8C%E7%94%B5%E6%B1%A0%E6%B6%88%E8%80%97-%E5%8E%9F%E5%9B%A0%E5%92%8C%E6%94%B9%E8%BF%9B"><span class="nav-number">1.</span> <span class="nav-text">网络使用和电池消耗 原因和改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B6%E9%9B%86%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE-Collecting-Network-Traffic-Data"><span class="nav-number">1.1.</span> <span class="nav-text">收集网络数据 Collecting Network Traffic Data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE-Analyzing-Network-Traffic-Data"><span class="nav-number">1.2.</span> <span class="nav-text">分析网络数据 Analyzing Network Traffic Data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">分析网络数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E7%94%A8%E6%88%B7%E5%8F%91%E8%B5%B7%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">分析用户发起的网络请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90app%E5%8F%91%E8%B5%B7%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">分析app发起的网络请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90server%E5%8F%91%E8%B5%B7%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">分析server发起的网络请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%94%A8%E6%88%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82-Optimizing-User-Initiated-Network-Use"><span class="nav-number">1.3.</span> <span class="nav-text">优化用户网络请求 Optimizing User-Initiated Network Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%8F%96-Pre-fetch-Network-Data"><span class="nav-number">1.3.1.</span> <span class="nav-text">预取 Pre-fetch Network Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E8%BF%9E%E6%8E%A5-Check-for-Connectivity-or-Listen-for-Changes"><span class="nav-number">1.3.2.</span> <span class="nav-text">检查连接 Check for Connectivity or Listen for Changes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E8%BF%9E%E6%8E%A5%E6%95%B0-Reduce-the-Number-of-Connections"><span class="nav-number">1.3.3.</span> <span class="nav-text">减少连接数 Reduce the Number of Connections</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96App%E5%8F%91%E8%B5%B7%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82-Optimizing-App-Initiated-Network-Use"><span class="nav-number">1.4.</span> <span class="nav-text">优化App发起的网络请求 Optimizing App-Initiated Network Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E5%92%8C%E5%AE%9A%E6%97%B6-Batch-and-Schedule-Network-Requests"><span class="nav-number">1.4.1.</span> <span class="nav-text">批处理和定时 Batch and Schedule Network Requests</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E4%B8%80%E4%B8%AAbatch-and-scheduling-API"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">选择一个batch-and-scheduling API</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E7%B3%BB%E7%BB%9F%E6%A3%80%E9%AA%8C%E8%BF%9E%E6%8E%A5-Allow-System-to-Check-for-Connectivity"><span class="nav-number">1.4.2.</span> <span class="nav-text">允许系统检验连接 Allow System to Check for Connectivity</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%9D%A5%E8%87%AAserver%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82-Optimizing-Server-Initiated-Network-Use"><span class="nav-number">1.5.</span> <span class="nav-text">优化来自server的网络请求 Optimizing Server-Initiated Network Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8GCM%E5%8F%91%E9%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0-Send-Server-Updates-with-GCM"><span class="nav-number">1.5.1.</span> <span class="nav-text">用GCM发送服务器更新 Send Server Updates with GCM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%B8%80%E8%88%AC%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8-Optimizing-General-Network-Use"><span class="nav-number">1.6.</span> <span class="nav-text">优化一般的网络使用 Optimizing General Network Use</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%95%B0%E6%8D%AE-Compress-Data"><span class="nav-number">1.6.1.</span> <span class="nav-text">压缩数据 Compress Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98%E6%96%87%E4%BB%B6-Cache-Files-Locally"><span class="nav-number">1.6.2.</span> <span class="nav-text">本地缓存文件 Cache Files Locally</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E9%A2%84%E5%8F%96%E7%BC%93%E5%AD%98%E5%A4%A7%E5%B0%8F-Optimize-Pre-Fetch-Cache-Size"><span class="nav-number">1.6.3.</span> <span class="nav-text">优化预取缓存大小 Optimize Pre-Fetch Cache Size</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/2017/04/11/network-usage-and-battery-consumption/";
+    this.page.identifier = "Android/2017/04/11/network-usage-and-battery-consumption/";
+    this.page.title = "网络使用和电池消耗 原因和改进";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

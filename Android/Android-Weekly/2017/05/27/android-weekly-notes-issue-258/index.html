@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #258May 21st, 2017Android Weekly Issue #258本期内容: 围绕着Google I&#x2F;O的热潮, 本周的posts除了几篇小工具和软件设计原则的讨论, 其他都是在说Android Architecture Components和Kotlin.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 258">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #258May 21st, 2017Android Weekly Issue #258本期内容: 围绕着Google I&#x2F;O的热潮, 本周的posts除了几篇小工具和软件设计原则的讨论, 其他都是在说Android Architecture Components和Kotlin.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-05-27T08:49:12.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.000Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Design">
+<meta property="article:tag" content="MVVM">
+<meta property="article:tag" content="ConstraintLayout">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="Architecture Components">
+<meta property="article:tag" content="Room">
+<meta property="article:tag" content="LiveData">
+<meta property="article:tag" content="Lifecycle">
+<meta property="article:tag" content="ViewModel">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 258 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 258
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-05-27 16:49:12" itemprop="dateCreated datePublished" datetime="2017-05-27T16:49:12+08:00">2017-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 258" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-258"><a href="#Android-Weekly-Issue-258" class="headerlink" title="Android Weekly Issue #258"></a>Android Weekly Issue #258</h1><p>May 21st, 2017<br><a href="http://androidweekly.net/issues/issue-258" target="_blank" rel="noopener">Android Weekly Issue #258</a><br>本期内容: 围绕着Google I/O的热潮, 本周的posts除了几篇小工具和软件设计原则的讨论, 其他都是在说Android Architecture Components和Kotlin.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="DebugPort-2-0"><a href="#DebugPort-2-0" class="headerlink" title="DebugPort 2.0"></a><a href="https://medium.com/@JasonWyatt/introducing-android-debugport-2-0-88ec4ed4db94" target="_blank" rel="noopener">DebugPort 2.0</a></h2><p>REPL(Read Eval Print Loop)是在命令行界面中, 读取每一行输入, 执行, 然后输出结果, 提供即时的反馈. Java 9会提供这么一个REPL的环境, 叫JShell.</p>
+<p>考虑到在Android中能用上可能要等很长时间, 所以作者一年前开始弄了一个这个项目: <a href="https://github.com/jasonwyatt/Android-DebugPort" target="_blank" rel="noopener">Android-DebugPort</a>.</p>
+<p>在你的应用中加入这个依赖, 然后运行, 在通知栏就会弹出通知, 然后在电脑上就可以使用telnet来连接到app.</p>
+<p>可以调用方法, 执行脚本, 查询数据库等.</p>
+<h2 id="Understanding-Law-of-Demeter"><a href="#Understanding-Law-of-Demeter" class="headerlink" title="Understanding Law of Demeter"></a><a href="https://medium.com/@ankit.sinhal/design-principal-understand-law-of-demeter-4a44ac18e923" target="_blank" rel="noopener">Understanding Law of Demeter</a></h2><p>软件设计要求松耦合.<br>Law of Demeter, 即迪米特原则, 亦称为最少知道原则.</p>
+<p>文章介绍了在这种原则下应该如何设计类和它的方法.</p>
+<h2 id="Object-Oriented-Tricks-6-SLAP-your-functions"><a href="#Object-Oriented-Tricks-6-SLAP-your-functions" class="headerlink" title="Object Oriented Tricks: #6 SLAP your functions"></a><a href="https://hackernoon.com/object-oriented-tricks-6-slap-your-functions-a13d25a7d994" target="_blank" rel="noopener">Object Oriented Tricks: #6 SLAP your functions</a></h2><p>SLAP: Single Level of Abstraction Priciple, 单层抽象原则.</p>
+<p>一个太长的方法往往有各种缺点, 那么怎么判断一个方法过长了呢? 根据行数来判断不太科学, 所以SLAP可以用在这里:<br>一个代码块中的代码应该处于同一层抽象级别.</p>
+<p>一个方法不应该有几个不同级别的抽象, 换言之, 一个方法只做一件事.</p>
+<p>当你在方法代码中用注释来分割代码块的时候, 这些代码可以提取出来, 这样最初的方法就变成了一个隐藏实现细节, 只展示逻辑步骤的ComposedMethod.</p>
+<h2 id="Android-and-Architecture"><a href="#Android-and-Architecture" class="headerlink" title="Android and Architecture"></a><a href="https://android-developers.googleblog.com/2017/05/android-and-architecture.html" target="_blank" rel="noopener">Android and Architecture</a></h2><p>Google推出Architecture Components的预览, 宣布了一种新的Android App构架指导.</p>
+<h3 id="意见不是处方"><a href="#意见不是处方" class="headerlink" title="意见不是处方"></a>意见不是处方</h3><p>写Android应用有多种方式, 这里提供的只是一系列的指导意见, 来帮助你更好地构架Android应用. </p>
+<p>Android framework中有一些定义良好的API, 用于处理和底层系统的交互, 比如Activity, 但是这些是你应用的入口点, 并不是你的构架块. 这些framework的组件并不强制你分离数据和UI, 也不提供清晰的方式来处理独立于生命周期的数据保存.</p>
+<h3 id="Building-Blocks"><a href="#Building-Blocks" class="headerlink" title="Building Blocks"></a>Building Blocks</h3><p>Architecture Components帮助你实现一个更明智的架构, 它们帮助你: 自动管理activity和fragment的生命周期, 避免内存和资源泄露; 保存Java数据对象到SQLite数据库.</p>
+<h3 id="Lifecycle-Components"><a href="#Lifecycle-Components" class="headerlink" title="Lifecycle Components"></a>Lifecycle Components</h3><p>新的<a href="https://developer.android.com/topic/libraries/architecture/lifecycle.html" target="_blank" rel="noopener">lifecycle-aware components</a>提供了一种方式来把你应用的核心组件绑定到生命周期事件上, 删除了显式的依赖路径.</p>
+<p>这里核心的类是<a href="https://developer.android.com/reference/android/arch/lifecycle/Lifecycle.html" target="_blank" rel="noopener">Lifecycle</a>, 它使用了生命周期状态和事件(states and events)的枚举来追踪相关组件的生命周期.</p>
+<p><code>LifecycleOwner</code>是一个接口, 其中<code>getLifecycle()</code>方法返回一个<code>Lifecycle</code>对象. <code>LifecycleObserver</code>是一个观察者, 可以监控组件的生命周期事件(通过在方法上加注解).</p>
+<h3 id="LiveData"><a href="#LiveData" class="headerlink" title="LiveData"></a>LiveData</h3><p><a href="https://developer.android.com/topic/libraries/architecture/livedata.html" target="_blank" rel="noopener">LiveData</a><br>是一个数据持有类, 同时也是一个Obervable, 允许它的数据被监听, 同时它也知道生命周期.</p>
+<p>当你的UI订阅了底层数据的改动, 并且绑定了一个<code>LifecycleOwner</code>, <code>LiveData</code>会确保这个observer:</p>
+<ul>
+<li>在生命周期处于活跃状态时得到数据更新.</li>
+<li>当生命周期结束时取消订阅.</li>
+<li>在<code>LifecycleOwner</code>重新开始时(比如旋转变化或从back stack中跳出), 得到最新的数据.</li>
+</ul>
+<h3 id="ViewModel"><a href="#ViewModel" class="headerlink" title="ViewModel"></a>ViewModel</h3><p><a href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" target="_blank" rel="noopener">ViewModel</a>是一个辅助类, 用于盛放Activity或Fragment的UI数据, 从UI controller的逻辑中分离出view的数据.</p>
+<p>只要Activity/Fragment存在, ViewModel的数据就被保持着. 包括Activity/Fragment因为状态变化而销毁重建的情况. 这样ViewModel就在重建时提供可用的数据.</p>
+<p>结合<code>ViewModel</code>和<code>LiveData</code>, 就为数据提供了一个了解生命周期的可观察的容器. 其中<code>LiveData</code>负责通知, <code>ViewModel</code>负责数据保存.</p>
+<h3 id="Data-Persistence"><a href="#Data-Persistence" class="headerlink" title="Data Persistence"></a>Data Persistence</h3><p>提出了<a href="https://developer.android.com/topic/libraries/architecture/room.html" target="_blank" rel="noopener">Room library</a>, 提供了一个在SQLite之上的object-mapping抽象层, 允许流式的数据库访问. </p>
+<p>Room中三个主要的组件:</p>
+<ul>
+<li><code>Entity</code>: 代码数据库中一行的数据, 用带有注解的Java数据类构建. 每一个Entity在它自己的表中被保存.</li>
+<li><code>DAO</code> (Data Access Object): 定义了访问数据库的方法. 使用注解来绑定SQL到每个方法.</li>
+<li><code>Database</code>. 用注解来定义entities列表和数据库版本;  定义DAO的列表; 同时也是底层数据库连接的主要访问点.</li>
+</ul>
+<h3 id="Guide-to-App-Architecture"><a href="#Guide-to-App-Architecture" class="headerlink" title="Guide to App Architecture"></a>Guide to App Architecture</h3><p><a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank" rel="noopener">Guide to App Architecture</a>显示如何用Architecture Components来构建一个稳健的, 模块化的, 可测试的app.</p>
+<h2 id="Why-Kotlin"><a href="#Why-Kotlin" class="headerlink" title="Why Kotlin?"></a><a href="http://blog.danlew.net/2017/05/17/why-kotlin/" target="_blank" rel="noopener">Why Kotlin?</a></h2><p>作者分享了为什么相比于Java, 他更喜欢Kotlin.</p>
+<h2 id="My-take-on“Architecture-Components”"><a href="#My-take-on“Architecture-Components”" class="headerlink" title="My take on“Architecture Components”"></a><a href="https://medium.com/@yonatanvlevin/weighing-in-on-the-holy-architecture-war-my-take-on-architecture-components-31f7025e9c66" target="_blank" rel="noopener">My take on“Architecture Components”</a></h2><p>作者分享了他在项目中使用Architecture components的一些心得.</p>
+<p>他们的项目原先是MVP + Content Provider的. 为了实验加入Architecture components, 他又新写了一个MVP的<a href="https://github.com/parahall/star_wars_movies" target="_blank" rel="noopener">Demo项目</a>, 把它转化成MVVM, 又加入Architecture components的新组件来实现. (代码比较多, 我没有详细看).</p>
+<h2 id="ConstraintLayout-com"><a href="#ConstraintLayout-com" class="headerlink" title="ConstraintLayout.com"></a><a href="https://blog.stylingandroid.com/constraintlayout-com/" target="_blank" rel="noopener">ConstraintLayout.com</a></h2><p>这个网站<a href="https://constraintlayout.com/" target="_blank" rel="noopener">ConstraintLayout.com</a>成立了, 用于讨论和<code>ConstraintLayout</code>相关的一切.</p>
+<h2 id="Looking-at-Room-and-LiveData-Part-1"><a href="#Looking-at-Room-and-LiveData-Part-1" class="headerlink" title="Looking at Room and LiveData - Part 1"></a><a href="https://riggaroo.co.za/android-architecture-components-looking-room-livedata-part-1/" target="_blank" rel="noopener">Looking at Room and LiveData - Part 1</a></h2><p>Android之前一直没有提出过一个官方的构架模式, 所以大家总在讨论各种MVP, MVVM, MVI模式, 各种库等等. 终于在Google I/O 2017, Android团队发布了Architecture Components, 来提供一个构建Android App的最佳实践指导.</p>
+<h3 id="什么是Architecture-Components"><a href="#什么是Architecture-Components" class="headerlink" title="什么是Architecture Components?"></a>什么是Architecture Components?</h3><p>Architecture Components是一系列的库和指导集合, 作为构建Android app的基础. 针对一些常见的使用场景, 目的是减少样板和重复代码, 让你能集中精力到你应用的核心功能代码上.</p>
+<p>主要组件包括:</p>
+<ul>
+<li>Room: a SQLite object mapper.</li>
+<li>LiveData: a lifecycle aware observable.</li>
+<li>ViewModel: Activity/Fragment和应用其他部分的交流点.</li>
+<li>Lifecycle: 核心部分, 包含了组件的生命周期.</li>
+<li>LifecycleOwner: 核心接口, 用于有生命周期的组件.</li>
+<li>LifecycleObserver: 当某个生命周期事件发生的时候, 应该做些什么呢?  </li>
+</ul>
+<p>之后作者写了一个小App作为例子, 用了MVVM + Android Architecture Components. 其中详细介绍了Room和LiveData的用法.</p>
+<h2 id="Room-—-Getting-Started"><a href="#Room-—-Getting-Started" class="headerlink" title="Room — Getting Started"></a><a href="https://medium.com/@tonyowen/a-room-with-a-view-getting-started-ec010f9f5448" target="_blank" rel="noopener">Room — Getting Started</a></h2><p>一个简单的例子, 介绍如何使用Room. (例子用Kotlin).</p>
+<h2 id="Generating-Kotlin-code-with-KotlinPoet"><a href="#Generating-Kotlin-code-with-KotlinPoet" class="headerlink" title="Generating Kotlin code with KotlinPoet"></a><a href="https://medium.com/square-corner-blog/generating-kotlin-code-with-kotlinpoet-119dc20f74d4" target="_blank" rel="noopener">Generating Kotlin code with KotlinPoet</a></h2><p>Jake Wharton的文章, Square推出了<a href="https://github.com/square/kotlinpoet" target="_blank" rel="noopener">KotlinPoet</a>, 用来生成kotlin代码.</p>
+<h2 id="Why-you-should-totally-switch-to-Kotlin"><a href="#Why-you-should-totally-switch-to-Kotlin" class="headerlink" title="Why you should totally switch to Kotlin"></a><a href="https://medium.com/@magnus.chatt/why-you-should-totally-switch-to-kotlin-c7bbde9e10d5" target="_blank" rel="noopener">Why you should totally switch to Kotlin</a></h2><p>要转换到Kotlin的若干个理由. (有17条).</p>
+<h2 id="30-New-Android-Libraries"><a href="#30-New-Android-Libraries" class="headerlink" title="30 New Android Libraries"></a><a href="https://medium.com/@mmbialas/30-new-android-libraries-released-in-the-spring-of-2017-which-deserve-your-attention-faea359a1915" target="_blank" rel="noopener">30 New Android Libraries</a></h2><p>30个Android的新库, 都是自2017年3月份以后发布的.<br>作者主观挑选的, 所以并没有排序.</p>
+<p>列表比较长, 我就不一一列了, 不少库还是挺有趣的.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="android-architecture-counter-sample"><a href="#android-architecture-counter-sample" class="headerlink" title="android-architecture-counter-sample"></a><a href="https://github.com/dlew/android-architecture-counter-sample" target="_blank" rel="noopener">android-architecture-counter-sample</a></h2><p>使用Kotlin和Android architecture components写的一个sample app.</p>
+<h2 id="KotlinPoet"><a href="#KotlinPoet" class="headerlink" title="KotlinPoet"></a><a href="https://github.com/square/kotlinpoet" target="_blank" rel="noopener">KotlinPoet</a></h2><p>Kotlin代码生成库.</p>
+<h2 id="memechat"><a href="#memechat" class="headerlink" title="memechat"></a><a href="https://github.com/efortuna/memechat" target="_blank" rel="noopener">memechat</a></h2><p>用<a href="https://flutter.io/" target="_blank" rel="noopener">Flutter</a>构建的一个聊天应用, 用了Firebase, Google Sign in和设备相机.</p>
+<h1 id="News"><a href="#News" class="headerlink" title="News"></a>News</h1><p>几个大新闻: </p>
+<ul>
+<li>Android O发布了第二个预览版.</li>
+<li>Android team发布了Architecture Components. - Android正式宣布了支持Kotlin.</li>
+<li>Instant App现在对所有开发者开放</li>
+<li>Android Studio发布了3.0 Canary, 推出了一系列的新工具.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Design/" rel="tag"># Design</a>
+              <a href="/tags/MVVM/" rel="tag"># MVVM</a>
+              <a href="/tags/ConstraintLayout/" rel="tag"># ConstraintLayout</a>
+              <a href="/tags/Architecture/" rel="tag"># Architecture</a>
+              <a href="/tags/Architecture-Components/" rel="tag"># Architecture Components</a>
+              <a href="/tags/Room/" rel="tag"># Room</a>
+              <a href="/tags/LiveData/" rel="tag"># LiveData</a>
+              <a href="/tags/Lifecycle/" rel="tag"># Lifecycle</a>
+              <a href="/tags/ViewModel/" rel="tag"># ViewModel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/" rel="prev" title="Android Weekly Notes Issue 257">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 257
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/06/12/android-weekly-notes-issue-261/" rel="next" title="Android Weekly Notes Issue 261">
+      Android Weekly Notes Issue 261 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-258"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #258</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DebugPort-2-0"><span class="nav-number">2.1.</span> <span class="nav-text">DebugPort 2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Understanding-Law-of-Demeter"><span class="nav-number">2.2.</span> <span class="nav-text">Understanding Law of Demeter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-Oriented-Tricks-6-SLAP-your-functions"><span class="nav-number">2.3.</span> <span class="nav-text">Object Oriented Tricks: #6 SLAP your functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-and-Architecture"><span class="nav-number">2.4.</span> <span class="nav-text">Android and Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%8F%E8%A7%81%E4%B8%8D%E6%98%AF%E5%A4%84%E6%96%B9"><span class="nav-number">2.4.1.</span> <span class="nav-text">意见不是处方</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-Blocks"><span class="nav-number">2.4.2.</span> <span class="nav-text">Building Blocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lifecycle-Components"><span class="nav-number">2.4.3.</span> <span class="nav-text">Lifecycle Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LiveData"><span class="nav-number">2.4.4.</span> <span class="nav-text">LiveData</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ViewModel"><span class="nav-number">2.4.5.</span> <span class="nav-text">ViewModel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Persistence"><span class="nav-number">2.4.6.</span> <span class="nav-text">Data Persistence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Guide-to-App-Architecture"><span class="nav-number">2.4.7.</span> <span class="nav-text">Guide to App Architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Kotlin"><span class="nav-number">2.5.</span> <span class="nav-text">Why Kotlin?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#My-take-on%E2%80%9CArchitecture-Components%E2%80%9D"><span class="nav-number">2.6.</span> <span class="nav-text">My take on“Architecture Components”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConstraintLayout-com"><span class="nav-number">2.7.</span> <span class="nav-text">ConstraintLayout.com</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Looking-at-Room-and-LiveData-Part-1"><span class="nav-number">2.8.</span> <span class="nav-text">Looking at Room and LiveData - Part 1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFArchitecture-Components"><span class="nav-number">2.8.1.</span> <span class="nav-text">什么是Architecture Components?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Room-%E2%80%94-Getting-Started"><span class="nav-number">2.9.</span> <span class="nav-text">Room — Getting Started</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generating-Kotlin-code-with-KotlinPoet"><span class="nav-number">2.10.</span> <span class="nav-text">Generating Kotlin code with KotlinPoet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-you-should-totally-switch-to-Kotlin"><span class="nav-number">2.11.</span> <span class="nav-text">Why you should totally switch to Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#30-New-Android-Libraries"><span class="nav-number">2.12.</span> <span class="nav-text">30 New Android Libraries</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#android-architecture-counter-sample"><span class="nav-number">3.1.</span> <span class="nav-text">android-architecture-counter-sample</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KotlinPoet"><span class="nav-number">3.2.</span> <span class="nav-text">KotlinPoet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memechat"><span class="nav-number">3.3.</span> <span class="nav-text">memechat</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#News"><span class="nav-number">4.</span> <span class="nav-text">News</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/";
+    this.page.identifier = "Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/";
+    this.page.title = "Android Weekly Notes Issue 258";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

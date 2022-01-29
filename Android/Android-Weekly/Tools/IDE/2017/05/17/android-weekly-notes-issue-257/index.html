@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #257May 14th, 2017Android Weekly Issue #257本期内容包括: Gradle中关于项目的一些设置; Android设备上的各种id讨论; ViewPagerAnimator这个库的进一步介绍; Kotlin中的Nothing类型介绍; 实现Parcelable的类和测试; Android开发中一些提高效率的快捷键.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 257">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #257May 14th, 2017Android Weekly Issue #257本期内容包括: Gradle中关于项目的一些设置; Android设备上的各种id讨论; ViewPagerAnimator这个库的进一步介绍; Kotlin中的Nothing类型介绍; 实现Parcelable的类和测试; Android开发中一些提高效率的快捷键.">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-05-17T09:26:18.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:09.000Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="Java 8">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="Animation">
+<meta property="article:tag" content="Android Studio">
+<meta property="article:tag" content="Shortcuts">
+<meta property="article:tag" content="ViewPager">
+<meta property="article:tag" content="FindBugs">
+<meta property="article:tag" content="Lint">
+<meta property="article:tag" content="Parcelable">
+<meta property="article:tag" content="PMD">
+<meta property="article:tag" content="Infer">
+<meta property="article:tag" content="Style">
+<meta property="article:tag" content="CheckStyle">
+<meta property="article:tag" content="JavaDoc">
+<meta property="article:tag" content="Jacoco">
+<meta property="article:tag" content="ID">
+<meta property="article:tag" content="Nothing">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 257 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 257
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-05-17 17:26:18" itemprop="dateCreated datePublished" datetime="2017-05-17T17:26:18+08:00">2017-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:09" itemprop="dateModified" datetime="2022-01-30T00:37:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/Tools/IDE/" itemprop="url" rel="index"><span itemprop="name">IDE</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 257" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-257"><a href="#Android-Weekly-Issue-257" class="headerlink" title="Android Weekly Issue #257"></a>Android Weekly Issue #257</h1><p>May 14th, 2017<br><a href="http://androidweekly.net/issues/issue-257" target="_blank" rel="noopener">Android Weekly Issue #257</a><br>本期内容包括: Gradle中关于项目的一些设置; Android设备上的各种id讨论; ViewPagerAnimator这个库的进一步介绍; Kotlin中的<code>Nothing</code>类型介绍; 实现<code>Parcelable</code>的类和测试; Android开发中一些提高效率的快捷键. </p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Make-or-break…-with-Gradle"><a href="#Make-or-break…-with-Gradle" class="headerlink" title="Make or break… with Gradle"></a><a href="https://medium.com/contentsquare-engineering-blog/make-or-break-with-gradle-dac2e858868d" target="_blank" rel="noopener">Make or break… with Gradle</a></h2><p>作者讲了他们的一些工作习惯:</p>
+<ul>
+<li>Git分支管理.<ul>
+<li>所有向主分支的提交都必须通过Pull Request.</li>
+<li>仅在CI通过后才允许merge.</li>
+</ul>
+</li>
+<li>Lint设置. <ul>
+<li><code>build.gradle</code>中的lintOptions设置.</li>
+<li><code>./gradlew check</code>会跑所有的单元测试, UI测试和Lint.</li>
+</ul>
+</li>
+<li>代码分析工具.<ul>
+<li>PMD.</li>
+<li>FindBugs.</li>
+<li>Infer.</li>
+<li>这里可以用Google提供的<a href="http://checkstyle.sourceforge.net/reports/google-java-style-20170228.html" target="_blank" rel="noopener">Java Style Guide</a>.</li>
+</ul>
+</li>
+<li>生成文档.<ul>
+<li>用CheckStyle要求所有的public方法都有JavaDoc注释(默认已经实现了).</li>
+<li>实现Gradle JavaDoc Plugin.</li>
+</ul>
+</li>
+<li>代码测试率报告.<ul>
+<li>Jacoco. </li>
+<li>可以设置一些规则来检测意外打出的log和注释掉的代码(Code Smell).</li>
+</ul>
+</li>
+</ul>
+<h2 id="Identifying-an-Android-Device"><a href="#Identifying-an-Android-Device" class="headerlink" title="Identifying an Android Device"></a><a href="http://handstandsam.com/2017/05/04/identifying-an-android-device/" target="_blank" rel="noopener">Identifying an Android Device</a></h2><p>在Android设备上可以通过程序获取各种id来识别一个设备或者一次安装. 这篇文章就讨论各种id:</p>
+<ul>
+<li>通过Settings.Secure获取到的Android ID.</li>
+<li>Android Build.SERIAL.</li>
+<li>Android Build.MODEL.</li>
+<li>Android Build.BRAND.</li>
+<li>Android Build.MANUFACTURER.</li>
+<li>Android Build.DEVICE.</li>
+<li>Android Build.PRODUCT.</li>
+<li>IMEI (International Mobile Equipment Identity).</li>
+<li>Phone Number.</li>
+<li>ICCID (Sim Serial Number).</li>
+</ul>
+<h2 id="ViewPagerAnimator-–-The-Advanced-Stuff"><a href="#ViewPagerAnimator-–-The-Advanced-Stuff" class="headerlink" title="ViewPagerAnimator – The Advanced Stuff"></a><a href="https://blog.stylingandroid.com/viewpageranimator-the-advanced-stuff/" target="_blank" rel="noopener">ViewPagerAnimator – The Advanced Stuff</a></h2><p>上次我们介绍了<a href="https://github.com/StylingAndroid/ViewPagerAnimator" target="_blank" rel="noopener">ViewPagerAnimator</a>这个库, 在ViewPager切换时进行动画, 但是上次只介绍了简单的颜色变化, 本文介绍一些关于API的高级设定: 变化的属性可以是自定义的类型; API的良好设计使得使用的代码在支持Java 8的环境下可以大幅度地得到简化.</p>
+<h2 id="Nothing-else-matters-in-Kotlin"><a href="#Nothing-else-matters-in-Kotlin" class="headerlink" title="Nothing (else) matters in Kotlin"></a><a href="https://medium.com/@quiro91/nothing-else-matters-in-kotlin-994a9ef106fc" target="_blank" rel="noopener">Nothing (else) matters in Kotlin</a></h2><p>Kotlin中的一切都有一个类型, 甚至还有一个类型叫Nothing.</p>
+<p>Kotlin中没有void类型, 当一个方法<code>fun</code>没有显示地声明返回值的时候, 它返回的其实是<code>Unit</code>类型.</p>
+<p><code>Unit</code>是一个真的类型, 继承<code>Any</code>(<code>Any</code>对应Java中的<code>Object</code>), 只接受单个的值, 是一个单例(为了避免每次方法返回Unit之后分配内存).</p>
+<p>如果我们有一个方法, 方法中只抛出一个异常, 如果我们不特殊声明, 它的返回值仍是<code>Unit</code>, 但是也许我们应该返回<code>Nothing</code>:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">fail</span><span class="params">()</span></span>: <span class="built_in">Nothing</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> RuntimeException(<span class="string">"Something went wrong"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Nothing</code>是一个无人居住的类型, 在运行时没有值会是这个类型, 它也是其他类的子类.</p>
+<p>当作为返回值时, <code>Unit</code>和<code>Nothing</code>到底有什么区别呢?</p>
+<p>举例来说明:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="keyword">data</span>: String = intent.getStringExtra(<span class="string">"key"</span>) ?: fail()</span><br><span class="line">textView.text = <span class="keyword">data</span></span><br></pre></td></tr></table></figure></p>
+<p>如果<code>fail()</code>方法返回<code>Nothing</code>, 我们要么得到<code>String</code>, 要么抛出异常; 如果返回<code>Unit</code>, 我们会得到一个error, 以为<code>Unit</code>不能转换为<code>String</code>.</p>
+<p>如果不显式声明String类型呢?<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="keyword">data</span> = intent.getStringExtra(<span class="string">"key"</span>) ?: fail()</span><br><span class="line">textView.text = <span class="keyword">data</span></span><br></pre></td></tr></table></figure></p>
+<p>如果<code>fail()</code>返回<code>Nothing</code>, 类型是<code>String</code>;<br>如果返回<code>Unit</code>, 类型是<code>Any</code>, 但TextView期待的是一个<code>CharSequence</code>, 所以你仍然会得到一个error.</p>
+<p><code>Nothing</code>的用途就是用来显式地标记一个方法永远也不会成功地完成(它可能会抛出异常, 进入死循环或者导致一个控制流转变).</p>
+<p><code>Nothing?</code>有且仅有一个实例, 是<code>null</code>.<br><code>Nothing?</code>是所有nullable类型的子类.</p>
+<h2 id="Android-Parcelables-Made-Easy"><a href="#Android-Parcelables-Made-Easy" class="headerlink" title="Android Parcelables Made Easy"></a><a href="https://medium.com/@calren24/android-parcelables-made-easy-acb742bcf96b" target="_blank" rel="noopener">Android Parcelables Made Easy</a></h2><p>可以在Android Studio中装一个插件, 来自动生成Parcelable的代码:<br>Android Studio &gt; Preferences &gt; Plugins &gt; 搜索<code>Parcelable</code> &gt; 安装<code>Android Parcelable Code Generator</code>.</p>
+<p>安装之后, 在你的类中, 只需要声明字段, 然后Cmd + N, 选<code>Parcelable</code>就可以生成相关的代码了.</p>
+<p>之后, 好的做法是为你的类写一个单元测试, 一旦有人加了新字段, 他们也需要保证Parcelable.<br>为了让你的测试fail的时候显示的信息更有效, 你还需要覆写<code>toString()</code>方法和<code>equals()</code>方法.(这些都是可以自动生成的).</p>
+<h2 id="Android-shortcuts-and-tricks-to-boost-up-your-productivity"><a href="#Android-shortcuts-and-tricks-to-boost-up-your-productivity" class="headerlink" title="Android shortcuts and tricks to boost up your productivity!"></a><a href="https://tech.fleka.me/android-shortcuts-and-tricks-to-boost-up-your-productivity-944548174582" target="_blank" rel="noopener">Android shortcuts and tricks to boost up your productivity!</a></h2><p>Android开发中一些提高效率的快捷键:</p>
+<ul>
+<li>在Activity和它的布局间切换:<ul>
+<li>在Activity声明的那一行用鼠标点icon.</li>
+<li>Cmd + Shift + O 输入文件名.</li>
+<li>Cmd + Shift + A 输入related symbol. (可以把这个存为一个自定义的shortcut).</li>
+</ul>
+</li>
+<li>在xml的文字和design之间切换: Ctrl + Shift + Left/Right.</li>
+<li>扩展/缩减选中文字: Opt + Up/Down.</li>
+<li>生成新类: Cmd + N; Opt + Enter.</li>
+<li>去实现类: Cmd + Opt + B.</li>
+<li>实现一个方法: Opt + Enter; Ctrl + I.</li>
+<li>去基类方法: Cmd + U; 去实现类方法: Cmd + B.</li>
+<li>覆写基类方法: Ctrl + O.</li>
+<li>在子类中给基类加方法: 在子类中把方法标记为<code>@Override</code>, 然后在<code>@Override</code>上按Opt + Enter, 选择<code>Pull method xxx to YYY</code>.</li>
+<li>改变方法参数: Cmd + F6.</li>
+<li>交换方法参数: Cmd + Opt + Shift + Left/Right.</li>
+<li>定位当前文件: 导航烂最左边有一个圆形小按钮可以帮你定位文件, 如果你想要自动, 可以勾选<code>Autoscroll from Source</code>.</li>
+<li>把local变量改为成员变量: Cmd + Opt + F.</li>
+<li>提取layout和style. (这个快捷键我实验失败了).</li>
+</ul>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="litho-glide"><a href="#litho-glide" class="headerlink" title="litho-glide"></a><a href="https://github.com/pavlospt/litho-glide" target="_blank" rel="noopener">litho-glide</a></h2><p>为litho创建的Glide图片加载组件.</p>
+<h2 id="sample-googleassistant"><a href="#sample-googleassistant" class="headerlink" title="sample-googleassistant"></a><a href="https://github.com/androidthings/sample-googleassistant" target="_blank" rel="noopener">sample-googleassistant</a></h2><p>Google Assistant API sample for Android Things.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Java-8/" rel="tag"># Java 8</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/Animation/" rel="tag"># Animation</a>
+              <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
+              <a href="/tags/Shortcuts/" rel="tag"># Shortcuts</a>
+              <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+              <a href="/tags/FindBugs/" rel="tag"># FindBugs</a>
+              <a href="/tags/Lint/" rel="tag"># Lint</a>
+              <a href="/tags/Parcelable/" rel="tag"># Parcelable</a>
+              <a href="/tags/PMD/" rel="tag"># PMD</a>
+              <a href="/tags/Infer/" rel="tag"># Infer</a>
+              <a href="/tags/Style/" rel="tag"># Style</a>
+              <a href="/tags/CheckStyle/" rel="tag"># CheckStyle</a>
+              <a href="/tags/JavaDoc/" rel="tag"># JavaDoc</a>
+              <a href="/tags/Jacoco/" rel="tag"># Jacoco</a>
+              <a href="/tags/ID/" rel="tag"># ID</a>
+              <a href="/tags/Nothing/" rel="tag"># Nothing</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/05/09/android-weekly-notes-issue-256/" rel="prev" title="Android Weekly Notes Issue 256">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 256
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/05/27/android-weekly-notes-issue-258/" rel="next" title="Android Weekly Notes Issue 258">
+      Android Weekly Notes Issue 258 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-257"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #257</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Make-or-break%E2%80%A6-with-Gradle"><span class="nav-number">2.1.</span> <span class="nav-text">Make or break… with Gradle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Identifying-an-Android-Device"><span class="nav-number">2.2.</span> <span class="nav-text">Identifying an Android Device</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewPagerAnimator-%E2%80%93-The-Advanced-Stuff"><span class="nav-number">2.3.</span> <span class="nav-text">ViewPagerAnimator – The Advanced Stuff</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nothing-else-matters-in-Kotlin"><span class="nav-number">2.4.</span> <span class="nav-text">Nothing (else) matters in Kotlin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Parcelables-Made-Easy"><span class="nav-number">2.5.</span> <span class="nav-text">Android Parcelables Made Easy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-shortcuts-and-tricks-to-boost-up-your-productivity"><span class="nav-number">2.6.</span> <span class="nav-text">Android shortcuts and tricks to boost up your productivity!</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#litho-glide"><span class="nav-number">3.1.</span> <span class="nav-text">litho-glide</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sample-googleassistant"><span class="nav-number">3.2.</span> <span class="nav-text">sample-googleassistant</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/";
+    this.page.identifier = "Android/Android-Weekly/Tools/IDE/2017/05/17/android-weekly-notes-issue-257/";
+    this.page.title = "Android Weekly Notes Issue 257";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

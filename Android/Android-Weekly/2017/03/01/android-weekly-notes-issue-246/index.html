@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #246February 26th, 2017Android Weekly Issue #246本期内容包括: RecyclerView上的Shared Element动画; 使用FileProvider分享文件有可能会碰到的权限问题; 测试和程序架构的一些讨论; FlexboxLayout的使用; RxJava中可以处理前后动作的两个方法;In-App">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 246">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #246February 26th, 2017Android Weekly Issue #246本期内容包括: RecyclerView上的Shared Element动画; 使用FileProvider分享文件有可能会碰到的权限问题; 测试和程序架构的一些讨论; FlexboxLayout的使用; RxJava中可以处理前后动作的两个方法;In-App">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-03-01T09:45:13.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.997Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="RxJava2">
+<meta property="article:tag" content="Testing">
+<meta property="article:tag" content="FileProvider">
+<meta property="article:tag" content="Shared Element">
+<meta property="article:tag" content="FlexboxLayout">
+<meta property="article:tag" content="In-App Billing">
+<meta property="article:tag" content="Music Player">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 246 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 246
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-03-01 17:45:13" itemprop="dateCreated datePublished" datetime="2017-03-01T17:45:13+08:00">2017-03-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 246" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-246"><a href="#Android-Weekly-Issue-246" class="headerlink" title="Android Weekly Issue #246"></a>Android Weekly Issue #246</h1><p>February 26th, 2017<br><a href="http://androidweekly.net/issues/issue-246" target="_blank" rel="noopener">Android Weekly Issue #246</a><br>本期内容包括: RecyclerView上的Shared Element动画; 使用FileProvider分享文件有可能会碰到的权限问题; 测试和程序架构的一些讨论; FlexboxLayout的使用; RxJava中可以处理前后动作的两个方法;<br>In-App Billing的实现; 如何用组合而非继承的方式来组织应用.</p>
+<p>代码中有意思的项目: 一个开源的音乐播放器, 一个带状态的layout.</p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Shared-Element-Transitions-with-RecyclerView"><a href="#Shared-Element-Transitions-with-RecyclerView" class="headerlink" title="Shared Element Transitions with RecyclerView"></a><a href="http://mikescamell.com/shared-element-transitions-part-4-recyclerview/" target="_blank" rel="noopener">Shared Element Transitions with RecyclerView</a></h2><p>作者介绍了如何在RecyclerView中实现shared element动画.</p>
+<h2 id="Sharing-files-through-Intents-part-2"><a href="#Sharing-files-through-Intents-part-2" class="headerlink" title="Sharing files through Intents (part 2)"></a><a href="https://medium.com/@quiro91/sharing-files-through-intents-part-2-fixing-the-permissions-before-lollipop-ceb9bb0eec3a#.ci4hqoauq" target="_blank" rel="noopener">Sharing files through Intents (part 2)</a></h2><p>之前介绍过因为Android 7 Nougat对文件权限的限制, 不能再依靠Intent来发送<code>file://uri</code>数据了, 应该用<code>FileProvider</code>. 但是你采用了这些新方法之后, 在一些Android的旧版本上有可能会遇到问题.</p>
+<p>你可能遇到这种异常: <code>java.lang.SecurityException: Permission Denial</code>.</p>
+<p>在API 16及以上, 系统有一个方法<code>migrateExtraStreamToClipData()</code>会根据你的Intent的action帮你迁移数据到ClipData, 并自动帮你加上权限. 见代码: <a href="http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/java/android/content/Intent.java#9037" target="_blank" rel="noopener">Intent</a>. 但是之前的版本却没有.</p>
+<p>所以解决办法是在原本的代码中加上这两句:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &lt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">    takePictureIntent.setClipData(ClipData.newRawUri(<span class="string">""</span>, photoURI));</span><br><span class="line">    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION|Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之所以要包括LOLLIPOP是因为<code>migrateExtraStreamToClipData()</code>这个方法是在preview版本之后才加上的, 所以不能保证所有的LOLLIPOP的设备都有这个方法.</p>
+<h2 id="What-Unit-Tests-are-Trying-to-Tell-us-about-Activities-Pt-1"><a href="#What-Unit-Tests-are-Trying-to-Tell-us-about-Activities-Pt-1" class="headerlink" title="What Unit Tests are Trying to Tell us about Activities: Pt. 1"></a><a href="https://www.philosophicalhacker.com/post/what-unit-tests-are-trying-to-tell-us-about-activities-pt1/" target="_blank" rel="noopener">What Unit Tests are Trying to Tell us about Activities: Pt. 1</a></h2><p>“android-centric”的构架是指用Activity/Fragment作为屏幕基本构架单元的程序架构. 作者的系列文章要讨论为什么这种架构是对测试不友好的.</p>
+<h2 id="Build-flexible-layouts-with-FlexboxLayout"><a href="#Build-flexible-layouts-with-FlexboxLayout" class="headerlink" title="Build flexible layouts with FlexboxLayout"></a><a href="https://android-developers.googleblog.com/2017/02/build-flexible-layouts-with.html" target="_blank" rel="noopener">Build flexible layouts with FlexboxLayout</a></h2><p>Google去年开源了<a href="https://github.com/google/flexbox-layout" target="_blank" rel="noopener">flexbox-layout</a>, 目的是将CSS中的<a href="https://www.w3.org/TR/css-flexbox-1/" target="_blank" rel="noopener">Flexible Layout module</a>引入到Android中来. 本文介绍了FlexboxLayout十分有用的几种情况, 附有demos.</p>
+<h2 id="Making-RxJava-code-tidier-with-doOnSubscribe-and-doFinally"><a href="#Making-RxJava-code-tidier-with-doOnSubscribe-and-doFinally" class="headerlink" title="Making RxJava code tidier with doOnSubscribe and doFinally"></a><a href="https://medium.com/@ValCanBuild/making-rxjava-code-tidier-with-doonsubscribe-and-dofinally-3748f223d32d#.58wup7kxn" target="_blank" rel="noopener">Making RxJava code tidier with doOnSubscribe and doFinally</a></h2><p>使用<code>doOnSubscribe()</code>和<code>doFinally()</code>(RxJava 2)可以让RxJava的代码更加简洁.</p>
+<ul>
+<li><p><code>doOnSubscribe()</code>中的代码在subscribe的时候被调用.</p>
+</li>
+<li><p><code>doFinally()</code>在<code>Observable</code>调用<code>onError()</code>或<code>onCompleted()</code>之后, 或者流被下游放弃的时候调用.</p>
+</li>
+</ul>
+<p>作者举的例子是用它们来show loading和hide loading, 这样它们也作为流的一部分, 而且subscriber可以只处理其他相关逻辑.</p>
+<h2 id="Implementing-In-App-Billing-in-Android"><a href="#Implementing-In-App-Billing-in-Android" class="headerlink" title="Implementing In-App Billing in Android"></a><a href="https://hackernoon.com/implementing-in-app-billing-in-android-4896232c7d6b?gi=575af60d0286#.scggjiasz" target="_blank" rel="noopener">Implementing In-App Billing in Android</a></h2><p>关于Android In-App Billing的实现.</p>
+<p>首先你会搜到<a href="https://developer.android.com/google/play/billing/index.html" target="_blank" rel="noopener">官方文档</a>.</p>
+<p>作者在本文中介绍了其他的一些可选方案.</p>
+<h2 id="Composite-Views-in-Android-Composition-over-Inheritance"><a href="#Composite-Views-in-Android-Composition-over-Inheritance" class="headerlink" title="Composite Views in Android: Composition over Inheritance"></a><a href="https://medium.com/@manuelvicnt/composite-views-in-android-composition-over-inheritance-4a7114609560#.n55x4611x" target="_blank" rel="noopener">Composite Views in Android: Composition over Inheritance</a></h2><p>作者介绍了这个库: <a href="https://github.com/passsy/CompositeAndroid" target="_blank" rel="noopener">CompositeAndroid</a>, 它解决了一个什么问题呢? </p>
+<p>在App中, 如果多个Activity或者多个Fragment有一些共同的功能, 那么我们很可能就会创建一个基类Activity或者基类Fragment, 然后继承它. 当一些功能只被一些类共享时, 我们可能会继续不断创建基类, 产生一个无法维护的继承树.</p>
+<p>解决的办法就是使用这个库, Activity只需要继承<code>CompositeActivity</code>, 所有共有的功能都会被当做插件加进来.<br>这样我们遵守了一个原则: <code>组合优于继承</code>.</p>
+<p>但是这个库也有一些缺点: 它还在alpha阶段; 如果你使用了一些不常用的生命周期, 可能会有问题; 它是基于support library的, 所以如果这个库不更新support库的版本, 你也无法更新.</p>
+<p>所以作者提出了一个简单的解决方案, 不使用CompositeAndroid. 文中举例展示了他的实现.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="ShapeShifter"><a href="#ShapeShifter" class="headerlink" title="ShapeShifter"></a><a href="https://github.com/alexjlockwood/ShapeShifter" target="_blank" rel="noopener">ShapeShifter</a></h2><p>创建路径变形动画的一个web-app, 支持导出到<code>AnimatedVectorDrawable</code>.</p>
+<h2 id="Shuttle"><a href="#Shuttle" class="headerlink" title="Shuttle"></a><a href="https://github.com/timusus/Shuttle" target="_blank" rel="noopener">Shuttle</a></h2><p>一个开源的本地音乐播放器.</p>
+<h2 id="cortado"><a href="#cortado" class="headerlink" title="cortado"></a><a href="https://github.com/blipinsk/cortado" target="_blank" rel="noopener">cortado</a></h2><p>在Espresso上提供了一个抽象层, 使用更流畅.</p>
+<h2 id="fragment-navigation-2-0"><a href="#fragment-navigation-2-0" class="headerlink" title="fragment-navigation-2.0"></a><a href="https://github.com/gyorgygabor/fragment-navigation-2.0" target="_blank" rel="noopener">fragment-navigation-2.0</a></h2><p>Fragment导航库.</p>
+<h2 id="flexbox-layout"><a href="#flexbox-layout" class="headerlink" title="flexbox-layout"></a><a href="https://github.com/google/flexbox-layout" target="_blank" rel="noopener">flexbox-layout</a></h2><p>Flexbox for Android.</p>
+<h2 id="kotlin-coroutines-retrofit"><a href="#kotlin-coroutines-retrofit" class="headerlink" title="kotlin-coroutines-retrofit"></a><a href="https://github.com/gildor/kotlin-coroutines-retrofit" target="_blank" rel="noopener">kotlin-coroutines-retrofit</a></h2><p>This is small library that provides Kotlin Coroutines suspending extension Call.await() for Retrofit 2.</p>
+<h2 id="StatefulLayout"><a href="#StatefulLayout" class="headerlink" title="StatefulLayout"></a><a href="https://github.com/gturedi/StatefulLayout" target="_blank" rel="noopener">StatefulLayout</a></h2><p>一个内置包含loading, 错误, 空状态的布局.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/FileProvider/" rel="tag"># FileProvider</a>
+              <a href="/tags/Shared-Element/" rel="tag"># Shared Element</a>
+              <a href="/tags/FlexboxLayout/" rel="tag"># FlexboxLayout</a>
+              <a href="/tags/In-App-Billing/" rel="tag"># In-App Billing</a>
+              <a href="/tags/Music-Player/" rel="tag"># Music Player</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Database/Realm/2017/02/27/android-realm-guide/" rel="prev" title="Android Realm数据库使用指南">
+      <i class="fa fa-chevron-left"></i> Android Realm数据库使用指南
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/03/08/android-weekly-notes-issue-247/" rel="next" title="Android Weekly Notes Issue 247">
+      Android Weekly Notes Issue 247 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-246"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #246</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shared-Element-Transitions-with-RecyclerView"><span class="nav-number">2.1.</span> <span class="nav-text">Shared Element Transitions with RecyclerView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sharing-files-through-Intents-part-2"><span class="nav-number">2.2.</span> <span class="nav-text">Sharing files through Intents (part 2)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Unit-Tests-are-Trying-to-Tell-us-about-Activities-Pt-1"><span class="nav-number">2.3.</span> <span class="nav-text">What Unit Tests are Trying to Tell us about Activities: Pt. 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Build-flexible-layouts-with-FlexboxLayout"><span class="nav-number">2.4.</span> <span class="nav-text">Build flexible layouts with FlexboxLayout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Making-RxJava-code-tidier-with-doOnSubscribe-and-doFinally"><span class="nav-number">2.5.</span> <span class="nav-text">Making RxJava code tidier with doOnSubscribe and doFinally</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementing-In-App-Billing-in-Android"><span class="nav-number">2.6.</span> <span class="nav-text">Implementing In-App Billing in Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Composite-Views-in-Android-Composition-over-Inheritance"><span class="nav-number">2.7.</span> <span class="nav-text">Composite Views in Android: Composition over Inheritance</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">3.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ShapeShifter"><span class="nav-number">3.1.</span> <span class="nav-text">ShapeShifter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shuttle"><span class="nav-number">3.2.</span> <span class="nav-text">Shuttle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cortado"><span class="nav-number">3.3.</span> <span class="nav-text">cortado</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fragment-navigation-2-0"><span class="nav-number">3.4.</span> <span class="nav-text">fragment-navigation-2.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flexbox-layout"><span class="nav-number">3.5.</span> <span class="nav-text">flexbox-layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kotlin-coroutines-retrofit"><span class="nav-number">3.6.</span> <span class="nav-text">kotlin-coroutines-retrofit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StatefulLayout"><span class="nav-number">3.7.</span> <span class="nav-text">StatefulLayout</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/";
+    this.page.identifier = "Android/Android-Weekly/2017/03/01/android-weekly-notes-issue-246/";
+    this.page.title = "Android Weekly Notes Issue 246";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

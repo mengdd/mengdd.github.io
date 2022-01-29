@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mengdd.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Android Weekly Issue #239January 8th, 2017Android Weekly Issue #239本期内容包括: Android Things开发; Android中有用却不常见的一些API介绍(拼写检查, 文字识别, 时间log, 截图, 创建PDF); Gradle依赖管理冲突和解决办法; Looper, Handler和HandlerThread; 兼顾W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Weekly Notes Issue 239">
+<meta property="og:url" content="http://mengdd.github.io/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/index.html">
+<meta property="og:site_name" content="Meng&#39;s pages">
+<meta property="og:description" content="Android Weekly Issue #239January 8th, 2017Android Weekly Issue #239本期内容包括: Android Things开发; Android中有用却不常见的一些API介绍(拼写检查, 文字识别, 时间log, 截图, 创建PDF); Gradle依赖管理冲突和解决办法; Looper, Handler和HandlerThread; 兼顾W">
+<meta property="og:locale">
+<meta property="og:image" content="http://mengdd.github.io/images/Android-Looper-Handler.jpeg">
+<meta property="article:published_time" content="2017-01-10T06:10:31.000Z">
+<meta property="article:modified_time" content="2022-01-29T16:37:08.995Z">
+<meta property="article:author" content="Dandan Meng">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android Weekly">
+<meta property="article:tag" content="Wear">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="RxJava">
+<meta property="article:tag" content="Test">
+<meta property="article:tag" content="RxJava2">
+<meta property="article:tag" content="Handler">
+<meta property="article:tag" content="Android Things">
+<meta property="article:tag" content="Looper">
+<meta property="article:tag" content="HandlerThread">
+<meta property="article:tag" content="PDF">
+<meta property="article:tag" content="Robolectric">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mengdd.github.io/images/Android-Looper-Handler.jpeg">
+
+<link rel="canonical" href="http://mengdd.github.io/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Android Weekly Notes Issue 239 | Meng's pages</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?83e8338b542a9fd155f68673d113e0ae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Meng's pages</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android developer and maybe other intersting things.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://mengdd.github.io/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+      <meta itemprop="name" content="Dandan Meng">
+      <meta itemprop="description" content="This is a technical blog site of an Android developer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Meng's pages">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Weekly Notes Issue 239
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-01-10 14:10:31" itemprop="dateCreated datePublished" datetime="2017-01-10T14:10:31+08:00">2017-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-30 00:37:08" itemprop="dateModified" datetime="2022-01-30T00:37:08+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-Weekly/" itemprop="url" rel="index"><span itemprop="name">Android Weekly</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/" class="post-meta-item leancloud_visitors" data-flag-title="Android Weekly Notes Issue 239" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-Weekly-Issue-239"><a href="#Android-Weekly-Issue-239" class="headerlink" title="Android Weekly Issue #239"></a>Android Weekly Issue #239</h1><p>January 8th, 2017<br><a href="http://androidweekly.net/issues/issue-239" target="_blank" rel="noopener">Android Weekly Issue #239</a><br>本期内容包括: Android Things开发; Android中有用却不常见的一些API介绍(拼写检查, 文字识别, 时间log, 截图, 创建PDF); Gradle依赖管理冲突和解决办法; Looper, Handler和HandlerThread; 兼顾Wear1.0和2.0的部署方式; 打开PDF的实现方法; 单元测试的命名; Robolectric的弊病; 迁移到RxJava2的好处和面临的挑战. </p>
+<a id="more"></a>
+<h1 id="ARTICLES-amp-TUTORIALS"><a href="#ARTICLES-amp-TUTORIALS" class="headerlink" title="ARTICLES &amp; TUTORIALS"></a>ARTICLES &amp; TUTORIALS</h1><h2 id="Preparing-your-computer-for-Android-dev"><a href="#Preparing-your-computer-for-Android-dev" class="headerlink" title="Preparing your computer for Android dev"></a><a href="https://medium.com/@rafael_toledo/preparing-your-android-environment-for-development-android-tutorials-pt-1-5f76ca2b8a32#.yxa0bvkp5" target="_blank" rel="noopener">Preparing your computer for Android dev</a></h2><p>在Windows, OSX和Linux上设置开发环境.</p>
+<h2 id="Beginner’s-guide-to-Raspberry-Pi-3-B-and-Android-Things"><a href="#Beginner’s-guide-to-Raspberry-Pi-3-B-and-Android-Things" class="headerlink" title="Beginner’s guide to Raspberry Pi 3 B and Android Things"></a><a href="http://www.andtuts.com/a-beginners-guide-to-raspberry-pi-3-b-and-android-things/" target="_blank" rel="noopener">Beginner’s guide to Raspberry Pi 3 B and Android Things</a></h2><p>如何Set up with Android Things.</p>
+<h2 id="Creating-new-project-and-emulator-on-Android-Studio"><a href="#Creating-new-project-and-emulator-on-Android-Studio" class="headerlink" title="Creating new project and emulator on Android Studio"></a><a href="https://medium.com/@rafael_toledo/creating-a-new-project-and-an-emulator-on-android-studio-android-tutorials-2-35bd965ac42b#.lwlhy72wf" target="_blank" rel="noopener">Creating new project and emulator on Android Studio</a></h2><p>如何创建新项目和模拟器.</p>
+<h2 id="Discovering-Android-API"><a href="#Discovering-Android-API" class="headerlink" title="Discovering Android API"></a><a href="https://blog.autsoft.hu/discovering-the-android-api-part-1/" target="_blank" rel="noopener">Discovering Android API</a></h2><p>Android是基于Java的, Java本身已经有四千多个类, Android API也有很多个类, 有一些不太常见但是却很有用的API我们应该了解一下.</p>
+<p>这篇文章就旨在发现那些不常见却很有用的API, 并且附有一个<a href="https://github.com/peekler/GDG" target="_blank" rel="noopener">Demo</a>.</p>
+<h3 id="No-1-Spell-Checker"><a href="#No-1-Spell-Checker" class="headerlink" title="No.1 - Spell Checker"></a>No.1 - Spell Checker</h3><p><a href="https://developer.android.com/reference/android/view/textservice/TextServicesManager.html" target="_blank" rel="noopener">TextServicesManager</a>从API 14开始支持, 可以发现拼写错误, 并返回正确的单词拼写.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TextServicesManager tsm = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);  </span><br><span class="line">SpellCheckerSession spellCheckerSession = tsm.newSpellCheckerSession(<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">this</span>, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="No-2-Text-Recognizer"><a href="#No-2-Text-Recognizer" class="headerlink" title="No.2 - Text Recognizer"></a>No.2 - Text Recognizer</h3><p>Google Play Services Vision API中的文字识别.</p>
+<p>Version API中包括了人脸识别, 二维码扫描和文字识别.</p>
+<p>这个例子中可以从图像中扫描出文字信息.</p>
+<h3 id="No-3-TimingLogger"><a href="#No-3-TimingLogger" class="headerlink" title="No.3 - TimingLogger"></a>No.3 - TimingLogger</h3><p><a href="https://developer.android.com/reference/android/util/TimingLogger.html" target="_blank" rel="noopener">TimingLogger</a>是用来测量流逝时间的一个好工具.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TimingLogger timings = <span class="keyword">new</span> TimingLogger(TAG, <span class="string">"methodA"</span>);</span><br><span class="line"><span class="comment">// ... do some work A ...</span></span><br><span class="line">timings.addSplit(<span class="string">"work A"</span>);</span><br><span class="line"><span class="comment">// ... do some work B ...</span></span><br><span class="line">timings.addSplit(<span class="string">"work B"</span>);</span><br><span class="line"><span class="comment">// ... do some work C ...</span></span><br><span class="line">timings.addSplit(<span class="string">"work C"</span>);</span><br><span class="line">timings.dumpToLog();</span><br></pre></td></tr></table></figure></p>
+<p>最后一句执行后, 会在log中一次性输出下面的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">D/TAG     ( 3459): methodA: begin</span><br><span class="line">D/TAG     ( 3459): methodA:      9 ms, work A</span><br><span class="line">D/TAG     ( 3459): methodA:      1 ms, work B</span><br><span class="line">D/TAG     ( 3459): methodA:      6 ms, work C</span><br><span class="line">D/TAG     ( 3459): methodA: end, 16 ms</span><br></pre></td></tr></table></figure></p>
+<p>注意需要在adb中使能TAG:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setprop log.tag.TAG_MYJOB VERBOSE</span><br></pre></td></tr></table></figure></p>
+<p>假设本例子中TAG = “TAG_MYJOB”.</p>
+<h3 id="No-4-Taking-screenshots"><a href="#No-4-Taking-screenshots" class="headerlink" title="No.4 - Taking screenshots"></a>No.4 - Taking screenshots</h3><p>有一些库可以提供截屏, 比如<a href="https://github.com/jraska/Falcon" target="_blank" rel="noopener">Falcon</a>. </p>
+<p>在Android 21之上用<a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html" target="_blank" rel="noopener">MediaProjection</a>甚至可以录屏.</p>
+<p>但是得到屏幕图像更简单的一种方法是:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">View viewRoot = getWindow().getDecorView().getRootView();  </span><br><span class="line">viewRoot.setDrawingCacheEnabled(<span class="keyword">true</span>);  </span><br><span class="line">Bitmap screenShotAsBitmap = Bitmap.createBitmap(viewRoot.getDrawingCache());  </span><br><span class="line">viewRoot.setDrawingCacheEnabled(<span class="keyword">false</span>);  </span><br><span class="line"><span class="comment">// use screenShotAsBitmap as you need</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="No-5-PDF-Creation-API"><a href="#No-5-PDF-Creation-API" class="headerlink" title="No.5 - PDF Creation API"></a>No.5 - PDF Creation API</h3><p>从API 19开始Android就提供了API可以创建PDF文档.<br>文中的例子是创建了一个PDF文档, 然后把当前屏幕内容放进去.</p>
+<h2 id="Avoiding-Conflicts-in-android-gradle-dependencies"><a href="#Avoiding-Conflicts-in-android-gradle-dependencies" class="headerlink" title="Avoiding Conflicts in android gradle dependencies"></a><a href="https://blog.mindorks.com/avoiding-conflicts-in-android-gradle-dependencies-28e4200ca235#.x66q6p4v4" target="_blank" rel="noopener">Avoiding Conflicts in android gradle dependencies</a></h2><p>如果两个依赖又都依赖了同一个库, 但是是不同的版本, 那会发生什么呢?</p>
+<p>比如下面这个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">androidTestCompile &apos;junit:junit:4.12&apos; //(Depends on version 1.3)</span><br><span class="line">androidTestCompile &apos;org.mockito:mockito-core:1.10.19&apos; //(Depends on version 1.1)</span><br></pre></td></tr></table></figure></p>
+<p>这两个库都依赖于”org.hamcrest:hamcrest-core”, 但是版本却不同.</p>
+<p>这种情况下, 最终被包含进build的是最高版本的库.</p>
+<p>在依赖被声明的module里运行下面这个命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew dependencies.</span><br></pre></td></tr></table></figure></p>
+<p>会显式地看到gradle自动把第二个依赖中的hamcrest库从1.1升级到了1.3.</p>
+<p>前面, 两个依赖都是test依赖, 所以gradle自动解决了冲突.  如果两个依赖属于不同的配置, 如, 把第一个<code>androidTestCompile</code>改为<code>compile</code>, gradle将会报错.</p>
+<p>原因是:</p>
+<blockquote>
+<p>When instrumentation tests are run, both the main APK and test APK share the same classpath. Gradle build will fail if the main APK and the test APK use the same library (e.g. Guava) but in different versions. If gradle didn’t catch that, your app could behave differently during tests and during normal run (including crashing in one of the cases).</p>
+</blockquote>
+<p><strong>解决依赖冲突</strong><br>一旦有了依赖冲突, 就需要开发者决定最后到底用什么版本的库, 有几种解决方法:</p>
+<ul>
+<li>方法1: 从依赖中排除这个库.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Now junit will not include hamcrest library. Therefore there will be no </span><br><span class="line">//dependency conflict. </span><br><span class="line"> compile (&apos;junit:junit:4.12&apos;)&#123;</span><br><span class="line">    exclude group: &apos;org.hamcrest&apos;, module:&apos;hamcrest-core&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">androidTestCompile (&apos;org.mockito:mockito-core:1.10.19&apos;)&#123;</span><br><span class="line">    exclude group: &apos;org.hamcrest&apos;, module:&apos;hamcrest-core&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>真实的项目中可能有多个依赖依赖于同一个库, 那么我们就需要写多个排除语句.</p>
+<ul>
+<li>方法2: 显式地声明冲突库的版本.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">compile &apos;junit:junit:4.12&apos; //(Depends on version 1.3)</span><br><span class="line">androidTestCompile &apos;org.mockito:mockito-core:1.10.19&apos; //(Depends on version 1.1)</span><br><span class="line">androidTestCompile &apos;org.hamcrest:hamcrest-core:1.3&apos; //(We explictly mention </span><br><span class="line">//that include version 1.3)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这种方法不用写exclude, 但是当升级直接依赖库的时候需要注意更新这种间接依赖库的版本.</p>
+<ul>
+<li>方法3: 强制解析.</li>
+</ul>
+<p>强制设置所有configuration的依赖版本:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    configurations.all &#123;</span><br><span class="line">        resolutionStrategy.force &apos;org.hamcrest:hamcrest-core:1.1&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用这种方法的时候需要小心, 因为与方法2不同, 它是把所有configuration中的版本都强制设置了. 当直接依赖更新的时候, 要注意更新间接依赖的版本.</p>
+<h2 id="Looper-Handler-and-HandlerThread"><a href="#Looper-Handler-and-HandlerThread" class="headerlink" title="Looper, Handler, and HandlerThread"></a><a href="https://blog.mindorks.com/android-core-looper-handler-and-handlerthread-bd54d69fe91a#.zf2nhog1x" target="_blank" rel="noopener">Looper, Handler, and HandlerThread</a></h2><p>这篇文章讨论Looper, Handler和HandlerThread.</p>
+<p>首先, 读者应该了解Java的<a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html" target="_blank" rel="noopener">Thread</a>和<a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html" target="_blank" rel="noopener">Runnable</a>.</p>
+<p>然后让我们带着问题来探索和复习:</p>
+<h3 id="Java的Thread存在什么问题"><a href="#Java的Thread存在什么问题" class="headerlink" title="Java的Thread存在什么问题?"></a>Java的Thread存在什么问题?</h3><p>Java的Thread是一次性的, 当它执行完<code>run()</code>方法之后, 它就死了.</p>
+<h3 id="我们可以改善这个问题吗"><a href="#我们可以改善这个问题吗" class="headerlink" title="我们可以改善这个问题吗?"></a>我们可以改善这个问题吗?</h3><p>线程本身是个双刃剑, 我们可以把任务分发到多个线程来加速, 但同时线程过多又会降低速度. 线程创建也会花费时间, 所以最好我们能有一个固定优化数量的线程, 然后用它们来执行任务.</p>
+<p><strong>线程复用模型</strong>:</p>
+<ul>
+<li>1.一个线程保持活跃, 通过它的<code>run()</code>方法不断循环.</li>
+<li>2.任务由该线程连续执行, 并保持在一个队列中(MessageQueue).</li>
+<li>3.当完成之后结束这个线程.</li>
+</ul>
+<h3 id="Android是以什么方式来做这件事的呢"><a href="#Android是以什么方式来做这件事的呢" class="headerlink" title="Android是以什么方式来做这件事的呢?"></a>Android是以什么方式来做这件事的呢?</h3><p>Android用<code>Looper</code>, <code>Handler</code>和<code>HandlerThread</code>实现了上述模型.<br>系统可以用这样的图表示:<br><img src="/images/Android-Looper-Handler.jpeg" alt="Android Looper Handler"></p>
+<ul>
+<li>1.<code>MessageQueue</code>是一个队列, 里面含有需要被处理的任务(消息).</li>
+<li>2.<code>Handler</code>利用<code>Looper</code>往队列中加任务, 同时也在任务出队列的时候进行处理.</li>
+<li>3.<code>Looper</code>是一个工人, 保持一个线程的活跃, 循环消息队列, 把消息发给对应的handler去处理.(一个线程只能对应一个唯一的<code>Looper</code>, 但是可以有多个关联的<code>Handler</code>).</li>
+<li>4.最后<code>Looper.quit()</code>会让线程终止.</li>
+</ul>
+<p>为一个线程创建<code>Looper</code>和<code>MessageQueue</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LooperThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Handler mHandler; </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        Looper.prepare();</span><br><span class="line"></span><br><span class="line">        mHandler = <span class="keyword">new</span> Handler() &#123; </span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123; </span><br><span class="line">               <span class="comment">// process incoming messages here</span></span><br><span class="line">               <span class="comment">// this will run in non-ui/background thread</span></span><br><span class="line">            &#125; </span><br><span class="line">        &#125;; </span><br><span class="line"></span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建<code>Handler</code>的时候自动和当前线程的Looper关联, 但是也可以通过构造传入Looper来使Handler关联到特定的线程.</p>
+<p>用<code>Handler</code>发消息有两种方式: <code>Message</code>和<code>Runnable</code>.</p>
+<p>自己创建一个线程并提供Looper和消息队列的方式是不好的, 所以Android提供了<code>HandlerThread</code>来简化这个过程, 它内部的实现和我们之前做的差不多, 但是是以一种更加稳健的方式. 所以我们应该使用<code>HandlerThread</code>而不是自己实现.</p>
+<p>大多数时候你只需要继承<code>HandlerThread</code>来创建它的子类.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHandlerThread</span> <span class="keyword">extends</span> <span class="title">HandlerThread</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    Handler handler;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyHandlerThread</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLooperPrepared</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        handler = <span class="keyword">new</span> Handler(getLooper()) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// process incoming messages here</span></span><br><span class="line">                <span class="comment">// this will run in non-ui/background thread</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意:</p>
+<ul>
+<li><code>Looper</code>只有在<code>HandlerThread</code>的<code>start()</code>方法被调用(线程开始跑)后才会进入prepared状态.</li>
+<li>只有在<code>HandlerThread</code>的<code>Looper</code>处于parepared状态以后, <code>Handler</code>才可以关联.</li>
+</ul>
+<p>另一种创建<code>HandlerThread</code>的方式:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HandlerThread handlerThread = <span class="keyword">new</span> HandlerThread(<span class="string">"MyHandlerThread"</span>);</span><br><span class="line">handlerThread.start();</span><br><span class="line">Handler handler = <span class="keyword">new</span> Handler(handlerThread.getLooper());</span><br></pre></td></tr></table></figure></p>
+<p>注意: <code>HandlerThread</code>需要调用<code>quit()</code>方法来停止线程执行和释放资源.</p>
+<p>作者文后还附有一个练习的demo.</p>
+<h2 id="Android-Wear-packaging"><a href="#Android-Wear-packaging" class="headerlink" title="Android Wear packaging"></a><a href="https://www.novoda.com/blog/android-wear-packaging/" target="_blank" rel="noopener">Android Wear packaging</a></h2><p>Android Wear 2.0将在2017年发布, 本文讨论了如何同时支持1.0和2.0的应用部署.</p>
+<h2 id="Simple-Things-–-Part-1"><a href="#Simple-Things-–-Part-1" class="headerlink" title="Simple Things – Part 1"></a><a href="https://blog.stylingandroid.com/simple-things-part-1/" target="_blank" rel="noopener">Simple Things – Part 1</a></h2><p>Android Things应用.</p>
+<h2 id="Options-for-Viewing-PDFs"><a href="#Options-for-Viewing-PDFs" class="headerlink" title="Options for Viewing PDFs"></a><a href="https://commonsware.com/blog/2017/01/04/options-viewing-pdfs.html" target="_blank" rel="noopener">Options for Viewing PDFs</a></h2><p>显示PDF传统的方法是通过ACTION_VIEW发出去, 用一个第三方应用打开.</p>
+<p>但是有一些开发者不愿意这样做.</p>
+<p>还有一种方法是把文件上传, 然后用Google Docs URL用WebView打开它. </p>
+<p>除了这些传统的方法, 还有一些选项, 虽然它们各自都有一些问题.</p>
+<p>比如用<code>PdfRenderer</code>, 它是Android 5.0加入的.</p>
+<p>Mozilka在Firefox上用的是<a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a>, 在Android 4.4+的WebView上可用, 它会给apk带来2MB左右的增加.</p>
+<p>Google在Chrominum上用的是<a href="https://pdfium.googlesource.com/pdfium/" target="_blank" rel="noopener">pdfium</a>, 这是C++. <a href="https://github.com/barteksc/AndroidPdfViewer" target="_blank" rel="noopener">barteksc/AndroidPdfViewer</a>封装了Pdfium, 处理了渲染和基本的手势, 在一些较老的Android版本上也使用, 但是大约每个CPU架构会给APK增加5MB, 默认情况下你会增加30MB.</p>
+<h2 id="Clean-tests-Part-1-Naming"><a href="#Clean-tests-Part-1-Naming" class="headerlink" title="Clean tests, Part 1: Naming"></a><a href="https://android.jlelse.eu/clean-tests-part-1-naming-cce94edf0522#.5nmmqx81y" target="_blank" rel="noopener">Clean tests, Part 1: Naming</a></h2><p>关于怎么写干净的单元测试, 本文作者提出了几点他对于命名的看法.</p>
+<ul>
+<li>不要用”test”开头写测试名.</li>
+<li>不要把被测试的方法名字写在测试名里.</li>
+<li>测试是一种规范.</li>
+</ul>
+<h2 id="Why-I-Don’t-use-Robolectric"><a href="#Why-I-Don’t-use-Robolectric" class="headerlink" title="Why I Don’t use Robolectric"></a><a href="http://www.philosophicalhacker.com/post/why-i-dont-use-roboletric/" target="_blank" rel="noopener">Why I Don’t use Robolectric</a></h2><p>作者觉得Robolectric不好的几点:</p>
+<ul>
+<li>Robolectric mock了一些我们并不拥有的type.</li>
+<li>Robolectric turns TDD on its head.</li>
+</ul>
+<p>所以最好的做法是我们在写Android代码的时候将逻辑代码抽象出来, 与framework分离, 这样在测试的时候不依赖于Android SDK的类, 也不需要robolectric来模拟一个中间层.</p>
+<h2 id="The-Next-Step-for-Reactive-Android-Programming"><a href="#The-Next-Step-for-Reactive-Android-Programming" class="headerlink" title="The Next Step for Reactive Android Programming"></a><a href="http://futurice.com/blog/the-next-step-for-reactive-android-programming" target="_blank" rel="noopener">The Next Step for Reactive Android Programming</a></h2><p>RxJava 2已经推出了, 本篇文章讨论从RxJava 1迁移到RxJava 2会带来的好处和挑战.</p>
+<p>好处:</p>
+<ul>
+<li>兼容了<a href="https://github.com/reactive-streams/reactive-streams-jvm" target="_blank" rel="noopener">Reactive Streams</a>.</li>
+<li>Backpressure的处理.</li>
+<li>Performance.</li>
+</ul>
+<p>挑战:</p>
+<ul>
+<li>流中不能再使用null.</li>
+<li>方法数限制. RxJava 1(5500), RxJava 2(9200).</li>
+<li>自定义操作符变得很难写.</li>
+</ul>
+<p>Note: 可以对比简单的操作符<a href="https://github.com/ReactiveX/RxJava/blob/2.x/src/main/java/io/reactivex/internal/operators/observable/ObservableMap.java" target="_blank" rel="noopener">map</a>和复杂的操作符<a href="https://github.com/ReactiveX/RxJava/blob/2.x/src/main/java/io/reactivex/internal/operators/observable/ObservableFlatMap.java" target="_blank" rel="noopener">flatMap</a>.</p>
+<h1 id="DESIGN"><a href="#DESIGN" class="headerlink" title="DESIGN"></a>DESIGN</h1><h2 id="Introducing-Auto-Layout-for-Sketch"><a href="#Introducing-Auto-Layout-for-Sketch" class="headerlink" title="Introducing Auto-Layout for Sketch"></a><a href="https://medium.com/sketch-app-sources/introducing-auto-layout-for-sketch-24e7b5d068f9#.tusju2z7k" target="_blank" rel="noopener">Introducing Auto-Layout for Sketch</a></h2><p>一个Sketch插件, 让你查看不同屏幕上的效果.</p>
+<h2 id="Designing-for-Both-Android-and-iOS"><a href="#Designing-for-Both-Android-and-iOS" class="headerlink" title="Designing for Both Android and iOS"></a><a href="https://webdesign.tutsplus.com/articles/a-tale-of-two-platforms-designing-for-both-android-and-ios--cms-23616" target="_blank" rel="noopener">Designing for Both Android and iOS</a></h2><p>Android和iOS的设计, 很详细的介绍, 最后附有一些resources.</p>
+<h1 id="LIBRARIES-amp-CODE"><a href="#LIBRARIES-amp-CODE" class="headerlink" title="LIBRARIES &amp; CODE"></a>LIBRARIES &amp; CODE</h1><h2 id="flowless"><a href="#flowless" class="headerlink" title="flowless"></a><a href="https://github.com/Zhuinden/flowless" target="_blank" rel="noopener">flowless</a></h2><p>一个框架, 给你Activity的UI状态命名, 管理并记录状态转换.</p>
+<h2 id="Store"><a href="#Store" class="headerlink" title="Store"></a><a href="https://github.com/NYTimes/Store" target="_blank" rel="noopener">Store</a></h2><p>异步数据加载和缓存的库.</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/uploads/qrcode_for_gh_0e2ed690dcda_258.jpg">
+            <span class="icon">
+              <i class="圣骑士Wind"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Android-Weekly/" rel="tag"># Android Weekly</a>
+              <a href="/tags/Wear/" rel="tag"># Wear</a>
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+              <a href="/tags/Test/" rel="tag"># Test</a>
+              <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+              <a href="/tags/Handler/" rel="tag"># Handler</a>
+              <a href="/tags/Android-Things/" rel="tag"># Android Things</a>
+              <a href="/tags/Looper/" rel="tag"># Looper</a>
+              <a href="/tags/HandlerThread/" rel="tag"># HandlerThread</a>
+              <a href="/tags/PDF/" rel="tag"># PDF</a>
+              <a href="/tags/Robolectric/" rel="tag"># Robolectric</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/01/03/android-weekly-notes-issue-238/" rel="prev" title="Android Weekly Notes Issue 238">
+      <i class="fa fa-chevron-left"></i> Android Weekly Notes Issue 238
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Android/Android-Weekly/2017/01/24/android-weekly-notes-issue-240/" rel="next" title="Android Weekly Notes Issue 240">
+      Android Weekly Notes Issue 240 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Weekly-Issue-239"><span class="nav-number">1.</span> <span class="nav-text">Android Weekly Issue #239</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARTICLES-amp-TUTORIALS"><span class="nav-number">2.</span> <span class="nav-text">ARTICLES &amp; TUTORIALS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Preparing-your-computer-for-Android-dev"><span class="nav-number">2.1.</span> <span class="nav-text">Preparing your computer for Android dev</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Beginner%E2%80%99s-guide-to-Raspberry-Pi-3-B-and-Android-Things"><span class="nav-number">2.2.</span> <span class="nav-text">Beginner’s guide to Raspberry Pi 3 B and Android Things</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Creating-new-project-and-emulator-on-Android-Studio"><span class="nav-number">2.3.</span> <span class="nav-text">Creating new project and emulator on Android Studio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discovering-Android-API"><span class="nav-number">2.4.</span> <span class="nav-text">Discovering Android API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#No-1-Spell-Checker"><span class="nav-number">2.4.1.</span> <span class="nav-text">No.1 - Spell Checker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-2-Text-Recognizer"><span class="nav-number">2.4.2.</span> <span class="nav-text">No.2 - Text Recognizer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-3-TimingLogger"><span class="nav-number">2.4.3.</span> <span class="nav-text">No.3 - TimingLogger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-4-Taking-screenshots"><span class="nav-number">2.4.4.</span> <span class="nav-text">No.4 - Taking screenshots</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#No-5-PDF-Creation-API"><span class="nav-number">2.4.5.</span> <span class="nav-text">No.5 - PDF Creation API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Avoiding-Conflicts-in-android-gradle-dependencies"><span class="nav-number">2.5.</span> <span class="nav-text">Avoiding Conflicts in android gradle dependencies</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Looper-Handler-and-HandlerThread"><span class="nav-number">2.6.</span> <span class="nav-text">Looper, Handler, and HandlerThread</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E7%9A%84Thread%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">2.6.1.</span> <span class="nav-text">Java的Thread存在什么问题?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E6%94%B9%E5%96%84%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E5%90%97"><span class="nav-number">2.6.2.</span> <span class="nav-text">我们可以改善这个问题吗?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android%E6%98%AF%E4%BB%A5%E4%BB%80%E4%B9%88%E6%96%B9%E5%BC%8F%E6%9D%A5%E5%81%9A%E8%BF%99%E4%BB%B6%E4%BA%8B%E7%9A%84%E5%91%A2"><span class="nav-number">2.6.3.</span> <span class="nav-text">Android是以什么方式来做这件事的呢?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Wear-packaging"><span class="nav-number">2.7.</span> <span class="nav-text">Android Wear packaging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-Things-%E2%80%93-Part-1"><span class="nav-number">2.8.</span> <span class="nav-text">Simple Things – Part 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Options-for-Viewing-PDFs"><span class="nav-number">2.9.</span> <span class="nav-text">Options for Viewing PDFs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clean-tests-Part-1-Naming"><span class="nav-number">2.10.</span> <span class="nav-text">Clean tests, Part 1: Naming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-I-Don%E2%80%99t-use-Robolectric"><span class="nav-number">2.11.</span> <span class="nav-text">Why I Don’t use Robolectric</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Next-Step-for-Reactive-Android-Programming"><span class="nav-number">2.12.</span> <span class="nav-text">The Next Step for Reactive Android Programming</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DESIGN"><span class="nav-number">3.</span> <span class="nav-text">DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introducing-Auto-Layout-for-Sketch"><span class="nav-number">3.1.</span> <span class="nav-text">Introducing Auto-Layout for Sketch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Designing-for-Both-Android-and-iOS"><span class="nav-number">3.2.</span> <span class="nav-text">Designing for Both Android and iOS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBRARIES-amp-CODE"><span class="nav-number">4.</span> <span class="nav-text">LIBRARIES &amp; CODE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#flowless"><span class="nav-number">4.1.</span> <span class="nav-text">flowless</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Store"><span class="nav-number">4.2.</span> <span class="nav-text">Store</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dandan Meng"
+      src="/uploads/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Dandan Meng</p>
+  <div class="site-description" itemprop="description">This is a technical blog site of an Android developer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">314</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mengdd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mengdd" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/mengdd/" title="http:&#x2F;&#x2F;www.cnblogs.com&#x2F;mengdd&#x2F;" rel="noopener" target="_blank">圣骑士Wind@博客园</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.jianshu.com/u/c4192d22f989" title="http:&#x2F;&#x2F;www.jianshu.com&#x2F;u&#x2F;c4192d22f989" rel="noopener" target="_blank">圣骑士Wind@简书</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.im/user/57ca63748ac247006446cf26" title="https:&#x2F;&#x2F;juejin.im&#x2F;user&#x2F;57ca63748ac247006446cf26" rel="noopener" target="_blank">圣骑士Wind@掘金</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dandan Meng</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"6NRSbfxTnKEHn4YEM8Gf4HdP-gzGzoHsz","app_key":"h6jBdqdDSdfOuICNkOVq2DQ0","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://dandanmeng.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://mengdd.github.io/Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/";
+    this.page.identifier = "Android/Android-Weekly/2017/01/10/android-weekly-notes-issue-239/";
+    this.page.title = "Android Weekly Notes Issue 239";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dandanmeng.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
