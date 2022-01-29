@@ -37,6 +37,18 @@ brew install hexo
 ```
 
 ### First clone
+Use:
+```
+git clone --recursive
+```
+if you didn't do --recursive.
+
+For theme: run these inside themes/next path:
+```
+git submodule init
+git submodule update
+```
+
 cd this project and run:
 ```
 npm install
